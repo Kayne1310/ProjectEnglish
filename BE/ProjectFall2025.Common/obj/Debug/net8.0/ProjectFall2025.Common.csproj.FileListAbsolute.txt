@@ -1,0 +1,11 @@
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\bin\Debug\net8.0\ProjectFall2025.Common.deps.json
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\bin\Debug\net8.0\ProjectFall2025.Common.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\bin\Debug\net8.0\ProjectFall2025.Common.pdb
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.GeneratedMSBuildEditorConfig.editorconfig
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.AssemblyInfoInputs.cache
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.AssemblyInfo.cs
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.csproj.CoreCompileInputs.cache
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\refint\ProjectFall2025.Common.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.pdb
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Common\obj\Debug\net8.0\ref\ProjectFall2025.Common.dll

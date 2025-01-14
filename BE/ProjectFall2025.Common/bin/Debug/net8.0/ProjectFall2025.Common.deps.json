@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ProjectFall2025.Common/1.0.0": {
+        "runtime": {
+          "ProjectFall2025.Common.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProjectFall2025.Common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

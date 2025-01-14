@@ -1,0 +1,15 @@
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.AssemblyInfoInputs.cache
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.AssemblyInfo.cs
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.csproj.CoreCompileInputs.cache
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.csproj.AssemblyReference.cache
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Infrastructure.deps.json
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Infrastructure.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Infrastructure.pdb
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Domain.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Domain.pdb
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectF.BD7C5424.Up2Date
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\refint\ProjectFall2025.Infrastructure.dll
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.pdb
+G:\Hoc Web API\ProjectEnglishFall2025\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ref\ProjectFall2025.Infrastructure.dll
