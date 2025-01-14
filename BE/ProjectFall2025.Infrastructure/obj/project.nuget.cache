@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0QzYNmpVQzl+3tzP7XlkwLs8vGnh3h1qJ7XnlyrW9oFxSBYEsisu7lJZ3rkGcp7hjNeXuidD0Ura5f8AynYStg==",
+  "dgSpecHash": "TFEQylElZw+u1SeaM9Lm/O96dt5r1KKfQuHPL0WjC+7uK9Ad57S3pbRkFHuYDFFFcXhIBuxEkXN6IZg3cc7JiA==",
   "success": true,
-  "projectFilePath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
+  "projectFilePath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",

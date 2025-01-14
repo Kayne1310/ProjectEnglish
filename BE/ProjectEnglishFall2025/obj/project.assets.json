@@ -1248,11 +1248,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
+      "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
       "projectName": "ProjectEnglishFall2025",
-      "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
+      "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025\\obj\\",
+      "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1269,17 +1269,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj"
+            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {
+              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj"
             },
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
+            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
             },
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
             },
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
+            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
+              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
             }
           }
         }

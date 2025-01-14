@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cv4+H2ZmQ921pJoP64Aw4jl4UxjwKEo0RpCYGBWoLn9dt4eh8CZuj33JVhK6f5mNnGO+0Wf5M4BFzcz2zUSdpA==",
+  "dgSpecHash": "VwPrJSAGDOtbJMhzZYQBH0Tq3tgfj/+WpBomnMtwGEm3UEoMu0uUk+86R2k8y7kHJGH9FYgsPv7iPyFAgmUdPg==",
   "success": true,
-  "projectFilePath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
+  "projectFilePath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",

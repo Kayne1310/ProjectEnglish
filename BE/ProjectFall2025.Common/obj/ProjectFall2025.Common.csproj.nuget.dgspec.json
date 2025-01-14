@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {}
+    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {}
   },
   "projects": {
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
+        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
         "projectName": "ProjectFall2025.Common",
-        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
+        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\ProjectFall2025.Common\\obj\\",
+        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
