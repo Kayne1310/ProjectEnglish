@@ -21,3 +21,4 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Common\obj\Debug\net8.0
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Common\obj\Debug\net8.0\refint\ProjectFall2025.Common.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.pdb
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Common\obj\Debug\net8.0\ref\ProjectFall2025.Common.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Common\obj\Debug\net8.0\ProjectFall2025.Common.csproj.AssemblyReference.cache

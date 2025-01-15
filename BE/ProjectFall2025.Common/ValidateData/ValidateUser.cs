@@ -9,5 +9,6 @@ namespace ProjectFall2025.Common.ValidateData
     public class ValidateUser
     {
 
+
     }
 }

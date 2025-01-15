@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProjectFall2025.Common\ProjectFall2025.Common.csproj" />
     <ProjectReference Include="..\ProjectFall2025.Domain\ProjectFall2025.Domain.csproj" />
   </ItemGroup>
 

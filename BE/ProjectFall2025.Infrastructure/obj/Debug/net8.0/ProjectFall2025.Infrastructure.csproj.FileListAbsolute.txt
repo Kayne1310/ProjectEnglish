@@ -29,3 +29,5 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debu
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\refint\ProjectFall2025.Infrastructure.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.pdb
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ref\ProjectFall2025.Infrastructure.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Common.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Common.pdb

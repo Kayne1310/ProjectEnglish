@@ -22,6 +22,7 @@ namespace ProjectFall2025.Infrastructure.Repositories
         {
                var userCollection = dbContext.GetCollectionUser();
              await userCollection.InsertOneAsync(user);
+                 
 
             return user;
         }
