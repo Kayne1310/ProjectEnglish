@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.ViewModel;
 
@@ -31,6 +32,22 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpGet]
+        [Authorize("Admin")]
+        public async Task<ActionResult> getAllUser()
+        {
+
+            try
+            {
+                var res=await userService.getAllUser();
+                return Ok(res);
+            }
+            catch(Exception e) 
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

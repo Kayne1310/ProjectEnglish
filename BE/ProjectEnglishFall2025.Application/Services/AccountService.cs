@@ -1,4 +1,5 @@
-﻿using ProjectFall2025.Application.Services;
+﻿using AutoMapper;
+using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
@@ -9,15 +10,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Application.IServices
+namespace ProjectFall2025.Application.Services
 {
-    public class AccountService:IAcountService
+    public class AccountService : IAcountService
     {
         private readonly IAcountRepository acountRepository;
+        private readonly IMapper mapper;
 
-        public AccountService(IAcountRepository acountRepository)
+        public AccountService(IAcountRepository acountRepository,IMapper mapper)
         {
             this.acountRepository = acountRepository;
+            this.mapper = mapper;
         }
 
         public async Task<LoginResponseData> AccountLogin(AccountLoginRequestData requestData)
@@ -57,9 +60,25 @@ namespace ProjectFall2025.Application.IServices
             }
         }
 
-        public Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
-        {
-            throw new NotImplementedException();
+        public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
+        {       var user=await acountRepository.getUserById(requestData.UserId);
+            if(user == null)
+            {
+                return -1;
+            }
+
+             user.Refeshtoken=requestData.RefeshToken;
+             user.Exprired=requestData.Exprired;
+
+            //map user to Account RefreshToken
+
+            var acRef=mapper.Map<Account_UpdateRefeshTokenRequestData>(user);
+
+            var update=await acountRepository.Account_UpdateRefeshToken(acRef);
+
+            return 1;
+
+         
         }
     }
 }

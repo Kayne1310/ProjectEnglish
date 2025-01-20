@@ -23,8 +23,6 @@ namespace ProjectFall2025.Infrastructure.Repositories
         {
             var userCollection = dbContext.GetCollectionUser();
 
-            var allUser=await userCollection.Find(_=>true).ToListAsync();
-
             var user= await userCollection
                 .Find(u => u.UserName == requestData.UserName && u.Password == requestData.Password)
                 .FirstOrDefaultAsync();
@@ -32,9 +30,23 @@ namespace ProjectFall2025.Infrastructure.Repositories
 
         }
 
-        public Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
+        public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
         {
-            throw new NotImplementedException();
+            var userCollection = dbContext.GetCollectionUser();
+            var filter = Builders<User>.Filter.Eq(x => x.UserID, requestData.UserId);
+            var update = Builders<User>.Update
+                .Set(x => x.Refeshtoken, requestData.RefeshToken)
+                .Set(x => x.Exprired, requestData.Exprired);
+
+            var result = await userCollection.UpdateOneAsync(filter, update);
+            return 1;
+        }
+
+        public async Task<User> getUserById(object userId)
+        {
+          var userCollection= dbContext.GetCollectionUser();
+           var filter = Builders<User>.Filter.Eq(x => x.UserID, userId);
+           return await userCollection.Find(filter).FirstOrDefaultAsync();
         }
     }
 }

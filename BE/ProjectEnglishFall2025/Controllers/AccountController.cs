@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using ProjectFall2025.Application.Services;
+using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
@@ -19,7 +19,7 @@ namespace ProjectEnglishFall2025.Controllers
         private readonly IAcountService acountService;
         private readonly IConfiguration configuration;
 
-        public AccountController(IAcountService acountService,IConfiguration configuration)
+        public AccountController(IAcountService acountService, IConfiguration configuration)
         {
             this.acountService = acountService;
             this.configuration = configuration;
@@ -44,8 +44,9 @@ namespace ProjectEnglishFall2025.Controllers
                 //2.1 tao Claims de luu thong tin users
                 var authClaims = new List<Claim> {
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.PrimarySid, user.UserID.ToString()), };
-
+                    new Claim(ClaimTypes.PrimarySid, user.UserID.ToString()),
+                    new Claim(ClaimTypes.Role,user.role),
+                };
                 var newtoken = CreateToken(authClaims);
 
                 //buoc 2.3 tao refresh token
@@ -62,10 +63,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 };
 
-              //       var res = await acountService.Account_UpdateRefeshToken(req);
-
-
-
+                var res = await acountService.Account_UpdateRefeshToken(req);
 
                 //tra ve token 
                 returnData.ReturnCode = 1;
@@ -86,7 +84,7 @@ namespace ProjectEnglishFall2025.Controllers
 
 
 
-        private  JwtSecurityToken CreateToken(List<Claim> authClaims)
+        private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);

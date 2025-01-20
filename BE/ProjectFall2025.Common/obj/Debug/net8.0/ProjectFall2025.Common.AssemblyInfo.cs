@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjectFall2025.Common")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6e55b5a838c6a80f38a536f2c0cdaeb4dc47b3b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9cf56a8a682f202ddbfe1a8e7946224e459f3403")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjectFall2025.Common")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjectFall2025.Common")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

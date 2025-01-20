@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
 using ProjectFall2025.Infrastructure.Repositories;
@@ -25,6 +26,8 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
+                //hash password
+                userViewModel.Password=Security.ComputeSha256Hash(userViewModel.Password);
                 //map user into userviewmodel
                 var userDTO = mapper.Map<User>(userViewModel);
 
@@ -39,9 +42,11 @@ namespace ProjectFall2025.Application.Services
         }
 
 
-        public Task<List<User>> getAllUser()
+        public async Task<List<User>> getAllUser()
         {
-            throw new NotImplementedException();
+           var user=await repository.getAllUser();
+
+            return user;
         }
     }
 }

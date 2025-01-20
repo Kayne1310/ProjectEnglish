@@ -14,5 +14,6 @@ namespace ProjectFall2025.Infrastructure.Repositories
         Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData);
 
 
+        Task<User> getUserById(Object userId);
     }
 }
