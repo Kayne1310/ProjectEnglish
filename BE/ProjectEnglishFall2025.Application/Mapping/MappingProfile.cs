@@ -14,7 +14,9 @@ namespace ProjectFall2025.Application.Mapping
         public MappingProfile()
         {
             CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<User, UserVM>().ReverseMap();
             CreateMap<Account_UpdateRefeshTokenRequestData,User>().ReverseMap();
+
         }
     }
 }

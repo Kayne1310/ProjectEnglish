@@ -20,10 +20,8 @@ namespace ProjectFall2025.Infrastructure.Repositories
 
         public async Task<User> addUser(User user)
         {
-               var userCollection = dbContext.GetCollectionUser();
-             await userCollection.InsertOneAsync(user);
-                 
-
+             var userCollection = dbContext.GetCollectionUser();
+             await userCollection.InsertOneAsync(user);               
             return user;
         }
 

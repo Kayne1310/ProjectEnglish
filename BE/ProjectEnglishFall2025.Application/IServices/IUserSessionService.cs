@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace ProjectFall2025.Application.IServices
 {
-    public interface IUserService
+    public interface IUserSessionService
     {
-        Task<User> addUserService(UserViewModel userViewModel);
-        Task<List<UserVM>> getAllUser();
 
+        Task<int> addUserSession(UserSession userSession);
+
+        Task<int> removeUserSession(LogoutRequest logoutRequest);
     }
 }

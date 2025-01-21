@@ -42,11 +42,20 @@ namespace ProjectFall2025.Application.Services
         }
 
 
-        public async Task<List<User>> getAllUser()
+        public async Task<List<UserVM>> getAllUser()
         {
            var user=await repository.getAllUser();
 
-            return user;
+            var listUservm=new List<UserVM>();
+
+            foreach (var item in user)
+            {
+
+                listUservm.Add(mapper.Map<UserVM>(item));
+            }
+            //map
+         
+            return listUservm;
         }
     }
 }

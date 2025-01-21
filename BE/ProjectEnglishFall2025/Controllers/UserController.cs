@@ -35,7 +35,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet]
-        [Authorize("Admin")]
+        [Authorize("User")]
         public async Task<ActionResult> getAllUser()
         {
 

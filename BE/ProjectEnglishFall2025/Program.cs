@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ProjectFall2025.Application.IServices;
@@ -7,6 +7,7 @@ using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
 using ProjectFall2025.Infrastructure.Repositories;
+using StackExchange.Redis;
 using System.Text;
 
 namespace ProjectEnglishFall2025
@@ -49,6 +50,12 @@ namespace ProjectEnglishFall2025
                 };
             });
 
+            //redis
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+             ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"]));
+
+            builder.Services.AddTransient<IRedisService, RedisService>();
+
 
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -56,6 +63,8 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAcountRepository, AccountRepository>();
             builder.Services.AddScoped<IAcountService,AccountService>();
+            builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
+            builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 
             var app = builder.Build();
