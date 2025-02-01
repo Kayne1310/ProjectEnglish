@@ -67,7 +67,26 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 
+
+            //cors
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:5173") // Đúng địa chỉ FE
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials(); // Nếu có cookie/token
+                                  });
+            });
+
+
+
             var app = builder.Build();
+            app.UseCors(MyAllowSpecificOrigins);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

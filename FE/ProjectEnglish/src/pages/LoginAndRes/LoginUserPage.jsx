@@ -1,9 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "../../assets/css/LoginCss/user.css"; // Import file CSS của bạn
+import authService from "../../service/authService";
 
 const LoginUserPage = () => {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   useEffect(() => {
+
     // Lấy button và container
     const loginBtn = document.getElementById("login");
     const registerBtn = document.getElementById("register");
@@ -21,10 +28,31 @@ const LoginUserPage = () => {
 
     // Cleanup event listener khi component bị unmount
     return () => {
-      if (loginBtn) loginBtn.removeEventListener("click", () => {});
-      if (registerBtn) registerBtn.removeEventListener("click", () => {});
+      if (loginBtn) loginBtn.removeEventListener("click", () => { });
+      if (registerBtn) registerBtn.removeEventListener("click", () => { });
     };
   }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await authService.login(email, password);
+     
+      if(response.returnCode ==-1){
+        setError("Login failed. Please Enter Email and Password incorrect.");
+      }
+      else{
+
+        console.log(response);
+        window.location.href = "/"; // Chuyển hướng sau khi login thành công
+      }
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
+  };
+
 
   return (
     <div className="container" id="container">
@@ -41,8 +69,8 @@ const LoginUserPage = () => {
             </a>
           </div>
           <span>or use your email for registration</span>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
+          <input type="text" placeholder="Name"  />
+          <input type="email" placeholder="Email"  />
           <input type="password" placeholder="Password" />
           <button type="submit">Sign Up</button>
         </form>
@@ -50,7 +78,7 @@ const LoginUserPage = () => {
 
       {/* Đăng nhập */}
       <div className="form-container sign-in">
-        <form>
+        <form onSubmit={handleLogin}> 
           <h1>Sign In</h1>
           <div className="social-icons">
             <a href="#" className="icon">
@@ -61,10 +89,11 @@ const LoginUserPage = () => {
             </a>
           </div>
           <span>or use your email password</span>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input type="text" placeholder="Email"  value={email} onChange={(e) => setEmail(e.target.value)}/>
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
           <a href="#">Forget Your Password?</a>
           <button type="submit">Sign In</button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
       </div>
 

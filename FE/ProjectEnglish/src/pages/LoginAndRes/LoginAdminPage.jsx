@@ -11,8 +11,6 @@ const LoginAdminPage=()=>{
           
             </div>
       
-       
-      
             <label htmlFor="email">Email</label>
             <input type="text" placeholder="Enter Email" name="email" required />
       
