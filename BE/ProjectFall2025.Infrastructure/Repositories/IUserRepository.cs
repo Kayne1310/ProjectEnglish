@@ -14,5 +14,7 @@ namespace ProjectFall2025.Infrastructure.Repositories
 
         Task<User> addUser(User user);
 
+        Task<User> findUserByUsername(string username);
+
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
 
 namespace ProjectEnglishFall2025.Controllers
@@ -23,6 +24,15 @@ namespace ProjectEnglishFall2025.Controllers
             try
             {
                 var res = await userService.addUserService(user);
+
+                if (res.UserName == null)
+                {
+                    return Ok(new ReturnData()
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "User Exists"
+                    });
+                }
 
                 return Ok(res);
             }

@@ -22,16 +22,25 @@ namespace ProjectFall2025.Application.Services
             this.repository = repository;
             this.mapper = mapper;
         }
-        public Task<User> addUserService(UserViewModel userViewModel)
+        public async Task<User> addUserService(UserViewModel userViewModel)
         {
             try
             {
+                //check user exit
+                var userexit=await repository.findUserByUsername(userViewModel.UserName);
+
+                if (userexit != null)
+                {
+                  
+                    return new User();
+                }
+
                 //hash password
                 userViewModel.Password=Security.ComputeSha256Hash(userViewModel.Password);
                 //map user into userviewmodel
                 var userDTO = mapper.Map<User>(userViewModel);
 
-                var res = repository.addUser(userDTO);
+                var res = await repository.addUser(userDTO);
                 return res;
             }
             catch (Exception ex) {

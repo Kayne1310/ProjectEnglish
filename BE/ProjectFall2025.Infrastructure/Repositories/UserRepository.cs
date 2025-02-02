@@ -25,12 +25,22 @@ namespace ProjectFall2025.Infrastructure.Repositories
             return user;
         }
 
-       
+        public async Task<User> findUserByUsername(string username)
+        {
+         var usercollection=dbContext.GetCollectionUser();
+
+            var res= await usercollection.Find(x=>x.UserName == username).FirstOrDefaultAsync();
+            return res;
+            //check user exit
+
+        }
 
         public async Task<List<User>> getAllUser()
         {
             var userCollection =  dbContext.GetCollectionUser();
             return await userCollection.Find(_ => true).ToListAsync(); 
         }
+
+
     }
 }
