@@ -10,7 +10,7 @@ namespace ProjectFall2025.Application.IServices
 {
     public interface IUserService
     {
-        Task<User> addUserService(UserViewModel userViewModel);
+        Task<ReturnData> addUserService(UserViewModel userViewModel);
         Task<List<UserVM>> getAllUser();
 
     }

@@ -105,3 +105,6 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\StackExchange.Redis.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

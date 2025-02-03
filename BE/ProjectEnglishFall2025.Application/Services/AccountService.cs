@@ -29,7 +29,7 @@ namespace ProjectFall2025.Application.Services
             try
             {
                 if (requestData == null
-                    || string.IsNullOrEmpty(requestData.UserName)
+                    || string.IsNullOrEmpty(requestData.Email)
                     || string.IsNullOrEmpty(requestData.Password))
                 {
                     returnData.ReturnCode = -1;

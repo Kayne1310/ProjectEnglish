@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.Mapping;
@@ -8,7 +9,13 @@ using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
 using ProjectFall2025.Infrastructure.Repositories;
 using StackExchange.Redis;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+
 using System.Text;
+using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Common.ValidateData;
 
 namespace ProjectEnglishFall2025
 {
@@ -20,7 +27,10 @@ namespace ProjectEnglishFall2025
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -62,11 +72,15 @@ namespace ProjectEnglishFall2025
             builder.Services.AddAutoMapper(typeof(MappingProfile));
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAcountRepository, AccountRepository>();
-            builder.Services.AddScoped<IAcountService,AccountService>();
+            builder.Services.AddScoped<IAcountService, AccountService>();
             builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
+            //res validator
 
+            builder.Services.AddFluentValidationAutoValidation();
+            // Đăng ký tất cả Validators trong Assembly
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
 
             //cors
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -79,7 +93,7 @@ namespace ProjectEnglishFall2025
                                       policy.WithOrigins("http://localhost:5173") // Đúng địa chỉ FE
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
-                                            .AllowCredentials(); // Nếu có cookie/token
+                                            .AllowCredentials(); 
                                   });
             });
 

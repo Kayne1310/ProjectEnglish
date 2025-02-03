@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
@@ -16,23 +17,40 @@ namespace ProjectFall2025.Application.Services
     {
         private readonly IUserRepository repository;
         private readonly IMapper mapper;
+        private readonly IValidator<UserViewModel> validator;
 
-        public UserService(IUserRepository repository, IMapper mapper)
+        public UserService(IUserRepository repository, IMapper mapper,IValidator<UserViewModel> validator)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.validator = validator;
         }
-        public async Task<User> addUserService(UserViewModel userViewModel)
+        public async Task<ReturnData> addUserService(UserViewModel userViewModel)
         {
             try
             {
+                //valid data
+                var validationResult = await validator.ValidateAsync(userViewModel);
+                if (!validationResult.IsValid)
+                {
+                    var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = string.Join(", ", errorMessages)
+                    };
+                }
                 //check user exit
-                var userexit=await repository.findUserByUsername(userViewModel.UserName);
+                var userexit=await repository.findUserByUsername(userViewModel.Email);
 
                 if (userexit != null)
                 {
-                  
-                    return new User();
+
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Username already exists."
+                    };
                 }
 
                 //hash password
@@ -41,7 +59,11 @@ namespace ProjectFall2025.Application.Services
                 var userDTO = mapper.Map<User>(userViewModel);
 
                 var res = await repository.addUser(userDTO);
-                return res;
+                return new ReturnData
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "User created successfully."
+                };
             }
             catch (Exception ex) {
 

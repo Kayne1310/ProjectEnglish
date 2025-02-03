@@ -25,11 +25,11 @@ namespace ProjectFall2025.Infrastructure.Repositories
             return user;
         }
 
-        public async Task<User> findUserByUsername(string username)
+        public async Task<User> findUserByUsername(string email)
         {
          var usercollection=dbContext.GetCollectionUser();
 
-            var res= await usercollection.Find(x=>x.UserName == username).FirstOrDefaultAsync();
+            var res= await usercollection.Find(x=>x.Email == email).FirstOrDefaultAsync();
             return res;
             //check user exit
 

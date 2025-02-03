@@ -27,7 +27,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -45,6 +49,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[11.11.0, )"
+            },
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.0, )"
+            },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[9.0.1, )"

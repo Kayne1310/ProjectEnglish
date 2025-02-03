@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "Ts8qld0I4zzl1biZm+wHMUM1XbNFpdbZ3h44Msl+KkF8pefSBv700SG90wOBUOg6xk3ubiwAO2eSxxx2ZeY8AQ==",
+  "dgSpecHash": "q69y0zaqu01RYiStwBkJVvVZ/6ZfTBRIgi0/WePk42EY5ReyCmHD9FDqW9gEWLMw8Elg6NJcJZiTShdIofOv6A==",
   "success": true,
   "projectFilePath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.11\\microsoft.aspnetcore.authentication.jwtbearer.8.0.11.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.1\\microsoft.extensions.configuration.abstractions.9.0.1.nupkg.sha512",

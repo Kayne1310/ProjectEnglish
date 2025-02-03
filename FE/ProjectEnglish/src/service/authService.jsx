@@ -4,10 +4,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 console.log(API_URL);
 // const API_URL ="https://localhost:7048/api"; 
 
-const login = async (username, password) => {
+const login = async (email, password) => {
     try {
         const response = await axios.post(`${API_URL}/Account`, {
-            userName: username,
+            email: email,
             password: password
             
         });
@@ -48,7 +48,7 @@ const register = async (username, email,password) => {
 
         return response.data;
     } catch (error) {
-        console.error("Register failed:", error.response?.data || error.message);
+        console.error("Register failed:", error.response?.data.errors || error.message);
         throw error;
     }
 }

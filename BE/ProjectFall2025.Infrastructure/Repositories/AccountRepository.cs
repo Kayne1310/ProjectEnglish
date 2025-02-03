@@ -24,7 +24,7 @@ namespace ProjectFall2025.Infrastructure.Repositories
             var userCollection = dbContext.GetCollectionUser();
 
             var user= await userCollection
-                .Find(u => u.UserName == requestData.UserName && u.Password == requestData.Password)
+                .Find(u => u.Email == requestData.Email && u.Password == requestData.Password)
                 .FirstOrDefaultAsync();
             return user;
 
