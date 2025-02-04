@@ -16,14 +16,14 @@ const LoginUserPage = () => {
 
   useEffect(() => {
 
-    // Lấy button và container
+    // Lấy button và containers
     const loginBtn = document.getElementById("login");
     const registerBtn = document.getElementById("register");
-    const container = document.getElementById("container");
+    const containers = document.getElementById("containers");
 
-    if (loginBtn && registerBtn && container) {
+    if (loginBtn && registerBtn && containers) {
       registerBtn.addEventListener("click", () => {
-        container.classList.add("active");
+        containers.classList.add("active");
         setError("");
         setName("");
         setPassword("");
@@ -32,7 +32,7 @@ const LoginUserPage = () => {
       });
 
       loginBtn.addEventListener("click", () => {
-        container.classList.remove("active");
+        containers.classList.remove("active");
         setIsRegisterSuccess(false);
         setError("");
         setEmail("");
@@ -48,9 +48,12 @@ const LoginUserPage = () => {
   }, []);
 
   return (
-    <div className="container" id="container">
+    <div className="login-user">
+
+ 
+    <div className="containers" id="containers">
       {/* Đăng ký tài khoản */}
-      <div className="form-container sign-up">
+      <div className="form-containers sign-up">
         <form onSubmit={(e) => handerRegister(e, name, email, password, setError, setIsLoading, setIsRegisterSuccess, setName, setEmail, setPassword)}>
           <h1>Create Account</h1>
           <div className="social-icons">
@@ -86,7 +89,7 @@ const LoginUserPage = () => {
       </div>
 
       {/* Đăng nhập */}
-      <div className="form-container sign-in">
+      <div className="form-containers sign-in">
         <form onSubmit={(e) => handleLogin(e, email, password, setError, setIsLoading)}>
           <h1>Sign In</h1>
           <div className="social-icons">
@@ -121,7 +124,7 @@ const LoginUserPage = () => {
       </div>
 
       {/* Toggle giữa Sign In / Sign Up */}
-      <div className="toggle-container">
+      <div className="toggle-containers">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Welcome Back!</h1>
@@ -139,6 +142,7 @@ const LoginUserPage = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

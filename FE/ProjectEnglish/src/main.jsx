@@ -5,7 +5,6 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css'
 
 import LoginUserPage from './pages/LoginAndRes/LoginUserPage.jsx';
 import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
