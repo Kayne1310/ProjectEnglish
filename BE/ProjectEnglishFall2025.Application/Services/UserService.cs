@@ -88,5 +88,50 @@ namespace ProjectFall2025.Application.Services
          
             return listUservm;
         }
+
+        public async Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model)
+        {
+            try
+            {
+                // Kiểm tra xem user đã tồn tại chưa (dựa trên FacebookId hoặc Email)
+                var existingUser = await repository.FindUserByFacebookId(model.FacebookId);
+                if (existingUser != null)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "User already exists."
+                    };
+                }
+
+                // Nếu chưa tồn tại, tạo tài khoản mới
+                var newUser = new User
+                {
+                    UserName = model.Name,
+                    Email = model.Email,
+                    FacebookId = model.FacebookId,
+                    Password = null,  // Không có mật khẩu
+                    role = "User",
+                    Exprired=DateTime.Now,
+                };
+
+                var result = await repository.addUser(newUser);
+             
+
+                return new ReturnData
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "User registered successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ReturnData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = $"Error: {ex.Message}"
+                };
+            }
+        }
     }
 }

@@ -21,6 +21,16 @@ namespace ProjectFall2025.Domain.ViewModel
 
     }
 
+
+    public class FacebookUserViewModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string FacebookId { get; set; }
+        public DateTime Exprired { get; set; }
+    }
+
+
     public class Account_UpdateRefeshTokenRequestData
     {
         public ObjectId UserId { get; set; }

@@ -23,3 +23,16 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Domain\obj\Debug\net8.0
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Domain\obj\Debug\net8.0\refint\ProjectFall2025.Domain.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.pdb
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ref\ProjectFall2025.Domain.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\bin\Debug\net8.0\ProjectFall2025.Domain.deps.json
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\bin\Debug\net8.0\ProjectFall2025.Domain.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\bin\Debug\net8.0\ProjectFall2025.Domain.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.csproj.AssemblyReference.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.AssemblyInfoInputs.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.AssemblyInfo.cs
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.csproj.CoreCompileInputs.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.sourcelink.json
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\refint\ProjectFall2025.Domain.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ProjectFall2025.Domain.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectFall2025.Domain\obj\Debug\net8.0\ref\ProjectFall2025.Domain.dll

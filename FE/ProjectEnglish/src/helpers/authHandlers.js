@@ -20,7 +20,9 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
-        setIsLoading(false);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
     }
 };
 

@@ -16,11 +16,13 @@ namespace ProjectFall2025.Application.Services
     {
         private readonly IAcountRepository acountRepository;
         private readonly IMapper mapper;
+        private readonly IUserRepository userRepository;
 
-        public AccountService(IAcountRepository acountRepository,IMapper mapper)
+        public AccountService(IAcountRepository acountRepository,IMapper mapper,IUserRepository userRepository)
         {
             this.acountRepository = acountRepository;
             this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
         public async Task<LoginResponseData> AccountLogin(AccountLoginRequestData requestData)
@@ -58,6 +60,25 @@ namespace ProjectFall2025.Application.Services
             {
                 throw new Exception("Đã xảy ra lỗi khi đăng nhập.", ex);
             }
+        }
+
+        public async Task<ReturnData> AccountLoginWithFb(string facebookId)
+        {
+            //find user by facebookId
+            var user = await userRepository.FindUserByFacebookId(facebookId);
+            if (user == null)
+            {
+                return new ReturnData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = "User chua duoc dang ki."
+                };
+            }
+            return new ReturnData
+            {
+                ReturnCode = 1,
+                ReturnMessage = "Dang nhap thanh cong."
+            };
         }
 
         public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)

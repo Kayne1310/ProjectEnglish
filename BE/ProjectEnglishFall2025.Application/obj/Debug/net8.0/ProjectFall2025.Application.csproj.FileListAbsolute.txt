@@ -37,3 +37,23 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\refint\ProjectFall2025.Application.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.pdb
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ref\ProjectFall2025.Application.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.deps.json
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Common.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Domain.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Infrastructure.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Common.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Domain.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Infrastructure.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.csproj.AssemblyReference.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.AssemblyInfoInputs.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.AssemblyInfo.cs
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.csproj.CoreCompileInputs.cache
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.sourcelink.json
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectF.BABEBFDD.Up2Date
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\refint\ProjectFall2025.Application.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.pdb
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ref\ProjectFall2025.Application.dll

@@ -12,6 +12,7 @@ namespace ProjectFall2025.Application.IServices
     {
         Task<ReturnData> addUserService(UserViewModel userViewModel);
         Task<List<UserVM>> getAllUser();
+        Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model);
 
     }
 }
