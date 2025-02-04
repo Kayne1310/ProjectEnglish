@@ -25,6 +25,14 @@ namespace ProjectFall2025.Infrastructure.Repositories
             return user;
         }
 
+        public async Task<User> FindUserByFacebookId(string facebookId)
+        {
+            var usercollection = dbContext.GetCollectionUser();
+
+            var res = await usercollection.Find(x => x.FacebookId == facebookId).FirstOrDefaultAsync();
+            return res;
+        }
+
         public async Task<User> findUserByUsername(string email)
         {
          var usercollection=dbContext.GetCollectionUser();

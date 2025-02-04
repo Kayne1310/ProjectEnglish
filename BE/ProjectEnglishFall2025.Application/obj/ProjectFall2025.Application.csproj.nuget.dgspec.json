@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {}
+    "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {}
   },
   "projects": {
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {
+    "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
+        "projectUniqueName": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
         "projectName": "ProjectFall2025.Application",
-        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\obj\\",
+        "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
+        "packagesPath": "C:\\Users\\Vanto\\.nuget\\packages\\",
+        "outputPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Vanto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,20 +26,21 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
               },
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
               },
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
               }
             }
           }
@@ -49,7 +54,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -88,21 +94,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+    "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
+        "projectUniqueName": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
         "projectName": "ProjectFall2025.Common",
-        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\obj\\",
+        "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj",
+        "packagesPath": "C:\\Users\\Vanto\\.nuget\\packages\\",
+        "outputPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Vanto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -110,14 +120,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
               }
             }
           }
@@ -131,7 +142,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -170,21 +182,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+    "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj",
+        "projectUniqueName": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj",
         "projectName": "ProjectFall2025.Domain",
-        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\obj\\",
+        "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj",
+        "packagesPath": "C:\\Users\\Vanto\\.nuget\\packages\\",
+        "outputPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Vanto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -192,6 +208,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -209,7 +226,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -236,21 +254,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
+    "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
+        "projectUniqueName": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
         "projectName": "ProjectFall2025.Infrastructure",
-        "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\obj\\",
+        "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Vanto\\.nuget\\packages\\",
+        "outputPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Vanto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -258,17 +280,18 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
               },
-              "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
-                "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+              "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+                "projectPath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
               }
             }
           }
@@ -282,7 +305,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -313,7 +337,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

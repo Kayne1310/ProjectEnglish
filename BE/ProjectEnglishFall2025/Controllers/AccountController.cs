@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Application.Services;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
@@ -157,6 +161,59 @@ namespace ProjectEnglishFall2025.Controllers
                 response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                 return StatusCode(500, response);
             }
+        }
+
+        [HttpGet("login-facebook")]
+        public IActionResult LoginWithFacebook()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/api/account/facebook-callback" };
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("facebook-callback")]
+        public async Task<IActionResult> FacebookCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Facebook authentication failed.");
+            
+
+            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var facebookId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            //check tk fb da duoc tao chua
+            var validAcount = await acountService.AccountLoginWithFb(facebookId);
+            if(validAcount.ReturnCode < 0)
+            {
+                return Ok(validAcount);
+            }
+
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Unable to get email from Facebook");
+
+            // Tạo access token
+            var authClaims = new List<Claim> {
+            new Claim(ClaimTypes.Name, name),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.NameIdentifier, facebookId),
+           new Claim(ClaimTypes.Role,"User"),
+        };
+            var newToken = CreateToken(authClaims);
+
+            // Lưu vào Redis
+            var redisKeyAccessToken = $"user:{facebookId}:accessToken";
+            await redisService.SetValueAsync(redisKeyAccessToken, new JwtSecurityTokenHandler().WriteToken(newToken),
+                TimeSpan.FromMinutes(Convert.ToDouble(configuration["Redis:DefaultExpiryMinutes"])));
+
+
+            var returnData = new LoginResponseData();
+            returnData.ReturnMessage = "Login Sucessful";
+            returnData.ReturnCode = 1;
+            returnData.token = new JwtSecurityTokenHandler().WriteToken(newToken);
+            return Ok(returnData);
         }
 
 
