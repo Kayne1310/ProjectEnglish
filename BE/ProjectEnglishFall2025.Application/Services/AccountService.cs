@@ -68,7 +68,7 @@ namespace ProjectFall2025.Application.Services
             }
 
              user.Refeshtoken=requestData.RefeshToken;
-             user.Exprired=requestData.Exprired;
+             user.Expired=requestData.Expired;
 
             //map user to Account RefreshToken
 

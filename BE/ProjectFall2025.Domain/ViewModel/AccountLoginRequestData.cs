@@ -25,7 +25,7 @@ namespace ProjectFall2025.Domain.ViewModel
     {
         public ObjectId UserId { get; set; }
         public string RefeshToken { get; set; }
-        public DateTime Exprired { get; set; }
+        public DateTime Expired { get; set; }
     }
 
     public class LogoutRequest

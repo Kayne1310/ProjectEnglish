@@ -63,7 +63,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 var req = new Account_UpdateRefeshTokenRequestData
                 {
-                    Exprired = refreshtokenExprired,
+                    Expired = refreshtokenExprired,
                     RefeshToken = refreshtoken,
                     UserId = user.UserID,
 

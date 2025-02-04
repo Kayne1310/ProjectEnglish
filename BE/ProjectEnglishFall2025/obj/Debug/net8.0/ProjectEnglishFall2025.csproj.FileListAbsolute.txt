@@ -108,3 +108,14 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.csproj.AssemblyReference.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.AssemblyInfoInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.AssemblyInfo.cs
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.csproj.CoreCompileInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.sourcelink.json
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\refint\ProjectEnglishFall2025.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.pdb

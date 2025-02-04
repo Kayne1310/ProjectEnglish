@@ -31,3 +31,12 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debu
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ref\ProjectFall2025.Infrastructure.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Common.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectFall2025.Infrastructure\bin\Debug\net8.0\ProjectFall2025.Common.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.AssemblyInfo.cs
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.sourcelink.json
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\refint\ProjectFall2025.Infrastructure.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectFall2025.Infrastructure\obj\Debug\net8.0\ProjectFall2025.Infrastructure.pdb

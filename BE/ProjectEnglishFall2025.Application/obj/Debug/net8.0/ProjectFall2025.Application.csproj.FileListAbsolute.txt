@@ -37,3 +37,23 @@ G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\refint\ProjectFall2025.Application.dll
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.pdb
 G:\Hoc Web API\ProjectEnglishFall2025\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ref\ProjectFall2025.Application.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.deps.json
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Application.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Common.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Domain.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Infrastructure.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Common.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Domain.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\bin\Debug\net8.0\ProjectFall2025.Infrastructure.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.csproj.AssemblyReference.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.AssemblyInfoInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.AssemblyInfo.cs
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.csproj.CoreCompileInputs.cache
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.sourcelink.json
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectF.BABEBFDD.Up2Date
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\refint\ProjectFall2025.Application.dll
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ProjectFall2025.Application.pdb
+C:\Users\Vanto\Source\Repos\ProjectEnglish\BE\ProjectEnglishFall2025.Application\obj\Debug\net8.0\ref\ProjectFall2025.Application.dll
