@@ -19,6 +19,7 @@ using ProjectFall2025.Common.ValidateData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace ProjectEnglishFall2025
 {
@@ -80,6 +81,15 @@ namespace ProjectEnglishFall2025
                    facebookOptions.Fields.Add("email");
                    facebookOptions.Fields.Add("name");
                    facebookOptions.CallbackPath = "/api/LoginWithFb";
+               })
+             
+               .AddGoogle(options =>
+               {
+                 
+                   options.ClientId = builder.Configuration["Google:ClientId"];
+                   options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+                   options.CallbackPath = "/api/signin-google";
+         
                });
 
             //redis

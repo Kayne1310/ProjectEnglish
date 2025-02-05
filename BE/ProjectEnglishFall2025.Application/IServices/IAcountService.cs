@@ -11,7 +11,8 @@ namespace ProjectFall2025.Application.IServices
     public interface IAcountService
     {
         Task<LoginResponseData> AccountLogin(AccountLoginRequestData requestData);
-        Task<ReturnData> AccountLoginWithFb(string  facebookId);
+        Task<LoginResponseData> AccountLoginWithFb(string  facebookId);
+        Task<LoginResponseData> AccountLoginWithGg(string googleId);
         Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData);
 
 

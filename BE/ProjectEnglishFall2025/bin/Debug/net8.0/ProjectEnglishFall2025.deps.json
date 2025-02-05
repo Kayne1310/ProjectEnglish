@@ -10,6 +10,7 @@
         "dependencies": {
           "FluentValidation": "11.11.0",
           "Microsoft.AspNetCore.Authentication.Facebook": "8.0.12",
+          "Microsoft.AspNetCore.Authentication.Google": "8.0.12",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.11",
           "ProjectFall2025.Application": "1.0.0",
           "ProjectFall2025.Common": "1.0.0",
@@ -79,6 +80,14 @@
       "Microsoft.AspNetCore.Authentication.Facebook/8.0.12": {
         "runtime": {
           "lib/net8.0/Microsoft.AspNetCore.Authentication.Facebook.dll": {
+            "assemblyVersion": "8.0.12.0",
+            "fileVersion": "8.0.1224.60312"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/8.0.12": {
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
             "assemblyVersion": "8.0.12.0",
             "fileVersion": "8.0.1224.60312"
           }
@@ -446,6 +455,13 @@
       "sha512": "sha512-po9edaLy4BgCwph1/OqocDB4H37bTZISzup0zP8NE42vK0XRBhy4BuLu10Pg3j+ZDEWUi1YUu2sSEbH/QrsnsQ==",
       "path": "microsoft.aspnetcore.authentication.facebook/8.0.12",
       "hashPath": "microsoft.aspnetcore.authentication.facebook.8.0.12.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Google/8.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+ytq0YfuQ5K8YnvfglBvYxxchsPpedeYlg7gYZY6oFvPIWqA9BjIabexLKAYfL6MewKrOJbRIgWvfx0pONnmPQ==",
+      "path": "microsoft.aspnetcore.authentication.google/8.0.12",
+      "hashPath": "microsoft.aspnetcore.authentication.google.8.0.12.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.11": {
       "type": "package",

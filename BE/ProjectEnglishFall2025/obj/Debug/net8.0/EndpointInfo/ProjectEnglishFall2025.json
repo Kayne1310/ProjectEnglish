@@ -91,6 +91,30 @@
         }
       }
     },
+    "/api/Account/login-google": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Account/google-callback": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/User": {
       "post": {
         "tags": [
@@ -145,6 +169,30 @@
       }
     },
     "/api/User/FacebookRegisterCallback": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/User/RegisterWithGoogle": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/User/GoogleRegisterCallback": {
       "get": {
         "tags": [
           "User"

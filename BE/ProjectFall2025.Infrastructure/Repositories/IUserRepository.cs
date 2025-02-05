@@ -16,7 +16,8 @@ namespace ProjectFall2025.Infrastructure.Repositories
 
         Task<User> findUserByUsername(string username);
 
-        Task<User> FindUserByFacebookId(string facebookId); 
+        Task<User> FindUserByFacebookId(string facebookId);
+        Task<User> FindUserByGoogleId(string googleId);
 
     }
 }

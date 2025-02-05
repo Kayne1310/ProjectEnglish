@@ -17,6 +17,7 @@ namespace ProjectFall2025.Domain.Do
         public string Email { get; set; }
         public string? Password { get; set; }
         public string? FacebookId { get; set; }
+        public string? GoogleId { get; set; }
         public string? Refeshtoken { get; set; }
         public DateTime Exprired { get; set; }
 
