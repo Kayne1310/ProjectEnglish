@@ -1,0 +1,164 @@
+/* Contact Section */
+.main-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+  
+  .slider_section .container {
+    max-width: 100%;
+  }
+  
+  .detail-box h1 {
+    font-size: 3rem;
+  }
+  
+  .detail-box p {
+    font-size: 1.5rem;
+  }
+  
+  .carousel-indicators li {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #71A6A8;
+  }
+  
+  .carousel-indicators .active {
+    background-color: #E58D35;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  .contact_section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .heading_container {
+    margin-bottom: 20px;
+  }
+  
+  .heading_container h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form_container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .btn_box button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .btn_box button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Info Section */
+  .info_section {
+    padding: 50px 0;
+    background-color: #222;
+    color: white;
+  }
+  
+  .contact_nav a {
+    color: white;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .info_links h4,
+  .info_post h5,
+  .info_form h4 {
+    color: white;
+    margin-bottom: 15px;
+  }
+  
+  .social_box a {
+    color: white;
+    margin-right: 10px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .detail-box h1 {
+      font-size: 2.5rem;
+    }
+  
+    .detail-box p {
+      font-size: 1.25rem;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .detail-box h1 {
+      font-size: 2rem;
+    }
+  
+    .detail-box p {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .form_container {
+      padding: 30px;
+    }
+  
+    .detail-box h1 {
+      font-size: 1.5rem;
+    }
+  
+    .detail-box p {
+      font-size: 0.875rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .detail-box h1 {
+      font-size: 1.25rem;
+    }
+  
+    .detail-box p {
+      font-size: 0.75rem;
+    }
+  }

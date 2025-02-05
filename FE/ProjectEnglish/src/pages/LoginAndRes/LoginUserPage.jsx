@@ -1,145 +1,90 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import "../../assets/css/LoginCss/user.css"; // Đường dẫn đến CSS
+// import image1 from "../../assets/image/1.jpg";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
-import "../../assets/css/LoginCss/user.css"; // Import file CSS của bạn
-import authService from "../../service/authService";
-import { Oval } from "react-loader-spinner";
-import { handerRegister, handleLogin } from "../../helpers/authHandlers";
 
 const LoginUserPage = () => {
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-
-    // Lấy button và container
-    const loginBtn = document.getElementById("login");
-    const registerBtn = document.getElementById("register");
-    const container = document.getElementById("container");
-
-    if (loginBtn && registerBtn && container) {
-      registerBtn.addEventListener("click", () => {
-        container.classList.add("active");
-        setError("");
-        setName("");
-        setPassword("");
-        setEmail("");
-        setIsRegisterSuccess(false);
-      });
-
-      loginBtn.addEventListener("click", () => {
-        container.classList.remove("active");
-        setIsRegisterSuccess(false);
-        setError("");
-        setEmail("");
-        setPassword("");
-      });
-    }
-
-    // Cleanup event listener khi component bị unmount
-    return () => {
-      if (loginBtn) loginBtn.removeEventListener("click", () => { });
-      if (registerBtn) registerBtn.removeEventListener("click", () => { });
-    };
-  }, []);
+  const [isRegister, setIsRegister] = useState(false);
 
   return (
-    <div className="container" id="container">
-      {/* Đăng ký tài khoản */}
-      <div className="form-container sign-up">
-        <form onSubmit={(e) => handerRegister(e, name, email, password, setError, setIsLoading, setIsRegisterSuccess, setName, setEmail, setPassword)}>
-          <h1>Create Account</h1>
-          <div className="social-icons">
-            <a href="#" className="icon">
-              <i className="fa-brands fa-google-plus-g"></i>
-            </a>
-            <a href="#" className="icon">
-              <i className="fa-brands fa-facebook-f"></i>
-            </a>
-          </div>
-          <span>or use your email for registration</span>
-          <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-          <button type="submit">Sign Up</button>
-          {isLoading && (
-            <div className="loader-overlay">
-              <Oval
-                height={50}
-                width={50}
-                color="#4fa94d"
-                visible={true}
-                ariaLabel="oval-loading"
-                secondaryColor="#4fa94d"
-                strokeWidth={2}
-                strokeWidthSecondary={2}
-              />
-            </div>
-          )}
-          {!isLoading && isRegisterSuccess && <p style={{ color: "green" }}>Register success. Please login</p>}
-          {!isLoading && error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
-      </div>
+      <div className="login-container">
+          <div className="login-box">
+              {/* Login Section */}
+              {!isRegister ? (
+                  <div className="w-100 w-md-50 px-3 px-md-5 text-center">
+                      <h2 className="font-bold text-2xl text-[#002D74] mt-3 mt-md-5">Log In</h2>
+                      <br />
+                      <form className="d-flex flex-column align-items-center gap-3 gap-md-4">
+                          <input className="login-input-field w-100" type="email" name="email" placeholder="Email" />
+                          <input className="login-input-field w-100" type="password" name="password" placeholder="Password" />
+                          <button className="login-btn-primary mt-3 mt-md-5 w-100">Log In</button>
+                      </form>
+                      <div className="login-divider d-flex justify-content-center align-items-center">
+                          <hr className="w-25" />
+                          <p className="mx-2">OR</p>
+                          <hr className="w-25" />
+                      </div>
 
-      {/* Đăng nhập */}
-      <div className="form-container sign-in">
-        <form onSubmit={(e) => handleLogin(e, email, password, setError, setIsLoading)}>
-          <h1>Sign In</h1>
-          <div className="social-icons">
-            <a href="#" className="icon">
-              <i className="fa-brands fa-google-plus-g"></i>
-            </a>
-            <a href="#" className="icon">
-              <i className="fa-brands fa-facebook-f"></i>
-            </a>
-          </div>
-          <span>or use your email password</span>
-          <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <a href="#">Forget Your Password?</a>
-          <button type="submit">Sign In</button>
-          {isLoading && (
-            <div className="loader-overlay">
-              <Oval
-                height={50}
-                width={50}
-                color="#4fa94d"
-                visible={true}
-                ariaLabel="oval-loading"
-                secondaryColor="#4fa94d"
-                strokeWidth={2}
-                strokeWidthSecondary={2}
-              />
-            </div>
-          )}
-          {!isLoading && error && <p style={{ color: "red" }}>{error}</p>}
-        </form>
-      </div>
+                      {/* // buton facebook, google */}
+                      <div className="d-flex justify-content-center gap-3 mt-3">
+                      <a href="#" className="icon btn btn-light border rounded p-3 d-flex align-items-center justify-content-center"
+                          style={{ width: "50px", height: "50px" }}>
+                          <i className="fa-brands fa-google text-danger fs-4"></i>
+                      </a>
+                      <a href="#" className="icon btn btn-light border rounded p-3 d-flex align-items-center justify-content-center"
+                          style={{ width: "50px", height: "50px" }}>
+                          <i className="fa-brands fa-facebook-f text-primary fs-4"></i>
+                      </a>
+                      </div>
 
-      {/* Toggle giữa Sign In / Sign Up */}
-      <div className="toggle-container">
-        <div className="toggle">
-          <div className="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of site features</p>
-            <button className="hidden" id="login">
-              Sign In
-            </button>
+
+
+                      <p className="login-forgot-password mt-3">Forgot your Password?</p>
+                      <div className="login-register-container d-flex justify-content-center">
+                          <p className="me-2">Don't have an account?</p>
+                          <button className="login-btn-secondary" onClick={() => setIsRegister(true)}>Register</button>
+                      </div>
+                  </div>
+              ) : (
+                  /* Register Section */
+                  <div className="w-100 w-md-50 px-3 px-md-5 text-center">
+                      <h2 className="font-bold text-2xl text-[#002D74] mt-3 mt-md-5">Register</h2>
+                      <br />
+                      <form className="d-flex flex-column align-items-center gap-3 gap-md-4">
+                          <input className="login-input-field w-100" type="text" name="fullname" placeholder="Full Name" />
+                          <input className="login-input-field w-100" type="email" name="email" placeholder="Email" />
+                          <input className="login-input-field w-100" type="password" name="password" placeholder="Password" />
+                          <button className="login-btn-primary mt-3 mt-md-5 w-100">Register</button>
+                      </form>
+                      <div className="login-divider d-flex justify-content-center align-items-center">
+                          <hr className="w-25" />
+                          <p className="mx-2">OR</p>
+                          <hr className="w-25" />
+                      </div>
+
+
+                      {/* buton facebook, google */}
+                      <div className="d-flex justify-content-center gap-3 mt-3">
+                      <a href="#" className="icon btn btn-light border rounded p-3 d-flex align-items-center justify-content-center"
+                          style={{ width: "50px", height: "50px" }}>
+                          <i className="fa-brands fa-google text-danger fs-4"></i>
+                      </a>
+                      <a href="#" className="icon btn btn-light border rounded p-3 d-flex align-items-center justify-content-center"
+                          style={{ width: "50px", height: "50px" }}>
+                          <i className="fa-brands fa-facebook-f text-primary fs-4"></i>
+                      </a>
+                      </div>
+
+
+                      <p className="login-forgot-password mt-3">Already have an account?</p>
+                      <div className="login-register-container d-flex justify-content-center">
+                          <button className="login-btn-secondary" onClick={() => setIsRegister(false)}>Log In</button>
+                      </div>
+                  </div>
+              )}
           </div>
-          <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
-            <p>Register with your personal details to use all of site features</p>
-            <button className="hidden" id="register">
-              Sign Up
-            </button>
-          </div>
-        </div>
       </div>
-    </div>
   );
 };
 

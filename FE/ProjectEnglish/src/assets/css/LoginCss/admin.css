@@ -1,22 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-
-
-
-body {
+/* Căn chỉnh toàn bộ trang đăng nhập admin */
+.admin-container {
     height: 100vh;
     margin: 0;
     display: grid;
     place-items: center;
     background: linear-gradient(to right, #e2e2e2, #c9d6ff);
-    ;
-  }
-  
-  * {
+}
+
+* {
     box-sizing: border-box;
-  }
-  
-  main {
+}
+
+/* Hộp chứa form đăng nhập */
+.admin-main {
     background: #f6f6f6;
     display: grid;
     grid-template-columns: 45% 55%;
@@ -24,33 +22,44 @@ body {
     width: 700px;
     border-radius: 20px;
     font-family: "Quicksand";
-  }
-  
-  .left-side {
+}
+
+.admin-image {
+    width: 100%; /* Ảnh lấp đầy div */
+    height: 100%;
+    object-fit: cover; /* Giữ tỉ lệ ảnh đẹp */
+    border-radius: 20px 0 0 20px;
+}
+
+/* Phần hình ảnh */
+.admin-left-side {
     height: 100%;
     width: 100%;
-    background-image: url('../../image/bear-bg.jpeg');
+    /* background-image: url('../../assets/image/bear-bg.jpg') */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     pointer-events: none;
     border-radius: 20px 0 0 20px;
-  }
-  
-  .right-side {
+}
+
+/* Phần form đăng nhập */
+.admin-right-side {
     padding: 60px;
-  }
-  
-  .btn-group {
+}
+
+/* Nhóm nút đăng nhập */
+.admin-btn-group {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 5px;
     margin-bottom: 32px;
-  }
-  
-  .btn {
+}
+
+/* Nút đăng nhập */
+.admin-btn {
     background-color: #f6f6f6;
     border: 2px solid #6b7280;
     border-radius: 5px;
@@ -63,58 +72,19 @@ body {
     padding: 8px 6px;
     transform: scale(1);
     cursor: pointer;
-  }
-  
-  .btn:focus {
+}
+
+.admin-btn:focus {
     transform: scale(0.97);
-  }
-  
-  .btn:hover {
+}
+
+.admin-btn:hover {
     background-color: #000;
     color: #eee;
-  }
-  
-  .btn img {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f6f6f6;
-    border-radius: 50%;
-    padding: 2px;
-  }
-  
-  .or {
-    position: relative;
-    text-align: center;
-    margin-bottom: 24px;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  
-  .or::before,
-  .or::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background: #000;
-  }
-  
-  .or::before {
-    left: 0;
-  }
-  
-  .or::after {
-    right: 0;
-  }
-  
-  input {
+}
+
+/* Hộp nhập thông tin */
+.admin-input {
     width: 100%;
     padding: 12px 20px;
     border: 2px solid #ccc;
@@ -125,18 +95,14 @@ body {
     font-size: 0.85rem;
     font-weight: 600;
     transition: all 0.5s;
-  }
-  
-  input:focus {
+}
+
+.admin-input:focus {
     border: 2px solid #000;
-  }
-  
-  label {
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  
-  .login-btn {
+}
+
+/* Nút đăng nhập */
+.admin-login-btn {
     width: 100%;
     background-color: #f6f6f6;
     border: 2px solid #6b7280;
@@ -147,28 +113,29 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.5s;
-  }
-  
-  .login-btn:hover {
+}
+
+.admin-login-btn:hover {
     background-color: #000;
     color: #eee;
-  }
-  
-  .links {
+}
+
+/* Link điều hướng */
+.admin-links {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
-  
-  a {
+}
+
+.admin-links a {
     color: #000;
     font-size: 0.88rem;
     font-weight: 600;
     letter-spacing: -1px;
     text-decoration: none;
     transition: all 0.4s ease;
-  }
-  
-  a:hover {
+}
+
+.admin-links a:hover {
     color: #0d85b9;
-  }
+}
