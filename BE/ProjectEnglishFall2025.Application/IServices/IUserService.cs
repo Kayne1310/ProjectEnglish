@@ -15,5 +15,7 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model);
         Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);
 
+        Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
+
     }
 }

@@ -219,10 +219,7 @@
           "System.IdentityModel.Tokens.Jwt": "7.1.2"
         },
         "runtime": {
-          "ProjectFall2025.Common.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "ProjectFall2025.Common.dll": {}
         }
       },
       "ProjectFall2025.Domain/1.0.0": {
@@ -230,10 +227,7 @@
           "MongoDB.Bson": "3.1.0"
         },
         "runtime": {
-          "ProjectFall2025.Domain.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "ProjectFall2025.Domain.dll": {}
         }
       }
     }

@@ -145,6 +145,20 @@ namespace ProjectEnglishFall2025.Controllers
             var result = await userService.RegisterWithGoogle(userModel);
             return Ok(result);
         }
+
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
+        {
+            try
+            {
+                var res = await userService.ChangePassword(request);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+               return BadRequest(ex.Message);
+            }
+        }
     }
 }
 
