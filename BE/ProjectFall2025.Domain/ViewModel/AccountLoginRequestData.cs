@@ -58,4 +58,13 @@ namespace ProjectFall2025.Domain.ViewModel
         public string ReturnMessage { get; set; }
 
     }
+
+    public class ChangePasswordRequest
+    {
+        public string Email { get; set; }
+
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+        public string reNewPassword { get; set; }
+    }
 }
