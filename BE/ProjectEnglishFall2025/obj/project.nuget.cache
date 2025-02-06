@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6e9B06zatCY=",
+  "dgSpecHash": "ZH6vrJqKlIU=",
   "success": true,
   "projectFilePath": "D:\\ProjectFall\\ProjectEnglish\\BE\\ProjectEnglishFall2025\\ProjectEnglishFall2025.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\Vanto\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\microsoft.aspnetcore.authentication.facebook\\8.0.12\\microsoft.aspnetcore.authentication.facebook.8.0.12.nupkg.sha512",
+    "C:\\Users\\Vanto\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\8.0.12\\microsoft.aspnetcore.authentication.google.8.0.12.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.11\\microsoft.aspnetcore.authentication.jwtbearer.8.0.11.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.1\\microsoft.extensions.configuration.abstractions.9.0.1.nupkg.sha512",

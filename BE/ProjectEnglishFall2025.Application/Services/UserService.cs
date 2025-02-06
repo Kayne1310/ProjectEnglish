@@ -133,5 +133,50 @@ namespace ProjectFall2025.Application.Services
                 };
             }
         }
+
+        public async Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model)
+        {
+            try
+            {
+                // Kiểm tra xem user đã tồn tại chưa (dựa trên FacebookId hoặc Email)
+                var existingUser = await repository.FindUserByGoogleId(model.GoogleId);
+                if (existingUser != null)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "User already exists."
+                    };
+                }
+
+                // Nếu chưa tồn tại, tạo tài khoản mới
+                var newUser = new User
+                {
+                    UserName = model.Name,
+                    Email = model.Email,
+                    GoogleId = model.GoogleId,
+                    Password = null,  // Không có mật khẩu
+                    role = "User",
+                    Exprired = DateTime.Now,
+                };
+
+                var result = await repository.addUser(newUser);
+
+
+                return new ReturnData
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "User registered successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ReturnData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = $"Error: {ex.Message}"
+                };
+            }
+        }
     }
 }

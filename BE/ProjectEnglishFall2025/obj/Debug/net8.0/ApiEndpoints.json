@@ -27,8 +27,28 @@
   },
   {
     "ContainingType": "ProjectEnglishFall2025.Controllers.AccountController",
+    "Method": "GoogleCallback",
+    "RelativePath": "api/Account/google-callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjectEnglishFall2025.Controllers.AccountController",
     "Method": "LoginWithFacebook",
     "RelativePath": "api/Account/login-facebook",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjectEnglishFall2025.Controllers.AccountController",
+    "Method": "LoginWithGoogle",
+    "RelativePath": "api/Account/login-google",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -89,8 +109,28 @@
   },
   {
     "ContainingType": "ProjectEnglishFall2025.Controllers.UserController",
+    "Method": "GoogleRegisterCallback",
+    "RelativePath": "api/User/GoogleRegisterCallback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjectEnglishFall2025.Controllers.UserController",
     "Method": "RegisterWithFacebook",
     "RelativePath": "api/User/RegisterWithFacebook",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjectEnglishFall2025.Controllers.UserController",
+    "Method": "RegisterWithGoogle",
+    "RelativePath": "api/User/RegisterWithGoogle",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

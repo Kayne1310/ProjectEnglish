@@ -33,6 +33,12 @@ namespace ProjectFall2025.Infrastructure.Repositories
             return res;
         }
 
+        public async Task<User> FindUserByGoogleId(string googleId)
+        {
+            return await dbContext.GetCollectionUser().Find(x => x.GoogleId == googleId).FirstOrDefaultAsync();
+            
+        }
+
         public async Task<User> findUserByUsername(string email)
         {
          var usercollection=dbContext.GetCollectionUser();

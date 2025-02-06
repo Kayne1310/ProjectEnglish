@@ -176,3 +176,4 @@ D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\Project
 D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ProjectEnglishFall2025.genruntimeconfig.cache
 D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025\obj\Debug\net8.0\ref\ProjectEnglishFall2025.dll
 D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Facebook.dll
+D:\ProjectFall\ProjectEnglish\BE\ProjectEnglishFall2025\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Google.dll

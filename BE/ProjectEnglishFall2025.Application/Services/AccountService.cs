@@ -62,23 +62,39 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public async Task<ReturnData> AccountLoginWithFb(string facebookId)
+        public async Task<LoginResponseData> AccountLoginWithFb(string facebookId)
         {
+            var returnData = new LoginResponseData();
             //find user by facebookId
             var user = await userRepository.FindUserByFacebookId(facebookId);
             if (user == null)
             {
-                return new ReturnData
-                {
-                    ReturnCode = -1,
-                    ReturnMessage = "User chua duoc dang ki."
-                };
+                returnData.ReturnCode= -1;
+                returnData.ReturnMessage ="User chua duoc dang ki";
+                return returnData;
             }
-            return new ReturnData
+            returnData.ReturnCode = 1;
+            returnData.ReturnMessage = "User dang ki thanh cong";
+            returnData.user=user;
+            return returnData;
+        }
+
+        public async Task<LoginResponseData> AccountLoginWithGg(string googleId)
+        {
+            var returnData = new LoginResponseData();
+
+            var user = await userRepository.FindUserByGoogleId(googleId);
+            if (user == null)
             {
-                ReturnCode = 1,
-                ReturnMessage = "Dang nhap thanh cong."
-            };
+                returnData.ReturnCode = -1;
+                returnData.ReturnMessage = "User chua duoc dang ki";
+                return returnData;
+               
+            }
+            returnData.ReturnCode = 1;
+            returnData.ReturnMessage = "User dang ki thanh cong";
+            returnData.user = user;
+            return returnData;
         }
 
         public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
