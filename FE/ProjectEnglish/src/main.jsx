@@ -5,16 +5,32 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css'
 
 import LoginUserPage from './pages/LoginAndRes/LoginUserPage.jsx';
 import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
+import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
+import ContactUs from './pages/HomePage/ContactUsPage.jsx';
+import HomePage from './pages/HomePage/HomePage.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App/>,
+    children: [
+      {
+        index: true,
+        element: <HomePage />
+      },
+      {
 
+        path: "/listquizz",
+        element: <ListQuizz />
+      },
+      {
+        path: "/contactus",
+        element: <ContactUs />
+      }
+    ]
   },
   {
     path: "/loginuser",
@@ -24,6 +40,7 @@ const router = createBrowserRouter([
     path: "/loginadmin",
     element: <LoginAdminPage />
   }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
