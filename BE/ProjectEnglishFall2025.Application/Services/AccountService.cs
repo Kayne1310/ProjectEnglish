@@ -16,11 +16,13 @@ namespace ProjectFall2025.Application.Services
     {
         private readonly IAcountRepository acountRepository;
         private readonly IMapper mapper;
+        private readonly IUserRepository userRepository;
 
-        public AccountService(IAcountRepository acountRepository,IMapper mapper)
+        public AccountService(IAcountRepository acountRepository,IMapper mapper,IUserRepository userRepository)
         {
             this.acountRepository = acountRepository;
             this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
         public async Task<LoginResponseData> AccountLogin(AccountLoginRequestData requestData)
@@ -58,6 +60,41 @@ namespace ProjectFall2025.Application.Services
             {
                 throw new Exception("Đã xảy ra lỗi khi đăng nhập.", ex);
             }
+        }
+
+        public async Task<LoginResponseData> AccountLoginWithFb(string facebookId)
+        {
+            var returnData = new LoginResponseData();
+            //find user by facebookId
+            var user = await userRepository.FindUserByFacebookId(facebookId);
+            if (user == null)
+            {
+                returnData.ReturnCode= -1;
+                returnData.ReturnMessage ="User chua duoc dang ki";
+                return returnData;
+            }
+            returnData.ReturnCode = 1;
+            returnData.ReturnMessage = "User dang ki thanh cong";
+            returnData.user=user;
+            return returnData;
+        }
+
+        public async Task<LoginResponseData> AccountLoginWithGg(string googleId)
+        {
+            var returnData = new LoginResponseData();
+
+            var user = await userRepository.FindUserByGoogleId(googleId);
+            if (user == null)
+            {
+                returnData.ReturnCode = -1;
+                returnData.ReturnMessage = "User chua duoc dang ki";
+                return returnData;
+               
+            }
+            returnData.ReturnCode = 1;
+            returnData.ReturnMessage = "User dang ki thanh cong";
+            returnData.user = user;
+            return returnData;
         }
 
         public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)

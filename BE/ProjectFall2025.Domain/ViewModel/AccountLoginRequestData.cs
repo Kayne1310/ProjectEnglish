@@ -21,6 +21,25 @@ namespace ProjectFall2025.Domain.ViewModel
 
     }
 
+
+    public class FacebookUserViewModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string FacebookId { get; set; }
+        public DateTime Exprired { get; set; }
+    }
+
+
+    public class GoogleUserViewModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string GoogleId { get; set; }
+        public DateTime Exprired { get; set; }
+    }
+
+
     public class Account_UpdateRefeshTokenRequestData
     {
         public ObjectId UserId { get; set; }
@@ -38,5 +57,14 @@ namespace ProjectFall2025.Domain.ViewModel
         public int ReturnCode { get; set; }
         public string ReturnMessage { get; set; }
 
+    }
+
+    public class ChangePasswordRequest
+    {
+        public string Email { get; set; }
+
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+        public string reNewPassword { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.VisualBasic;
+using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
 using System;
@@ -23,6 +24,28 @@ namespace ProjectFall2025.Infrastructure.Repositories
              var userCollection = dbContext.GetCollectionUser();
              await userCollection.InsertOneAsync(user);               
             return user;
+        }
+
+        public async Task<int> ChangePassword(User user)
+        {    
+            var update = Builders<User>.Update.Set(x => x.Password, user.Password);
+            var res=await dbContext.GetCollectionUser().UpdateOneAsync(x=>x.Email==user.Email,update);
+            return (int)res.ModifiedCount;
+
+        }
+
+        public async Task<User> FindUserByFacebookId(string facebookId)
+        {
+            var usercollection = dbContext.GetCollectionUser();
+
+            var res = await usercollection.Find(x => x.FacebookId == facebookId).FirstOrDefaultAsync();
+            return res;
+        }
+
+        public async Task<User> FindUserByGoogleId(string googleId)
+        {
+            return await dbContext.GetCollectionUser().Find(x => x.GoogleId == googleId).FirstOrDefaultAsync();
+            
         }
 
         public async Task<User> findUserByUsername(string email)

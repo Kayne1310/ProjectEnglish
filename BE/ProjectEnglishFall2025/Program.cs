@@ -16,6 +16,10 @@ using FluentValidation.AspNetCore;
 using System.Text;
 using ProjectFall2025.Domain.ViewModel;
 using ProjectFall2025.Common.ValidateData;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace ProjectEnglishFall2025
 {
@@ -60,6 +64,34 @@ namespace ProjectEnglishFall2025
                 };
             });
 
+            //login with facebook and gooogle
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            })
+               .AddCookie()
+               .AddFacebook(facebookOptions =>
+               {
+                   facebookOptions.AppId = builder.Configuration["Facebook:AppId"];
+                   facebookOptions.AppSecret = builder.Configuration["Facebook:AppSecret"];
+                   facebookOptions.SaveTokens = true;
+                   facebookOptions.Scope.Add("email");
+                   facebookOptions.Scope.Add("public_profile");
+                   facebookOptions.Fields.Add("email");
+                   facebookOptions.Fields.Add("name");
+                   facebookOptions.CallbackPath = "/api/LoginWithFb";
+               })
+             
+               .AddGoogle(options =>
+               {
+                 
+                   options.ClientId = builder.Configuration["Google:ClientId"];
+                   options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+                   options.CallbackPath = "/api/signin-google";
+         
+               });
+
             //redis
             builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
              ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"]));
@@ -93,7 +125,7 @@ namespace ProjectEnglishFall2025
                                       policy.WithOrigins("http://localhost:5173") // Đúng địa chỉ FE
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
-                                            .AllowCredentials(); 
+                                            .AllowCredentials();
                                   });
             });
 

@@ -1,8 +1,14 @@
+
 ﻿using Microsoft.AspNetCore.Authorization;
+
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Application.Services;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel;
@@ -10,6 +16,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -52,7 +61,7 @@ namespace ProjectEnglishFall2025.Controllers
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.PrimarySid, user.UserID.ToString()),
                     new Claim(ClaimTypes.Role,user.role),
-                    
+
                 };
                 var newtoken = CreateToken(authClaims);
 
@@ -102,7 +111,7 @@ namespace ProjectEnglishFall2025.Controllers
                     isSueAt = DateTime.UtcNow, // Set issue date to current time
                     expriresAt = refreshtokenExprired,
                     isRevoked = "false",
-                
+
                 };
 
                 await userSessionService.addUserSession(userSession);
@@ -139,14 +148,14 @@ namespace ProjectEnglishFall2025.Controllers
                 await redisService.DeleteKeyAsync(redisKeyRefreshToken);
 
                 // (Tùy chọn) Cập nhật trạng thái session trong MongoDB
-                if(request.UserId==null)
+                if (request.UserId == null)
                 {
                     response.ReturnCode = -1;
                     response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                     return StatusCode(500, response);
 
                 }
-                    await userSessionService.removeUserSession(new LogoutRequest { UserId=request.UserId});
+                await userSessionService.removeUserSession(new LogoutRequest { UserId = request.UserId });
 
                 response.ReturnCode = 1;
                 response.ReturnMessage = "Đăng xuất thành công.";
@@ -159,6 +168,191 @@ namespace ProjectEnglishFall2025.Controllers
                 return StatusCode(500, response);
             }
         }
+
+        [HttpGet("login-facebook")]
+        public IActionResult LoginWithFacebook()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/api/account/facebook-callback" };
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("facebook-callback")]
+        public async Task<IActionResult> FacebookCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Facebook authentication failed.");
+
+
+            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var facebookId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            //check tk fb da duoc tao chua
+            var validAcount = await acountService.AccountLoginWithFb(facebookId);
+            if (validAcount.ReturnCode < 0)
+            {
+                return Ok(validAcount);
+            }
+
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Unable to get email from Facebook");
+
+            // Tạo access token
+            var authClaims = new List<Claim> {
+            new Claim(ClaimTypes.Name, name),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.NameIdentifier, facebookId),
+            new Claim(ClaimTypes.Role,"User"),
+            new Claim(ClaimTypes.PrimarySid, validAcount.user.UserID.ToString()),
+        };
+            var newToken = CreateToken(authClaims);
+
+            //buoc 2.3 tao refresh token
+            var exprired = Convert.ToInt32(configuration["JWT:RefreshTokenValidityInDays"]);
+            var refreshtokenExprired = DateTime.Now.AddDays(exprired);
+
+            var refreshtoken = GenerateRefreshToken();
+            var req = new Account_UpdateRefeshTokenRequestData
+            {
+                Exprired = refreshtokenExprired,
+                RefeshToken = refreshtoken,
+                UserId = validAcount.user.UserID,
+
+            };
+
+            // Lưu vào Redis
+            var redisKeyAccessToken = $"user:{validAcount.user.UserID}:accessToken";
+            var redisKeyRefreshToken = $"user:{validAcount.user.UserID}:refreshToken";
+
+            await redisService.SetValueAsync(redisKeyAccessToken, new JwtSecurityTokenHandler().WriteToken(newToken),
+                TimeSpan.FromMinutes(Convert.ToDouble(configuration["Redis:DefaultExpiryMinutes"])));
+
+            await redisService.SetValueAsync(
+                  redisKeyRefreshToken,
+                  refreshtoken,
+                  TimeSpan.FromDays(exprired)
+              );
+
+
+
+            var userSession = new UserSession
+            {
+
+                token = new JwtSecurityTokenHandler().WriteToken(newToken),
+                UserId = validAcount.user.UserID,
+                isSueAt = DateTime.UtcNow, // Set issue date to current time
+                expriresAt = refreshtokenExprired,
+                isRevoked = "false",
+
+            };
+
+            await userSessionService.addUserSession(userSession);
+            await acountService.Account_UpdateRefeshToken(req);
+
+            var returnData = new LoginResponseData();
+            returnData.ReturnMessage = "Login Sucessful";
+            returnData.ReturnCode = 1;
+            returnData.token = new JwtSecurityTokenHandler().WriteToken(newToken);
+            return Ok(returnData);
+        }
+
+
+        //login gooogle 
+
+        [HttpGet("login-google")]
+        public IActionResult LoginWithGoogle()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/api/account/google-callback" };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Google authentication failed.");
+
+            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var googleId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Unable to get email from Google");
+
+            //    Kiểm tra tài khoản Google đã được tạo hay chưa
+            var validAccount = await acountService.AccountLoginWithGg(googleId);
+            if (validAccount.ReturnCode < 0)
+            {
+                return Ok(validAccount);
+            }
+
+            var exprired = Convert.ToInt32(configuration["JWT:RefreshTokenValidityInDays"]);
+            var refreshtokenExprired = DateTime.Now.AddDays(exprired);
+
+            var refreshtoken = GenerateRefreshToken();
+            var req = new Account_UpdateRefeshTokenRequestData
+            {
+                Exprired = refreshtokenExprired,
+                RefeshToken = refreshtoken,
+                UserId = validAccount.user.UserID,
+
+            };
+            await acountService.Account_UpdateRefeshToken(req);
+            // Tạo JWT token
+            var authClaims = new List<Claim> {
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.NameIdentifier, googleId),
+                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.PrimarySid, validAccount.user.UserID.ToString()),
+            };
+
+            var newToken = CreateToken(authClaims);
+
+            // Lưu token vào Redis
+            var redisKeyAccessToken = $"user:{validAccount.user.UserID}:accessToken";
+            var redisKeyRefreshToken = $"user:{validAccount.user.UserID}:refreshToken";
+            await redisService.SetValueAsync(redisKeyAccessToken, new JwtSecurityTokenHandler().WriteToken(newToken),
+                TimeSpan.FromMinutes(Convert.ToDouble(configuration["Redis:DefaultExpiryMinutes"])));
+
+            await redisService.SetValueAsync(
+            redisKeyRefreshToken,
+            refreshtoken,
+            TimeSpan.FromDays(exprired)
+        );
+
+
+            var userSession = new UserSession
+            {
+
+                token = new JwtSecurityTokenHandler().WriteToken(newToken),
+                UserId = validAccount.user.UserID,
+                isSueAt = DateTime.UtcNow, // Set issue date to current time
+                expriresAt = refreshtokenExprired,
+                isRevoked = "false",
+
+            };
+
+            await userSessionService.addUserSession(userSession);
+
+            // Tạo phản hồi trả về
+            var returnData = new LoginResponseData
+            {
+                ReturnMessage = "Login Successful",
+                ReturnCode = 1,
+                token = new JwtSecurityTokenHandler().WriteToken(newToken)
+            };
+
+            return Ok(returnData);
+        }
+
 
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
