@@ -1331,19 +1331,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC\\.nuget\\packages\\": {}
+    "C:\\Users\\Giang\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
+      "projectUniqueName": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
       "projectName": "ProjectFall2025.Application",
-      "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
-      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectEnglishFall2025.Application\\obj\\",
+      "projectPath": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\ProjectFall2025.Application.csproj",
+      "packagesPath": "C:\\Users\\Giang\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectEnglishFall2025.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Giang\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1357,14 +1357,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
+            "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj": {
+              "projectPath": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Common\\ProjectFall2025.Common.csproj"
             },
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
+            "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj": {
+              "projectPath": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Domain\\ProjectFall2025.Domain.csproj"
             },
-            "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
-              "projectPath": "G:\\Hoc Web API\\ProjectEnglishFall2025\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
+            "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\Giang\\source\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj"
             }
           }
         }
