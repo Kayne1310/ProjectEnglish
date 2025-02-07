@@ -13,6 +13,7 @@
     transition: all 0.2s;
 }
 
+
 @media (max-width: 768px) {
     .navbar-toggler {
         display: block;
@@ -31,3 +32,80 @@
         text-align: center;
     }
 }
+
+.navbar-nav .nav-link {
+    transition: color 0.3s ease-in-out;
+    /* Hiệu ứng mượt mà */
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus,
+.navbar-nav .nav-link.active {
+    color: #ff5733 !important;
+    /* Đổi màu khi hover hoặc active */
+}
+
+.quote_btn-container a {
+    text-decoration: none;
+    color: #22231b;
+    /* Màu mặc định */
+    transition: color 0.3s ease-in-out;
+}
+
+.quote_btn-container a:hover {
+    color: #ff5733;
+    /* Màu khi hover */
+}
+
+/* Dropdown */
+.custom-dropdown {
+    display: inline-block !important;
+    padding: 10px 15px !important;
+    background-color: #f89646 !important;
+    color: #ffffff !important;
+    border-radius: 10 !important;
+    font-weight: bold !important;
+    border: 1px solid #f89646 !important;
+    transition: all 0.2s !important;
+}
+
+.custom-dropdown:hover {
+    background-color: transparent !important;
+    color: #f89646 !important;
+    border: 1px solid #f89646 !important;
+}
+
+.custom-dropdown-menu {
+    background-color: #ffffff !important;
+    border: none !important;
+    padding: 5px 0 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-dropdown-item {
+
+    padding: 10px 15px !important;
+    color: #f89646 !important;
+    background-color: #fff !important;
+    border: none !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.custom-dropdown-item:hover {
+    background-color: #f89646 !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+.no-link-style {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+.no-link-style:hover {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+
+
+

@@ -3,6 +3,8 @@ import "../../assets/css/LoginCss/admin.css"; // Import file CSS của bạn
 const LoginAdminPage=()=>{
     return (
         <>
+         <div className="login-admin">
+  
            <main>
         <div className="left-side"></div>
         <div className="right-side">
@@ -24,7 +26,7 @@ const LoginAdminPage=()=>{
           </form>
         </div>
       </main>
-
+      </div>
         </>
     )
 }
