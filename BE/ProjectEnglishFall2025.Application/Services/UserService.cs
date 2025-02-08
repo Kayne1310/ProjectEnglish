@@ -95,7 +95,7 @@ namespace ProjectFall2025.Application.Services
             }
 
             //check newpass and renewpass 
-            if (changePassword.reNewPassword != changePassword.reNewPassword)
+            if (changePassword.newPassword != changePassword.reNewPassword)
             {
                 return new ReturnData
                 {
@@ -124,6 +124,24 @@ namespace ProjectFall2025.Application.Services
                 ReturnMessage = "Change Password Succesfull! ",
             };
 
+        }
+
+        public async Task<ReturnData> FindUserbyEmail(string email)
+        {
+            var res=await repository.findUserByUsername(email);
+            if (res == null)
+            {
+                return new ReturnData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = "email not found"
+                };
+            }
+            return new ReturnData
+            {
+                ReturnCode = 1,
+                ReturnMessage = "email exist"
+            };
         }
 
         public async Task<List<UserVM>> getAllUser()

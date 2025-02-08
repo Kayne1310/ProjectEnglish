@@ -17,5 +17,7 @@ namespace ProjectFall2025.Application.IServices
 
         Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
 
+        Task<ReturnData> FindUserbyEmail(string email);
+
     }
 }

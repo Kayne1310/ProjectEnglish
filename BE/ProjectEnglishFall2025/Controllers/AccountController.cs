@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -25,13 +26,19 @@ namespace ProjectEnglishFall2025.Controllers
         private readonly IConfiguration configuration;
         private readonly IRedisService redisService;
         private readonly IUserSessionService userSessionService;
+        private readonly IEmailService emailService;
+        private readonly IUserService userService;
 
-        public AccountController(IAcountService acountService, IConfiguration configuration, IRedisService redisService, IUserSessionService userSessionService)
+        public AccountController(IAcountService acountService, IConfiguration configuration,
+            IRedisService redisService, IUserSessionService userSessionService,
+            IEmailService emailService, IUserService userService)
         {
             this.acountService = acountService;
             this.configuration = configuration;
             this.redisService = redisService;
             this.userSessionService = userSessionService;
+            this.emailService = emailService;
+            this.userService = userService;
         }
         [HttpPost]
         public async Task<ActionResult> AccountLogin(AccountLoginRequestData requestData)
@@ -350,6 +357,50 @@ namespace ProjectEnglishFall2025.Controllers
 
 
 
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            try
+            {
+
+                var user = await userService.FindUserbyEmail(request.Email);
+                if (user.ReturnCode == -1)
+                    return Ok("Người dùng không tồn tại");
+
+                var token = GenerateRefreshToken();
+                await emailService.SendPasswordResetEmailAsync(request.Email, token);
+
+                return Ok(new ReturnData
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "Da Send Email"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        //// API đặt lại mật khẩu
+        //[HttpPost("reset-password")]
+        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        //{
+        //    var user = await userService.FindUserbyEmail(request.Email);
+        //    if (user == null)
+        //        return BadRequest("Người dùng không tồn tại");
+
+        //    var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        //    if (!resetResult.Succeeded)
+        //        return BadRequest(resetResult.Errors);
+
+        //    return Ok("Mật khẩu đã được đặt lại thành công.");
+        //}
+
+
+
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
@@ -365,6 +416,10 @@ namespace ProjectEnglishFall2025.Controllers
 
             return token;
         }
+
+
+
+
 
         private static string GenerateRefreshToken()
         {
