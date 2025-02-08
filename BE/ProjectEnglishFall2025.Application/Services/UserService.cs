@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Org.BouncyCastle.Asn1.Ocsp;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
@@ -208,6 +209,7 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
+        
         public async Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model)
         {
             try
@@ -233,6 +235,7 @@ namespace ProjectFall2025.Application.Services
                     Password = null,  // Không có mật khẩu
                     role = "User",
                     Exprired = DateTime.Now,
+                    Picture=model.PictureUrl,
                 };
 
                 var result = await repository.addUser(newUser);
@@ -252,6 +255,28 @@ namespace ProjectFall2025.Application.Services
                     ReturnMessage = $"Error: {ex.Message}"
                 };
             }
+        }
+
+        public async Task<ReturnData> ResetPassword(ResetPasswordRequest resetPassword)
+        {
+            var user = await repository.findUserByUsername(resetPassword.Email);
+            if (user == null)
+                return new ReturnData { ReturnCode = -1, ReturnMessage = "Người dùng không tồn tại" };
+
+            // Kiểm tra token reset mật khẩu có hợp lệ không
+            if (user.ResetPasswordToken != resetPassword.Token || user.ResetTokenExpiry < DateTime.Now)
+                return new ReturnData { ReturnCode = -1, ReturnMessage = "Token không hợp lệ hoặc đã hết hạn" };
+
+            // Hash mật khẩu mới
+            user.Password = Security.ComputeSha256Hash(resetPassword.NewPassword);
+            user.ResetPasswordToken = null;
+            user.ResetTokenExpiry = null;// Xóa token sau khi reset
+
+            var isUpdated = await repository.ChangePassword(user);
+            if (isUpdated <=0)
+                return new ReturnData { ReturnCode = -1, ReturnMessage = "Lỗi khi cập nhật mật khẩu" };
+
+            return new ReturnData { ReturnCode = 1, ReturnMessage = "Mật khẩu đã được đặt lại thành công" };
         }
     }
 }

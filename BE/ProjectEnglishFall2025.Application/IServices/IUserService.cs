@@ -16,6 +16,8 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);
 
         Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
+        Task<ReturnData> ResetPassword(ResetPasswordRequest resetPassword);
+
 
         Task<ReturnData> FindUserbyEmail(string email);
 

@@ -13,10 +13,13 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
             }, 1000);
         } else {
             console.log(response);
+            // Lưu trạng thái đăng nhập vào localStorage
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("user", JSON.stringify(response.data));
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/"; // Redirect after successful login
-            }, 1000); // Hide loader after 2 seconds
+            }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
@@ -31,8 +34,11 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
     setError("");
     setIsLoading(true);
     setIsRegisterSuccess(false); 
+
+    console.log("Registering user:", { name, email, password });
     try {
         const response = await authService.register(name, email, password);
+        console.log("API Response:", response); 
         if (response.returnCode == -1) {
             setError(`Register failed. ${response.returnMessage}`);
             setTimeout(() => {
@@ -55,3 +61,64 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
         }, 1000);
     }
 };
+
+export const handerGoogleRegister = async (response, setError, setIsLoading, setIsRegisterSuccess) => {
+    setError("");
+    setIsLoading(true);
+    setIsRegisterSuccess(false); 
+
+    try {
+        const apiResponse = await authService.GoogleRegister(response.access_token);
+        console.log("API Response:", apiResponse); 
+        if (apiResponse.returnCode == -1) {
+            setError(`Register failed. ${apiResponse.returnMessage}`);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+        }
+         else if (apiResponse.returnCode == 1) {
+            setTimeout(() => {
+                setIsLoading(false);
+                setIsRegisterSuccess(true);
+            }, 1000); // Hide loader after 1 seconds
+        }
+    } catch (err) {
+        setError(`Register failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+
+    
+}
+
+export const handleGoogleLogin = async (response, setError, setIsLoading) => {
+    setError("");
+    setIsLoading(true);
+  
+
+    try {
+        const apiResponse = await authService.googleLogin(response.access_token);
+        console.log("API Response:", apiResponse); 
+        if (apiResponse.returnCode == -1) {
+            setError(`Register failed. ${apiResponse.returnMessage}`);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+        }
+
+         else if (apiResponse.returnCode == 1) {
+            setTimeout(() => {
+                setIsLoading(false);
+                window.location.href = "/";
+            }, 1000); // Hide loader after 1 seconds
+        }
+    } catch (err) {
+        setError(`Register failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+
+    
+}

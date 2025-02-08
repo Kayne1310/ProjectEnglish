@@ -263,99 +263,85 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
 
-        //login gooogle 
-
-        [HttpGet("login-google")]
-        public IActionResult LoginWithGoogle()
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin(GoogleUserViewModel model)
         {
-            var properties = new AuthenticationProperties { RedirectUri = "/api/account/google-callback" };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-        }
 
-        [HttpGet("google-callback")]
-        public async Task<IActionResult> GoogleCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            if (!authenticateResult.Succeeded)
-                return BadRequest("Google authentication failed.");
-
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var googleId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(email))
-                return BadRequest("Unable to get email from Google");
-
-            //    Kiểm tra tài khoản Google đã được tạo hay chưa
-            var validAccount = await acountService.AccountLoginWithGg(googleId);
-            if (validAccount.ReturnCode < 0)
+            try
             {
-                return Ok(validAccount);
-            }
+                //    Kiểm tra tài khoản Google đã được tạo hay chưa
+                var validAccount = await acountService.AccountLoginWithGg(model.GoogleId);
+                if (validAccount.ReturnCode < 0)
+                {
+                    return Ok(validAccount);
+                }
 
-            var exprired = Convert.ToInt32(configuration["JWT:RefreshTokenValidityInDays"]);
-            var refreshtokenExprired = DateTime.Now.AddDays(exprired);
+                var exprired = Convert.ToInt32(configuration["JWT:RefreshTokenValidityInDays"]);
+                var refreshtokenExprired = DateTime.Now.AddDays(exprired);
 
-            var refreshtoken = GenerateRefreshToken();
-            var req = new Account_UpdateRefeshTokenRequestData
-            {
-                Exprired = refreshtokenExprired,
-                RefeshToken = refreshtoken,
-                UserId = validAccount.user.UserID,
+                var refreshtoken = GenerateRefreshToken();
+                var req = new Account_UpdateRefeshTokenRequestData
+                {
+                    Exprired = refreshtokenExprired,
+                    RefeshToken = refreshtoken,
+                    UserId = validAccount.user.UserID,
 
-            };
-            await acountService.Account_UpdateRefeshToken(req);
-            // Tạo JWT token
-            var authClaims = new List<Claim> {
-                new Claim(ClaimTypes.Name, name),
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.NameIdentifier, googleId),
+                };
+                await acountService.Account_UpdateRefeshToken(req);
+                // Tạo JWT token
+                var authClaims = new List<Claim> {
+                new Claim(ClaimTypes.Name, model.Name),
+                new Claim(ClaimTypes.Email, model.Email),
+                new Claim(ClaimTypes.NameIdentifier, model.GoogleId),
                 new Claim(ClaimTypes.Role, "User"),
                 new Claim(ClaimTypes.PrimarySid, validAccount.user.UserID.ToString()),
             };
 
-            var newToken = CreateToken(authClaims);
+                var newToken = CreateToken(authClaims);
 
-            // Lưu token vào Redis
-            var redisKeyAccessToken = $"user:{validAccount.user.UserID}:accessToken";
-            var redisKeyRefreshToken = $"user:{validAccount.user.UserID}:refreshToken";
-            await redisService.SetValueAsync(redisKeyAccessToken, new JwtSecurityTokenHandler().WriteToken(newToken),
-                TimeSpan.FromMinutes(Convert.ToDouble(configuration["Redis:DefaultExpiryMinutes"])));
+                // Lưu token vào Redis
+                var redisKeyAccessToken = $"user:{validAccount.user.UserID}:accessToken";
+                var redisKeyRefreshToken = $"user:{validAccount.user.UserID}:refreshToken";
+                await redisService.SetValueAsync(redisKeyAccessToken, new JwtSecurityTokenHandler().WriteToken(newToken),
+                    TimeSpan.FromMinutes(Convert.ToDouble(configuration["Redis:DefaultExpiryMinutes"])));
 
-            await redisService.SetValueAsync(
-            redisKeyRefreshToken,
-            refreshtoken,
-            TimeSpan.FromDays(exprired)
-        );
+                await redisService.SetValueAsync(
+                redisKeyRefreshToken,
+                refreshtoken,
+                TimeSpan.FromDays(exprired)
+            );
 
 
-            var userSession = new UserSession
+                var userSession = new UserSession
+                {
+
+                    token = new JwtSecurityTokenHandler().WriteToken(newToken),
+                    UserId = validAccount.user.UserID,
+                    isSueAt = DateTime.UtcNow, // Set issue date to current time
+                    expriresAt = refreshtokenExprired,
+                    isRevoked = "false",
+
+                };
+
+                await userSessionService.addUserSession(userSession);
+
+                // Tạo phản hồi trả về
+                var returnData = new LoginResponseData
+                {
+                    ReturnMessage = "Login Successful",
+                    ReturnCode = 1,
+                    token = new JwtSecurityTokenHandler().WriteToken(newToken)
+                };
+
+                return Ok(returnData);
+            }
+            catch (Exception ex)
             {
-
-                token = new JwtSecurityTokenHandler().WriteToken(newToken),
-                UserId = validAccount.user.UserID,
-                isSueAt = DateTime.UtcNow, // Set issue date to current time
-                expriresAt = refreshtokenExprired,
-                isRevoked = "false",
-
-            };
-
-            await userSessionService.addUserSession(userSession);
-
-            // Tạo phản hồi trả về
-            var returnData = new LoginResponseData
-            {
-                ReturnMessage = "Login Successful",
-                ReturnCode = 1,
-                token = new JwtSecurityTokenHandler().WriteToken(newToken)
-            };
-
-            return Ok(returnData);
+                return BadRequest(ex.Message);
+            }
+         
+         
         }
-
-
 
 
         [HttpPost("forgot-password")]
@@ -369,6 +355,8 @@ namespace ProjectEnglishFall2025.Controllers
                     return Ok("Người dùng không tồn tại");
 
                 var token = GenerateRefreshToken();
+                
+
                 await emailService.SendPasswordResetEmailAsync(request.Email, token);
 
                 return Ok(new ReturnData
@@ -384,20 +372,22 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-        //// API đặt lại mật khẩu
-        //[HttpPost("reset-password")]
-        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-        //{
-        //    var user = await userService.FindUserbyEmail(request.Email);
-        //    if (user == null)
-        //        return BadRequest("Người dùng không tồn tại");
+        // API đặt lại mật khẩu
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            try
+            {
+              var res=  await userService.ResetPassword(request);
+                return Ok(res);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
 
-        //    var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
-        //    if (!resetResult.Succeeded)
-        //        return BadRequest(resetResult.Errors);
 
-        //    return Ok("Mật khẩu đã được đặt lại thành công.");
-        //}
+            }
+        }
 
 
 

@@ -15,6 +15,12 @@ export default defineConfig({
       }
     }
   },
+  css: {
+    devSourcemap: false, // Tắt source map CSS
+  },
+  build: {
+    sourcemap: false, // Disable source maps in production
+  }
 })
 
 

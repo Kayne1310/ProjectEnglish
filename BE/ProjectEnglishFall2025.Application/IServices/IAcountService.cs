@@ -15,6 +15,8 @@ namespace ProjectFall2025.Application.IServices
         Task<LoginResponseData> AccountLoginWithGg(string googleId);
         Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData);
 
+        Task<ReturnData> UpdateTokenReset();
+
 
 
 
