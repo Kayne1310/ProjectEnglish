@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "set HTTPS=true&& set SSL_CRT_FILE=./certs/cert.crt&& set SSL_KEY_FILE=./certs/cert.key&& react-scripts start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "install": "^0.13.0",
@@ -22,6 +24,7 @@
     "react-loading": "^2.0.3",
     "react-router": "6.28.0",
     "react-router-dom": "^7.1.4",
+    "reactjs-social-login": "^2.6.3",
     "sass": "^1.83.4"
   },
   "devDependencies": {

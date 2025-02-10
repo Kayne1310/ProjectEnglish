@@ -19,7 +19,9 @@ namespace ProjectFall2025.Infrastructure.Repositories
         Task<User> FindUserByFacebookId(string facebookId);
         Task<User> FindUserByGoogleId(string googleId);
 
-        Task<int > ChangePassword(User user);
+        Task<int> ChangePassword(User user);
+
+        Task<int> UpdateTokenResetPassword(User user);
 
     }
 }

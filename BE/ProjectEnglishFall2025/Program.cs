@@ -82,14 +82,14 @@ namespace ProjectEnglishFall2025
                    facebookOptions.Fields.Add("name");
                    facebookOptions.CallbackPath = "/api/LoginWithFb";
                })
-             
+
                .AddGoogle(options =>
                {
-                 
+
                    options.ClientId = builder.Configuration["Google:ClientId"];
                    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
                    options.CallbackPath = "/api/signin-google";
-         
+
                });
 
             //redis
@@ -113,6 +113,12 @@ namespace ProjectEnglishFall2025
             builder.Services.AddFluentValidationAutoValidation();
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
+
+            //email
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailService, EmailService>();
+ 
+
 
             //cors
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

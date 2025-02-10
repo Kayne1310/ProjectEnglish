@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/FE/ProjectEnglish",
+            "sourceMapPathOverrides": {
+                "webpack://src/*": "${webRoot}/src/*",
+                "http://localhost:5173/src/*": "${webRoot}/src/*"
+            }
+        }
+    ]
+}
