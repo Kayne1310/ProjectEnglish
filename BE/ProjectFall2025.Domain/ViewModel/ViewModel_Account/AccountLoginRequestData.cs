@@ -6,20 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Domain.ViewModel
+namespace ProjectFall2025.Domain.ViewModel.ViewModel_Account
 {
     public class AccountLoginRequestData
     {
-
         public string Email { get; set; }
-
         public string Password { get; set; }
     }
 
     public class AccountLogOutRequestData
     {
         public string Token { get; set; }
-
     }
 
 

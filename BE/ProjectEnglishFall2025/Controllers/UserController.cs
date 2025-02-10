@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using ProjectFall2025.Domain.ViewModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 
 namespace ProjectEnglishFall2025.Controllers
 {

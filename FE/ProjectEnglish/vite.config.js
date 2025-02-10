@@ -7,10 +7,9 @@ import fs from 'fs'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // https: {
-    //   key: fs.readFileSync('./certs/cert.key'),
-    //   cert: fs.readFileSync('./certs/cert.crt'),
-    // },
+    // port: 5173, // Đổi thành port bạn muốn
+    // strictPort: true, // Nếu port bị chiếm, Vite sẽ báo lỗi thay vì đổi sang port khác
+
     proxy: {
       '/api': {
         target: 'https://localhost:7048',
@@ -25,6 +24,7 @@ export default defineConfig({
   build: {
     sourcemap: false, // Disable source maps in production
   }
+  
 })
 
 

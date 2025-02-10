@@ -8,7 +8,7 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
