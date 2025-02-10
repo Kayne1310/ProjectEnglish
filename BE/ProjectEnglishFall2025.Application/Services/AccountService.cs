@@ -2,8 +2,8 @@
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
-using ProjectFall2025.Infrastructure.Repositories;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
+using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;

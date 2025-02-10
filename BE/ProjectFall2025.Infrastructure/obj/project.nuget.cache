@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "qT8jfnPKw/4=",
+  "dgSpecHash": "WRh25OBrg2A=",
   "success": true,
   "projectFilePath": "C:\\Users\\Vanto\\Source\\Repos\\ProjectEnglish\\BE\\ProjectFall2025.Infrastructure\\ProjectFall2025.Infrastructure.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Vanto\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\Vanto\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",

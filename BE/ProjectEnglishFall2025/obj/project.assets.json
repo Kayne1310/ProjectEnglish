@@ -664,6 +664,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "AutoMapper": "13.0.1",
           "Microsoft.Extensions.Options": "6.0.0",
           "MongoDB.Driver": "3.1.0",
           "ProjectFall2025.Common": "1.0.0",
