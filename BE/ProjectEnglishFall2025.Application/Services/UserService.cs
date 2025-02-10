@@ -188,6 +188,7 @@ namespace ProjectFall2025.Application.Services
                     Password = null,  // Không có mật khẩu
                     role = "User",
                     Exprired = DateTime.Now,
+                    Picture=model.PictureUrl,
                 };
 
                 var result = await repository.addUser(newUser);

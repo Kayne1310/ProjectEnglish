@@ -42,49 +42,7 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
         }
-        [HttpGet("RegisterWithFacebook")]
-        public IActionResult RegisterWithFacebook()
-        {
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = "/api/User/FacebookRegisterCallback"
-             
-            };
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
-
-        [HttpGet("FacebookRegisterCallback")]
-        public async Task<IActionResult> FacebookRegisterCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded)
-            {
-                return BadRequest("Facebook authentication failed.");
-            }
-
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var facebookId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(facebookId))
-            {
-                return BadRequest("Unable to get user information from Facebook.");
-            }
-
-        
-            var userModel = new FacebookUserViewModel
-            {
-                Name = name,
-                Email = email,
-                FacebookId = facebookId,
-                
-            };
-
-            var result = await userService.RegisterWithFacebook(userModel);
-            return Ok(result);
-        }
-
+   
         [HttpGet]
         [Authorize("User")]
         public async Task<ActionResult> getAllUser()
@@ -119,6 +77,24 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(e.Message);
             }
             
+        }
+
+        [HttpPost("FacebookRegister")]
+        public async Task<IActionResult> FacebookRegister(FacebookUserViewModel facebookUserViewModel)
+        {
+            try
+            {
+
+                var result = await userService.RegisterWithFacebook(facebookUserViewModel);
+
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpPost("ChangePassword")]

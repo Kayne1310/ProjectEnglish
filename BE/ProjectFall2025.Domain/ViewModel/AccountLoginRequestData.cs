@@ -28,7 +28,7 @@ namespace ProjectFall2025.Domain.ViewModel
         public string Name { get; set; }
         public string Email { get; set; }
         public string FacebookId { get; set; }
-        public DateTime Exprired { get; set; }
+        public string PictureUrl { get; set; }
     }
 
 

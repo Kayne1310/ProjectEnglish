@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
+import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
 
@@ -24,6 +24,10 @@ const Login = () => {
             setError("Google login failed.");
         },
     });
+    const HandleFacebookLogin = async ({ data }) => {
+      await handleFacebookLogin(data, setError, setIsLoading);
+    };
+
 
     return (
         <AuthForm
@@ -40,6 +44,7 @@ const Login = () => {
             toggleLink="/registeruser"
             toggleLinkText="Sign Up"
             showSignUp={false}
+            facebookLogin={HandleFacebookLogin }
         />
     );
 };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
-import { handerRegister,handerGoogleRegister } from "../../../helpers/authHandlers";
+import { handerRegister,handerGoogleRegister, FacebookRegister } from "../../../helpers/authHandlers";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -38,6 +38,11 @@ const Register = () => {
         },
     });
 
+      const hanleFacebookRegister = async ({ data }) => {
+          await FacebookRegister(data, setError, setIsLoading,setIsRegisterSuccess);
+        };
+    
+
     return (
         <AuthForm
             title="Create Account"
@@ -56,6 +61,7 @@ const Register = () => {
             toggleLink="/loginuser"
             toggleLinkText="Sign In"
             showSignUp={true}
+            facebookLogin={hanleFacebookRegister }
         />
     );
 };

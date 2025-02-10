@@ -47,6 +47,7 @@ const LoginUserPage = () => {
                         <div className="social-icons" style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "10px" }}>
                             <Link to="#" className="icon" onClick={handleGoogleLogin} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#db4437", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-google"></i>
+                              
                             </Link>
                             <Link to="#" className="icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#3b5998", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-facebook-f"></i>

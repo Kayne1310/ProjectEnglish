@@ -66,6 +66,8 @@ const GoogleRegister = async (accessToken) => {
             Email: data.email,
             GoogleId: data.id,
             PictureUrl: data.picture,
+        
+        
         };
 
         console.log("Google User:", data);
@@ -108,12 +110,65 @@ const googleLogin = async (accessToken) => {
     }
 };
 
+
+const facebookLogin = async (accessToken) => {
+    try {
+        const accessTokens = accessToken;
+        const { data } = await axios.get(
+            `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+        );
+
+        const userData = {
+            Name: data.name,
+            Email: data.email,
+            FacebookId: data.id,
+            PictureUrl: data.picture.data.url,
+        };
+
+        console.log("Facebook User:", userData);
+
+        const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData);
+
+        return apiResponse;
+    } catch (error) {
+        console.error("Facebook Login failed:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
+const facebookRegister = async (accessToken) => {
+    try {
+        const accessTokens = accessToken;
+        const { data } = await axios.get(
+            `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+        );
+
+        const userData = {
+            Name: data.name,
+            Email: data.email,
+            FacebookId: data.id,
+            PictureUrl: data.picture.data.url,
+        };
+
+        console.log("Facebook User:", userData);
+
+        const apiResponse = await axios.post(`${API_URL}/User/FacebookRegister`, userData);
+
+        return apiResponse;
+    } catch (error) {
+        console.error("Facebook Login failed:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
 const authService = {
     login,
     logout,
     register,
     GoogleRegister,
     googleLogin,
+    facebookLogin,
+    facebookRegister,
   
 };
 

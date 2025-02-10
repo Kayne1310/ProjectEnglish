@@ -171,43 +171,23 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-        [HttpGet("login-facebook")]
-        public IActionResult LoginWithFacebook()
+    
+
+        [HttpPost("facebook-login")]
+        public async Task<IActionResult> FacebookLogin(FacebookUserViewModel model)
         {
-            var properties = new AuthenticationProperties { RedirectUri = "/api/account/facebook-callback" };
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
-
-        [HttpGet("facebook-callback")]
-        public async Task<IActionResult> FacebookCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            if (!authenticateResult.Succeeded)
-                return BadRequest("Facebook authentication failed.");
-
-
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-            var facebookId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
+         
             //check tk fb da duoc tao chua
-            var validAcount = await acountService.AccountLoginWithFb(facebookId);
+            var validAcount = await acountService.AccountLoginWithFb(model.FacebookId);
             if (validAcount.ReturnCode < 0)
             {
                 return Ok(validAcount);
             }
-
-            if (string.IsNullOrEmpty(email))
-                return BadRequest("Unable to get email from Facebook");
-
             // Tạo access token
             var authClaims = new List<Claim> {
-            new Claim(ClaimTypes.Name, name),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.NameIdentifier, facebookId),
+            new Claim(ClaimTypes.Name, model.Name),
+            new Claim(ClaimTypes.Email, model.Email),
+            new Claim(ClaimTypes.NameIdentifier, model.FacebookId),
             new Claim(ClaimTypes.Role,"User"),
             new Claim(ClaimTypes.PrimarySid, validAcount.user.UserID.ToString()),
         };

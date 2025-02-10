@@ -51,7 +51,6 @@ const router = createBrowserRouter([
 
 ]);
 
-const clientId = "954871855690-ebeilhq9a689iia9plkl3d9o9sfng7ci.apps.googleusercontent.com";
 
 const dotenvClientId=import.meta.env.VITE_GOOGLE_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById('root')).render(

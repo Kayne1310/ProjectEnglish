@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "set HTTPS=true&& set SSL_CRT_FILE=./certs/cert.crt&& set SSL_KEY_FILE=./certs/cert.key&& react-scripts start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -23,6 +24,7 @@
     "react-loading": "^2.0.3",
     "react-router": "6.28.0",
     "react-router-dom": "^7.1.4",
+    "reactjs-social-login": "^2.6.3",
     "sass": "^1.83.4"
   },
   "devDependencies": {
