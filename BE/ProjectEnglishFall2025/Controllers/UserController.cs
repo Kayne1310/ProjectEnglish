@@ -44,49 +44,7 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
         }
-        [HttpGet("RegisterWithFacebook")]
-        public IActionResult RegisterWithFacebook()
-        {
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = "/api/User/FacebookRegisterCallback"
-             
-            };
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
-
-        [HttpGet("FacebookRegisterCallback")]
-        public async Task<IActionResult> FacebookRegisterCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded)
-            {
-                return BadRequest("Facebook authentication failed.");
-            }
-
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var facebookId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(facebookId))
-            {
-                return BadRequest("Unable to get user information from Facebook.");
-            }
-
-        
-            var userModel = new FacebookUserViewModel
-            {
-                Name = name,
-                Email = email,
-                FacebookId = facebookId,
-                
-            };
-
-            var result = await userService.RegisterWithFacebook(userModel);
-            return Ok(result);
-        }
-
+   
         [HttpGet]
         [Authorize("User")]
         public async Task<ActionResult> getAllUser()
@@ -103,49 +61,42 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-        [HttpGet("RegisterWithGoogle")]
+   
 
-        public IActionResult RegisterWithGoogle()
+        [HttpPost("GoogleRegister")]
+        public async Task<IActionResult> GoogleRegisterCallback(GoogleUserViewModel googleUserViewModel)
         {
-
-            var properties = new AuthenticationProperties
+            try
             {
-                RedirectUri = "/api/User/GoogleRegisterCallback"
 
-            };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            var result = await userService.RegisterWithGoogle(googleUserViewModel);
+            
+            return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
-        [HttpGet("GoogleRegisterCallback")]
-        public async Task<IActionResult> GoogleRegisterCallback()
+        [HttpPost("FacebookRegister")]
+        public async Task<IActionResult> FacebookRegister(FacebookUserViewModel facebookUserViewModel)
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded)
+            try
             {
-                return BadRequest("Google authentication failed.");
+
+                var result = await userService.RegisterWithFacebook(facebookUserViewModel);
+
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var googleId = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(googleId))
-            {
-                return BadRequest("Unable to get user information from Google.");
-            }
-
-
-            var userModel = new GoogleUserViewModel
-            {
-                Name = name,
-                Email = email,
-                GoogleId = googleId,
-
-            };
-
-            var result = await userService.RegisterWithGoogle(userModel);
-            return Ok(result);
         }
 
         [HttpPost("ChangePassword")]

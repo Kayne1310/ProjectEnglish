@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Account
         public string Name { get; set; }
         public string Email { get; set; }
         public string FacebookId { get; set; }
-        public DateTime Exprired { get; set; }
+        public string PictureUrl { get; set; }
     }
 
 
@@ -33,7 +34,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Account
         public string Name { get; set; }
         public string Email { get; set; }
         public string GoogleId { get; set; }
-        public DateTime Exprired { get; set; }
+        public string PictureUrl { get; set; }
     }
 
 
@@ -64,4 +65,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Account
         public string newPassword { get; set; }
         public string reNewPassword { get; set; }
     }
+
+
+
 }

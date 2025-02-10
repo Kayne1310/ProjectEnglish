@@ -19,8 +19,10 @@ namespace ProjectFall2025.Domain.Do
         public string? GoogleId { get; set; }
         public string? Refeshtoken { get; set; }
         public DateTime Exprired { get; set; }
+        public string? Picture { get; set; }
         public string role { get; set; } = "User";
-
+        public string? ResetPasswordToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
 
     }
 }

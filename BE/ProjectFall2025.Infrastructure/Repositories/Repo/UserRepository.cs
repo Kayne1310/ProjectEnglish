@@ -65,6 +65,15 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return await userCollection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<int> UpdateTokenResetPassword(User user)
+        {
+            var update = Builders<User>.Update.Set(x => x.ResetPasswordToken, user.ResetPasswordToken)
+                                              .Set(x=>x.ResetTokenExpiry,DateTime.UtcNow.AddMinutes(15));
 
+            var res= await  dbContext.GetCollectionUser().UpdateManyAsync(e=>e.Email==user.Email, update);
+
+            return  (int) res.ModifiedCount;
+
+        }
     }
 }

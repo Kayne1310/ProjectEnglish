@@ -117,5 +117,10 @@ namespace ProjectFall2025.Application.Services
 
          
         }
+
+        public Task<ReturnData> UpdateTokenReset()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
