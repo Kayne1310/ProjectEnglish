@@ -1,5 +1,6 @@
 ﻿using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
+using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);
 
         Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
+        Task<ReturnData> ResetPassword(ResetPasswordRequest resetPassword);
+
+
+        Task<ReturnData> FindUserbyEmail(string email);
+        Task<ReturnData> UpdateTokenUser(ResetPasswordRequest resetPassword);
 
     }
 }

@@ -40,7 +40,40 @@ namespace ProjectFall2025.Infrastructure.DbContext
             return _database.GetCollection<UserSession>("UserSession");
         }
 
+        public IMongoCollection<Quiz> GetCollectionQuiz()
+        {
+            return _database.GetCollection<Quiz>("Quiz");
+        }
 
+        public IMongoCollection<QuizAnswer> GetCollectionQuizAnswer()
+        {
+            return _database.GetCollection<QuizAnswer>("QuizAnswer");
+        }
+
+        public IMongoCollection<QuizQuestion> GetCollectionQuizQuestion()
+        {
+            return _database.GetCollection<QuizQuestion>("QuizQuestion");
+        }
+
+        public IMongoCollection<UserQuiz> GetCollectionUserQuiz()
+        {
+            return _database.GetCollection<UserQuiz>("UserQuiz");
+        }
+
+        public IMongoCollection<History> GetCollectionHistory()
+        {
+            return _database.GetCollection<History>("History");
+        }
+
+        public IMongoCollection<QuizUserAnswer> GetCollectionQuizUserAnswer()
+        {
+            return _database.GetCollection<QuizUserAnswer>("QuizUserAnswer");
+        }
+
+        public IMongoCollection<AIAnswer> GetCollectionAIAnswer()
+        {
+            return _database.GetCollection<AIAnswer>("AIAnswer");
+        }
 
     }
 

@@ -1,5 +1,5 @@
 ﻿using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,8 @@ namespace ProjectFall2025.Application.IServices
         Task<LoginResponseData> AccountLoginWithFb(string  facebookId);
         Task<LoginResponseData> AccountLoginWithGg(string googleId);
         Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData);
+
+        Task<ReturnData> UpdateTokenReset();
 
 
 
