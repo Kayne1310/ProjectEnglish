@@ -1,4 +1,5 @@
 ﻿using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace ProjectFall2025.Application.IServices
     {
         Task<ReturnData> addUserService(UserViewModel userViewModel);
         Task<List<UserVM>> getAllUser();
+        Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model);
+        Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);
+
+        Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
 
     }
 }

@@ -16,5 +16,10 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
 
         Task<User> findUserByUsername(string username);
 
+        Task<User> FindUserByFacebookId(string facebookId);
+        Task<User> FindUserByGoogleId(string googleId);
+
+        Task<int > ChangePassword(User user);
+
     }
 }

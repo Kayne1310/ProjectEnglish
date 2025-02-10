@@ -37,7 +37,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var filter = Builders<User>.Filter.Eq(x => x.UserID, requestData.UserId);
             var update = Builders<User>.Update
                 .Set(x => x.Refeshtoken, requestData.RefeshToken)
-                .Set(x => x.Expired, requestData.Expired);
+                .Set(x => x.Exprired, requestData.Exprired);
 
             var result = await userCollection.UpdateOneAsync(filter, update);
             return 1;

@@ -1,1 +1,14 @@
-﻿.vs/
+﻿
+.vs/
+
+# .NET build files
+bin/
+obj/
+*.dll
+*.pdb
+*.deps.json
+*.sourcelink.json
+
+
+**/bin/
+**/obj/

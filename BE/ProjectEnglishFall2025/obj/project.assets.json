@@ -84,6 +84,38 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.Facebook/8.0.12": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Facebook.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Facebook.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
+      "Microsoft.AspNetCore.Authentication.Google/8.0.12": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.11": {
         "type": "package",
         "dependencies": {
@@ -778,6 +810,36 @@
         "lib/netstandard2.0/FluentValidation.DependencyInjectionExtensions.xml",
         "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.dll",
         "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Facebook/8.0.12": {
+      "sha512": "po9edaLy4BgCwph1/OqocDB4H37bTZISzup0zP8NE42vK0XRBhy4BuLu10Pg3j+ZDEWUi1YUu2sSEbH/QrsnsQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.facebook/8.0.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Facebook.dll",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Facebook.xml",
+        "microsoft.aspnetcore.authentication.facebook.8.0.12.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.facebook.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/8.0.12": {
+      "sha512": "+ytq0YfuQ5K8YnvfglBvYxxchsPpedeYlg7gYZY6oFvPIWqA9BjIabexLKAYfL6MewKrOJbRIgWvfx0pONnmPQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/8.0.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.8.0.12.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.11": {
@@ -1877,6 +1939,8 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "FluentValidation >= 11.11.0",
+      "Microsoft.AspNetCore.Authentication.Facebook >= 8.0.12",
+      "Microsoft.AspNetCore.Authentication.Google >= 8.0.12",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "ProjectFall2025.Application >= 1.0.0",
       "ProjectFall2025.Common >= 1.0.0",
@@ -1952,6 +2016,14 @@
           "FluentValidation": {
             "target": "Package",
             "version": "[11.11.0, )"
+          },
+          "Microsoft.AspNetCore.Authentication.Facebook": {
+            "target": "Package",
+            "version": "[8.0.12, )"
+          },
+          "Microsoft.AspNetCore.Authentication.Google": {
+            "target": "Package",
+            "version": "[8.0.12, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
