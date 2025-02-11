@@ -113,7 +113,7 @@ const HomePage = () => {
 
             {/* <!-- end about section -->
 
-  <!-- blog section --> */}
+            <!-- blog section --> */}
             <ListQuizz />
 
             {/* <!-- Contact Section --> */}

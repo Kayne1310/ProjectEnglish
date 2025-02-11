@@ -13,9 +13,10 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
             }, 1000);
         } else {
             console.log(response);
-            // Lưu trạng thái đăng nhập vào localStorage
+            // Lưu trạng thái đăng nhập và thông tin người dùng vào localStorage
             localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("user", JSON.stringify(response.data));
+            // localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin người dùng
+
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/"; // Redirect after successful login
@@ -23,6 +24,29 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+};
+
+export const handleLogout = async (setIsLoading, setError) => {
+    setError("");
+    setIsLoading(true);
+    try {
+        // Gọi API logout (nếu cần)
+        // await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
+
+        // Xóa thông tin khỏi localStorage
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("accessToken");
+
+        setTimeout(() => {
+            setIsLoading(false);
+            window.location.href = "/"; // Chuyển hướng về trang đăng nhập
+        }, 1000);
+    } catch (error) {
+        setError(`Logout failed. ${error.message}`);
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -111,6 +135,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
         }
 
         else if (apiResponse.returnCode == 1) {
+            localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/";
@@ -122,11 +147,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
             setIsLoading(false);
         }, 1000);
     }
-
-
 };
-
-
 
 export const FacebookRegister = async (response, setError, setIsLoading, setIsRegisterSuccess) => {
     setError("");
@@ -174,6 +195,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
 
        
         else if (apiResponse.data.returnCode == 1) {
+            localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/";
