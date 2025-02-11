@@ -6,22 +6,18 @@ import "../../assets/css/Home/home.css";
 import "../../assets/css/Home/nav.css";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-
+import { handleLogout } from "../../helpers/authHandlers"; // Đường dẫn tới file chứa handler
+// import Loading from "react-loading";
 import Dropdown from 'react-bootstrap/Dropdown';
+
 const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-
-    // Xử lý đăng xuất
-    const handleLogout = () => {
-        localStorage.removeItem("isLoggedIn"); // Xóa trạng thái đăng nhập
-        setIsLoggedIn(false);
-        window.location.href = "/"; // Chuyển hướng về trang chính
-    };
-
+    
     // Kiểm tra trạng thái đăng nhập từ localStorage
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     useEffect(() => {
@@ -104,7 +100,7 @@ const Nav = () => {
                                             <Dropdown.Item className="custom-dropdown-item">
                                                 Profile
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={handleLogout} className="custom-dropdown-item">
+                                            <Dropdown.Item onClick={() => handleLogout(setIsLoading, setError)} className="custom-dropdown-item">
                                                 Logout
                                             </Dropdown.Item>
                                         </Dropdown.Menu>

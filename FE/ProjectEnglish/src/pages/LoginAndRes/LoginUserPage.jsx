@@ -4,6 +4,7 @@ import "../../assets/css/LoginCss/user.css";
 import { handerGoogleRegister, handerRegister, handleLogin } from "../../helpers/authHandlers";
 import Loading from "react-loading";
 import { Link } from "react-router-dom";
+import { Eye, EyeSlash } from "react-bootstrap-icons"; // Sử dụng icon từ react-bootstrap-icons
 
 import { useGoogleLogin } from "@react-oauth/google";
 
