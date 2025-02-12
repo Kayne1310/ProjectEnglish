@@ -6,26 +6,32 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "set HTTPS=true&& set SSL_CRT_FILE=./certs/cert.crt&& set SSL_KEY_FILE=./certs/cert.key&& react-scripts start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "install": "^0.13.0",
     "npm": "^11.1.0",
     "react": "^18.3.1",
-    "react-bootstrap": "2.10.9",
+    "react-bootstrap": "^2.10.9",
+    "react-bootstrap-icons": "^1.11.5",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
     "react-loader-spinner": "^6.1.6",
     "react-loading": "^2.0.3",
     "react-router": "6.28.0",
     "react-router-dom": "^7.1.4",
+
     "react-toastify": "^11.0.3",
     "sass": "^1.83.4",
-    "tailwindcss": "^4.0.6"
+    "tailwindcss": "^4.0.6",
+    "reactjs-social-login": "^2.6.3"
+
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

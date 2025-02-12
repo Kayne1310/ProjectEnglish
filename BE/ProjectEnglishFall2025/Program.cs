@@ -7,15 +7,14 @@ using ProjectFall2025.Application.Mapping;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
-using ProjectFall2025.Infrastructure.Repositories;
 using StackExchange.Redis;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-
-
 using System.Text;
 using ProjectFall2025.Domain.ViewModel;
 using ProjectFall2025.Common.ValidateData;
+using ProjectFall2025.Infrastructure.Repositories.Repo;
+using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -82,14 +81,14 @@ namespace ProjectEnglishFall2025
                    facebookOptions.Fields.Add("name");
                    facebookOptions.CallbackPath = "/api/LoginWithFb";
                })
-             
+
                .AddGoogle(options =>
                {
-                 
+
                    options.ClientId = builder.Configuration["Google:ClientId"];
                    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
                    options.CallbackPath = "/api/signin-google";
-         
+
                });
 
             //redis
@@ -99,20 +98,51 @@ namespace ProjectEnglishFall2025
             builder.Services.AddTransient<IRedisService, RedisService>();
 
 
-
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            // Mapper
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            // Services
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAcountRepository, AccountRepository>();
             builder.Services.AddScoped<IAcountService, AccountService>();
+            builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IQuizAnswerService, QuizAnswerService>();
+            builder.Services.AddScoped<IUserQuizService, UserQuizService>();
+            builder.Services.AddScoped<IQuizQuestionService, QuizQuestionService>();
+            builder.Services.AddScoped<IHistoryService, HistoryService>();
+            builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
+            builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
+
+            // Repository
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAcountRepository, AccountRepository>();
             builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+            builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+            builder.Services.AddScoped<IQuizAnswerRepository, QuizAnswerRepository>();
+            builder.Services.AddScoped<IUserQuizRepository, UserQuizRepository>();
+            builder.Services.AddScoped<IQuizQuestionRepository, QuizQuestionRepository>();
+            builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
+            builder.Services.AddScoped<IQuizUserAnswerRepository, QuizUserAnswerRepository>();
+            builder.Services.AddScoped<IAIAnswerRepository, AIAnswerRepository>();
 
             //res validator
-
             builder.Services.AddFluentValidationAutoValidation();
+
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuiz>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizAnswer>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateUserQuiz>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizQuestion>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateHistory>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizUserAnswer>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ValidateIAIAnswer>();
+
+            //email
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailService, EmailService>();
+ 
+
 
             //cors
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

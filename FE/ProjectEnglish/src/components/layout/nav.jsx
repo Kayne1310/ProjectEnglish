@@ -10,20 +10,18 @@ import React, { useState, useEffect } from "react";
 import avatar from "../../assets/image/default-avatar.png";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FaUser, FaCogs, FaList, FaSignOutAlt } from 'react-icons/fa';
+import { handleLogout } from "../../helpers/authHandlers"; // Đường dẫn tới file chứa handler
+// import Loading from "react-loading";
+
 
 const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
-    // Xử lý đăng xuất
-    // const handleLogout = () => {
-    //     localStorage.removeItem("isLoggedIn"); // Xóa trạng thái đăng nhập
-    //     setIsLoggedIn(false);
-    //     window.location.href = "/"; // Chuyển hướng về trang chính
-    // };
 
     // Kiểm tra trạng thái đăng nhập từ localStorage
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true");
@@ -145,12 +143,13 @@ const Nav = () => {
                                                 <FaUser className="mr-2" />
                                                 Profile
                                             </Dropdown.Item>
+
                                             <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
                                                 <FaCogs className="mr-2" />
                                                 Settings
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item onClick={handleLogout} className="custom-dropdown-item">
+                                            <Dropdown.Item onClick={() => handleLogout(setIsLoading, setError)} className="custom-dropdown-item">
                                                 <FaSignOutAlt className="mr-2" />
                                                 Logout
                                             </Dropdown.Item>

@@ -114,7 +114,7 @@ const HomePage = () => {
             <div className="w-100 bg-white" style={{ height: '50px' }}></div>
             {/* <!-- end about section -->
 
-  <!-- blog section --> */}
+            <!-- blog section --> */}
             <ListQuizz />
 
             {/* <!-- Contact Section --> */}

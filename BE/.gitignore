@@ -12,3 +12,19 @@ obj/
 
 **/bin/
 **/obj/
+
+./BE/ProjectEnglishFall2025/bin/
+./BE/ProjectEnglishFall2025/obj/
+./BE/ProjectEnglishFall2025.Application/bin/
+./BE/ProjectEnglishFall2025.Application/obj/
+./BE/ProjectEnglishFall2025.Domain/bin/
+./BE/ProjectEnglishFall2025.Domain/obj/
+./BE/ProjectEnglishFall2025.Infrastructure/bin/
+./BE/ProjectEnglishFall2025.Infrastructure/obj/
+.BE/ProjectFall2025.Common/bin/
+./BE/ProjectFall2025.Common/obj/
+
+
+# Ignore all bin and obj directories
+[Bb]in/
+[Oo]bj/
