@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import {
@@ -6,7 +6,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import LoginUserPage from './pages/LoginAndRes/LoginUserPage.jsx';
 import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';

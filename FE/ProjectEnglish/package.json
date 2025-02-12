@@ -25,13 +25,11 @@
     "react-loader-spinner": "^6.1.6",
     "react-loading": "^2.0.3",
     "react-router": "6.28.0",
-    "react-router-dom": "^7.1.4",
-
+    "react-router-dom": "^7.1.5",
     "react-toastify": "^11.0.3",
+    "reactjs-social-login": "^2.6.3",
     "sass": "^1.83.4",
-    "tailwindcss": "^4.0.6",
-    "reactjs-social-login": "^2.6.3"
-
+    "tailwindcss": "^4.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
