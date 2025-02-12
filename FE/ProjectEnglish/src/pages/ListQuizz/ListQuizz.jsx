@@ -6,6 +6,7 @@ import b3 from "../../assets/image/b3.jpg";
 const ListQuizz = () => {
 return(
     <section class="blog_section layout_padding">
+    {/* <section class="about_section layout_padding long_section"> */}
                 <div class="container">
                     <div class="heading_container">
                         <h2>

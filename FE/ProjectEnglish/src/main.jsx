@@ -11,6 +11,8 @@ import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
+import ViewProfile from './pages/Profile/VIewProfile.jsx';
+import EditProfile from './pages/Profile/EditProfile..jsx';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
       {
         path: "/contactus",
         element: <ContactUs />
+      },
+      {
+        path: "/viewprofile",
+        element: <ViewProfile/>
+      },
+      {
+        path: "/editprofile",
+        element: <EditProfile />
       }
     ]
   },
@@ -39,7 +49,8 @@ const router = createBrowserRouter([
   {
     path: "/loginadmin",
     element: <LoginAdminPage />
-  }
+  },
+
 
 ]);
 

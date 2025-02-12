@@ -13,8 +13,7 @@
     transition: all 0.2s;
 }
 
-
-@media (max-width: 768px) {
+@media (max-width: 988px) {
     .navbar-toggler {
         display: block;
     }
@@ -32,6 +31,7 @@
         text-align: center;
     }
 }
+
 
 .navbar-nav .nav-link {
     transition: color 0.3s ease-in-out;
@@ -67,6 +67,7 @@
     font-weight: bold !important;
     border: 1px solid #f89646 !important;
     transition: all 0.2s !important;
+    border-radius: 10px !important; 
 }
 
 .custom-dropdown:hover {
@@ -74,38 +75,90 @@
     color: #f89646 !important;
     border: 1px solid #f89646 !important;
 }
-
 .custom-dropdown-menu {
     background-color: #ffffff !important;
-    border: none !important;
+    border: 1px solid #ecebea !important;  /* Đổi màu biên nếu cần */
     padding: 5px 0 !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 10px !important;  /* Bo góc menu */
+    opacity: 0;  /* Đặt opacity mặc định là 0 */
+    transition: opacity 0.3s ease, transform 0.3s ease !important;  /* Thêm hiệu ứng mờ và di chuyển */
 }
 
-.custom-dropdown-item {
+.custom-dropdown-menu.show {
+    opacity: 1;  /* Khi mở, opacity sẽ là 1 */
+    transform: translateY(10px);  /* Hiệu ứng di chuyển từ dưới lên */
+}
 
+/* Bỏ in hoa các item */
+.custom-dropdown-item {
     padding: 10px 15px !important;
-    color: #f89646 !important;
+    color: black !important;
     background-color: #fff !important;
     border: none !important;
+    text-transform: none !important;  /* Không in hoa */
     transition: all 0.2s ease-in-out !important;
 }
 
+/* Hiệu ứng hover cho item */
 .custom-dropdown-item:hover {
-    background-color: #f89646 !important;
+    background-color: #e1ddda !important;
     color: #ffffff !important;
-    border-radius: 0 !important;
+    border-radius: 5px !important;  /* Bo góc khi hover */
     transition: all 0.2s ease-in-out !important;
 }
+
+/* Sửa link không gạch chân */
 .no-link-style {
     color: inherit !important;
     text-decoration: none !important;
 }
+
 .no-link-style:hover {
     color: inherit !important;
     text-decoration: none !important;
 }
 
+/* .custom-avatar-dropdown để bao quanh ảnh như dropdown */
+.custom-avatar-dropdown {
+    display: inline-flex !important;           /* Đảm bảo ảnh sẽ hiển thị theo chiều ngang */
+    align-items: center !important;            /* Canh giữa ảnh trong dropdown */
+    justify-content: center !important;        /* Canh giữa ảnh trong dropdown */
+    padding: 8px !important;                   /* Thêm một chút padding quanh ảnh */
+    cursor: pointer !important;               /* Thêm con trỏ pointer để tương tác */
+    background-color: white !important;      /* Màu nền cho dropdown */
+    border-radius: 50% !important;             /* Bo tròn dropdown để nó trông giống với ảnh avatar */
+    border: 0px !important;     
+    transition: background-color 0.3s ease, border-color 0.3s ease !important; /* Hiệu ứng chuyển màu khi hover */
+    width: 40px !important;     
+    height: 40px !important;               /* Đảm bảo dropdown sẽ co dãn theo kích thước ảnh */
+}
+
+/* .avatar-img cho kiểu ảnh bên trong */
+.avatar-img {
+    width: 40px !important;                    /* Kích thước ảnh */
+    height: 40px !important;                   /* Kích thước ảnh */
+    border-radius: 50% !important;             /* Bo tròn ảnh */
+    object-fit: cover !important;              /* Đảm bảo ảnh không bị méo khi thay đổi kích thước */
+    transition: transform 0.2s ease !important; /* Thêm hiệu ứng chuyển ảnh khi hover */
+}
+
+/* Hiệu ứng khi hover vào dropdown */
+
+
+/* Hiệu ứng khi hover vào ảnh */
+.avatar-img:hover {
+    transform: scale(1.1) !important;         /* Phóng to ảnh một chút khi hover */
+}
+
+/* icon menu */
+/* .mr-2 {
+    color: #d1d3e2 !important;
+  } */
+
+
+  
+  
 
 
 

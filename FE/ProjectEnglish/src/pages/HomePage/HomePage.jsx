@@ -1,8 +1,8 @@
 //home age
-import "../../assets/css/Home/style.scss";
+// import "../../assets/css/Home/style.scss";
 // import "../../assets/css/Home/bootstrap.css";
-import "../../assets/css/Home/responsive.css";
-import "../../assets/css/Home/style.css";
+// import "../../assets/css/Home/responsive.css";
+// import "../../assets/css/Home/style.css";
 import "../../assets/css/Home/home.css";
 import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
@@ -111,6 +111,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
             {/* <!-- end about section -->
 
   <!-- blog section --> */}
