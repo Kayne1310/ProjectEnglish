@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const API_URL = import.meta.env.VITE_API_URL;
 // const API_URL ="https://localhost:7048/api"; 
 
@@ -9,7 +8,7 @@ const login = async (email, password) => {
             email: email,
             password: password
 
-        });
+        }, { withCredentials: true });
 
         if (response.data && response.data.token) {
             localStorage.setItem("accessToken", response.data.token);
@@ -66,8 +65,6 @@ const GoogleRegister = async (accessToken) => {
             Email: data.email,
             GoogleId: data.id,
             PictureUrl: data.picture,
-
-
         };
 
         console.log("Google User:", data);
@@ -101,7 +98,12 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`${API_URL}/Account/google-login`, userData);
+        const apiResponse = await axios.post(
+            `${API_URL}/Account/google-login`,
+            userData,
+            { withCredentials: true } // Bắt buộc để cookie hoạt động
+          );
+          
 
         return apiResponse.data;
     } catch (error) {
@@ -161,6 +163,7 @@ const facebookRegister = async (accessToken) => {
     }
 };
 
+
 const resetPassword = async (email, token, newpassword) => {
 
     try {   
@@ -204,6 +207,7 @@ const authService = {
     facebookRegister,
     resetPassword,
     forgotpassword,
+
 
 };
 

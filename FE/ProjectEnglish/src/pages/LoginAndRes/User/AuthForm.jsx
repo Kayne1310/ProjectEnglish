@@ -73,8 +73,8 @@ const AuthForm = ({
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-
                         {!showSignUp && <Link to="/forgotpassword" className="forgot-password" >
+
                             Forget Your Password?
                         </Link>}
 

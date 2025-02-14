@@ -130,7 +130,9 @@ namespace ProjectFall2025.Application.Services
 
         public async Task<ReturnData> FindUserbyEmail(string email)
         {
+
             var res = await repository.findUserByUsername(email);
+
             if (res == null)
             {
                 return new ReturnData
@@ -211,7 +213,6 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-
         public async Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model)
         {
             try
@@ -238,6 +239,7 @@ namespace ProjectFall2025.Application.Services
                     role = "User",
                     Exprired = DateTime.Now,
                     Picture = model.PictureUrl,
+
                 };
 
                 var result = await repository.addUser(newUser);
@@ -266,8 +268,10 @@ namespace ProjectFall2025.Application.Services
                 return new ReturnData { ReturnCode = -1, ReturnMessage = "Người dùng không tồn tại" };
 
             // Kiểm tra token reset mật khẩu có hợp lệ không
+
             var dateiabc = DateTime.UtcNow;
             if (user.ResetPasswordToken != resetPassword.Token || user.ResetTokenExpiry < DateTime.UtcNow)
+
                 return new ReturnData { ReturnCode = -1, ReturnMessage = "Token không hợp lệ hoặc đã hết hạn" };
 
             // Hash mật khẩu mới
@@ -277,10 +281,14 @@ namespace ProjectFall2025.Application.Services
 
             var isUpdated = await repository.ChangePassword(user);
             if (isUpdated <= 0)
+            {
+
                 return new ReturnData { ReturnCode = -1, ReturnMessage = "Lỗi khi cập nhật mật khẩu" };
+            }
 
             return new ReturnData { ReturnCode = 1, ReturnMessage = "Mật khẩu đã được đặt lại thành công" };
         }
+
 
         public async Task<ReturnData> UpdateTokenUser(ResetPasswordRequest resetPassword)
         {

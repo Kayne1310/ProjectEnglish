@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using ProjectEnglishFall2025.Filter;
 
 namespace ProjectEnglishFall2025
 {
@@ -130,13 +131,7 @@ namespace ProjectEnglishFall2025
 
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuiz>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizAnswer>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateUserQuiz>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizQuestion>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateHistory>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizUserAnswer>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateIAIAnswer>();
+
 
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -162,7 +157,11 @@ namespace ProjectEnglishFall2025
 
 
             var app = builder.Build();
+
+            app.UseMiddleware<JwtFromCookieMiddleware>();
+
             app.UseCors(MyAllowSpecificOrigins);
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

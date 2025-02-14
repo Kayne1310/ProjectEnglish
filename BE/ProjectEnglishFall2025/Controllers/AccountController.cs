@@ -13,8 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -43,6 +42,7 @@ namespace ProjectEnglishFall2025.Controllers
         [HttpPost]
         public async Task<ActionResult> AccountLogin(AccountLoginRequestData requestData)
         {
+
             var returnData = new LoginResponseData();
             try
             {
@@ -121,12 +121,27 @@ namespace ProjectEnglishFall2025.Controllers
 
                 var res = await acountService.Account_UpdateRefeshToken(req);
 
+                //Gan token vao cookies 
+                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
+                {
+                    HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                    Secure = true,   // Chỉ hoạt động trên HTTPS
+                    SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
+
                 //tra ve token 
                 returnData.ReturnCode = 1;
                 returnData.ReturnMessage = result.ReturnMessage;
                 returnData.token = new JwtSecurityTokenHandler().WriteToken(newtoken);
 
                 return Ok(returnData);
+
+
+
+
+
+
 
             }
             catch (Exception ex)
@@ -136,28 +151,29 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        public async Task<IActionResult> Logout()
         {
+            var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var response = new LogoutResponse();
             try
             {
                 // Redis Keys
-                var redisKeyAccessToken = $"user:{request.UserId}:accessToken";
-                var redisKeyRefreshToken = $"user:{request.UserId}:refreshToken";
+                var redisKeyAccessToken = $"user:{userId}:accessToken";
+                var redisKeyRefreshToken = $"user:{userId}:refreshToken";
 
                 // Xóa Access Token và Refresh Token khỏi Redis
                 await redisService.DeleteKeyAsync(redisKeyAccessToken);
                 await redisService.DeleteKeyAsync(redisKeyRefreshToken);
 
                 // (Tùy chọn) Cập nhật trạng thái session trong MongoDB
-                if (request.UserId == null)
+                if (userId == null)
                 {
                     response.ReturnCode = -1;
                     response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                     return StatusCode(500, response);
 
                 }
-                await userSessionService.removeUserSession(new LogoutRequest { UserId = request.UserId });
+                await userSessionService.removeUserSession(new LogoutRequest { UserId = userId });
 
                 response.ReturnCode = 1;
                 response.ReturnMessage = "Đăng xuất thành công.";
@@ -169,9 +185,7 @@ namespace ProjectEnglishFall2025.Controllers
                 response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                 return StatusCode(500, response);
             }
-        }
-
-    
+        }   
 
         [HttpPost("facebook-login")]
         public async Task<IActionResult> FacebookLogin(FacebookUserViewModel model)
@@ -234,6 +248,14 @@ namespace ProjectEnglishFall2025.Controllers
 
             await userSessionService.addUserSession(userSession);
             await acountService.Account_UpdateRefeshToken(req);
+
+            Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+            {
+                HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                Secure = true,   // Chỉ hoạt động trên HTTPS
+                SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                Expires = DateTime.UtcNow.AddHours(1)
+            });
 
             var returnData = new LoginResponseData();
             returnData.ReturnMessage = "Login Sucessful";
@@ -304,6 +326,14 @@ namespace ProjectEnglishFall2025.Controllers
                 };
 
                 await userSessionService.addUserSession(userSession);
+                //add cokkie
+                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+                {
+                    HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                    Secure = true,   // Chỉ hoạt động trên HTTPS
+                    SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
 
                 // Tạo phản hồi trả về
                 var returnData = new LoginResponseData
@@ -344,6 +374,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 await emailService.SendPasswordResetEmailAsync(request.Email, token);
                 await userService.UpdateTokenUser(new ResetPasswordRequest { Email = request.Email, NewPassword = null ,Token=token});
+
                 return Ok(new ReturnData
                 {
                     ReturnCode = 1,
@@ -373,8 +404,6 @@ namespace ProjectEnglishFall2025.Controllers
 
             }
         }
-
-
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {

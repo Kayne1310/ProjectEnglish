@@ -13,9 +13,10 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
             }, 1000);
         } else {
             console.log(response);
-            // Lưu trạng thái đăng nhập vào localStorage
+            // Lưu trạng thái đăng nhập và thông tin người dùng vào localStorage
             localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("user", JSON.stringify(response.data));
+            // localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin người dùng
+
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/"; // Redirect after successful login
@@ -23,6 +24,29 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+};
+
+export const handleLogout = async (setIsLoading, setError) => {
+    setError("");
+    setIsLoading(true);
+    try {
+        // Gọi API logout (nếu cần)
+        // await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
+
+        // Xóa thông tin khỏi localStorage
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("accessToken");
+
+        setTimeout(() => {
+            setIsLoading(false);
+            window.location.href = "/"; // Chuyển hướng về trang đăng nhập
+        }, 1000);
+    } catch (error) {
+        setError(`Logout failed. ${error.message}`);
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -111,10 +135,12 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
         }
 
         else if (apiResponse.returnCode == 1) {
+
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/";
                 localStorage.setItem("accessToken", apiResponse.token);
+
             }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
@@ -124,9 +150,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
         }, 1000);
     }
 
-
 };
-
 
 
 export const FacebookRegister = async (response, setError, setIsLoading, setIsRegisterSuccess) => {
@@ -156,7 +180,11 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
         }, 1000);
     }
 
+
 };
+
+
+
 
 export const handleFacebookLogin = async (data, setError, setIsLoading) => {
     setError("");
@@ -173,17 +201,18 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
             }, 1000);
         }
 
-       
+
         else if (apiResponse.data.returnCode == 1) {
             setTimeout(() => {
                 setIsLoading(false);
                 window.location.href = "/";
                 localStorage.setItem("accessToken", apiResponse.data.token);
+
             }, 1000); // Hide loader after 1 seconds
         }
 
     }
-     catch (err) {
+    catch (err) {
         setError(`Register failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
@@ -191,12 +220,12 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
     }
 };
 
-export const handleResetPassword = async (password,email,token, setError, setIsLoading, setIsSuccess) => {  
+export const handleResetPassword = async (password, email, token, setError, setIsLoading, setIsSuccess) => {
     setError("");
     setIsLoading(true);
     setIsSuccess(false);
     try {
-        const response = await authService.resetPassword(email,token,password);
+        const response = await authService.resetPassword(email, token, password);
         console.log("API Response:", response);
         if (response.returnCode == -1) {
             setError(`Reset password failed. ${response.returnMessage}`);
@@ -216,7 +245,7 @@ export const handleResetPassword = async (password,email,token, setError, setIsL
         }, 1000);
     }
 };
-export const handleForgotPassword = async (email, setError, setIsLoading, setIsSuccess,setEmail) => {
+export const handleForgotPassword = async (email, setError, setIsLoading, setIsSuccess, setEmail) => {
     setError("");
     setIsLoading(true);
     setIsSuccess(false);
@@ -228,7 +257,7 @@ export const handleForgotPassword = async (email, setError, setIsLoading, setIsS
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
-            setEmail("");   
+            setEmail("");
         } else {
             setTimeout(() => {
                 setIsLoading(false);

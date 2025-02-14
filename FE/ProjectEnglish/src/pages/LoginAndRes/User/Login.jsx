@@ -27,8 +27,6 @@ const Login = () => {
     const HandleFacebookLogin = async ({ data }) => {
       await handleFacebookLogin(data, setError, setIsLoading);
     };
-
-
     return (
         <AuthForm
             title="Sign In"

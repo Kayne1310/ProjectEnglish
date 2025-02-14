@@ -2,64 +2,65 @@ import React  from "react";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
+import { Link } from "react-router-dom";
 
 const ListQuizz = () => {
 return(
-    <section class="blog_section layout_padding">
-                <div class="container">
-                    <div class="heading_container">
+    <section className="blog_section layout_padding">
+                <div className="container">
+                    <div className="heading_container">
                         <h2>
                             Quizzet
                         </h2>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 col-lg-4 mx-auto">
-                            <div class="box">
-                                <div class="img-box">
+                    <div className="row">
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
                                     <img src={b1} />
                                 </div>
-                                <div class="detail-box">
+                                <div className="detail-box">
                                     <h5>
                                         Flashcard
                                     </h5>
                                     <p>
                                         Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
-                                    <a href="">
+                                    <Link href="">
                                         Read More
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 mx-auto">
-                            <div class="box">
-                                <div class="img-box">
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
                                     <img src={b2} />
                                 </div>
-                                <div class="detail-box">
+                                <div className="detail-box">
                                     <h5>
                                         Quiz
                                     </h5>
                                     <p>
                                         Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân              </p>
-                                    <a href="">
+                                    <Link href="">
                                         Read More
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 mx-auto">
-                            <div class="box">
-                                <div class="img-box">
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
                                     <img src={b3} />
                                 </div>
-                                <div class="detail-box">
+                                <div className="detail-box">
                                     <h5>
                                         Tài liệu              </h5>
                                     <p>
                                         Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất              </p>
-                                    <a href="">
+                                    <Link href="">
                                         Read More
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

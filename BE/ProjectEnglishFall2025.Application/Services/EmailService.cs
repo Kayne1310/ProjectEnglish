@@ -18,14 +18,15 @@ public class EmailService : IEmailService
 
     public async Task SendPasswordResetEmailAsync(string email, string token)
     {
+
         var resetLink = $"{_emailSettings.FrontendBaseUrl}/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+
 
         var subject = "Đặt lại mật khẩu";
         var body = $"<p>Nhấn vào link dưới đây để đặt lại mật khẩu của bạn:</p>" +
                    $"<p><a href='{resetLink}'>Đặt lại mật khẩu</a></p>";
+
               await SendEmailAsync(email, subject, body);
-
-
     }
 
     private async Task SendEmailAsync(string to, string subject, string body)
