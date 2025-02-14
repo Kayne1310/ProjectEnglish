@@ -7,8 +7,8 @@ import fs from 'fs'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // port: 5173, // Đổi thành port bạn muốn
-    // strictPort: true, // Nếu port bị chiếm, Vite sẽ báo lỗi thay vì đổi sang port khác
+    port: 5173, // Đổi thành port bạn muốn
+    strictPort: true, // Nếu port bị chiếm, Vite sẽ báo lỗi thay vì đổi sang port khác
 
     proxy: {
       '/api': {

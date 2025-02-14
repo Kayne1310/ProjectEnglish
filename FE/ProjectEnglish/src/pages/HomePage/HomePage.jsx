@@ -1,14 +1,16 @@
 //home age
-import "../../assets/css/Home/style.scss";
+// import "../../assets/css/Home/style.scss";
 // import "../../assets/css/Home/bootstrap.css";
-import "../../assets/css/Home/responsive.css";
-import "../../assets/css/Home/style.css";
+// import "../../assets/css/Home/responsive.css";
+// import "../../assets/css/Home/style.css";
 import "../../assets/css/Home/home.css";
 import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
 import ListQuizz from "../ListQuizz/ListQuizz";
 import ContactUs from "./ContactUsPage";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { Link } from "react-bootstrap-icons";
+
 // import Footer from "../../components/layout/footer";
 
 
@@ -112,6 +114,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
             {/* <!-- end about section -->
 
             <!-- blog section --> */}

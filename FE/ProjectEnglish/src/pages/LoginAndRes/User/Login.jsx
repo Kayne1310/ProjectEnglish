@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
+import {AuthContext} from "../../../components/layout/context/authContext";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(AuthContext); // Lấy setUser từ AuthContext
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleLogin(e, email, password, setError, setIsLoading);
+        handleLogin(e, email, password, setError, setIsLoading, setUser);
     };
 
     const HandleGoogleLogin = useGoogleLogin({

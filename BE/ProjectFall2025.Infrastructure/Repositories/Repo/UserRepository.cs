@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
@@ -77,5 +78,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return  (int) res.ModifiedCount;
 
         }
-    }
+		public async Task<User> findUserById(ObjectId id)
+		{
+			var usercollection = dbContext.GetCollectionUser();
+
+			var res = await usercollection.Find(x => x.UserID == id).FirstOrDefaultAsync();
+			return res;
+		}
+	}
 }
