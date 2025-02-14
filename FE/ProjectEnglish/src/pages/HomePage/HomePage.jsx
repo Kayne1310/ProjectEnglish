@@ -1,8 +1,8 @@
 //home age
 // import "../../assets/css/Home/style.scss";
-// import "../../assets/css/Home/bootstrap.css";
+import "../../assets/css/Home/bootstrap.css";
 // import "../../assets/css/Home/responsive.css";
-// import "../../assets/css/Home/style.css";
+import "../../assets/css/Home/style.css";
 import "../../assets/css/Home/home.css";
 import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
@@ -68,12 +68,12 @@ const HomePage = () => {
                         </ol>
 
 
-                        <Link className="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
+                        <a className="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
                             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                        </Link>
-                        <Link className="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
+                        </a>
+                        <a className="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
                             <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                        </Link>
+                        </a>
                     </div>
                 </section>
 

@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios from "./axios-customize.js";
 
-const API_URL = import.meta.env.VITE_API_URL; 
+// const API_URL = import.meta.env.VITE_API_URL; 
 // const API_URL ="https://localhost:7048/api"; 
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/Account`, {
+        const response = await axios.post(`/Account`, {
             email: email,
             password: password
         });
@@ -34,13 +34,13 @@ const login = async (email, password) => {
     }
 };
 
-const  logout = async (userId) => {
+const logout = async (userId) => {
     try {
-        const response = await axios.post(`${API_URL}/Account/Logout`, {
-           userId: userId      
+        const response = await axios.post(`/Account/Logout`, {
+            userId: userId
         });
-        
-        if (response.data && response.data.token) {     
+
+        if (response.data && response.data.token) {
             localStorage.removeItem("accessToken");
         }
     } catch (error) {
@@ -49,9 +49,9 @@ const  logout = async (userId) => {
 };
 
 
-const register = async (username, email,password) => {
+const register = async (username, email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/User`, {
+        const response = await axios.post(`/User`, {
             userName: username,
             email: email,
             password: password,
@@ -78,14 +78,14 @@ const GoogleRegister = async (accessToken) => {
             Email: data.email,
             GoogleId: data.id,
             PictureUrl: data.picture,
-        
-        
+
+
         };
 
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`${API_URL}/User/GoogleRegister`, userData);
+        const apiResponse = await axios.post(`/User/GoogleRegister`, userData);
 
         return apiResponse.data;
     } catch (error) {
@@ -113,7 +113,7 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`${API_URL}/Account/google-login`, userData);
+        const apiResponse = await axios.post(`/Account/google-login`, userData);
 
         return apiResponse.data;
     } catch (error) {
@@ -139,7 +139,7 @@ const facebookLogin = async (accessToken) => {
 
         console.log("Facebook User:", userData);
 
-        const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData);
+        const apiResponse = await axios.post(`/Account/facebook-login`, userData);
 
         return apiResponse;
     } catch (error) {
@@ -164,7 +164,7 @@ const facebookRegister = async (accessToken) => {
 
         console.log("Facebook User:", userData);
 
-        const apiResponse = await axios.post(`${API_URL}/User/FacebookRegister`, userData);
+        const apiResponse = await axios.post(`/User/FacebookRegister`, userData);
 
         return apiResponse;
     } catch (error) {
@@ -181,7 +181,7 @@ const authService = {
     googleLogin,
     facebookLogin,
     facebookRegister,
-  
+
 };
 
 export default authService;
