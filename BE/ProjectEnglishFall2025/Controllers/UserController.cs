@@ -18,10 +18,12 @@ namespace ProjectEnglishFall2025.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IRedisService _redisService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IRedisService redis)
         {
             this.userService = userService;
+            _redisService = redis;
         }
 
         [HttpPost]
@@ -42,12 +44,37 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
         }
-   
-        [HttpGet]
+        [HttpGet("getUser")]
+        [Authorize("User")]
+        public async Task<ActionResult> getUser()
+        {
+            try
+            {
+
+                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+                var user = await userService.getUserById(userId);
+                user.UserID.ToString();
+                return Ok(new LoginResponseData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = "data user",
+                    user = user,
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
+
+        [HttpGet("getAllUser")]
         [Authorize("User")]
         public async Task<ActionResult> getAllUser()
         {
-
             try
             {
                 var res = await userService.getAllUser();
@@ -59,7 +86,7 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-   
+
 
         [HttpPost("GoogleRegister")]
         public async Task<IActionResult> GoogleRegisterCallback(GoogleUserViewModel googleUserViewModel)
@@ -67,16 +94,16 @@ namespace ProjectEnglishFall2025.Controllers
             try
             {
 
-            var result = await userService.RegisterWithGoogle(googleUserViewModel);
-            
-            return Ok(result);
+                var result = await userService.RegisterWithGoogle(googleUserViewModel);
+
+                return Ok(result);
 
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            
+
         }
 
         [HttpPost("FacebookRegister")]
@@ -98,7 +125,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             try
             {
@@ -107,7 +134,7 @@ namespace ProjectEnglishFall2025.Controllers
             }
             catch (Exception ex)
             {
-               return BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using MongoDB.Bson;
 using Org.BouncyCastle.Asn1.Ocsp;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
@@ -159,6 +160,25 @@ namespace ProjectFall2025.Application.Services
             //map
 
             return listUservm;
+        }
+
+        public async Task<User> getUserById(string id)
+        {
+            try
+            {
+
+            var acb = ObjectId.Parse(id);
+             var userExit = await repository.findUserById(acb);
+            if(userExit == null)
+            {
+                return new User();
+            }
+            return userExit;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model)

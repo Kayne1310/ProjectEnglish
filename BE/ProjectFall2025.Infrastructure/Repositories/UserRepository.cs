@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
@@ -46,6 +47,14 @@ namespace ProjectFall2025.Infrastructure.Repositories
         {
             return await dbContext.GetCollectionUser().Find(x => x.GoogleId == googleId).FirstOrDefaultAsync();
             
+        }
+
+        public async Task<User> findUserById(ObjectId id)
+        {
+            var usercollection = dbContext.GetCollectionUser();
+        
+            var res = await usercollection.Find(x => x.UserID == id).FirstOrDefaultAsync();
+            return  res;
         }
 
         public async Task<User> findUserByUsername(string email)

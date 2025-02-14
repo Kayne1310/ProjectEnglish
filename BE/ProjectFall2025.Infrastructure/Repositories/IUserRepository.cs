@@ -1,4 +1,5 @@
-﻿using ProjectFall2025.Domain.Do;
+﻿using MongoDB.Bson;
+using ProjectFall2025.Domain.Do;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace ProjectFall2025.Infrastructure.Repositories
         Task<int> ChangePassword(User user);
 
         Task<int> UpdateTokenResetPassword(User user);
+        Task<User> findUserById(ObjectId id);
 
     }
 }

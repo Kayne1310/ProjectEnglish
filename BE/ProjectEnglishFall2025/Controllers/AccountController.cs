@@ -43,6 +43,7 @@ namespace ProjectEnglishFall2025.Controllers
         [HttpPost]
         public async Task<ActionResult> AccountLogin(AccountLoginRequestData requestData)
         {
+
             var returnData = new LoginResponseData();
             try
             {
@@ -63,6 +64,7 @@ namespace ProjectEnglishFall2025.Controllers
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.PrimarySid, user.UserID.ToString()),
                     new Claim(ClaimTypes.Role,user.role),
+                    new Claim(ClaimTypes.Email, user.Email),
 
                 };
                 var newtoken = CreateToken(authClaims);

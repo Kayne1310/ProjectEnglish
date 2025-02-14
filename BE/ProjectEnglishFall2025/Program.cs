@@ -128,7 +128,7 @@ namespace ProjectEnglishFall2025
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:5173") // Đúng địa chỉ FE
+                                      policy.WithOrigins(builder.Configuration["FeURL"]) // Đúng địa chỉ FE
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .AllowCredentials();
