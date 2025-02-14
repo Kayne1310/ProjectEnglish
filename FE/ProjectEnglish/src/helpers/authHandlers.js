@@ -1,34 +1,43 @@
-import authService from "../service/authService";
+import authService from "../service/authService"; // Đảm bảo đường dẫn đúng
 
-export const handleLogin = async (e, email, password, setError, setIsLoading) => {
+export const handleLogin = async (e, email, password, setError, setIsLoading, setUser) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
+
     try {
         const response = await authService.login(email, password);
-        if (response.returnCode == -1) {
-            setError(`Login failed. ${response.returnMessage}`);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000);
+
+        console.log("API Response:", response); // Kiểm tra response trả về từ authService
+
+        if (!response || !response.user) {
+            setError("Login failed. User data is missing.");
+            console.error("Missing user data:", response);
         } else {
-            console.log(response);
-            // Lưu trạng thái đăng nhập và thông tin người dùng vào localStorage
+            console.log("User Data:", response.user);
+
             localStorage.setItem("isLoggedIn", "true");
-            // localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin người dùng
+
+            setUser(response.user); // Cập nhật context với thông tin người dùng
 
             setTimeout(() => {
                 setIsLoading(false);
-                window.location.href = "/"; // Redirect after successful login
-            }, 1000); // Hide loader after 1 seconds
+                window.location.href = "/"; // Chuyển hướng sau khi đăng nhập thành công
+            }, 1000);
+            return;
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
     }
+
+    setTimeout(() => {
+        setIsLoading(false);
+    }, 1000);
 };
+
+
+
+
 
 export const handleLogout = async (setIsLoading, setError) => {
     setError("");
@@ -53,6 +62,8 @@ export const handleLogout = async (setIsLoading, setError) => {
     }
 };
 
+
+////
 export const handerRegister = async (e, name, email, password, setError, setIsLoading, setIsRegisterSuccess, setName, setEmail, setPassword) => {
     e.preventDefault();
     setError("");
@@ -193,7 +204,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
             }, 1000);
         }
 
-       
+
         else if (apiResponse.data.returnCode == 1) {
             localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
@@ -203,7 +214,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
         }
 
     }
-     catch (err) {
+    catch (err) {
         setError(`Register failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);

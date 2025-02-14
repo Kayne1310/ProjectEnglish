@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "../../assets/css/LoginCss/user.css";
 import { handerGoogleRegister, handerRegister, handleLogin } from "../../helpers/authHandlers";
 import Loading from "react-loading";
 import { Link } from "react-router-dom";
 import { Eye, EyeSlash } from "react-bootstrap-icons"; // Sử dụng icon từ react-bootstrap-icons
-
 import { useGoogleLogin } from "@react-oauth/google";
-
-
+import {AuthContext} from "../../components/layout/context/authContext";
 
 const LoginUserPage = () => {
     const [email, setEmail] = useState("");
@@ -18,13 +16,14 @@ const LoginUserPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
+    const { setUser } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (showSignUp) {
             handerRegister(e, name, email, password, setError, setIsLoading, setIsRegisterSuccess, setName, setEmail, setPassword);
         } else {
-            handleLogin(e, email, password, setError, setIsLoading);
+            handleLogin(e, email, password, setError, setIsLoading, setUser);
         }
     };
 

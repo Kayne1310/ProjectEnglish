@@ -107,7 +107,7 @@ const Nav = () => {
                                     </nav>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/editprofile">About Us</NavLink>
+                                    <NavLink className="nav-link" to="/viewprofile">About Us</NavLink>
                                 </li>
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">community</NavLink>

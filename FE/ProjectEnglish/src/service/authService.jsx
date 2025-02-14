@@ -8,17 +8,29 @@ const login = async (email, password) => {
         const response = await axios.post(`${API_URL}/Account`, {
             email: email,
             password: password
-            
         });
 
-        if (response.data && response.data.token) {
+        console.log("Full API Response:", response); // Log toàn bộ response
+
+        if (!response || !response.data) {
+            console.error("Error: response.data is undefined!");
+            return null;
+        }
+
+        // Lưu token vào localStorage nếu có
+        if (response.data.token) {
             localStorage.setItem("accessToken", response.data.token);
         }
 
-        return response.data;
+        // Lưu user vào localStorage nếu có
+        if (response.data.user) {
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+        }
+
+        return response.data; // Trả về `response.data` thay vì `response`
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
-        throw error;
+        return { error: error.response?.data || error.message };
     }
 };
 
