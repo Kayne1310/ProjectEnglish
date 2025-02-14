@@ -25,7 +25,7 @@ const ListQuizz = () => {
                                     <div className="detail-box">
                                         <h5>Flashcard</h5>
                                         <p>Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
-                                        <a href="">Read More</a>
+                                        <Link href="">Read More</Link>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@ const ListQuizz = () => {
                                     <div className="detail-box">
                                         <h5>Tài liệu</h5>
                                         <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
-                                        <a href="">Read More</a>
+                                        <Link href="">Read More</Link>
                                     </div>
                                 </div>
                             </div>

@@ -8,6 +8,7 @@ import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
 import ListQuizz from "../ListQuizz/ListQuizz";
 import ContactUs from "./ContactUsPage";
+import { Link } from "react-bootstrap-icons";
 // import Footer from "../../components/layout/footer";
 
 
@@ -28,8 +29,8 @@ const HomePage = () => {
                                                 <h1>For All Your <br /> Furniture Needs</h1>
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                                                 <div className="btn-box">
-                                                    <a href="#" className="btn1">Contact Us</a>
-                                                    <a href="#" className="btn2">About Us</a>
+                                                    <Link href="#" className="btn1">Contact Us</Link>
+                                                    <Link href="#" className="btn2">About Us</Link>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,12 +68,12 @@ const HomePage = () => {
                         </ol>
 
 
-                        <a className="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
+                        <Link className="carousel-control-prev" href="#customCarousel" role="button" data-bs-slide="prev">
                             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                        </a>
-                        <a className="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
+                        </Link>
+                        <Link className="carousel-control-next" href="#customCarousel" role="button" data-bs-slide="next">
                             <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                        </a>
+                        </Link>
                     </div>
                 </section>
 
@@ -102,9 +103,9 @@ const HomePage = () => {
                                     We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether you're a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community.
 
                                     Start your journey to mastering English today!</p>
-                                <a href="">
+                                <Link href="">
                                     Read More
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>

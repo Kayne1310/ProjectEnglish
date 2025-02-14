@@ -84,9 +84,9 @@ const Nav = () => {
         <div className="navigation">
             <header className="header_section long_section px-0">
                 <nav className="navbar navbar-expand-lg custom_nav-container">
-                    <a className="navbar-brand">
+                    <div className="navbar-brand">
                         <span><Link className="nav-link" to="/">Quizzet</Link></span>
-                    </a>
+                    </div>
                     <button className="navbar-toggler" type="button" onClick={toggleMenu} aria-controls="navbarSupportedContent" aria-expanded={isOpen} aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>

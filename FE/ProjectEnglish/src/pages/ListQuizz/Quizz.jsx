@@ -2,6 +2,7 @@ import React from "react";
 import "../../assets/css/Home/QuizletForm.css"; // Import file CSS
 // import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';   
 import test from "../../assets/image/b1.jpg"
+import { Link } from "react-bootstrap-icons";
 
 const QuizletForm = () => {
     return (
@@ -49,7 +50,7 @@ const QuizletForm = () => {
                         </div>
 
                         <div className="quizlet-help-link">
-                            <a href="#">Bạn không biết?</a>
+                           <span> Bạn không biết?</span>
                         </div>
                     </div>
 

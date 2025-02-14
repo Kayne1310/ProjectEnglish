@@ -6,7 +6,7 @@ import Loading from "react-loading";
 import { Link } from "react-router-dom";
 import { Eye, EyeSlash } from "react-bootstrap-icons"; // Sử dụng icon từ react-bootstrap-icons
 import { useGoogleLogin } from "@react-oauth/google";
-import {AuthContext} from "../../components/layout/context/authContext";
+import { AuthContext } from "../../components/layout/context/authContext";
 
 const LoginUserPage = () => {
     const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ const LoginUserPage = () => {
 
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (response) => {
-            await handerGoogleRegister(response, setError, setIsLoading,setIsRegisterSuccess);
+            await handerGoogleRegister(response, setError, setIsLoading, setIsRegisterSuccess);
         },
         onError: (error) => {
             console.error("Google login failed:", error);
@@ -47,7 +47,7 @@ const LoginUserPage = () => {
                         <div className="social-icons" style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "10px" }}>
                             <Link to="#" className="icon" onClick={handleGoogleLogin} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#db4437", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-google"></i>
-                              
+
                             </Link>
                             <Link to="#" className="icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#3b5998", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-facebook-f"></i>
@@ -87,7 +87,7 @@ const LoginUserPage = () => {
                                 <Loading type="spin" color="#13d420" height={30} width={30} />
                             </div>
                         )}
-                        {!isLoading&& error  && <p style={{ color: "red" }}>{error}</p>}
+                        {!isLoading && error && <p style={{ color: "red" }}>{error}</p>}
                         {isRegisterSuccess && !isLoading && showSignUp && (
                             <p style={{ color: "green" }}>Register success. Please login</p>
                         )}
