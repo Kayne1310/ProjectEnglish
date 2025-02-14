@@ -21,6 +21,6 @@ namespace ProjectFall2025.Application.IServices
 
 
         Task<ReturnData> FindUserbyEmail(string email);
-
-    }
+		Task<User> getUserById(string id);
+	}
 }

@@ -123,6 +123,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 //tra ve token 
                 returnData.ReturnCode = 1;
+                returnData.user=user;
                 returnData.ReturnMessage = result.ReturnMessage;
                 returnData.token = new JwtSecurityTokenHandler().WriteToken(newtoken);
 
@@ -238,6 +239,7 @@ namespace ProjectEnglishFall2025.Controllers
             var returnData = new LoginResponseData();
             returnData.ReturnMessage = "Login Sucessful";
             returnData.ReturnCode = 1;
+            returnData.user=validAcount.user;
             returnData.token = new JwtSecurityTokenHandler().WriteToken(newToken);
             return Ok(returnData);
         }
@@ -310,7 +312,8 @@ namespace ProjectEnglishFall2025.Controllers
                 {
                     ReturnMessage = "Login Successful",
                     ReturnCode = 1,
-                    token = new JwtSecurityTokenHandler().WriteToken(newToken)
+					user = validAccount.user,
+			    	token = new JwtSecurityTokenHandler().WriteToken(newToken)
                 };
 
                 return Ok(returnData);
