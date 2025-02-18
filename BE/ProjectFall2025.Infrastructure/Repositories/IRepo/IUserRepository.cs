@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Infrastructure.Repositories
+namespace ProjectFall2025.Infrastructure.Repositories.IRepo
 {
     public interface IUserRepository
     {
@@ -25,5 +25,6 @@ namespace ProjectFall2025.Infrastructure.Repositories
         Task<int> UpdateTokenResetPassword(User user);
         Task<User> findUserById(ObjectId id);
 
-    }
+
+	}
 }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using ProjectFall2025.Domain.ViewModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -18,12 +20,10 @@ namespace ProjectEnglishFall2025.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
-        private readonly IRedisService _redisService;
 
-        public UserController(IUserService userService, IRedisService redis)
+        public UserController(IUserService userService)
         {
             this.userService = userService;
-            _redisService = redis;
         }
 
         [HttpPost]
@@ -44,37 +44,12 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
         }
-        [HttpGet("getUser")]
-        [Authorize("User")]
-        public async Task<ActionResult> getUser()
-        {
-            try
-            {
 
-                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-                var role = User.FindFirst(ClaimTypes.Role)?.Value;
-                var user = await userService.getUserById(userId);
-                user.UserID.ToString();
-                return Ok(new LoginResponseData
-                {
-                    ReturnCode = -1,
-                    ReturnMessage = "data user",
-                    user = user,
-
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-
-        }
-
-        [HttpGet("getAllUser")]
+        [HttpGet]
         [Authorize("User")]
         public async Task<ActionResult> getAllUser()
         {
+
             try
             {
                 var res = await userService.getAllUser();
@@ -137,7 +112,32 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("getUser")]
+        [Authorize("User")]
+        public async Task<ActionResult> getUser()
+        {
+            try
+            {
+
+                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+                var user = await userService.getUserById(userId);
+                user.UserID.ToString();
+                return Ok(new LoginResponseData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = "data user",
+                    user = user,
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
     }
 }
-
-

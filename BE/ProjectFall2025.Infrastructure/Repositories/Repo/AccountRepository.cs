@@ -1,15 +1,16 @@
 ﻿using MongoDB.Driver;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using ProjectFall2025.Infrastructure.DbContext;
+using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Infrastructure.Repositories
+namespace ProjectFall2025.Infrastructure.Repositories.Repo
 {
     public class AccountRepository : IAcountRepository
     {
@@ -23,7 +24,7 @@ namespace ProjectFall2025.Infrastructure.Repositories
         {
             var userCollection = dbContext.GetCollectionUser();
 
-            var user= await userCollection
+            var user = await userCollection
                 .Find(u => u.Email == requestData.Email && u.Password == requestData.Password)
                 .FirstOrDefaultAsync();
             return user;
@@ -44,9 +45,9 @@ namespace ProjectFall2025.Infrastructure.Repositories
 
         public async Task<User> getUserById(object userId)
         {
-          var userCollection= dbContext.GetCollectionUser();
-           var filter = Builders<User>.Filter.Eq(x => x.UserID, userId);
-           return await userCollection.Find(filter).FirstOrDefaultAsync();
+            var userCollection = dbContext.GetCollectionUser();
+            var filter = Builders<User>.Filter.Eq(x => x.UserID, userId);
+            return await userCollection.Find(filter).FirstOrDefaultAsync();
         }
     }
 }

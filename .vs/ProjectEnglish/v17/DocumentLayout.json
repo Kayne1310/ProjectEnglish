@@ -1,5 +1,16 @@
 {
   "Version": 1,
+<<<<<<< HEAD
+  "WorkspaceRootPath": "C:\\Users\\Vanto\\source\\repos\\ProjectEnglish\\",
+  "Documents": [],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+=======
   "WorkspaceRootPath": "G:\\Hoc Web API\\ProjectEnglish\\",
   "Documents": [],
   "DocumentGroupContainers": [
@@ -9,10 +20,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+>>>>>>> 117a20200e82f12c40d43244a4f1e353e6cb336a
           "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
+<<<<<<< HEAD
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{ca8cc5c7-0231-406a-95cd-aa5ed6ac0190}"
+            },
+            {
+              "$type": "Bookmark",
+=======
+>>>>>>> 117a20200e82f12c40d43244a4f1e353e6cb336a
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             },
             {
@@ -21,6 +50,13 @@
             },
             {
               "$type": "Bookmark",
+<<<<<<< HEAD
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+=======
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
@@ -48,6 +84,7 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+>>>>>>> 117a20200e82f12c40d43244a4f1e353e6cb336a
             }
           ]
         }

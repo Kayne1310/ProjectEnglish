@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Domain.ViewModel
+namespace ProjectFall2025.Domain.ViewModel.ViewModel_User
 {
     public class UserVM
     {
@@ -16,8 +16,7 @@ namespace ProjectFall2025.Domain.ViewModel
         public string Email { get; set; }
         public string Password { get; set; }
         public string? Refeshtoken { get; set; }
-        public DateTime Exprired { get; set; }
-
+        public DateTime Expired { get; set; }
         public string role { get; set; }
 
     }

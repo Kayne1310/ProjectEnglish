@@ -7,19 +7,19 @@ using ProjectFall2025.Application.Mapping;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
-using ProjectFall2025.Infrastructure.Repositories;
 using StackExchange.Redis;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-
-
 using System.Text;
 using ProjectFall2025.Domain.ViewModel;
 using ProjectFall2025.Common.ValidateData;
+using ProjectFall2025.Infrastructure.Repositories.Repo;
+using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using ProjectEnglishFall2025.Filter;
 
 namespace ProjectEnglishFall2025
 {
@@ -99,20 +99,39 @@ namespace ProjectEnglishFall2025
             builder.Services.AddTransient<IRedisService, RedisService>();
 
 
-
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            // Mapper
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            // Services
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAcountRepository, AccountRepository>();
             builder.Services.AddScoped<IAcountService, AccountService>();
+            builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IQuizAnswerService, QuizAnswerService>();
+            builder.Services.AddScoped<IUserQuizService, UserQuizService>();
+            builder.Services.AddScoped<IQuizQuestionService, QuizQuestionService>();
+            builder.Services.AddScoped<IHistoryService, HistoryService>();
+            builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
+            builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
+
+            // Repository
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAcountRepository, AccountRepository>();
             builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
             builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+            builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+            builder.Services.AddScoped<IQuizAnswerRepository, QuizAnswerRepository>();
+            builder.Services.AddScoped<IUserQuizRepository, UserQuizRepository>();
+            builder.Services.AddScoped<IQuizQuestionRepository, QuizQuestionRepository>();
+            builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
+            builder.Services.AddScoped<IQuizUserAnswerRepository, QuizUserAnswerRepository>();
+            builder.Services.AddScoped<IAIAnswerRepository, AIAnswerRepository>();
 
             //res validator
-
             builder.Services.AddFluentValidationAutoValidation();
+
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
+
 
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -138,7 +157,11 @@ namespace ProjectEnglishFall2025
 
 
             var app = builder.Build();
+
+            app.UseMiddleware<JwtFromCookieMiddleware>();
+
             app.UseCors(MyAllowSpecificOrigins);
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

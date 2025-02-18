@@ -1,0 +1,157 @@
+/* Tạo class body riêng cho form Quizlet để tránh đè lên CSS khác */
+.quizlet-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f6f7fb;
+    padding: 40px 0;
+    /* Cách đều phần navbar và footer */
+}
+
+.quizlet-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+}
+
+.quizlet-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 800px;
+    /* Tăng kích thước form */
+    max-width: 90%;
+    text-align: center;
+}
+
+.quizlet-definition-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.quizlet-definition-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: blue;
+}
+
+.quizlet-audio-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: blue;
+}
+
+.quizlet-content-wrapper {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.quizlet-question-container {
+    flex: 1;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    padding: 20px;
+    background: #f6f7fb;
+    border-radius: 10px;
+}
+
+.quizlet-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+}
+
+.quizlet-image-container {
+    width: 250px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: white;
+}
+
+.quizlet-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+}
+
+.quizlet-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.quizlet-option {
+    padding: 14px;
+    background: #edeff4;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 16px;
+    /* color: black; */
+}
+
+.quizlet-option-text {
+    color: black;
+    /* Chỉ thay đổi màu của chữ bên trong */
+}
+
+
+.quizlet-option:hover {
+    background: #d9dde8;
+}
+
+.quizlet-help-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.quizlet-help-link a {
+    text-decoration: none;
+    color: #4255ff;
+    font-size: 14px;
+}
+
+/* Footer nhỏ hơn nhưng giữ nguyên chiều dài */
+.quizlet-footer-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    margin-top: 20px;
+    border-radius: 15px;
+    width: 800px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.quizlet-footer-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}

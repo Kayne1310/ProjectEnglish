@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectFall2025.Domain.ViewModel
+namespace ProjectFall2025.Domain.ViewModel.ViewModel_User
 {
     public class UserViewModel
     {

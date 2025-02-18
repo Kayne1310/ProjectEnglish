@@ -8,13 +8,13 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
-using ProjectFall2025.Domain.ViewModel;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -123,43 +123,54 @@ namespace ProjectEnglishFall2025.Controllers
 
                 var res = await acountService.Account_UpdateRefeshToken(req);
 
+                //Gan token vao cookies 
+                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
+                {
+                    HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                    Secure = true,   // Chỉ hoạt động trên HTTPS
+                    SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
+
                 //tra ve token 
                 returnData.ReturnCode = 1;
+                returnData.user=user;
                 returnData.ReturnMessage = result.ReturnMessage;
                 returnData.token = new JwtSecurityTokenHandler().WriteToken(newtoken);
 
                 return Ok(returnData);
-
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
-
+        
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        //[Authorize("User")]
+        public async Task<IActionResult> Logout()
         {
+            var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var response = new LogoutResponse();
             try
             {
                 // Redis Keys
-                var redisKeyAccessToken = $"user:{request.UserId}:accessToken";
-                var redisKeyRefreshToken = $"user:{request.UserId}:refreshToken";
+                var redisKeyAccessToken = $"user:{userId}:accessToken";
+                var redisKeyRefreshToken = $"user:{userId}:refreshToken";
 
                 // Xóa Access Token và Refresh Token khỏi Redis
                 await redisService.DeleteKeyAsync(redisKeyAccessToken);
                 await redisService.DeleteKeyAsync(redisKeyRefreshToken);
 
                 // (Tùy chọn) Cập nhật trạng thái session trong MongoDB
-                if (request.UserId == null)
+                if (userId == null)
                 {
                     response.ReturnCode = -1;
                     response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                     return StatusCode(500, response);
 
                 }
-                await userSessionService.removeUserSession(new LogoutRequest { UserId = request.UserId });
+                await userSessionService.removeUserSession(new LogoutRequest { UserId = userId });
 
                 response.ReturnCode = 1;
                 response.ReturnMessage = "Đăng xuất thành công.";
@@ -171,9 +182,7 @@ namespace ProjectEnglishFall2025.Controllers
                 response.ReturnMessage = "Đã xảy ra lỗi khi đăng xuất.";
                 return StatusCode(500, response);
             }
-        }
-
-    
+        }   
 
         [HttpPost("facebook-login")]
         public async Task<IActionResult> FacebookLogin(FacebookUserViewModel model)
@@ -237,9 +246,18 @@ namespace ProjectEnglishFall2025.Controllers
             await userSessionService.addUserSession(userSession);
             await acountService.Account_UpdateRefeshToken(req);
 
+            Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+            {
+                HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                Secure = true,   // Chỉ hoạt động trên HTTPS
+                SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                Expires = DateTime.UtcNow.AddHours(1)
+            });
+
             var returnData = new LoginResponseData();
             returnData.ReturnMessage = "Login Sucessful";
             returnData.ReturnCode = 1;
+            returnData.user=validAcount.user;
             returnData.token = new JwtSecurityTokenHandler().WriteToken(newToken);
             return Ok(returnData);
         }
@@ -306,13 +324,22 @@ namespace ProjectEnglishFall2025.Controllers
                 };
 
                 await userSessionService.addUserSession(userSession);
+                //add cokkie
+                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+                {
+                    HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
+                    Secure = true,   // Chỉ hoạt động trên HTTPS
+                    SameSite = SameSiteMode.None, // Ngăn chặn CSRF
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
 
                 // Tạo phản hồi trả về
                 var returnData = new LoginResponseData
                 {
                     ReturnMessage = "Login Successful",
                     ReturnCode = 1,
-                    token = new JwtSecurityTokenHandler().WriteToken(newToken)
+					user = validAccount.user,
+			    	token = new JwtSecurityTokenHandler().WriteToken(newToken)
                 };
 
                 return Ok(returnData);
@@ -334,12 +361,18 @@ namespace ProjectEnglishFall2025.Controllers
 
                 var user = await userService.FindUserbyEmail(request.Email);
                 if (user.ReturnCode == -1)
-                    return Ok("Người dùng không tồn tại");
+                    return Ok(new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage="User not exits"
+                    });
+
 
                 var token = GenerateRefreshToken();
                 
 
                 await emailService.SendPasswordResetEmailAsync(request.Email, token);
+                await userService.UpdateTokenUser(new ResetPasswordRequest { Email = request.Email, NewPassword = null ,Token=token});
 
                 return Ok(new ReturnData
                 {
@@ -370,8 +403,6 @@ namespace ProjectEnglishFall2025.Controllers
 
             }
         }
-
-
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
