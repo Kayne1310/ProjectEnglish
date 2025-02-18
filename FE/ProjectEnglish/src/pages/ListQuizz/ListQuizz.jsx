@@ -2,11 +2,11 @@ import React from "react";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
+
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 const ListQuizz = () => {
     const location = useLocation(); // Lấy đường dẫn hiện tại
-
     return (
         <>
             {/* Kiểm tra nếu đường dẫn không phải là "/listquizz/quizlet" thì hiển thị ListQuizz */}

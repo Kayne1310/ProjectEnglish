@@ -8,7 +8,9 @@ import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
 import ListQuizz from "../ListQuizz/ListQuizz";
 import ContactUs from "./ContactUsPage";
+// import { Link } from "react-router-dom";
 import { Link } from "react-bootstrap-icons";
+
 // import Footer from "../../components/layout/footer";
 
 

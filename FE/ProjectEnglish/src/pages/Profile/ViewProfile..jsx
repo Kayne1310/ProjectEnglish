@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../components/layout/context/authContext';
 
 const ViewProfile = () => {
+  const {userInfor}=useContext(AuthContext);
   const [userData, setUserData] = useState({
-    userName: '',
-    email: '',
-    picture: '',
+    userName: userInfor.userName || '',
+    email: userInfor.email || '',
+    picture: userInfor.picture || '',
 
   });
-
+console.log(userInfor);
   useEffect(() => {
-    // Lấy thông tin người dùng từ localStorage
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+
+  if(userInfor){
       try {
-        const parsedUser = JSON.parse(storedUser);
         setUserData({
           ...userData,
-          userName: parsedUser.userName || '',
-          email: parsedUser.email || '',
-          picture: parsedUser.picture || ''
+          userName: userInfor.userName || '',
+          email: userInfor.email || '',
+          picture: userInfor.picture || ''
         });
       } catch (error) {
         console.error('Failed to parse user data:', error);

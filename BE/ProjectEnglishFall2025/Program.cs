@@ -19,7 +19,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
-
+using ProjectEnglishFall2025.Filter;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 namespace ProjectEnglishFall2025
 {
     public class Program
@@ -111,6 +113,8 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IHistoryService, HistoryService>();
             builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -130,19 +134,26 @@ namespace ProjectEnglishFall2025
 
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuiz>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizAnswer>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateUserQuiz>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizQuestion>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateHistory>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizUserAnswer>();
-            builder.Services.AddValidatorsFromAssemblyContaining<ValidateIAIAnswer>();
+
 
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
- 
 
+
+            //config cloudiary
+            builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
+            {
+                var config = builder.Configuration.GetSection("Cloudinary");
+
+                var account = new CloudinaryDotNet.Account(
+                     config["CloudName"],
+                     config["ApiKey"],
+                     config["ApiSecret"]
+                      );
+                return new Cloudinary(account);
+
+            });
 
             //cors
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -152,7 +163,7 @@ namespace ProjectEnglishFall2025
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:5173") // Đúng địa chỉ FE
+                                      policy.WithOrigins(builder.Configuration["FeURL"]) // Đúng địa chỉ FE
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .AllowCredentials();
@@ -162,7 +173,11 @@ namespace ProjectEnglishFall2025
 
 
             var app = builder.Build();
+
+            app.UseMiddleware<JwtFromCookieMiddleware>();
+
             app.UseCors(MyAllowSpecificOrigins);
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
