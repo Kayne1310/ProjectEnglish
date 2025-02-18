@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
+
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const ListQuizz = () => {

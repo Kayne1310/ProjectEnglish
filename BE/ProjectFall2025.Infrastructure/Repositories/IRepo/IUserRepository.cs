@@ -23,7 +23,9 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<int> ChangePassword(User user);
 
         Task<int> UpdateTokenResetPassword(User user);
+        Task<User> findUserById(ObjectId id);
+        Task<int > UpdateUser(User user);
 
-		Task<User> findUserById(ObjectId id);
+
 	}
 }

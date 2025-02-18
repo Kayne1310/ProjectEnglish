@@ -1,6 +1,7 @@
-import axios from "./axios-customize.js";
 
-// const API_URL = import.meta.env.VITE_API_URL; 
+import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
 // const API_URL ="https://localhost:7048/api"; 
 
 // const getQuizByUser = () =>{
@@ -22,7 +23,8 @@ const login = async (email, password) => {
         const response = await axios.post(`/Account`, {
             email: email,
             password: password
-        });
+        }, { withCredentials: true });
+
 
         console.log("Full API Response:", response); // Log toàn bộ response
 
@@ -30,17 +32,6 @@ const login = async (email, password) => {
             console.error("Error: response.data is undefined!");
             return null;
         }
-
-        // Lưu token vào localStorage nếu có
-        if (response.data.token) {
-            localStorage.setItem("accessToken", response.data.token);
-        }
-
-        // Lưu user vào localStorage nếu có
-        if (response.data.user) {
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-        }
-
         return response.data; // Trả về `response.data` thay vì `response`
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
@@ -48,15 +39,13 @@ const login = async (email, password) => {
     }
 };
 
-const logout = async (userId) => {
-    try {
-        const response = await axios.post(`/Account/Logout`, {
-            userId: userId
-        });
 
-        if (response.data && response.data.token) {
-            localStorage.removeItem("accessToken");
-        }
+const logout = async () => {
+    try {
+        const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
+          withCredentials: true,
+        });
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -92,8 +81,6 @@ const GoogleRegister = async (accessToken) => {
             Email: data.email,
             GoogleId: data.id,
             PictureUrl: data.picture,
-
-
         };
 
         console.log("Google User:", data);
@@ -127,8 +114,12 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`/Account/google-login`, userData);
 
+        const apiResponse = await axios.post(
+            `${API_URL}/Account/google-login`,
+            userData,
+            { withCredentials: true } // Bắt buộc để cookie hoạt động
+          );
         return apiResponse.data;
     } catch (error) {
         console.error("Google Login failed:", error.response?.data || error.message);
@@ -153,7 +144,8 @@ const facebookLogin = async (accessToken) => {
 
         console.log("Facebook User:", userData);
 
-        const apiResponse = await axios.post(`/Account/facebook-login`, userData);
+
+        const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData, { withCredentials: true });
 
         return apiResponse;
     } catch (error) {
@@ -187,6 +179,53 @@ const facebookRegister = async (accessToken) => {
     }
 };
 
+
+const resetPassword = async (email, token, newpassword) => {
+
+    try {   
+    const response = await axios.post(`${API_URL}/Account/reset-password`,
+        {
+            email: email,
+            token: token,
+            newpassword: newpassword
+        });
+
+        console.log(response);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Reset Password failed:", error.response?.data || error.message);
+        throw error;
+    }
+
+};
+
+
+//
+const getUserInfor= async()=>{
+
+    try{
+            const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
+            return response.data;
+    }
+    catch(error){
+            return error;
+    }
+};
+
+const forgotpassword = async (email) => {
+    try {
+        const response = await axios.post(`${API_URL}/Account/forgot-password`, {
+            email: email
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Forgot Password failed:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
 const authService = {
     login,
     logout,
@@ -195,7 +234,9 @@ const authService = {
     googleLogin,
     facebookLogin,
     facebookRegister,
-
+    resetPassword,
+    forgotpassword,
+    getUserInfor,
 };
 
 export default authService;
