@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using Org.BouncyCastle.Asn1.Ocsp;
 using ProjectFall2025.Application.IServices;
@@ -13,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjectFall2025.Infrastructure.Repositories.Repo;
 
 namespace ProjectFall2025.Application.Services
 {
@@ -22,13 +26,18 @@ namespace ProjectFall2025.Application.Services
         private readonly IMapper mapper;
         private readonly IValidator<UserViewModel> validator;
         private readonly IAcountRepository acountRepository;
+        private readonly ICloudinaryService cloudinaryService;
 
-        public UserService(IUserRepository repository, IMapper mapper, IValidator<UserViewModel> validator, IAcountRepository acountRepository)
+
+        public UserService(IUserRepository repository, IMapper mapper,
+            IValidator<UserViewModel> validator, IAcountRepository acountRepository,ICloudinaryService cloudinaryService)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.validator = validator;
             this.acountRepository = acountRepository;
+            this.cloudinaryService = cloudinaryService;
+
         }
         public async Task<ReturnData> addUserService(UserViewModel userViewModel)
         {
@@ -340,9 +349,39 @@ namespace ProjectFall2025.Application.Services
             };
 
         }
-    
+
+        //upload anh luu vao cloudinary
+
+        public async Task<string> UploadProfilePictureAsync(string userId, IFormFile file)
+        {
+            try
+            {
+                var imageUrl = await cloudinaryService.UploadImageAsync(file, "users");                                                                                                                        
+
+                // Lấy thông tin user từ DB
+                var user = await repository.findUserById(ObjectId.Parse(userId));
+                if (user == null) throw new ArgumentException("User not found!");
+
+                // Cập nhật URL ảnh vào user
+                user.Picture = imageUrl;
+                var res = await repository.UpdateUser(user);
+                if (res <= 0)
+                {
+                    throw new ArgumentException("Error ");
+                }
+
+                return imageUrl;
+
+            }
+            catch (Exception ex) {
+                return ex.Message;
+            }
+      
+        }
+            // Upload ảnh lên Cloudinary
 
 
-	}
+    }
+
 
 }

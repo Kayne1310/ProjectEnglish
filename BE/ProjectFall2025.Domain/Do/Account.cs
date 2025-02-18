@@ -14,4 +14,6 @@ namespace ProjectFall2025.Domain.Do
 
         public string FullName { get; set; }
     }
+
+
 }

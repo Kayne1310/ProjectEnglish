@@ -86,6 +86,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return  (int) res.ModifiedCount;
 
         }
-	
-	}
+
+        public async Task<int> UpdateUser(User user)
+        {
+            var updateuser=await dbContext.GetCollectionUser().ReplaceOneAsync(x=>x.UserID==user.UserID,user);
+         
+            return (int) updateuser.ModifiedCount;
+        }
+    }
 }

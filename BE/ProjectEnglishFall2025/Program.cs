@@ -20,7 +20,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using ProjectEnglishFall2025.Filter;
-
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 namespace ProjectEnglishFall2025
 {
     public class Program
@@ -112,6 +113,8 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IHistoryService, HistoryService>();
             builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -136,8 +139,21 @@ namespace ProjectEnglishFall2025
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
- 
 
+
+            //config cloudiary
+            builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
+            {
+                var config = builder.Configuration.GetSection("Cloudinary");
+
+                var account = new CloudinaryDotNet.Account(
+                     config["CloudName"],
+                     config["ApiKey"],
+                     config["ApiSecret"]
+                      );
+                return new Cloudinary(account);
+
+            });
 
             //cors
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
