@@ -1,15 +1,14 @@
 //home age
-// import "../../assets/css/Home/style.scss";
-import "../../assets/css/Home/bootstrap.css";
-// import "../../assets/css/Home/responsive.css";
-import "../../assets/css/Home/style.css";
 import "../../assets/css/Home/home.css";
 import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
 import ListQuizz from "../ListQuizz/ListQuizz";
 import ContactUs from "./ContactUsPage";
-import { Link } from "react-bootstrap-icons";
-// import Footer from "../../components/layout/footer";
+import b1 from "../../assets/image/b1.jpg";
+import b2 from "../../assets/image/b2.jpg";
+import b3 from "../../assets/image/b3.jpg";
+import { Link } from "react-router-dom";
+
 
 
 const HomePage = () => {
@@ -29,8 +28,8 @@ const HomePage = () => {
                                                 <h1>For All Your <br /> Furniture Needs</h1>
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                                                 <div className="btn-box">
-                                                    <Link href="#" className="btn1">Contact Us</Link>
-                                                    <Link href="#" className="btn2">About Us</Link>
+                                                    <a href="#" className="btn1">Contact Us</a>
+                                                    <a href="#" className="btn2">About Us</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -103,9 +102,9 @@ const HomePage = () => {
                                     We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether you're a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community.
 
                                     Start your journey to mastering English today!</p>
-                                <Link href="">
+                                <a href="">
                                     Read More
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -116,8 +115,53 @@ const HomePage = () => {
             {/* <!-- end about section -->
 
             <!-- blog section --> */}
-            <ListQuizz />
+            <section className="blog_section layout_padding">
+                <div className="container">
+                    <div className="heading_container">
+                        <h2>welcome Quizzet</h2>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
+                                    <img src={b1} alt="Flashcard" />
+                                </div>
+                                <div className="detail-box">
+                                    <h5>Flashcard</h5>
+                                    <p>Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
+                                    <Link href="">Read More</Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
+                                    <img src={b2} alt="Quiz" />
+                                </div>
+                                <div className="detail-box">
+                                    <h5>Quiz</h5>
+                                    <p>Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân</p>
+                                    <Link to="/listquizz">Read More</Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 col-lg-4 mx-auto">
+                            <div className="box">
+                                <div className="img-box">
+                                    <img src={b3} alt="Tài liệu" />
+                                </div>
+                                <div className="detail-box">
+                                    <h5>Tài liệu</h5>
+                                    <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
+                                    <Link href="">Read More</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
+            <ListQuizz/>
             {/* <!-- Contact Section --> */}
             <ContactUs />
 

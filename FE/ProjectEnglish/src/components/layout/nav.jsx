@@ -1,9 +1,3 @@
-// import "../../assets/css/Home/style.scss";
-import "../../assets/css/Home/bootstrap.css";
-import "../../assets/css/Home/responsive.css";
-// import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';    
-import "../../assets/css/Home/style.css";
-import "../../assets/css/Home/home.css";
 import "../../assets/css/Home/nav.css";
 import { Link, NavLink } from "react-router-dom";
 import React, { useState, useEffect } from "react";
@@ -84,9 +78,9 @@ const Nav = () => {
         <div className="navigation">
             <header className="header_section long_section px-0">
                 <nav className="navbar navbar-expand-lg custom_nav-container">
-                    <div className="navbar-brand">
+                    <a className="navbar-brand">
                         <span><Link className="nav-link" to="/">Quizzet</Link></span>
-                    </div>
+                    </a>
                     <button className="navbar-toggler" type="button" onClick={toggleMenu} aria-controls="navbarSupportedContent" aria-expanded={isOpen} aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -95,6 +89,9 @@ const Nav = () => {
                             <ul className="navbar-nav">
                                 <li className="nav-item active">
                                     <NavLink className="nav-link" to="/">Home </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/viewprofile">Flashcard</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <nav>
@@ -106,9 +103,10 @@ const Nav = () => {
                                         <NavLink className="nav-link" to="/contactus">Contact US</NavLink>
                                     </nav>
                                 </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="/viewprofile">About Us</NavLink>
-                                </li>
+                                {/* <li className="nav-item">
+                                    <NavLink className="nav-link" to="">About Us</NavLink>
+                                </li> */}
+
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">community</NavLink>
                                 </li> */}
@@ -156,7 +154,7 @@ const Nav = () => {
                                         </>
                                     ) : (
                                         <>
-                                        
+
                                             <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">User Login</Dropdown.Item>
                                             <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">Admin Login</Dropdown.Item>
                                         </>

@@ -3,6 +3,20 @@ import axios from "./axios-customize.js";
 // const API_URL = import.meta.env.VITE_API_URL; 
 // const API_URL ="https://localhost:7048/api"; 
 
+// const getQuizByUser = () =>{
+//     return axios.get('/api/v1/quiz-by-participant');
+// }
+
+// const getDataQuiz = (id) =>{
+    // console.log(id);
+//     return axios.get(`/api/v1/questions-by-quiz?quizId=${id}`);
+// }
+
+// const postSubmitQuiz = (data)=>{
+//     console.log(...data)// check ...data gồm những data or cấu trúc như thế nào
+//     return axios.post('/api/v1/quiz-submit',{...data});
+// }
+
 const login = async (email, password) => {
     try {
         const response = await axios.post(`/Account`, {
