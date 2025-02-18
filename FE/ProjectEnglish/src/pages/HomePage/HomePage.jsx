@@ -7,8 +7,8 @@ import ContactUs from "./ContactUsPage";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
-// import { Link } from "react-router-dom";
-import { Link } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
+// import { Link } from "react-bootstrap-icons";
 
 
 
