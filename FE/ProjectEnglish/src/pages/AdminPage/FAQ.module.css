@@ -1,0 +1,97 @@
+/* General Styles */
+.main {
+    padding: 20px;
+    background-color: #f6f9ff;
+}
+
+/* Page Title */
+.pagetitle {
+    margin-bottom: 20px;
+}
+
+.pagetitle h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #012970;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: #899bbd;
+}
+
+.breadcrumbItem {
+    margin-right: 8px;
+}
+
+.breadcrumbItem a {
+    text-decoration: none;
+    color: #4154f1;
+    transition: 0.3s;
+}
+
+.breadcrumbItem a:hover {
+    color: #717ff5;
+}
+
+.breadcrumbItem.active {
+    font-weight: bold;
+    color: #51678f;
+}
+
+/* FAQ Section */
+.sectionFaq {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(1, 41, 112, 0.1);
+}
+
+.row {
+    max-width: 100%;
+    padding: 20px;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.basic {
+    padding: 20px;
+}
+
+/* Card Body */
+.cardBody {
+    padding: 25px;
+}
+
+/* Card Title */
+.cardTitle {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #012970;
+}
+
+/* FAQ Items */
+.faqItem {
+    font-size: 1em;
+    line-height: 1.6;
+    padding-top: 15px;
+}
+
+.faqItem h6 {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #4154f1;
+}
+
+/* Padding Utility */
+.pt3 {
+    padding-top: 15px;
+}

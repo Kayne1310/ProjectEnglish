@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
@@ -38,8 +38,8 @@ const Register = () => {
         },
     });
 
-      const hanleFacebookRegister = async ({ data }) => {
-          await FacebookRegister(data, setError, setIsLoading,setIsRegisterSuccess);
+    const hanleFacebookRegister = async ({ data }) => {
+            await FacebookRegister(data, setError, setIsLoading,setIsRegisterSuccess);
         };
     
 

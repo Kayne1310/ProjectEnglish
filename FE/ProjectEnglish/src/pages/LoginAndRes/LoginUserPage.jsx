@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "../../assets/css/LoginCss/user.css";
 import { handerGoogleRegister, handerRegister, handleLogin } from "../../helpers/authHandlers";
 import Loading from "react-loading";
 import { Link } from "react-router-dom";
-import { Eye, EyeSlash } from "react-bootstrap-icons"; // Sử dụng icon từ react-bootstrap-icons
+import { EyeSlash } from "react-bootstrap-icons"; // Sử dụng icon từ react-bootstrap-icons
 import { useGoogleLogin } from "@react-oauth/google";
 import { AuthContext } from "../../components/layout/context/authContext";
 

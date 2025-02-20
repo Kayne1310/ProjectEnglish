@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
@@ -27,7 +27,7 @@ const Login = () => {
         },
     });
     const HandleFacebookLogin = async ({ data }) => {
-      await handleFacebookLogin(data, setError, setIsLoading);
+        await handleFacebookLogin(data, setError, setIsLoading);
     };
 
 

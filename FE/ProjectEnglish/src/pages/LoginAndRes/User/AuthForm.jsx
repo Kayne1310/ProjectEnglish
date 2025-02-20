@@ -1,9 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 import "@fortawesome/fontawesome-free/css/all.css";
 import "../../../assets/css/LoginCss/user.css";
 import Loading from "react-loading";
-import { LoginSocialFacebook, } from 'reactjs-social-login'
+import { LoginSocialFacebook } from 'reactjs-social-login';
 
 const AuthForm = ({
     title,
@@ -23,7 +23,6 @@ const AuthForm = ({
     toggleLink,
     toggleLinkText,
     showSignUp
-
 }) => {
     return (
         <div className="login-user">
@@ -35,15 +34,14 @@ const AuthForm = ({
                             <Link to="#" className="icon" onClick={googleLogin} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#db4437", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-google"></i>
                             </Link>
-                            
                             <LoginSocialFacebook
                                 isOnlyGetToken
                                 appId={import.meta.env.VITE_APP_FB_APP_ID2 || ''}
                                 onResolve={facebookLogin}
-                                  onReject={(err) => {
-                                    console.log(err)
-                                  }}
-                                >
+                                onReject={(err) => {
+                                    console.log(err);
+                                }}
+                            >
                                 <Link to="#" className="icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#3b5998", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                     <i className="fa-brands fa-facebook-f"></i>
                                 </Link>
@@ -73,11 +71,7 @@ const AuthForm = ({
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-
-                        {!showSignUp && <Link to="#" className="forgot-password" >
-                            Forget Your Password?
-                        </Link>}
-
+                        {!showSignUp && <Link to="#" className="forgot-password">Forget Your Password?</Link>}
                         <button type="submit">{title}</button>
                         {isLoading && (
                             <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
@@ -99,6 +93,25 @@ const AuthForm = ({
             </div>
         </div>
     );
+};
+AuthForm.propTypes = {
+    title: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    setName: PropTypes.func.isRequired,
+    email: PropTypes.string.isRequired,
+    setEmail: PropTypes.func.isRequired,
+    password: PropTypes.string.isRequired,
+    setPassword: PropTypes.func.isRequired,
+    error: PropTypes.string,
+    isLoading: PropTypes.bool.isRequired,
+    isRegisterSuccess: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    googleLogin: PropTypes.func.isRequired,
+    facebookLogin: PropTypes.func.isRequired,
+    toggleText: PropTypes.string.isRequired,
+    toggleLink: PropTypes.string.isRequired,
+    toggleLinkText: PropTypes.string.isRequired,
+    showSignUp: PropTypes.bool.isRequired
 };
 
 export default AuthForm;
