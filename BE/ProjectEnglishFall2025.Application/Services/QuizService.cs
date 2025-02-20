@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -22,12 +24,14 @@ namespace ProjectFall2025.Application.Services
         private readonly IQuizRepository quizRepository;
         private readonly IMapper mapper;
         private readonly IValidator<Quiz> validator;
+        private readonly ICloudinaryService cloudinary;
 
-        public QuizService(IQuizRepository quizRepository, IMapper mapper, IValidator<Quiz> validator)
+        public QuizService(IQuizRepository quizRepository, IMapper mapper, IValidator<Quiz> validator, ICloudinaryService cloudinary)
         {
             this.quizRepository = quizRepository;
             this.mapper = mapper;
             this.validator = validator;
+            this.cloudinary = cloudinary;
         }
 
         public async Task<List<Quiz>> GetAllQuizs()
@@ -58,11 +62,17 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
+
+                //goi service upload len cloudiary
+                string image = await cloudinary.UploadImageAsync(quiz.image,"QUIZ");
+
+
+
                 var data = new Quiz
                 {
                     name = quiz.name,
                     description = quiz.description,
-                    image = quiz.image,
+                    image = image,
                     difficutly = quiz.difficutly,
                     createAt = DateTime.Now,
                 };
@@ -99,11 +109,11 @@ namespace ProjectFall2025.Application.Services
             {
                 var data = new DeleteQuizVM
                 {
-                    quiz_id = quiz.quiz_id,             
+                    quiz_id = quiz.quiz_id,
                 };
 
                 var exitingQuiz = await quizRepository.GetQuizById(data);
-                if(exitingQuiz == null)
+                if (exitingQuiz == null)
                 {
                     return new ReturnData
                     {
@@ -128,7 +138,7 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = string.Join(", ", errorMess)
                     };
                 }
-                else 
+                else
                 {
                     var update = await quizRepository.UpdateQuiz(exitingQuiz);
                     if (update <= 0)
