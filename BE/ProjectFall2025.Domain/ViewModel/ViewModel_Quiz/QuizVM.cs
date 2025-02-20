@@ -31,4 +31,6 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string quiz_id { get; set; }
     }
 
+
+
 }

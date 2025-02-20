@@ -89,5 +89,33 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetCountQuestionbyQuiz")]
+        public async Task<ActionResult> GetCountQuestionbyQuiz()
+        {
+            try
+            {
+                var res = await quizService.getCountQuestionInQuiz();
+                return Ok(res);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetQuestionByQuizId/{questionId}")]   
+        public async Task<ActionResult> GetQuestionByQuizId([FromRoute]string questionId)
+        {
+            try
+            {
+                var res=await quizService.GetQuestionsAndAnswersByQuizIdAsync(questionId);
+                return Ok(res);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

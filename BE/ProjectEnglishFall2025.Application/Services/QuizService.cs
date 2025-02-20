@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
+using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Infrastructure.DbContext;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
@@ -192,6 +193,68 @@ namespace ProjectFall2025.Application.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<List<QuizzAndQuestionVM>> getCountQuestionInQuiz()
+        {
+            try
+            {
+                var bsonList = await quizRepository.getCountQuestionbyQuiz();
+
+                var res = bsonList.Select(q => new QuizzAndQuestionVM
+                {
+                    quiz_id = q["_id"].ToString(),
+                    name = q["name"].ToString(),
+                    countQuestion = q.Contains("countQuestion") && q["countQuestion"].BsonType == BsonType.Int32
+                            ? q["countQuestion"].AsInt32
+                            : 0,  //  Chuyển đổi sau khi lấy dữ liệu
+                    image = q["image"].ToString(),
+                    description = q["description"].ToString(),
+                    difficutly = q["difficutly"].ToString()
+                }).ToList();
+
+                return res;
+            }
+            catch(Exception ex)
+            {
+               
+            throw new NotImplementedException();
+            }
+        }
+
+        public async Task<List<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(string id)
+        {
+            ObjectId Quizid = ObjectId.Parse(id);
+            var data=await quizRepository.GetQuestionByQuizId(Quizid);
+            return data
+             .Where(doc => doc.Contains("QuestionInfor") && doc["QuestionInfor"].BsonType == BsonType.Array)
+             .SelectMany(doc => doc["QuestionInfor"].AsBsonArray.Select(q => new QuestionAndAnswerVM
+             {
+                 question_id = q["_id"].ToString(),
+                 description =  q["description"].ToString() ,
+                 image =q["image"].ToString() ,
+                 quiz_id = doc["_id"].ToString(),
+
+                 // Thông tin Quiz
+                 QuizInforVM = new QuizInforVM
+                 {
+                     name = doc.Contains("name") ? doc["name"].ToString() : null,
+                     description = doc.Contains("description") ? doc["description"].AsString : null,
+                     image = doc.Contains("image") ? doc["image"].ToString() : null,
+                     difficutly = doc.Contains("difficutly") ? doc["difficutly"].AsString : null
+                 },
+
+                 // Lấy tất cả câu trả lời của câu hỏi
+                 answer = q["QuestionAnswer"].BsonType == BsonType.Array
+                     ? q["QuestionAnswer"].AsBsonArray.Select(a => new AnswerVM
+                     {
+                         idAnswered = a["_id"].ToString(),
+                         descriptionAnswered =  a["desciption"].ToString() ,
+                         isCorrect = a["correct_answer"].ToBoolean() ,
+                     }).ToList()
+                     : new List<AnswerVM>()
+             })).ToList();
+
         }
     }
 }
