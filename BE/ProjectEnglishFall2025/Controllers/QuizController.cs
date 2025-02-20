@@ -50,7 +50,8 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("add_quiz")]
-        public async Task<IActionResult> AddQuizs([FromBody] CreateQuizVM quiz)
+
+        public async Task<IActionResult> AddQuizs([FromForm]CreateQuizVM quiz)
         {
             try
             {

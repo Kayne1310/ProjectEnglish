@@ -141,6 +141,13 @@ namespace ProjectEnglishFall2025
             builder.Services.AddTransient<IEmailService, EmailService>();
 
 
+
+            //Iform file 
+            //builder.Services.AddSwaggerGen(c =>
+            //{
+            //    c.OperationFilter<FileUploadOperationFilter>(); // Thêm filter để Swagger nhận diện file
+            //});
+
             //config cloudiary
             builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
             {

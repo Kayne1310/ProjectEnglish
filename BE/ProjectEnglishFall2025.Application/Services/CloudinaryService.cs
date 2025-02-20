@@ -27,7 +27,8 @@ namespace ProjectFall2025.Application.Services
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                PublicId = $"{folder}/{Guid.NewGuid().ToString()}",
+                Folder = folder,  // Chỉ định folder thay vì gán trong PublicId
+                PublicId = Guid.NewGuid().ToString(), // Chỉ định ID file riêng biệt
                 Overwrite = true
             };
 
