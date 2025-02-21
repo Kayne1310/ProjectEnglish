@@ -17,9 +17,9 @@ import QuizletForm from './pages/ListQuizz/Quizz.jsx';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
-import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
 
 import PrivateRoute from './pages/privateroute.jsx';
+import DetailQuizz from './pages/ListQuizz/DetailQuiz/DetailQuizz.jsx';
 
 
 const router = createBrowserRouter([
@@ -37,20 +37,20 @@ const router = createBrowserRouter([
           </PrivateRoute>)
       },
       {
-        path: "/listquizz", 
+        path: "/quizlet",
+        element: <QuizletForm />
+      },
+      {
+        path: "/listquizz",
         element: <ListQuizz />,
         children: [{
-          path: "detailquiz",element:<DetailQuizz/>
+          path: "detailquiz/:quizId", element: <DetailQuizz />
         },
         ],
       },
     ]
   },
 
- {
-  path: "/quizlet", 
-  element: <QuizletForm />
-},
 
   {
     path: "/resetpassword",

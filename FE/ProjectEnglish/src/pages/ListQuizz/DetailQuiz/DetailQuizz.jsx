@@ -5,6 +5,7 @@ import "./DetailQuizz.scss"
 import { Question } from "react-bootstrap-icons";
 import Questions from "./question";
 import ModalResult from "./ModalResult";
+import RightContent from "./RightContentQuiz/RightContent";
 // import _ from "lodash";
 
 
@@ -26,6 +27,7 @@ const DetailQuizz = () => {
 
     // phần tùy chỉnh data gọi từ backend bằng thư viện lodash vd : gộp các câu trả lời có id bằng nhau (nếu ở backend làm chưa đúng ý)
     // ns tóm gọn là chế biến data theo ý của bên frontend (get)
+    
     // const fecthQuestion = async () => {
     //     let response = await getDataQuiz();
     //     if (res && res.EC == 0) {
@@ -59,6 +61,7 @@ const DetailQuizz = () => {
     // }
 
 // xy ly chon answers de nhan biet chon value: true or false
+
     // const handleCheckbox = (answerId, questionId) =>{
     //     let dataQuizClone = __.cloneDeep(dataQuiz);
     //     let question = dataQuizClone.find(item=> +item.questionId === +questionId)
@@ -126,7 +129,10 @@ const DetailQuizz = () => {
                     </div>
                 </div>
                 <div className="right-content">
-                tong hop cau hoi
+                   <RightContent 
+                dataQuiz={dataQuiz}
+                handleFinishQuiz= { handleFinishQuiz}
+                />
                 </div>
 
         // goi component va dinh nghia cac bien
@@ -152,11 +158,15 @@ const DetailQuizz = () => {
                     <div className="footer">
                         <button className="btn btn-secondary ">Prev</button>
                         <button className="btn btn-primary ">Next</button>
-                        <button className="btn btn-Warning ">Finish</button>
+                        <button className="btn btn-warning ">Finish</button>
                     </div>
                 </div>
                 <div className="right-content">
-                    tong hop cau hoi
+                <RightContent/>
+                {/* <RightContent 
+                dataQuiz={dataQuiz}
+                handleFinishQuiz= { handleFinishQuiz}
+                /> */}
                 </div>
             </div>
         </>

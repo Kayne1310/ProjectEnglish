@@ -1,9 +1,12 @@
 // import _ from "lodash";
-import image from "../../assets/image/b1.jpg"
+import image from "../../../assets/image/b1.jpg"
 import "./DetailQuizz.scss"
 // const Questions = (props) => {
 const Questions = () => {
     // const { data, index } = props;
+
+    // const [isPreviewImage,setIsPreviewImage] = useState();
+
     // if (_.isEmpty(data)) {
     //     return (<></>)
     // }
@@ -17,7 +20,16 @@ const Questions = () => {
         <>
             {/* {data.image ?
                 <div className="q-image">
-                    <img src={`data:image/jpeg;base,${data.image}`} />
+                    <img 
+                    onclick={() => setIsPreviewImage(true)}
+                    src={`data:image/jpeg;base,${data.image}`} />
+                    {isPreviewImage === true &&}
+                    <Lightbox
+                        image={dataImagePreview.url}
+                        title={dataImagePreview.title}
+                        onClose={() => setIsPreviewImage(false)} 
+                    >
+                    </Lightbox>
                 </div>
                 :
                 <div className="q-image">
@@ -60,30 +72,19 @@ const Questions = () => {
                 question 1: khong co cau hoi nao?
             </div>
             <div className="answer">
-                <div className="a-child">
-                    <div className="form-check-input" type="checkbox" value="" />
-                    <label className="form-check-label">
-                        A. toi la ai
-                    </label>
-                </div>
-                <div className="a-child">
-                    <div className="form-check-input" type="checkbox" value="" />
-                    <label className="form-check-label">
-                        b. toi la ai
-                    </label>
-                </div>
-                <div className="a-child">
-                    <div className="form-check-input" type="checkbox" value="" />
-                    <label className="form-check-label">
-                        C. toi la ai
-                    </label>
-                </div>
-
-                <div className="a-child">
-                    <div className="form-check-input" type="checkbox" value="" />
-                    <label className="form-check-label">
-                        D. toi la ai
-                    </label>
+                <div className="answer-options">
+                    <button className="answer-option">
+                        <span className="answer-option-text">A. Lựa chọn 1</span>
+                    </button>
+                    <button className="answer-option">
+                        <span className="answer-option-text">B. Lựa chọn 2</span>
+                    </button>
+                    <button className="answer-option">
+                        <span className="answer-option-text">C. Lựa chọn 3</span>
+                    </button>
+                    <button className="answer-option">
+                        <span className="answer-option-text">D. Lựa chọn 4</span>
+                    </button>
                 </div>
 
             </div>
