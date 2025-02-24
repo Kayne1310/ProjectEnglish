@@ -13,7 +13,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 
 namespace ProjectEnglishFall2025.Controllers
@@ -107,13 +106,11 @@ namespace ProjectEnglishFall2025.Controllers
 
                 var userSession = new UserSession
                 {
-
                     token = new JwtSecurityTokenHandler().WriteToken(newtoken),
                     UserId = user.UserID,
                     isSueAt = DateTime.UtcNow, // Set issue date to current time
                     expriresAt = refreshtokenExprired,
                     isRevoked = "false",
-
                 };
 
                 await userSessionService.addUserSession(userSession);
@@ -125,7 +122,7 @@ namespace ProjectEnglishFall2025.Controllers
                 returnData.ReturnCode = 1;
                 returnData.ReturnMessage = result.ReturnMessage;
                 returnData.token = new JwtSecurityTokenHandler().WriteToken(newtoken);
-
+                returnData.user = user;
                 return Ok(returnData);
 
             }
@@ -171,12 +168,12 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-    
+
 
         [HttpPost("facebook-login")]
         public async Task<IActionResult> FacebookLogin(FacebookUserViewModel model)
         {
-         
+
             //check tk fb da duoc tao chua
             var validAcount = await acountService.AccountLoginWithFb(model.FacebookId);
             if (validAcount.ReturnCode < 0)
@@ -238,6 +235,7 @@ namespace ProjectEnglishFall2025.Controllers
             var returnData = new LoginResponseData();
             returnData.ReturnMessage = "Login Sucessful";
             returnData.ReturnCode = 1;
+            returnData.user = validAcount.user;
             returnData.token = new JwtSecurityTokenHandler().WriteToken(newToken);
             return Ok(returnData);
         }
@@ -310,7 +308,8 @@ namespace ProjectEnglishFall2025.Controllers
                 {
                     ReturnMessage = "Login Successful",
                     ReturnCode = 1,
-                    token = new JwtSecurityTokenHandler().WriteToken(newToken)
+                    token = new JwtSecurityTokenHandler().WriteToken(newToken),
+                    user = validAccount.user
                 };
 
                 return Ok(returnData);
@@ -319,8 +318,8 @@ namespace ProjectEnglishFall2025.Controllers
             {
                 return BadRequest(ex.Message);
             }
-         
-         
+
+
         }
 
 
@@ -335,7 +334,7 @@ namespace ProjectEnglishFall2025.Controllers
                     return Ok("Người dùng không tồn tại");
 
                 var token = GenerateRefreshToken();
-                
+
 
                 await emailService.SendPasswordResetEmailAsync(request.Email, token);
 
@@ -358,10 +357,10 @@ namespace ProjectEnglishFall2025.Controllers
         {
             try
             {
-              var res=  await userService.ResetPassword(request);
+                var res = await userService.ResetPassword(request);
                 return Ok(res);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"{ex.Message}");
 

@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
     public class CreateQuizQuestionVM
     {
         public string? description { get; set; }
-        public string? image { get; set; }
+        public IFormFile image { get; set; }
         public string quiz_id { get; set; }
     }
 
@@ -18,7 +20,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
     {
         public string question_id { get; set; }
         public string? description { get; set; }
-        public string? image { get; set; }
+        public IFormFile image { get; set; }
         public string quiz_id { get; set; }
     }
 
@@ -26,4 +28,12 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
     {
         public string question_id { get; set; }
     }
+
+    public class QuizQuestionDto
+    {
+        public string question_id { get; set; }
+        public string description { get; set; }
+        public List<QuizDto> quizInfo { get; set; }
+    }
+
 }

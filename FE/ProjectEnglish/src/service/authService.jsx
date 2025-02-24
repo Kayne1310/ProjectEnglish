@@ -1,7 +1,10 @@
 import axios from "axios";
+import { useContext } from "react";
+import userContext from "../reactContext/userReactContext";
 
 const API_URL = import.meta.env.VITE_API_URL; 
 // const API_URL ="https://localhost:7048/api"; 
+
 
 const login = async (email, password) => {
     try {
@@ -10,10 +13,6 @@ const login = async (email, password) => {
             password: password
             
         });
-
-        if (response.data && response.data.token) {
-            localStorage.setItem("accessToken", response.data.token);
-        }
 
         return response.data;
     } catch (error) {
@@ -30,6 +29,7 @@ const  logout = async (userId) => {
         
         if (response.data && response.data.token) {     
             localStorage.removeItem("accessToken");
+            document.cookie("accessToken=")
         }
     } catch (error) {
         throw error;
@@ -84,6 +84,7 @@ const GoogleRegister = async (accessToken) => {
 
 
 const googleLogin = async (accessToken) => {
+    // const userInfo=useContext(userContext);
     try {
         // Gọi API Google để lấy thông tin user
         const { data } = await axios.get(
@@ -102,6 +103,20 @@ const googleLogin = async (accessToken) => {
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
         const apiResponse = await axios.post(`${API_URL}/Account/google-login`, userData);
+        
+
+        
+        document.cookie=`accessToken=${apiResponse.data.token}`;
+        console.log(apiResponse.data.user.email);
+        if (!userInfo) {
+            console.error("userInfo is undefined! Ensure useContext is correctly used in a component.");
+            return;
+        }
+        // userInfo.setEmail(apiResponse.data.user.email);
+        // userInfo.setName(apiResponse.data.user.userName);
+        // userInfo.setUserID(apiResponse.data.user.userId);
+        // userInfo.setPicture(apiResponse.data.user.picture);
+
 
         return apiResponse.data;
     } catch (error) {

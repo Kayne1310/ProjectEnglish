@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import userContext from "../reactContext/userReactContext";
 import authService from "../service/authService";
 
 export const handleLogin = async (e, email, password, setError, setIsLoading) => {
@@ -92,8 +94,10 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     setIsRegisterSuccess(false);
 
     try {
-        const apiResponse = await authService.GoogleRegister(response.access_token);
+        const apiResponse = await authService.GoogleRegister(response.access_token,userInfor);
         console.log("API Response:", apiResponse);
+
+
         if (apiResponse.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
@@ -126,7 +130,11 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
-        console.log("API Response:", apiResponse);
+        // console.log("Context Response:", userInfo.email);
+        // console.log("Context Response:", userInfo.userId);
+        // console.log("Context Response:", userInfo.name);
+        // console.log("Context Response:", userInfo.picture);
+        // console.log("API Response:", apiResponse);
         if (apiResponse.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {

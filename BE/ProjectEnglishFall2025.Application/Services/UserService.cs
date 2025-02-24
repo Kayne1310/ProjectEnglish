@@ -59,8 +59,10 @@ namespace ProjectFall2025.Application.Services
 
                 //hash password
                 userViewModel.Password = Security.ComputeSha256Hash(userViewModel.Password);
+
                 //map user into userviewmodel
                 var userDTO = mapper.Map<User>(userViewModel);
+                userDTO.Picture = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"; // add picture default
 
                 var res = await repository.addUser(userDTO);
                 return new ReturnData

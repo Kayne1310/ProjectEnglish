@@ -8,10 +8,14 @@ import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
 import ListQuizz from "../ListQuizz/ListQuizz";
 import ContactUs from "./ContactUsPage";
+import userContext from "../../reactContext/userReactContext";
+import { useContext } from "react";
 // import Footer from "../../components/layout/footer";
 
 
+
 const HomePage = () => {
+   
     return (
         <>
             <div className="hero_area">
@@ -28,7 +32,7 @@ const HomePage = () => {
                                                 <h1>For All Your <br /> Furniture Needs</h1>
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                                                 <div className="btn-box">
-                                                    <a href="#" className="btn1">Contact Us</a>
+                                                    <a href="#" className="btn1">Contact Us  </a>
                                                     <a href="#" className="btn2">About Us</a>
                                                 </div>
                                             </div>

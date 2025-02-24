@@ -6,7 +6,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import LoginUserPage from './pages/LoginAndRes/LoginUserPage.jsx';
 import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';
@@ -14,11 +13,13 @@ import HomePage from './pages/HomePage/HomePage.jsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Login from './pages/LoginAndRes/User/Login.jsx';
 import Register from './pages/LoginAndRes/User/Register.jsx';
+import { UserProvider } from './reactContext/userReactContext.jsx';
+import Flashcard from './components/FlashCard.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
     children: [
       {
         index: true,
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/contactus",
         element: <ContactUs />
+      },
+      {
+        path: "/flashcard",
+        element: <Flashcard />
       }
     ]
   },
@@ -51,12 +56,13 @@ const router = createBrowserRouter([
 
 ]);
 
-
-const dotenvClientId=import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const dotenvClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-     <GoogleOAuthProvider clientId= {dotenvClientId}>
-    <RouterProvider router={router} />
-     </GoogleOAuthProvider>
+    <UserProvider>
+      <GoogleOAuthProvider clientId={dotenvClientId}>
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
+    </UserProvider>
   </React.StrictMode>,
 )

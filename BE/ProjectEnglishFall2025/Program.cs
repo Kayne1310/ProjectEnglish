@@ -19,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace ProjectEnglishFall2025
 {
@@ -62,6 +64,7 @@ namespace ProjectEnglishFall2025
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                 };
             });
+
 
             //login with facebook and gooogle
             builder.Services.AddAuthentication(options =>
@@ -111,6 +114,7 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IHistoryService, HistoryService>();
             builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -138,10 +142,25 @@ namespace ProjectEnglishFall2025
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateQuizUserAnswer>();
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateIAIAnswer>();
 
+
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
- 
+
+
+            //config cloudiary
+            builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
+            {
+                var config = builder.Configuration.GetSection("Cloudinary");
+
+                var account = new CloudinaryDotNet.Account(
+                     config["CloudName"],
+                     config["ApiKey"],
+                     config["ApiSecret"]
+                      );
+                return new Cloudinary(account);
+
+            });
 
 
             //cors
