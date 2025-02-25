@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -20,12 +21,14 @@ namespace ProjectFall2025.Application.Services
         private readonly IQuizQuestionRepository quizQuestionRepository;
         private readonly IMapper mapper;
         private readonly IValidator<QuizQuestion> validator;
+        private readonly ICloudinaryService cloudinary;
 
-        public QuizQuestionService(IQuizQuestionRepository quizQuestionRepository, IMapper mapper, IValidator<QuizQuestion> validator)
+        public QuizQuestionService(IQuizQuestionRepository quizQuestionRepository, IMapper mapper, IValidator<QuizQuestion> validator, ICloudinaryService cloudinary)
         {
             this.quizQuestionRepository = quizQuestionRepository;
             this.mapper = mapper;
             this.validator = validator;
+            this.cloudinary = cloudinary;
         }
         public async Task<List<QuizQuestion>> getAllQuizQuestion()
         {
@@ -55,10 +58,12 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
+                string image = await cloudinary.UploadImageAsync(quizQuestion.image, "QUIZ QUESTION");
+
                 var data = new QuizQuestion
                 {
                     description = quizQuestion.description,
-                    image = quizQuestion.image,
+                    image = image,
                     quiz_id = ObjectId.Parse(quizQuestion.quiz_id),
                     createAt = DateTime.Now,
                 };
@@ -107,6 +112,15 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = "Update failed! question_id is not found"
                     };
                 }
+                else
+                {
+                    string image = await cloudinary.UploadImageAsync(quizQuestion.image, "QUIZ QUESTION");
+
+                    existingQuizQuestion.description = quizQuestion.description;
+                    existingQuizQuestion.image = image;
+                }
+
+
                 var validate = await validator.ValidateAsync(existingQuizQuestion);
                 if (!validate.IsValid)
                 {

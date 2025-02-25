@@ -51,7 +51,7 @@ namespace ProjectFall2025.Application.Services
                 var newData = new QuizAnswer
                 {
                     correct_answer = answerQuestionVM.correct_answer,
-                    desciption = answerQuestionVM.desciption,
+                    description = answerQuestionVM.desciption,
                     createAt = DateTime.Now,
                     question_id = ObjectId.Parse(answerQuestionVM.question_id),
                 };
@@ -104,10 +104,13 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = "Update failed! quizAnswer_id is not found"
                     };
                 }
+                else
+                {
+                    existingQuizAnswer.description = answerQuestionVM.desciption;
+                    existingQuizAnswer.correct_answer = answerQuestionVM.correct_answer;
+                    existingQuizAnswer.updateAt = DateTime.Now;
+                }
 
-                existingQuizAnswer.desciption = answerQuestionVM.desciption;
-                existingQuizAnswer.correct_answer = answerQuestionVM.correct_answer;
-                existingQuizAnswer.updateAt = DateTime.Now;
 
                 var validateData = await validator.ValidateAsync(existingQuizAnswer);
                 if (!validateData.IsValid)

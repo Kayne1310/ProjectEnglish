@@ -13,7 +13,7 @@ namespace ProjectFall2025.Common.ValidateData
         public ValidateQuiz()
         {
             RuleFor(u => u.name).NotEmpty().WithMessage("Name is not null").MaximumLength(15).WithMessage("Name must be less than 15 characters");
-            RuleFor(u => u.difficutly).NotEmpty().WithMessage("Dificall is not null");
+            RuleFor(u => u.difficutly).NotEmpty().WithMessage("Difficutly is not null");
             RuleFor(u => u.image).NotEmpty().WithMessage("Image is not null");
         }
 

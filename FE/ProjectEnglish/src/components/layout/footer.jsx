@@ -7,14 +7,14 @@ const Footer = () => {
         <section className="info_section">
         <div className="container">
             <div className="contact_nav">
-                <Link href="tel:+01123455678990">
+                <a href="tel:+01123455678990">
                     <i className="fa fa-phone"></i>
                     <span>Call: 01234567890</span>
-                </Link>
-                <Link href="mailto:demo@gmail.com">
+                </a>
+                <a href="mailto:demo@gmail.com">
                     <i className="fa fa-envelope"></i>
                     <span>Email: demo@gmail.com</span>
-                </Link>
+                </a>
                 <Link href="#">
                     <i className="fa fa-map-marker"></i>
                     <span>Btec Fpt </span>

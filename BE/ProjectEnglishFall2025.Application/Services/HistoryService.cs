@@ -109,11 +109,14 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = "Update failed! history_id not found"
                     };
                 }
+                else
+                {
+                    // Cập nhật dữ liệu mới nhưng giữ nguyên createAt
+                    existingHistory.total_questions = history.total_questions;
+                    existingHistory.total_corrects = history.total_corrects;
+                    existingHistory.updateAt = DateTime.Now;
+                }
 
-                // Cập nhật dữ liệu mới nhưng giữ nguyên createAt
-                existingHistory.total_questions = history.total_questions;
-                existingHistory.total_corrects = history.total_corrects;
-                existingHistory.updateAt = DateTime.Now;
 
                 // Validate lại dữ liệu sau khi cập nhật
                 var validate = validator.Validate(existingHistory);

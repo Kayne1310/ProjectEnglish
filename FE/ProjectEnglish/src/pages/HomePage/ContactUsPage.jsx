@@ -1,7 +1,7 @@
 const ContactUs = () => {
 
     return (
-        <section className="contact_section">
+        <section className="about_section layout_padding long_section mb-5">
             <div className="container">
                 <div className="row align-items-center">
                     {/* <!-- Contact Form --> */}

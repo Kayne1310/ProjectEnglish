@@ -78,5 +78,66 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             return (int)res.DeletedCount; // Trả về số lượng bản ghi đã xóa
         }
+
+
+        //get all Count Quetion in Quiz
+        public async Task<List<BsonDocument>> getCountQuestionbyQuiz()
+        {
+            var res = await dbContext.GetCollectionQuiz()
+                .Aggregate()
+                .Lookup("QuizQuestion", "_id", "quiz_id", "QuestionInfor")
+                .AppendStage<BsonDocument>(new BsonDocument("$set", new BsonDocument("countQuestion", new BsonDocument("$size", "$QuestionInfor"))))
+                .ToListAsync();  // Lấy dữ liệu dưới dạng BsonDocument
+
+       
+            return res;
+
+       
+        }
+
+        public async Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId)
+        {
+            var pipeline = new[]
+         {
+        new BsonDocument("$match", new BsonDocument("_id", quizId)),
+
+        new BsonDocument("$lookup", new BsonDocument
+        {
+            { "from", "QuizQuestion" },
+            { "localField", "_id" },
+            { "foreignField", "quiz_id" },
+            { "as", "QuestionInfor" }
+        }),
+         new BsonDocument("$unwind", new BsonDocument
+        {
+            { "path", "$QuestionInfor" },
+            { "preserveNullAndEmptyArrays", true } // Giữ quiz ngay cả khi không có câu hỏi
+        }),
+
+        new BsonDocument("$lookup", new BsonDocument
+        {
+            { "from", "QuizAnswer" },
+            { "localField", "QuestionInfor._id" },
+            { "foreignField", "question_id" },
+            { "as", "QuestionInfor.QuestionAnswer" }
+        }),
+
+          new BsonDocument("$group", new BsonDocument
+         {
+            { "_id", "$_id" },
+            { "name", new BsonDocument("$first", "$name") },
+            { "description", new BsonDocument("$first", "$description") },
+            { "image", new BsonDocument("$first", "$image") },
+            { "difficutly", new BsonDocument("$first", "$difficutly") },
+            { "createAt", new BsonDocument("$first", "$createAt") },
+            { "updateAt", new BsonDocument("$first", "$updateAt") },
+            { "QuestionInfor", new BsonDocument("$push", "$QuestionInfor") }
+              })
+              };
+            var result = await dbContext.GetCollectionQuiz()
+                .Aggregate<BsonDocument>(pipeline)
+                .ToListAsync();
+            return result;
+        }
     }
 }

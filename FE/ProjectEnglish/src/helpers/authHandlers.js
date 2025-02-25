@@ -1,5 +1,5 @@
 
-import authService from "../service/authService"; // Đảm bảo đường dẫn đúng
+import authService from "../service/authService";
 
 // Sử dụng hook navigate để chuyển hướng trang
 export const handleLogin = async (email, password, setError, setIsLoading, setUser, navigate) => {
@@ -107,8 +107,10 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     setIsRegisterSuccess(false);
 
     try {
-        const apiResponse = await authService.GoogleRegister(response.access_token);
+        const apiResponse = await authService.GoogleRegister(response.access_token,userInfor);
         console.log("API Response:", apiResponse);
+
+
         if (apiResponse.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
@@ -141,7 +143,11 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
-        console.log("API Response:", apiResponse);
+        // console.log("Context Response:", userInfo.email);
+        // console.log("Context Response:", userInfo.userId);
+        // console.log("Context Response:", userInfo.name);
+        // console.log("Context Response:", userInfo.picture);
+        // console.log("API Response:", apiResponse);
         if (apiResponse.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
