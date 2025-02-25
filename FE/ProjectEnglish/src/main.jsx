@@ -1,4 +1,5 @@
 
+
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -18,9 +19,11 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
 import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
-
 import PrivateRoute from './pages/privateroute.jsx';
-
+import Flashcard from './components/FlashCard.jsx';
+import ListDocument from './pages/Document/ListDocument.jsx';
+import DocumentItem from './pages/Document/documentItem.jsx';
+import FlashcardList from './pages/FlashCard/ListFlashCard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -37,20 +40,45 @@ const router = createBrowserRouter([
           </PrivateRoute>)
       },
       {
-        path: "/listquizz", 
+        path: "/listquizz",
         element: <ListQuizz />,
         children: [{
-          path: "detailquiz",element:<DetailQuizz/>
+          path: "detailquiz", element: <DetailQuizz />
         },
         ],
       },
+      {
+        path: "/listdocument",
+        element: <ListDocument />
+      },
+      {
+        path: "/listdocument/detaildocument/:id",
+        element: <DocumentItem />
+      },
+      {
+        path: "/contactus",
+        element: <ContactUs />
+      },
+      {
+        path: "/flashcard/:quizId",
+        element: <Flashcard />
+      },
+      {
+        path: "/listdocument/detaildocument/flashcard/:quizId",
+        element: <Flashcard />
+      },
+      {
+        path: "/flashcard",
+        element: <FlashcardList />
+      }
+    
     ]
   },
 
- {
-  path: "/quizlet", 
-  element: <QuizletForm />
-},
+  {
+    path: "/quizlet",
+    element: <QuizletForm />
+  },
 
   {
     path: "/resetpassword",
@@ -82,7 +110,6 @@ const router = createBrowserRouter([
 ]);
 
 const dotenvClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <AuthWrapper>
@@ -92,3 +119,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </AuthWrapper>
   // </StrictMode>
 );
+

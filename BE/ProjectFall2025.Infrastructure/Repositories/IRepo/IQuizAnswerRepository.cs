@@ -1,4 +1,5 @@
-﻿using ProjectFall2025.Domain.Do;
+﻿using MongoDB.Bson;
+using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,8 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<QuizAnswer> createQuizAnswer(QuizAnswer quiz);
         Task<int> updateQuizAnswer(QuizAnswer quiz);
         Task<int> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionId);
+
+        // lookup QuizAnswer -> QuizQuestion -> Quiz
+        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId);
     }
 }

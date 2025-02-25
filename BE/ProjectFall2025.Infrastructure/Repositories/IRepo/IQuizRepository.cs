@@ -21,5 +21,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<List<BsonDocument>> getCountQuestionbyQuiz();
 
         Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId);
+
     }
 }

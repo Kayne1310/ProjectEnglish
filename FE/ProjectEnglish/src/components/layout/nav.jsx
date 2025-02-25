@@ -63,7 +63,7 @@ const Nav = () => {
                                     <NavLink className="nav-link" to="/">Home </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/viewprofile">Flashcard</NavLink>
+                                    <NavLink className="nav-link" to="/flashcard">Flashcard</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <nav>
