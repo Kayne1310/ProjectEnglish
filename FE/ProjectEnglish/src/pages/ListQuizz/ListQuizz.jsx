@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
-// import '../../assets/css/Home/bootstrap.min.css';
-import '../../assets/css/Home/home.css';
+import '../../assets/css/Home/document.css';
 
 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -29,206 +28,253 @@ const ListQuizz = () => {
 
             {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
             {!isQuizletPage && (
-                // <section className="blog_section layout_padding">
-                //     <div className="container">
-                //         <div className="heading_container">
-                //             <h2>Quizzet</h2>
-                //         </div>
-                //         {/* <div className="row">
-                //             {arrQuiz && arrQuiz.length > 0 &&
-                //                 arrQuiz.map((quiz, index) => {
-                //                     return (
-
-                //                         <div key={`${index}-quiz`} className="col-md-6 col-lg-4 mx-auto">
-                //                             <div className="box">
-                //                                 <div className="img-box">
-                //                                     <img src={b1} alt="Flashcard" />
-                //                                     <img src= {`data:image/jpeg;base64,${quiz.image}`} alt="Flashcard" />
-                //                                 </div>
-                //                                 <div className="detail-box">
-                //                                     <h5>Quiz{index +1}</h5>
-                //                                     <p>{quiz.description}</p>
-                //                                     <Link to="quizlet">Read More</Link>
-                //                                 </div>
-                //                             </div>
-                //                         </div>
-
-                //                     )
-
-                //                 }
-                //                 )
-                //             }
-
-                //             {arrQuiz && arrQuiz.length === 0}
-                //             <div>
-                //                 you don't have any quiz now...
-                //             </div>
-                //         </div> */}
-
-                //         <div className="row">
-
-                //             <div className="col-md-6 col-lg-4 mx-auto">
-                //                 <div className="box">
-                //                     <div className="img-box">
-                //                         <img src={b1} alt="Flashcard" />
-
-                //                     </div>
-                //                     <div className="detail-box">
-                //                         <h5>Quiz</h5>
-                //                         <p>hok nhieu len do ngu</p>
-                //                         <Link to="detailquiz">Read More</Link>
-                //                     </div>
-                //                 </div>
-                //             </div>
-
-                //         </div>
-                //     </div>
-                // </section >
                 <section className="contact_section p-5">
+                    <div className="container">
+                        <div className="mt-10 mb-5 text-third">
+                            <h1 className="text-3xl font-bold">Tài liệu</h1>
+                            <p>
+                                Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất.
+                            </p>
+                            <p>
+                                Nếu bạn có tài liệu cần đưa lên web? bấm vào nút dưới để
+                                <a className="underline text-primary" href="mailto:khanhdjkl@gmail.com" style={{textDecoration:"none"}}> gửi tài liệu</a>
+                                cho mình nhá
+                            </p>
+                        </div>
+                        <div className="d-flex flex-wrap gap-3 mt-3 mb-3 w-100">
+                            <button className="btn btn-primary flex-grow-1">Default</button>
+                            <button className="btn btn-primary flex-grow-1 btn-hover-text" data-hover="Sắp xếp theo chữ cái">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z" />
+                                    <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                                </svg>
+                            </button>
+                            <button className="btn btn-primary flex-grow-1 btn-hover-text" data-hover="Sắp xếp theo số lượng câu hỏi">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-numeric-down" viewBox="0 0 16 16">
+                                    <path d="M12.438 1.668V7H11.39V2.684h-.051l-1.211.859v-.969l1.262-.906h1.046z" />
+                                    <path fill-rule="evenodd" d="M11.36 14.098c-1.137 0-1.708-.657-1.762-1.278h1.004c.058.223.343.45.773.45.824 0 1.164-.829 1.133-1.856h-.059c-.148.39-.57.742-1.261.742-.91 0-1.72-.613-1.72-1.758 0-1.148.848-1.835 1.973-1.835 1.09 0 2.063.636 2.063 2.687 0 1.867-.723 2.848-2.145 2.848zm.062-2.735c.504 0 .933-.336.933-.972 0-.633-.398-1.008-.94-1.008-.52 0-.927.375-.927 1 0 .64.418.98.934.98" />
+                                    <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                                </svg>
+                            </button>
+                            <select className="form-select w-auto flex-grow-1">
+                                <option value="none">Tất cả</option>
+                                <option value="daicuong">Đại cương</option>
+                                <option value="lsdang">Lịch sử Đảng</option>
+                                <option value="tthcm">Tư tưởng HCM</option>
+                                <option value="triet">Triết học</option>
+                                <option value="taichinh">Tài chính - Ngân hàng</option>
+                                <option value="cntt">CNTT</option>
+                                <option value="ketoan">Kế toán</option>
+                                <option value="dieuduong">Điều dưỡng</option>
+                                <option value="kythuat">Kỹ thuật</option>
+                                <option value="thucpham">Thực phẩm</option>
+                                <option value="qtkd">Quản trị kinh doanh</option>
+                                <option value="dulich">Du lịch - Lữ hành</option>
+                                <option value="khachsan">Quản trị khách sạn</option>
+                                <option value="dongphuonghoc">Đông phương học</option>
+                                <option value="anh">Ngôn ngữ Anh</option>
+                                <option value="trung">Ngôn ngữ Trung</option>
+                            </select>
+                            <input type="text" className="form-control w-auto flex-grow-1" placeholder="Tìm tên tài liệu..." />
+                            <a className="btn btn-secondary text-center flex-grow-1" href="/tailieu/themtailieu">Thêm tài liệu</a>
+                            <a className="btn btn-primary d-flex align-items-center justify-content-center gap-2 flex-grow-1" href="/flashcard">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file" viewBox="0 0 16 16">
+                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                </svg>  Flashcard
+                            </a>
+                        </div>
 
-             
-                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 ">
-                    <div className="col">
-                        <div className="card h-100 rounded-xl shadow-md" style={{ minHeight: '500px' }}>
-                            <div className="position-relative h-100 rounded-3 overflow-hidden">
-                                <Link className="d-block w-100 h-100 " to="/quiz/detail/cac-cau-hoi-ve-python-gTYKuL"  >
-                                    <img
-                                        
-                                        alt="Các câu hỏi về python"
-                                        fetchpriority="high"
-                                        decoding="async"
-                                        className="d-block img-fluid w-100  object-cover transition-transform "
-                                        src="https://topdev.vn/blog/wp-content/uploads/2023/02/top-10-cau-hoi-phong-van-python-developer.png"
+
+
+                        <div className="row ">
+
+                            <div className="col-md-4 col-lg-3 pb-3">
+                                <div className="card card-custom bg-white border-white border-0">
+                                    <div
+                                        className="card-custom-img"
                                         style={{
-                                     
-                                            height: '100%',
-                                            objectFit: 'cover',
-                        
+                                            backgroundImage: `url("https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740048094/QUIZ/fcba4c3d-77dd-4f0d-ab7c-9899ca71864d.png")`,
                                         }}
-                        
-                                    />
-                                </Link>
-                                <div className="card-img-overlay d-flex flex-column justify-content-end bg-gradient ">
-                                    <h1 className="card-title text-white" style={{ fontSize: '18px', lineHeight: '1.75rem' }}>
-                                        Các câu hỏi về python
-                                    </h1>
-                                    <p className="card-text text-white-50" style={{ fontSize: '14px', lineHeight: '1.25rem' }}>
-                                        20 câu hỏi về Python siêu dễ
-                                    </p>
-                                    <div className="d-flex justify-content-end align-items-center gap-1 mb-1 text-muted small">
-                                        <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 576 512"
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"
-                                            ></path>
-                                        </svg>
-                                        <p className="mb-0 text-white">Lượt làm: 15</p>
+                                    ></div>
+                                    <div className="card-custom-avatar">
+                                        <img
+                                            className="img-fluid"
+                                            src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                            alt="Avatar"
+                                        />
                                     </div>
-                                    <div className="d-flex justify-content-between align-items-center gap-1">
-                                        <Link className="d-flex align-items-center gap-2" href="/profile/66f4137d4dacf0d78879b944">
-                                            <div className="position-relative rounded-circle overflow-hidden" style={{ width: '40px', height: '40px' }}>
-                                                <img
-                                                    alt="Trọng An"
-                                                    fetchpriority="high"
-                                                    decoding="async"
-                                                    className="img-fluid w-100 h-100 object-cover scale-125"
-                                                    src="https://cdn11.dienmaycholon.vn/filewebdmclnew/public/userupload/files/Image%20FP_2024/hinh-anime-2.jpg"
-                                                />
-                                            </div>
-                                            <div className="group">
-                                                <div className="d-flex align-items-center gap-1">
-                                                    <h2 className="h6 mb-0 text-truncate  text-white" style={{textDecoration:'none'}}>Trọng An</h2>
-                                                    <svg
-                                                        stroke="currentColor"
-                                                        fill="currentColor"
-                                                        strokeWidth="0"
-                                                        viewBox="0 0 24 24"
-                                                        color="#3b82f6"
-                                                        height="1em"
-                                                        width="1em"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        style={{ color: 'rgb(59, 130, 246)' }}
-                                                    >
-                                                        <path fill="none" d="M0 0h24v24H0z"></path>
-                                                        <path
-                                                            d="M23 11.99 20.56 9.2l.34-3.69-3.61-.82L15.4 1.5 12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 11.99l2.44 2.79-.34 3.7 3.61.82 1.89 3.2 3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69 2.44-2.8zm-3.95 1.48-.56.65.08.85.18 1.95-1.9.43-.84.19-.44.74-.99 1.68-1.78-.77-.8-.34-.79.34-1.78.77-.99-1.67-.44-.74-.84-.19-1.9-.43.18-1.96.08-.85-.56-.65L3.67 12l1.29-1.48.56-.65-.09-.86-.18-1.94 1.9-.43.84-.19.44-.74.99-1.68 1.78.77.8.34.79-.34 1.78-.77.99 1.68.44.74.84.19 1.9.43-.18 1.95-.08.85.56.65 1.29 1.47-1.28 1.48z"
-                                                        ></path>
-                                                        <path d="m10.09 13.75-2.32-2.33-1.48 1.49 3.8 3.81 7.34-7.36-1.48-1.49z"></path>
-                                                    </svg>
-                                                </div>
-                                                <p className="text-muted small d-flex align-items-center gap-1 mb-0 text-white" >
-                                                    <svg
-                                                        stroke="currentColor"
-                                                        fill="currentColor"
-                                                        strokeWidth="0"
-                                                        viewBox="0 0 24 24"
-                                                        color="#D9D9D9"
-                                                        height="1em"
-                                                        width="1em"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        style={{ color: 'rgb(217, 217, 217)' }}
-                                                    >
-                                                        <g id="Timer">
-                                                            <g>
-                                                                <path
-                                                                    d="M2.336,9.685A9.934,9.934,0,0,0,13.592,21.808,9.931,9.931,0,0,0,20.708,7.23,10.046,10.046,0,0,0,12,2.072a.507.507,0,0,0-.5.5v4.2a.5.5,0,0,0,1,0v-4.2l-.5.5a8.935,8.935,0,0,1,8.433,11.892A8.938,8.938,0,0,1,6.468,19.027,9.041,9.041,0,0,1,3.3,9.951c.142-.627-.822-.9-.964-.266Z"
-                                                                ></path>
-                                                                <path d="M7.4,8.117a.5.5,0,0,1,.707-.707l4.243,4.242h0a.5.5,0,0,1-.707.707Z"></path>
-                                                            </g>
-                                                        </g>
-                                                    </svg>{' '}
-                                                    khoảng 1 tháng trước
-                                                </p>
-                                            </div>
-                                        </Link>
-                                        <Link
-                                            className="d-flex align-items-center gap-1 btn btn-primary rounded-md text-sm"
-                                            href="/quiz/cac-cau-hoi-ve-python-gTYKuL"
-                                        >
-                                            Làm bài
-                                            <svg
-                                                stroke="currentColor"
-                                                fill="currentColor"
-                                                strokeWidth="0"
-                                                viewBox="0 0 512 512"
-                                                height="1em"
-                                                width="1em"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    fill="none"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="32"
-                                                    d="M262.62 336 342 256l-79.38-80m68.35 80H170"
-                                                ></path>
-                                                <path
-                                                    fill="none"
-                                                    strokeMiterlimit="10"
-                                                    strokeWidth="32"
-                                                    d="M256 448c106 0 192-86 192-192S362 64 256 64 64 150 64 256s86 192 192 192z"
-                                                ></path>
-                                            </svg>
-                                        </Link>
+                                    <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
+                                        <h4 className="card-title">Card title Card titleCard titleCard titleCard titleCard title </h4>
+                                        <p className="card-text">
+                                            Descrip tion
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-eye "></i>
+                                            View
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-question-circle "></i>
+                                            Số Câu hỏi :100
+                                        </p>
+                                    </div>
+                                    <div className="card-footer" style={{ background: "inherit", borderColor: "inherit" }}>
+                                        <a href="#" className="btn btn-primary ">
+                                            Option
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-               
+                            <div className="col-md-4 col-lg-3 pb-3">
+                                <div className="card card-custom bg-white border-white border-0">
+                                    <div
+                                        className="card-custom-img"
+                                        style={{
+                                            backgroundImage: `url("https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740048094/QUIZ/fcba4c3d-77dd-4f0d-ab7c-9899ca71864d.png")`,
+                                        }}
+                                    ></div>
+                                    <div className="card-custom-avatar">
+                                        <img
+                                            className="img-fluid"
+                                            src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                            alt="Avatar"
+                                        />
+                                    </div>
+                                    <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
+                                        <h4 className="card-title">Card title Card titleCard titleCard titleCard titleCard title </h4>
+                                        <p className="card-text">
+                                            Descrip tion
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-eye "></i>
+                                            View
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-question-circle "></i>
+                                            Số Câu hỏi :100
+                                        </p>
+                                    </div>
+                                    <div className="card-footer" style={{ background: "inherit", borderColor: "inherit" }}>
+                                        <a href="#" className="btn btn-primary ">
+                                            Option
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>        <div className="col-md-4 col-lg-3 pb-3">
+                                <div className="card card-custom bg-white border-white border-0">
+                                    <div
+                                        className="card-custom-img"
+                                        style={{
+                                            backgroundImage: `url("https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740048094/QUIZ/fcba4c3d-77dd-4f0d-ab7c-9899ca71864d.png")`,
+                                        }}
+                                    ></div>
+                                    <div className="card-custom-avatar">
+                                        <img
+                                            className="img-fluid"
+                                            src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                            alt="Avatar"
+                                        />
+                                    </div>
+                                    <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
+                                        <h4 className="card-title">Card title Card titleCard titleCard titleCard titleCard title </h4>
+                                        <p className="card-text">
+                                            Descrip tion
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-eye "></i>
+                                            View
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-question-circle "></i>
+                                            Số Câu hỏi :100
+                                        </p>
+                                    </div>
+                                    <div className="card-footer" style={{ background: "inherit", borderColor: "inherit" }}>
+                                        <a href="#" className="btn btn-primary ">
+                                            Option
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>        <div className="col-md-4 col-lg-3 pb-3">
+                                <div className="card card-custom bg-white border-white border-0">
+                                    <div
+                                        className="card-custom-img"
+                                        style={{
+                                            backgroundImage: `url("https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740048094/QUIZ/fcba4c3d-77dd-4f0d-ab7c-9899ca71864d.png")`,
+                                        }}
+                                    ></div>
+                                    <div className="card-custom-avatar">
+                                        <img
+                                            className="img-fluid"
+                                            src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                            alt="Avatar"
+                                        />
+                                    </div>
+                                    <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
+                                        <h4 className="card-title">Card title Card titleCard titleCard titleCard titleCard title </h4>
+                                        <p className="card-text">
+                                            Descrip tion
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-eye "></i>
+                                            View
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-question-circle "></i>
+                                            Số Câu hỏi :100
+                                        </p>
+                                    </div>
+                                    <div className="card-footer" style={{ background: "inherit", borderColor: "inherit" }}>
+                                        <a href="#" className="btn btn-primary ">
+                                            Option
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>        <div className="col-md-4 col-lg-3 pb-3">
+                                <div className="card card-custom bg-white border-white border-0">
+                                    <div
+                                        className="card-custom-img"
+                                        style={{
+                                            backgroundImage: `url("https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740048094/QUIZ/fcba4c3d-77dd-4f0d-ab7c-9899ca71864d.png")`,
+                                        }}
+                                    ></div>
+                                    <div className="card-custom-avatar">
+                                        <img
+                                            className="img-fluid"
+                                            src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                            alt="Avatar"
+                                        />
+                                    </div>
+                                    <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
+                                        <h4 className="card-title">Card title Card titleCard titleCard titleCard titleCard title </h4>
+                                        <p className="card-text">
+                                            Descrip tion
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-eye "></i>
+                                            View
+                                        </p>
+                                        <p className="card-text view">
+                                            <i className="fas fa-question-circle "></i>
+                                            Số Câu hỏi :100
+                                        </p>
+                                    </div>
+                                    <div className="card-footer" style={{ background: "inherit", borderColor: "inherit" }}>
+                                        <a href="#" className="btn btn-primary ">
+                                            Option
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
-                </div>
+                        </div>
+
+
+
+                    </div>
+
                 </section>
             )
             }
-
             {/* Luôn luôn hiển thị component con */}
             <Outlet />
         </>

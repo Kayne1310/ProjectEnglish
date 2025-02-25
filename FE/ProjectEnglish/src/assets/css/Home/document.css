@@ -1,0 +1,119 @@
+.card-custom {
+    overflow: hidden;
+    min-height: 350px;
+    height: 350px;
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+  }
+  
+  .card-custom-img {
+    height: 200px;
+    overflow: hidden;
+    min-height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-color: inherit;
+  }
+  
+  /* First border-left-width setting is a fallback */
+  .card-custom-img::after {
+    overflow: hidden;
+    position: absolute;
+    content: '';
+    top: 161px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-top-width: 40px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 545px;
+    border-left-width: calc(575px - 5vw);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: inherit;
+  }
+  
+  .card-custom-avatar img {
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+    position: absolute;
+    top: 100px;
+    left: 1.25rem;
+    width: 100px;
+    height: 100px;
+  }
+
+
+.card-body-fixed {
+    overflow-y: hidden;
+    position: relative;
+    height: 150px;
+    
+}
+
+.card-body-fixed .card-text {
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-title{
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-body-fixed a {
+    color: #007bff;
+    text-decoration: none;
+}
+.card-body-fixed .card-text i {
+    margin-right: 10px;
+     /* Add margin to the right of the icon */
+}
+.card-footer {
+    background: inherit;
+    border-color: inherit;
+    display: flex;
+    /* justify-content: right; */
+
+}
+.view {
+    font-size: 14px;
+}
+
+.btn-hover-text {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-hover-text::after {
+    content: attr(data-hover);
+    position: absolute;
+    bottom: 110%; /* Đặt chữ phía trên button */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    pointer-events: none;
+  }
+  
+  .btn-hover-text:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+  }
+  

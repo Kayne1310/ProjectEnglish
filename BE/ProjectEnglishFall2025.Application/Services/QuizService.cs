@@ -67,8 +67,6 @@ namespace ProjectFall2025.Application.Services
                 //goi service upload len cloudiary
                 string image = await cloudinary.UploadImageAsync(quiz.image,"QUIZ");
 
-
-
                 var data = new Quiz
                 {
                     name = quiz.name,
