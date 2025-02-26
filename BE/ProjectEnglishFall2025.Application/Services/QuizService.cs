@@ -64,7 +64,7 @@ namespace ProjectFall2025.Application.Services
             {
 
                 //goi service upload len cloudiary
-                string image = await cloudinary.UploadImageAsync(quiz.image,"QUIZ");
+                string image = await cloudinary.UploadImageAsync (quiz.image,"QUIZ");
 
 
 

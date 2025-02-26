@@ -30,7 +30,7 @@ namespace ProjectFall2025.Application.Services
                 Folder = folder,  // Chỉ định folder thay vì gán trong PublicId
                 PublicId = Guid.NewGuid().ToString(), // Chỉ định ID file riêng biệt
                 Overwrite = true
-            };
+            };  
 
             var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
