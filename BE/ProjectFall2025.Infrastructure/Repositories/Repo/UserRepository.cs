@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Infrastructure.DbContext;
@@ -49,6 +50,14 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             
         }
 
+        public async Task<User> findUserById(ObjectId id)
+        {
+            var usercollection = dbContext.GetCollectionUser();
+        
+            var res = await usercollection.Find(x => x.UserID == id).FirstOrDefaultAsync();
+            return  res;
+        }
+
         public async Task<User> findUserByUsername(string email)
         {
             var usercollection = dbContext.GetCollectionUser();
@@ -68,12 +77,21 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
         public async Task<int> UpdateTokenResetPassword(User user)
         {
             var update = Builders<User>.Update.Set(x => x.ResetPasswordToken, user.ResetPasswordToken)
-                                              .Set(x=>x.ResetTokenExpiry,DateTime.UtcNow.AddMinutes(15));
+                                              .Set(x=>x.ResetTokenExpiry,DateTime.Now.AddMinutes(15));
+
+
 
             var res= await  dbContext.GetCollectionUser().UpdateManyAsync(e=>e.Email==user.Email, update);
 
             return  (int) res.ModifiedCount;
 
+        }
+
+        public async Task<int> UpdateUser(User user)
+        {
+            var updateuser=await dbContext.GetCollectionUser().ReplaceOneAsync(x=>x.UserID==user.UserID,user);
+         
+            return (int) updateuser.ModifiedCount;
         }
     }
 }

@@ -77,76 +77,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
         }
 
 
-        //public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync()
-        //{
-        //    var db = dbContext.GetCollectionQuizAnswer();
-
-        //    // Lookup QuizQuestion
-        //    var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
-        //    {
-        //        {"from", "QuizQuestion" },
-        //        {"localField", "question_id" },
-        //        {"foreignField", "_id" },
-        //        {"as", "question_info" }
-        //    });
-
-        //    /// dùng unwind để giải nén mảng
-        //    // Unwind question_info array
-        //    var unwindQuestion = new BsonDocument("$unwind", "$question_info");
-
-        //    // Lookup Quiz using correct path
-        //    var lookupQuiz = new BsonDocument("$lookup", new BsonDocument
-        //    {
-        //        {"from", "Quiz" },
-        //        {"localField", "question_info.quiz_id" }, // Sửa đường dẫn này
-        //        {"foreignField", "_id" },
-        //        {"as", "quiz_info" }
-        //    });
-
-        //    // Unwind quiz_info array
-        //    var unwindQuiz = new BsonDocument("$unwind", "$quiz_info");
-
-        //    // Lọc câu trả lời đúng
-        //    var matchCorrectAnswer = new BsonDocument("$match", new BsonDocument
-        //    {
-        //        {"correct_answer", 1 }
-        //    });
-
-        //    // Pipeline này là một mảng các bước xử lý tuần tự trong MongoDB, giống như một dây chuyền sản xuất. Dữ liệu sẽ đi qua từng bước theo thứ tự khai báo
-        //    var pipeline = new[] { lookupQuestion, unwindQuestion, lookupQuiz, unwindQuiz, matchCorrectAnswer };
-
-        //    // Thực thi pipeline
-        //    var res = await db.Aggregate<BsonDocument>(pipeline).ToListAsync();
-
-        //    // Map kết quả
-        //    var dtoRes = res.Select(bson => new QuizAnswerDto
-        //    {
-        //        quizAnswer_id = bson["_id"].ToString(),
-        //        Description = bson["desciption"].AsString,
-        //        CorrectAnswer = bson["correct_answer"].AsInt32 == 1,
-        //        QuestionInfo = new List<QuizQuestionDto>
-        //        {
-        //            new QuizQuestionDto
-        //            {
-        //                question_id = bson["question_info"]["_id"].ToString(),
-        //                Description = bson["question_info"]["description"].AsString,
-        //                QuizInfo = new List<QuizDto>
-        //                {
-        //                    new QuizDto
-        //                    {
-        //                        quiz_id = bson["quiz_info"]["_id"].ToString(),
-        //                        Name = bson["quiz_info"]["name"].AsString,
-        //                        Description = bson["quiz_info"]["description"].AsString,
-        //                        Image = bson["quiz_info"]["image"].AsString,
-        //                        Difficutly = bson["quiz_info"]["difficutly"].AsString
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }).ToList();
-
-        //    return dtoRes;
-        //}
+ 
 
 
         public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)

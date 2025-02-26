@@ -1,25 +1,30 @@
-import React, { useContext, useState } from "react";
+
+import React, { useState, useContext } from "react";
 import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
-import userContext from "../../../reactContext/userReactContext";
+import {AuthContext} from "../../../components/layout/context/authContext";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(AuthContext); // Lấy setUser từ AuthContext
+    const navigate=useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleLogin(e, email, password, setError, setIsLoading);
+        handleLogin( email, password, setError, setIsLoading, setUser,navigate);
     };
     // const userInfo=useContext(userContext);
     // console.log(userInfo);
 
     const HandleGoogleLogin = useGoogleLogin({
         onSuccess: async (response) => {
-            await handleGoogleLogin(response, setError, setIsLoading);
+            await handleGoogleLogin(response, setError, setIsLoading,setUser,navigate);
             console.log("Google login success", response);
         },
         onError: (error) => {
@@ -28,10 +33,8 @@ const Login = () => {
         },
     });
     const HandleFacebookLogin = async ({ data }) => {
-      await handleFacebookLogin(data, setError, setIsLoading);
+      await handleFacebookLogin(data, setError, setIsLoading,setUser,navigate);
     };
-
-
     return (
         <AuthForm
             title="Sign In"

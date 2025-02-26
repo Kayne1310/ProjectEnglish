@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Http;
 using ProjectFall2025.Application.IServices;
 using CloudinaryDotNet;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ProjectFall2025.Application.Services
 {
     public class CloudinaryService : ICloudinaryService

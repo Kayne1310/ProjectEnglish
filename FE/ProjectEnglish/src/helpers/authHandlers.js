@@ -1,28 +1,40 @@
-import { useContext } from "react";
-import userContext from "../reactContext/userReactContext";
+
 import authService from "../service/authService";
 
-export const handleLogin = async (e, email, password, setError, setIsLoading) => {
-    e.preventDefault();
+// Sử dụng hook navigate để chuyển hướng trang
+export const handleLogin = async (email, password, setError, setIsLoading, setUser, navigate) => {
     setError("");
     setIsLoading(true);
+
     try {
         const response = await authService.login(email, password);
-        if (response.returnCode == -1) {
-            setError(`Login failed. ${response.returnMessage}`);
+
+        console.log("API Response:", response); // Kiểm tra response trả về từ authService
+
+        if (!response || !response.user) {
+            setError("Login failed. User data is missing.");
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
+            console.error("Missing user data:", response);
         } else {
-            console.log(response);
-            // Lưu trạng thái đăng nhập và thông tin người dùng vào localStorage
+            console.log("User Data:", response.user);
+
             localStorage.setItem("isLoggedIn", "true");
-            // localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin người dùng
+
+            setUser({
+                userName: response.user.userName,
+                email: response.user.email,
+                picture: response.user.picture,
+                facebookId: response.user.facebookId,
+                googleId: response.user.googleId,
+            }); // Lưu thông tin user vào context
 
             setTimeout(() => {
                 setIsLoading(false);
-                window.location.href = "/"; // Redirect after successful login
-            }, 1000); // Hide loader after 1 seconds
+                navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+            }, 1000);
+            return;
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
@@ -30,31 +42,32 @@ export const handleLogin = async (e, email, password, setError, setIsLoading) =>
             setIsLoading(false);
         }, 1000);
     }
+
+    setTimeout(() => {
+        setIsLoading(false);
+    }, 1000);
 };
 
-export const handleLogout = async (setIsLoading, setError) => {
+
+export const handleLogout = async (setIsLoading, setError,navigate) => {
     setError("");
-    setIsLoading(true);
     try {
         // Gọi API logout (nếu cần)
-        // await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
-
+        setIsLoading(true);
+        var res=    await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
         // Xóa thông tin khỏi localStorage
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("accessToken");
+        if(res.returnCode==1){
+            localStorage.removeItem("isLoggedIn");
+            window.location.href="/";// Chuyển hướng về trang đăng nhập
+        }       
 
-        setTimeout(() => {
-            setIsLoading(false);
-            window.location.href = "/"; // Chuyển hướng về trang đăng nhập
-        }, 1000);
     } catch (error) {
         setError(`Logout failed. ${error.message}`);
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
     }
 };
 
+
+////
 export const handerRegister = async (e, name, email, password, setError, setIsLoading, setIsRegisterSuccess, setName, setEmail, setPassword) => {
     e.preventDefault();
     setError("");
@@ -123,7 +136,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
 
 
-export const handleGoogleLogin = async (response, setError, setIsLoading) => {
+export const handleGoogleLogin = async (response, setError, setIsLoading, setUser, navigate) => {
     setError("");
     setIsLoading(true);
 
@@ -146,7 +159,9 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
             localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
-                window.location.href = "/";
+                navigate("/");
+
+
             }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
@@ -155,7 +170,9 @@ export const handleGoogleLogin = async (response, setError, setIsLoading) => {
             setIsLoading(false);
         }, 1000);
     }
+
 };
+
 
 export const FacebookRegister = async (response, setError, setIsLoading, setIsRegisterSuccess) => {
     setError("");
@@ -172,6 +189,7 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
             }, 1000);
         }
         else if (apiResponse.data.returnCode == 1) {
+            localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
@@ -184,9 +202,13 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
         }, 1000);
     }
 
-}
 
-export const handleFacebookLogin = async (data, setError, setIsLoading) => {
+};
+
+
+
+
+export const handleFacebookLogin = async (data, setError, setIsLoading, setUser, navigate) => {
     setError("");
     setIsLoading(true);
     try {
@@ -201,18 +223,73 @@ export const handleFacebookLogin = async (data, setError, setIsLoading) => {
             }, 1000);
         }
 
-       
+
         else if (apiResponse.data.returnCode == 1) {
             localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
-                window.location.href = "/";
+                navigate("/");
+
+
             }, 1000); // Hide loader after 1 seconds
         }
 
     }
-     catch (err) {
+    catch (err) {
         setError(`Register failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+};
+
+export const handleResetPassword = async (password, email, token, setError, setIsLoading, setIsSuccess) => {
+    setError("");
+    setIsLoading(true);
+    setIsSuccess(false);
+    try {
+        const response = await authService.resetPassword(email, token, password);
+        console.log("API Response:", response);
+        if (response.returnCode == -1) {
+            setError(`Reset password failed. ${response.returnMessage}`);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+        } else {
+            setTimeout(() => {
+                setIsLoading(false);
+                setIsSuccess(true);
+            }, 1000); // Hide loader after 1 seconds
+        }
+    } catch (err) {
+        setError(`Reset password failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+};
+export const handleForgotPassword = async (email, setError, setIsLoading, setIsSuccess, setEmail) => {
+    setError("");
+    setIsLoading(true);
+    setIsSuccess(false);
+    try {
+        const response = await authService.forgotpassword(email);
+        console.log("API Response:", response);
+        if (response.returnCode == -1) {
+            setError(`Forgot password failed. ${response.returnMessage}`);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+            setEmail("");
+        } else {
+            setTimeout(() => {
+                setIsLoading(false);
+                setIsSuccess(true);
+                setEmail("");
+            }, 1000); // Hide loader after 1 second
+        }
+    } catch (err) {
+        setError(`Forgot password failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);

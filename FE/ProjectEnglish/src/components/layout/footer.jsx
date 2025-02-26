@@ -1,5 +1,7 @@
 //noi footer cua page
 
+import { Link } from "react-router-dom";
+
 const Footer = () => {
     return(
         <section className="info_section">
@@ -13,10 +15,10 @@ const Footer = () => {
                     <i className="fa fa-envelope"></i>
                     <span>Email: demo@gmail.com</span>
                 </a>
-                <a href="#">
+                <Link href="#">
                     <i className="fa fa-map-marker"></i>
                     <span>Btec Fpt </span>
-                </a>
+                </Link>
             </div>
 
             <div className="info_top">
@@ -24,11 +26,11 @@ const Footer = () => {
                     <div className="col-sm-6 col-md-4 col-lg-3">
                         <div className="info_links">
                             <div className="info_links_menu">
-                                <a href="index.html">Home</a>
-                                <a href="about.html">About Us</a>
-                                <a href="courses.html">Courses</a>
-                                <a href="blog.html">Blog</a>
-                                <a href="contact.html">Contact Us</a>
+                                <Link href="index.html">Home</Link>
+                                <Link href="about.html">About Us</Link>
+                                <Link href="courses.html">Courses</Link>
+                                <Link href="blog.html">Blog</Link>
+                                <Link href="contact.html">Contact Us</Link>
                             </div>
                         </div>
                     </div>
@@ -46,10 +48,10 @@ const Footer = () => {
                                 <button type="submit">Subscribe</button>
                             </form>
                             <div className="social_box">
-                                <a href="#"><i className="fa fa-facebook"></i></a>
-                                <a href="#"><i className="fa fa-twitter"></i></a>
-                                <a href="#"><i className="fa fa-linkedin"></i></a>
-                                <a href="#"><i className="fa fa-instagram"></i></a>
+                                <Link href="#"><i className="fa fa-facebook"></i></Link>
+                                <Link href="#"><i className="fa fa-twitter"></i></Link>
+                                <Link href="#"><i className="fa fa-linkedin"></i></Link>
+                                <Link href="#"><i className="fa fa-instagram"></i></Link>
                             </div>
                         </div>
                     </div>

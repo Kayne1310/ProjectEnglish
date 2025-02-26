@@ -1,7 +1,7 @@
 const ContactUs = () => {
 
     return (
-        <section className="contact_section">
+        <section className="about_section layout_padding long_section mb-5">
             <div className="container">
                 <div className="row align-items-center">
                     {/* <!-- Contact Form --> */}
@@ -12,19 +12,19 @@ const ContactUs = () => {
                             </div>
                             <form action="">
                                 <div className="form-group">
-                                    <label for="name">Your Name</label>
+                                    <label htmlFor="name">Your Name</label>
                                     <input type="text" id="name" placeholder="Enter your full name" required />
                                 </div>
                                 <div className="form-group">
-                                    <label for="phone">Phone Number</label>
+                                    <label htmlFor="phone">Phone Number</label>
                                     <input type="tel" id="phone" placeholder="Enter your phone number" required />
                                 </div>
                                 <div className="form-group">
-                                    <label for="email">Email</label>
+                                    <label htmlFor="email">Email</label>
                                     <input type="email" id="email" placeholder="Enter your email address" required />
                                 </div>
                                 <div className="form-group">
-                                    <label for="message">Message</label>
+                                    <label htmlFor="message">Message</label>
                                     <textarea id="message" className="message-box" placeholder="Write your message here..." required></textarea>
                                 </div>
                                 <div className="btn_box text-center">

@@ -44,7 +44,8 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
         }
-   
+
+
         [HttpGet]
         [Authorize("User")]
         public async Task<ActionResult> getAllUser()
@@ -61,7 +62,7 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-   
+
 
         [HttpPost("GoogleRegister")]
         public async Task<IActionResult> GoogleRegisterCallback(GoogleUserViewModel googleUserViewModel)
@@ -69,16 +70,16 @@ namespace ProjectEnglishFall2025.Controllers
             try
             {
 
-            var result = await userService.RegisterWithGoogle(googleUserViewModel);
-            
-            return Ok(result);
+                var result = await userService.RegisterWithGoogle(googleUserViewModel);
+
+                return Ok(result);
 
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            
+
         }
 
         [HttpPost("FacebookRegister")]
@@ -100,7 +101,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             try
             {
@@ -109,10 +110,35 @@ namespace ProjectEnglishFall2025.Controllers
             }
             catch (Exception ex)
             {
-               return BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("getUser")]
+        [Authorize("User")]
+        public async Task<ActionResult> getUser()
+        {
+            try
+            {
+
+                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+                var user = await userService.getUserById(userId);
+                user.UserID.ToString();
+                return Ok(new LoginResponseData
+                {
+                    ReturnCode = -1,
+                    ReturnMessage = "data user",
+                    user = user,
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
     }
 }
-
-

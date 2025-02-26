@@ -1,43 +1,43 @@
-import axios from "axios";
-import { useContext } from "react";
-import userContext from "../reactContext/userReactContext";
 
-const API_URL = import.meta.env.VITE_API_URL; 
-// const API_URL ="https://localhost:7048/api"; 
+import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/Account`, {
+        const response = await axios.post(`/Account`, {
             email: email,
             password: password
-            
-        });
+        }, { withCredentials: true });
 
-        return response.data;
+
+        console.log("Full API Response:", response); // Log toàn bộ response
+
+        if (!response || !response.data) {
+            console.error("Error: response.data is undefined!");
+            return null;
+        }
+        return response.data; // Trả về `response.data` thay vì `response`
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
-        throw error;
+        return { error: error.response?.data || error.message };
     }
 };
 
-const  logout = async (userId) => {
+
+const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/Account/Logout`, {
-           userId: userId      
+        const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
+          withCredentials: true,
         });
-        
-        if (response.data && response.data.token) {     
-            localStorage.removeItem("accessToken");
-            document.cookie("accessToken=")
-        }
+        return response.data;
     } catch (error) {
         throw error;
     }
 };
 
 
-const register = async (username, email,password) => {
+const register = async (username, email, password) => {
     try {
         const response = await axios.post(`${API_URL}/User`, {
             userName: username,
@@ -66,8 +66,6 @@ const GoogleRegister = async (accessToken) => {
             Email: data.email,
             GoogleId: data.id,
             PictureUrl: data.picture,
-        
-        
         };
 
         console.log("Google User:", data);
@@ -84,7 +82,6 @@ const GoogleRegister = async (accessToken) => {
 
 
 const googleLogin = async (accessToken) => {
-    // const userInfo=useContext(userContext);
     try {
         // Gọi API Google để lấy thông tin user
         const { data } = await axios.get(
@@ -102,22 +99,12 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`${API_URL}/Account/google-login`, userData);
-        
 
-        
-        document.cookie=`accessToken=${apiResponse.data.token}`;
-        console.log(apiResponse.data.user.email);
-        if (!userInfo) {
-            console.error("userInfo is undefined! Ensure useContext is correctly used in a component.");
-            return;
-        }
-        // userInfo.setEmail(apiResponse.data.user.email);
-        // userInfo.setName(apiResponse.data.user.userName);
-        // userInfo.setUserID(apiResponse.data.user.userId);
-        // userInfo.setPicture(apiResponse.data.user.picture);
-
-
+        const apiResponse = await axios.post(
+            `${API_URL}/Account/google-login`,
+            userData,
+            { withCredentials: true } // Bắt buộc để cookie hoạt động
+          );
         return apiResponse.data;
     } catch (error) {
         console.error("Google Login failed:", error.response?.data || error.message);
@@ -142,7 +129,8 @@ const facebookLogin = async (accessToken) => {
 
         console.log("Facebook User:", userData);
 
-        const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData);
+
+        const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData, { withCredentials: true });
 
         return apiResponse;
     } catch (error) {
@@ -176,6 +164,53 @@ const facebookRegister = async (accessToken) => {
     }
 };
 
+
+const resetPassword = async (email, token, newpassword) => {
+
+    try {   
+    const response = await axios.post(`${API_URL}/Account/reset-password`,
+        {
+            email: email,
+            token: token,
+            newpassword: newpassword
+        });
+
+        console.log(response);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Reset Password failed:", error.response?.data || error.message);
+        throw error;
+    }
+
+};
+
+
+//
+const getUserInfor= async()=>{
+
+    try{
+            const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
+            return response.data;
+    }
+    catch(error){
+            return error;
+    }
+};
+
+const forgotpassword = async (email) => {
+    try {
+        const response = await axios.post(`${API_URL}/Account/forgot-password`, {
+            email: email
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Forgot Password failed:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
 const authService = {
     login,
     logout,
@@ -184,7 +219,9 @@ const authService = {
     googleLogin,
     facebookLogin,
     facebookRegister,
-  
+    resetPassword,
+    forgotpassword,
+    getUserInfor,
 };
 
 export default authService;

@@ -43,7 +43,10 @@ namespace ProjectFall2025.Application.Mapping
                 .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
                 .ReverseMap()
                 .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)));
-
+            CreateMap<Quiz, QuizDto>()
+               .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
+               .ReverseMap()
+               .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)));
 
             // quiz answer
             CreateMap<QuizAnswer, CreateAnswerQuestionVM>()

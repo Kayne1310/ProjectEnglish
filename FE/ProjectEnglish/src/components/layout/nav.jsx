@@ -1,29 +1,50 @@
-import "../../assets/css/Home/style.scss";
-import "../../assets/css/Home/bootstrap.css";
-import "../../assets/css/Home/responsive.css";
-import "../../assets/css/Home/style.css";
-import "../../assets/css/Home/home.css";
 import "../../assets/css/Home/nav.css";
-import { Link, NavLink } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import { handleLogout } from "../../helpers/authHandlers"; // Đường dẫn tới file chứa handler
-// import Loading from "react-loading";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import avatar from "../../assets/image/default-avatar.png";
 import Dropdown from 'react-bootstrap/Dropdown';
+import { FaUser, FaCogs, FaList, FaSignOutAlt } from 'react-icons/fa';
+import { handleLogout } from "../../helpers/authHandlers"; // Đường dẫn tới file chứa handler
+import { AuthContext } from "./context/authContext";
+// import Loading from "react-loading";
+
 
 const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const {userInfor}=useContext(AuthContext);
+    const navigate = useNavigate();
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-    
+
+
     // Kiểm tra trạng thái đăng nhập từ localStorage
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true");
+    const [user, setUser] = useState({
+        name: userInfor.userName || "",
+        avatar: userInfor.picture|| avatar,
+    });
+
+    // Cập nhật lại khi component render lại (nếu có thay đổi)
     useEffect(() => {
         const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+        const userAvatar = userInfor.picture;
+
         setIsLoggedIn(loggedIn);
+        setUser({
+            name: userInfor.userName  || "User",
+            avatar: userAvatar || avatar,
+        });
     }, []);
+
+    const Logout = async () => {
+           await handleLogout(setIsLoading, setError,navigate);
+        localStorage.removeItem("isLoggedIn");
+        setIsLoggedIn(false);
+    };
 
     return (
         <div className="navigation">
@@ -42,6 +63,9 @@ const Nav = () => {
                                     <NavLink className="nav-link" to="/">Home </NavLink>
                                 </li>
                                 <li className="nav-item">
+                                    <NavLink className="nav-link" to="/flashcard">Flashcard</NavLink>
+                                </li>
+                                <li className="nav-item">
                                     <nav>
                                         <NavLink className="nav-link" to="/listquizz">Quizzet</NavLink>
                                     </nav>
@@ -53,59 +77,61 @@ const Nav = () => {
                                 </li>
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">About Us</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="">Contact Us</NavLink>
+                                </li> */}
+
+                                {/* <li className="nav-item">
+                                    <NavLink className="nav-link" to="">community</NavLink>
                                 </li> */}
                             </ul>
                         </div>
                         <div className="quote_btn-container">
-                            {/* 
-                            <Dropdown>
-                                <Dropdown.Toggle className="custom-dropdown" bsPrefix="custom-toggle">
-                                    LOGIN
-                                </Dropdown.Toggle>
 
-                                <Dropdown.Menu className="custom-dropdown-menu">
-                                    <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">
-                                        User
-                                    </Dropdown.Item>
-                                    <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">
-                                        Admin
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown> */}
+                            <Dropdown >
+                                {isLoggedIn ? (
+                                    <Dropdown.Toggle className="custom-avatar-dropdown" bsPrefix="custom-toggle">
+                                        <img
+                                            src={user.avatar || avatar}  // Sử dụng biến `avatar` đã import
+                                            alt="User Avatar"
+                                            className="avatar-img"
+                                            onError={(e) => { e.target.src = avatar; }} // Nếu ảnh lỗi, đổi sang ảnh mặc định
 
-                            <Dropdown>
-                                {!isLoggedIn ? (
-                                    <>
-                                        <Dropdown.Toggle className="custom-dropdown" bsPrefix="custom-toggle">
-                                            LOGIN
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu className="custom-dropdown-menu">
-                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">
-                                                User
-                                            </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">
-                                                Admin
-                                            </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </>
+                                        />
+                                    </Dropdown.Toggle>
                                 ) : (
-                                    <>
-                                        <Dropdown.Toggle className="custom-dropdown" bsPrefix="custom-toggle">
-                                            PROFILE
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu className="custom-dropdown-menu">
-                                            <Dropdown.Item className="custom-dropdown-item">
+                                    <Dropdown.Toggle className="custom-dropdown" bsPrefix="custom-toggle">
+                                        LOGIN
+                                    </Dropdown.Toggle>
+                                )}
+
+
+                                {/* <Dropdown.Menu className={`custom-dropdown-menu ${animateDropdown ? "show" : ""}`}> */}
+                                <Dropdown.Menu className="custom-dropdown-menu ">
+
+                                    {isLoggedIn ? (
+                                        <>
+                                            <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">
+                                                <FaUser className="mr-2" />
                                                 Profile
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleLogout(setIsLoading, setError)} className="custom-dropdown-item">
+                                            <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
+                                                <FaCogs className="mr-2" />
+                                                Settings
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item onClick={() => Logout(setIsLoading, setError)} className="custom-dropdown-item">
+                                                <FaSignOutAlt className="mr-2" />
                                                 Logout
                                             </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </>
-                                )}
+                                        </>
+                                    ) : (
+
+                                        <>                                     
+                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">User Login</Dropdown.Item>
+                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">Admin Login</Dropdown.Item>
+                                        </>
+                                    )}
+                                </Dropdown.Menu>
+
                             </Dropdown>
 
                         </div>

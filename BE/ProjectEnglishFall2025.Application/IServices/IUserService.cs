@@ -18,9 +18,13 @@ namespace ProjectFall2025.Application.IServices
 
         Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword);
         Task<ReturnData> ResetPassword(ResetPasswordRequest resetPassword);
-
+        Task<User> getUserById(string id);
 
         Task<ReturnData> FindUserbyEmail(string email);
 
-    }
+
+        Task<ReturnData> UpdateTokenUser(ResetPasswordRequest resetPassword);
+
+
+	}
 }

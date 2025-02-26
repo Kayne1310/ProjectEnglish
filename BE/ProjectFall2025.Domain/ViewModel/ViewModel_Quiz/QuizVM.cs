@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http; // Added
+using Microsoft.AspNetCore.Http;
+
 
 namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
 {
@@ -32,6 +33,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
     {
         public string quiz_id { get; set; }
     }
+
 
     public class QuizDto
     {
