@@ -1,0 +1,56 @@
+
+.manage-user-container{
+  .users-content {
+
+  }
+}
+
+
+.modal-add-user{
+  .img-peview{
+      border: 1px solid #ccc;
+      height:  150px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ccc;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+
+        
+      }
+  }
+
+
+  .label-upload{
+    display: flex;
+    gap : 5px;
+    align-items: center;
+    justify-content: center;
+    border: 1 px solid red;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.form-label label-upload{
+  display: flex;
+  gap : 10px;
+  align-items: center;
+  justify-content: center;
+  border: 1 px solid red;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 5px;
+  background-color: red;
+  border: none;
+  cursor: pointer;
+  
+}

@@ -4,7 +4,7 @@ import { FaTachometerAlt, FaGem } from 'react-icons/fa';
 import { GoCircle } from 'react-icons/go';  // Import GoCircle icon
 import { SiQuizlet } from "react-icons/si";
 import PropTypes from 'prop-types';
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // chuyển trang - thẻ link 
 import sidebarBg from '../../assets/bg2.jpg';
 import { GoFileDirectory } from "react-icons/go";
 

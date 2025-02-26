@@ -1,9 +1,24 @@
+import ModalCreactUser from "./ModalCreacteUser";
+import "./ManageUsers.scss";
+
 const ManageUsers = () => {
-    return (
+  return (
+    <div className="user-container">
+      <div className="title">Manage User</div>
+      <div className="user-content">
         <div>
-            <h1>Manage Quizzes</h1>
+          <button>Add new user</button>
         </div>
-    );
+        <div>
+          table user
+          {/* <ModalCreactUser /> */}
+        
+      </div>
+
+      <ModalCreactUser />
+      </div>
+    </div>
+  );
 };
 
 export default ManageUsers;
