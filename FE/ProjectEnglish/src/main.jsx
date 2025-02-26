@@ -15,9 +15,16 @@ import Login from './pages/LoginAndRes/User/Login.jsx';
 import Register from './pages/LoginAndRes/User/Register.jsx';
 import { UserProvider } from './reactContext/userReactContext.jsx';
 import Flashcard from './components/FlashCard.jsx';
+import AppAdmin from './AppAdmin.jsx';
+import DashboardPage from './pages/Admin/DashboardPage/DashboardPage.jsx';
+import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
+import ChartPage from './pages/Admin/ChartPage/ChartPage.jsx';
+import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
+import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
 
 const router = createBrowserRouter([
   {
+    // USER
     path: "/",
     element: <App />,
     children: [
@@ -52,7 +59,36 @@ const router = createBrowserRouter([
   {
     path: "/loginadmin",
     element: <LoginAdminPage />
-  }
+  },
+
+  // ADMIN
+  {
+    path: "/Admin",
+    element: <AppAdmin />,
+    children: [
+      {
+        index: true,
+        element: <DashboardPage />
+      },
+      {
+
+        path: "userlist",
+        element: <UserlistPage />
+      },
+      {
+        path: "chart",
+        element: <ChartPage />
+      },
+      {
+        path: "quiz",
+        element: <QuizPage />
+      },
+      {
+        path: "quizquestionanswer",
+        element: <QuizQuestionAnswerPage />
+      },
+    ]
+  },
 
 ]);
 

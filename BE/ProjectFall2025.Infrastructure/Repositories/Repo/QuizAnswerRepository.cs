@@ -197,7 +197,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             // Lọc để chỉ lấy những câu trả lời đúng (correct_answer = 1)
             var matchCorrectAnswer = new BsonDocument("$match", new BsonDocument
             {
-                {"correct_answer", 1}
+                {"correct_answer", true}
             });
 
             // Tạo pipeline để thực thi truy vấn
@@ -211,7 +211,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             {
                 quizAnswer_id = bson["_id"].ToString(), // ID của câu trả lời
                 description = bson["description"].AsString, // Nội dung câu trả lời
-                correctAnswer = bson["correct_answer"].AsInt32 == 1, // Xác định câu trả lời đúng hay sai
+                correctAnswer = bson["correct_answer"].AsBoolean, // Xác định câu trả lời đúng hay sai
 
                 // Danh sách thông tin câu hỏi liên quan
                 questionInfo = new List<QuizQuestionDto>
