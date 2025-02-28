@@ -4,7 +4,7 @@
     padding: 50px;
     width: 90%; // Mở rộng container
     // max-width: 1200px; // Giới hạn chiều rộng tối đa
-    
+
     margin: auto; // Căn giữa trang
 
     .left-content,
@@ -58,68 +58,123 @@
             }
 
             .answer {
-                
                 .answer-options {
-                    
+                    width: 100%;
+                    max-width: 1000px;
                     display: grid;
-                    grid-template-columns: repeat(2, 1fr); // Hiển thị hai cột
-                    gap: 15px;
-                    margin-top: 20px;
-                    padding: 0 10px;
-                
+                    grid-template-columns: 1fr 1fr; // Hiển thị 2 cột
+                    gap: 16px; // Khoảng cách giữa các nút
+                    margin: 20px auto 0; // Căn giữa và tạo khoảng cách trên
+                    padding: 0 20px; // Thêm padding trái/phải để căn lề phù hợp với form
+
+                    .answer-option-wrapper {
+                        // width: 100%; // Chiếm toàn bộ chiều rộng của cột
+                    }
+
                     .answer-option {
-                        padding: 14px 16px;
+                        width: 100%; // Chiếm toàn bộ chiều rộng của cột trong grid
+                        height: 50px; // Chiều cao cố định ban đầu, phù hợp với ảnh
+                        padding: 10px 16px;
                         background: #f8f9fd;
-                        border: 2px solid transparent;
-                        border-radius: 10px;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 8px; // Bo góc nhẹ giống ảnh
                         cursor: pointer;
                         transition: all 0.3s ease;
                         font-size: 16px;
                         font-weight: 500;
-                        // text-align: center;
                         color: #333;
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                        text-align: left; // Căn text về bên trái
-                        display: flex;
-                        align-items: center; // Giữ text cân đối theo chiều dọc
-                        justify-content: flex-start; // Đẩy nội dung về trái
-                        padding-left: 20px; // Tạo khoảng cách với viền trái
-                
+                        display: flex; // Sử dụng flex để sắp xếp số và text
+                        align-items: center; // Căn giữa theo chiều dọc
+                        justify-content: flex-start; // Đẩy nội dung về bên trái
+                        overflow: hidden; // Ẩn phần tràn ban đầu
+
+                        // Phần text container để chứa text và nút "Xem thêm"/"(Ẩn)"
+                        .answer-option-text-container {
+                            display: flex;
+                            flex-direction: column; // Sắp xếp text và nút "Xem thêm" theo cột
+                            width: 100%;
+                            align-items: flex-start; // Căn trái
+
+                            .answer-option-text {
+                                max-width: calc(100% - 36px); // Đảm bảo text không vượt quá không gian còn lại sau số
+                                color: inherit;
+                                font-size: 16px;
+
+                                // Khi hiển thị rút gọn (ban đầu)
+                                &:not(.expanded) {
+                                    white-space: nowrap; // Ngăn text xuống dòng
+                                    overflow: hidden; // Ẩn phần text tràn
+                                    text-overflow: ellipsis; // Hiển thị dấu "..." khi text tràn
+                                }
+
+                                // Khi hiển thị full text (khi click), cho phép xuống dòng theo chiều dọc trong chiều rộng cố định
+                                &.expanded {
+                                    white-space: normal; // Cho phép xuống dòng
+                                    overflow: auto; // Cho phép cuộn nếu text quá dài
+                                    display: block; // Hiển thị như block để xuống dòng
+                                    line-height: 1.2; // Khoảng cách dòng dễ đọc
+                                    max-height: 150px; // Giới hạn chiều cao tối đa để tránh tràn quá nhiều
+                                    padding: 10px 0; // Thêm padding để text không sát viền
+                                    width: 100%; // Đảm bảo text chiếm toàn bộ chiều rộng nút
+                                }
+                            }
+
+                            .expand-toggle {
+                                font-size: 14px;
+                                color: #007bff;
+                                cursor: pointer;
+                                margin-top: 5px; // Khoảng cách giữa text và nút "Xem thêm"
+                            }
+                        }
+
+                        // Phần số thứ tự
+                        .answer-number {
+                            width: 24px; // Kích thước cố định cho số
+                            height: 24px; // Kích thước cố định cho số
+                            background: #e0e0e0; // Màu nền xám nhạt giống ảnh
+                            border-radius: 50%; // Tạo hình tròn
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-right: 12px; // Khoảng cách giữa số và text
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #666;
+                        }
+
                         &:hover {
                             background: #e2e6f2;
                             border-color: #b0b8c5;
-                            transform: translateY(-2px); // Hiệu ứng nhấn nổi lên nhẹ
+                            transform: translateY(-2px);
                         }
-                
+
                         &:active {
                             background: #cdd4e0;
                             border-color: #8f99a9;
                             transform: translateY(1px);
                         }
-                
+
                         &:focus {
                             outline: none;
                             border-color: #6c7a89;
                             box-shadow: 0 0 5px rgba(108, 122, 137, 0.5);
                         }
                     }
-                
-                    .answer-option-text {
-                        color: inherit;
-                        font-size: 16px;
-                        // font-weight: bold;
-                        // text-align: left; // Đảm bảo text luôn căn trái
-                        // flex-grow: 1; // Đẩy text ra xa nếu có icon hoặc checkbox
-                    }
-                
-                    // Nếu muốn làm hiệu ứng checked
+
+                    // Hiệu ứng khi chọn
                     .answer-option.selected {
                         background: #4a90e2;
                         color: white;
                         border-color: #2c6bb2;
                         font-weight: bold;
+
+                        .answer-number {
+                            background: #2c6bb2;
+                            color: white;
+                        }
                     }
-                }    
+                }
             }
         }
 
@@ -159,7 +214,7 @@
                 }
             }
 
-            .btn-warning{
+            .btn-warning {
                 background-color: rgb(241, 241, 86);
                 color: black;
                 border: none;
@@ -183,7 +238,7 @@
     border-radius: 5px;
     padding: 20px;
 
-    .main-timer{
+    .main-timer {
         border-bottom: 1px dashed;
         padding-bottom: 20px;
         text-align: center;
@@ -192,12 +247,13 @@
         font-size: 20px;
     }
 
-    .main-question{
+    .main-question {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
         padding: 15px;
-        .question{
+
+        .question {
             border: 1px solid #878787;
             height: 40px;
             width: 40px;
@@ -207,17 +263,19 @@
             justify-content: center;
             cursor: pointer;
 
-            &:hover{
+            &:hover {
                 color: red;
             }
+
             &.selected {
                 background-color: rgb(222, 135, 135);
             }
+
             &.clicked {
                 color: red
             }
         }
     }
-    
-   
+
+
 }

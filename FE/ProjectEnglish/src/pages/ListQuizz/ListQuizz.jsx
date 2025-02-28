@@ -2,104 +2,122 @@ import React, { useEffect, useState } from "react";
 import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
-
-import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import avatar from "../../assets/image/default-avatar.png";
+import '../../assets/css/Home/home.css';
+import './listquizz.css';
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { getDataQuiz } from "../../service/quizService";
+import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 
 const ListQuizz = () => {
-    const location = useLocation(); // Lấy đường dẫn hiện tại
-    // Kiểm tra nếu đường dẫn có chứa "detailquiz"
-    const isQuizletPage = location.pathname.includes("/listquizz/detailquiz");
+  const location = useLocation();
+  const isQuizletPage = location.pathname.includes("/listquizz/detailquiz");
+  const isHomePage = location.pathname === "/";
 
-    const isHomePage = location.pathname === "/";
-    const { quizId } = useParams(); // Lấy quizId từ URL nếu có
+  const [arrQuiz, setArrQuiz] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
 
-    const [arrQuiz, setArrQuiz] = useState([]);
+  // Xử lý danh sách quiz trước khi render
+  const processedQuiz = arrQuiz.map(quiz => ({
+    ...quiz,
+    image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : b1
+  }));
 
-    useEffect(() => {
-        // Giả lập dữ liệu thay vì gọi API
-        const fakeData = [
-            { id: 1, title: "Quiz 1", description: "Mô tả cho Quiz 1", image: b1 },
-            { id: 2, title: "Quiz 2", description: "Mô tả cho Quiz 2", image: b2 },
-            { id: 3, title: "Quiz 3", description: "Mô tả cho Quiz 3", image: b3 },
-            { id: 3, title: "Quiz 3", description: "Mô tả cho Quiz 3", image: b3 },
-            { id: 3, title: "Quiz 3", description: "Mô tả cho Quiz 3", image: b3 },
-            { id: 3, title: "Quiz 3", description: "Mô tả cho Quiz 3", image: b3 },
-            { id: 3, title: "Quiz 3", description: "Mô tả cho Quiz 3", image: b3 },
-        ];
-        setArrQuiz(fakeData);
-    }, []);
+  useEffect(() => {
+    let timer;
 
-    // Tìm quiz hiện tại theo ID (nếu có)
-    // const currentQuiz = arrQuiz.find(quiz => quiz.id === Number(quizId));
+    const fetchData = async () => {
+      try {
+        const res = await getDataQuiz();
+        console.log('res', res);
+        setArrQuiz(res);
 
-    //     const [arrQuiz, setArrQuiz] = useState([]);
+        // Đảm bảo loading tối thiểu 2 giây
+        timer = setTimeout(() => {
+          setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
+        }, 2000);
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+        setIsLoading(false); // Tắt loading nếu có lỗi
+      }
+    };
 
-    //     useEffect(() => {
-    //         getQuizData();
-    //     }, []);
+    fetchData();
 
-    //     const getQuizData = async () => {
-    //         const res = await getQuizByUser();
-    //         if (res && res.EC === 0) {
-    //             setArrQuiz(res.DT);
-    //         }
-    // }
+    // Cleanup timer nếu component unmount trước khi 2 giây trôi qua
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
-    return (
+  console.log("arrQuiz:", arrQuiz);
+  console.log("isQuizletPage:", isQuizletPage);
+
+  return (
+    <>
+      {isLoading ? (
+        <div className="loading-container" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '50vh',
+        }}>
+          <Spin size="large" />
+        </div>
+      ) : (
         <>
-
-            {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
-            {!isQuizletPage && (
-                <section className="blog_section layout_padding">
-                    <div className="container">
-                        <div className="heading_container">
-                            <h2>Quizzet</h2>
-                        </div>
-                        <div className="row">
-                            {arrQuiz && arrQuiz.length > 0 &&
-                                arrQuiz.map((quiz, index) => {
-                                    return (
-
-                                        <div key={quiz.id} className="col-md-6 col-lg-4 mx-auto">
-                                            <div className="box">
-                                                <div className="img-box">
-                                                    <img src={quiz.image} alt={`Quiz ${quiz.id}`} />
-                                                    {/* <img src= {`data:image/jpeg;base64,${quiz.image}`} alt="Flashcard" /> */}
-                                                </div>
-                                                <div className="detail-box">
-                                                    <h5>{quiz.title}</h5>
-                                                    <p>{quiz.description}</p>
-                                                    <Link
-                                                        to={
-                                                            isHomePage
-                                                                ? `/listquizz/detailquiz/${quiz.id}`
-                                                                : `detailquiz/${quiz.id}`
-                                                        }
-                                                    >
-                                                        Read More
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    )
-
+          {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
+          {!isQuizletPage && (
+            <section className="wrapper">
+              <div className="container">
+                <div className="row">
+                  {processedQuiz && processedQuiz.length > 0 &&
+                    processedQuiz.map((quiz, index) => (
+                      <div key={`${index}-quiz`} className="col-sm-12 col-md-4 col-lg-3">
+                        <div className="listquiz-card">
+                          <div
+                            className="listquiz-card-bg"
+                            style={{
+                              backgroundImage: quiz.image
+                                ? `url(${quiz.image})`
+                                : `url(${b1})`,
+                            }}
+                          ></div>
+                          <div className="listquiz-card-content">
+                            <h4 className="listquiz-card-title">{quiz.name}</h4>
+                            <h4 className="listquiz-card-title">Số lượng: {quiz.countQuestion}</h4>
+                            <div className="listquiz-card-footer">
+                              <div className="listquiz-footer-left">
+                                <img className="listquiz-avatar" src={avatar} alt="avatar" />
+                                <div className="listquiz-user-info">
+                                  <h6>Oz Coruhlu</h6>
+                                  <span>Director of UI/UX</span>
+                                </div>
+                              </div>
+                              <Link
+                                className="listquiz-btn-primary"
+                                to={
+                                  isHomePage
+                                    ? `/listquizz/detailquiz/${quiz.quiz_id}`
+                                    : `detailquiz/${quiz.quiz_id}`
                                 }
-                                )
-                            }
-
-                            {arrQuiz && arrQuiz.length === 0 && (
-                                <div>You don't have any quiz now...</div>
-                            )}
+                              >
+                                Read More
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                    </div>
-                </section >
-            )}
-
-            {/* Luôn luôn hiển thị component con */}
-            <Outlet />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </section>
+          )}
+          <Outlet />
         </>
-    );
-}
+      )}
+    </>
+  );
+};
 
 export default ListQuizz;

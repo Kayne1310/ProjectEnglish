@@ -1,52 +1,37 @@
 import CountDown from "./CountDown";
 
 const RightContent = (props) => {
+  // Sử dụng destructuring cho các props
+  const { questions, currentQuestionIndex } = props;
 
-    // const { dataQuiz } = props;
-    const onTimeUp = () => {
-        alert("endgame")
-        // props.handleFinishQuiz();
-    }
+  const onTimeUp = () => {
+    alert("endgame");
+    // if (handleFinishQuiz) {
+    //   handleFinishQuiz();
+    // }
+  };
 
-    
-    return (
-        <>
-            <div className="main-timer">
-                {/* <CountDown/> */}
-                <CountDown
-                    onTimeUp={onTimeUp}
-                />
-            </div>
-            {/* <div className="main-question">
-                {dataQuiz && dataQuiz.length > 0 
-                && dataQuiz.map((item, index) => {
-                    return (
-                        <div key={`question-abc-${index} `}className="question">{index +1}</div>
-                    )
-                })
-            }
-        </div > */}
-
-
-            <div className="main-question">
-                <div className="question">B</div>
-                <div className="question">A</div>
-
-                <div className="question">B</div>
-                <div className="question">A</div>
-
-                <div className="question">B</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-                <div className="question">A</div>
-            </div>
-        </>
-    )
-
-}
+  return (
+    <div>
+      <div className="main-timer">
+        <CountDown onTimeUp={onTimeUp} />
+      </div>
+      <div className="main-question">
+        {questions &&
+          questions.length > 0 &&
+          questions.map((item, index) => {
+            return (
+              <div
+                key={`question-abc-${index}`}
+                className={`question ${index === currentQuestionIndex ? "selected" : ""}`}
+              >
+                {index + 1}
+              </div>
+            );
+          })}
+      </div>
+    </div>
+  );
+};
 
 export default RightContent;

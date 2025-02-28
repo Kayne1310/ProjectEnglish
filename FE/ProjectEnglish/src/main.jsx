@@ -13,7 +13,7 @@ import Login from './pages/LoginAndRes/User/Login.jsx';
 import Register from './pages/LoginAndRes/User/Register.jsx';
 import ResetPasswordPage from './pages/LoginAndRes/User/ResetPasword.jsx';
 import ForgotpasswordPage from './pages/LoginAndRes/User/ForgotPassword.jsx';
-import QuizletForm from './pages/ListQuizz/Quizz.jsx';
+import QuizletForm from './pages/ListQuizz/quizlet/Quizz.jsx';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
