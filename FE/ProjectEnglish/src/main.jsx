@@ -1,38 +1,34 @@
+
+
+// import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
+import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
-// import ViewProfile from './pages/Profile/ViewProfile.jsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthWrapper } from './components/layout/context/authContext.jsx';
+import Login from './pages/LoginAndRes/User/Login.jsx';
+import Register from './pages/LoginAndRes/User/Register.jsx';
+import ResetPasswordPage from './pages/LoginAndRes/User/ResetPasword.jsx';
+import ForgotpasswordPage from './pages/LoginAndRes/User/ForgotPassword.jsx';
 import QuizletForm from './pages/ListQuizz/Quizz.jsx';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import ViewProfile from './pages/Profile/ViewProfile..jsx';
+import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
+import PrivateRoute from './pages/privateroute.jsx';
+import Flashcard from './components/FlashCard.jsx';
 
 
-
-// by canh - des Admin
-// import ManageUsers from './pages/AdminPage/Content/ManageUsers.jsx';
-// import ManageQuizzes from './pages/AdminPage/Content/ManageQuizzes.jsx';
-// import ManageQuestions from './pages/AdminPage/Content/ManageQuestions.jsx';
-// import Charts from './pages/AdminPage/Charts.jsx';
-// import FAQ from './pages/AdminPage/FAQ.jsx';
-// import Admin from './pages/AdminPage/Admin.jsx';   
+import Flashcardcanh from './pages/FlashCard/Flashcardcanh.jsx';
+// import ListDocument from './pages/Document/ListDocument.jsx';
 
 
-import Admin from './pages/AdminPage/Admin.jsx';
-import ManageUsers from './pages/AdminPage/Content/ManageUsers.jsx';
-
-
-
-// import OverviewPage from './pages/AdminPage/pagesss/OverviewPage.jsx';
-import ProductsPage from './pages/AdminPage/pagesss/ProductsPage.jsx';
-import UsersPage from './pages/AdminPage/pagesss/UsersPage.jsx';
-import SalesPage from './pages/AdminPage/pagesss/SalesPage.jsx';
-import OrdersPage from './pages/AdminPage/pagesss/OrdersPage.jsx';
-import AnalyticsPage from './pages/AdminPage/pagesss/AnalyticsPage.jsx';
-import SettingsPage from './pages/AdminPage/pagesss/SettingsPage.jsx';
+// import DocumentItem from './pages/Document/documentItem.jsx';
+// import FlashcardList from './pages/FlashCard/ListFlashCard.jsx';
 
 
 
@@ -42,59 +38,90 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
+
       { path: "/contactus", element: <ContactUs /> },
-      // { path: "/viewprofile", element: <ViewProfile /> },
+      {
+        path: "/viewprofile", element:
+          (<PrivateRoute>
+            <ViewProfile />,
+          </PrivateRoute>)
+      },
+      {
+        path: "/listquizz",
+        element: <ListQuizz />,
+        children: [{
+          path: "detailquiz", element: <DetailQuizz />
+        },
+        ],
+      },
+      // {
+      //   path: "/listdocument",
+      //   element: <ListDocument />
+      // },
+      // {
+      //   path: "/listdocument/detaildocument/:id",
+      //   element: <DocumentItem />
+      // },
+      {
+        path: "/contactus",
+        element: <ContactUs />
+      },
+      {
+        path: "/flashcard/:quizId",
+        element: <Flashcard />
+      },
+      {
+        path: "/listdocument/detaildocument/flashcard/:quizId",
+        element: <Flashcard />
+      },
+      // {
+      //   path: "/flashcard",
+      //   element: <FlashcardList />
+      // }
 
-      { path: "/listquizz", element: <ListQuizz />, children: [{ path: "quizlet", element: <QuizletForm /> }] },
-      ]
-    },
+      {
+        path: "/flashcardcanh",
+        element: <Flashcardcanh/>
+      }
+    
+    ]
+  },
 
+  {
+    path: "/quizlet",
+    element: <QuizletForm />
+  },
 
+  {
+    path: "/resetpassword",
+    element: <ResetPasswordPage />
+  },
+  {
+    path: "/forgotpassword",
+    element: <ForgotpasswordPage />
+  },
 
+  {
+    path: "/loginuser",
+    element: <Login />
+  },
+  {
+    path: "/registeruser",
+    element: <Register />
+  },
 
-      // Trang Admin
-    {
-      path: "/admin",
-      element: <Admin />,
-      children: [
-  
-            // { index: true, element: <Charts /> },
-            // { path: "fuction-manageuser", element: <ManageUsers /> },
-            // { path: "fuction-managequizzes", element: <ManageQuizzes /> },
-            // { path: "fuction-managequestions", element: <ManageQuestions /> },
-            
-  
-            // { path: "Charts", element: <Charts /> },
+  {
+    path: "/loginadmin",
+    element: <LoginAdminPage />
+  },
+  {
+    path: "/resetpassword",
+    element: <ResetPasswordPage />
+  }
 
-            // { path: "FAQ", element: <FAQ /> },
-
-
-
-
-
-
-
-            { index: true, element: <ManageUsers /> }, // Trang mặc định khi vào "/admin"
-            // { path: "overview", element: <OverviewPage /> },
-            { path: "fuction-manageuser", element: <fuction-manageuser /> }, 
-            { path: "users", element: <UsersPage /> },
-            { path: "sales", element: <SalesPage /> },
-            { path: "orders", element: <OrdersPage /> },
-            { path: "analytics", element: <AnalyticsPage /> },
-            { path: "settings", element: <SettingsPage /> },
-
-      ]
-    },
-
-  ]);
-
-
-
-
-
+]);
 
 const dotenvClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <AuthWrapper>

@@ -1,16 +1,11 @@
-// import "../../assets/css/Home/style.scss";
-import "../../assets/css/Home/bootstrap.css";
-import "../../assets/css/Home/responsive.css";
-// import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';    
-import "../../assets/css/Home/style.css";
-import "../../assets/css/Home/home.css";
 import "../../assets/css/Home/nav.css";
-import { Link, NavLink } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
 import avatar from "../../assets/image/default-avatar.png";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FaUser, FaCogs, FaList, FaSignOutAlt } from 'react-icons/fa';
 import { handleLogout } from "../../helpers/authHandlers"; // Đường dẫn tới file chứa handler
+import { AuthContext } from "./context/authContext";
 // import Loading from "react-loading";
 
 
@@ -18,6 +13,9 @@ const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const {userInfor}=useContext(AuthContext);
+    const navigate = useNavigate();
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
@@ -26,67 +24,35 @@ const Nav = () => {
     // Kiểm tra trạng thái đăng nhập từ localStorage
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true");
     const [user, setUser] = useState({
-        name: localStorage.getItem("userName") || "User",
-        avatar: localStorage.getItem("userAvatar") || avatar,
+        name: userInfor.userName || "",
+        avatar: userInfor.picture|| avatar,
     });
 
     // Cập nhật lại khi component render lại (nếu có thay đổi)
     useEffect(() => {
         const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-        const userName = localStorage.getItem("userName");
-        const userAvatar = localStorage.getItem("userAvatar");
+        const userAvatar = userInfor.picture;
 
         setIsLoggedIn(loggedIn);
         setUser({
-            name: userName || "User",
+            name: userInfor.userName  || "User",
             avatar: userAvatar || avatar,
         });
     }, []);
 
-    const handleLogout = () => {
+    const Logout = async () => {
+           await handleLogout(setIsLoading, setError,navigate);
         localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userAvatar");
         setIsLoggedIn(false);
-        window.location.reload(); // Reload để cập nhật UI
     };
-    // const [showDropdown, setShowDropdown] = useState(false);
-    // const [animateDropdown, setAnimateDropdown] = useState(false);
-    // // Hiệu ứng dropdown (fade-in)
-    // const handleDropdownToggle = () => {
-    //     if (showDropdown) {
-    //         setAnimateDropdown(false); // Ẩn hiệu ứng trước khi tắt
-    //         setTimeout(() => setShowDropdown(false), 200); // Chờ hiệu ứng chạy xong rồi tắt
-    //     } else {
-    //         setShowDropdown(true);
-    //         setTimeout(() => setAnimateDropdown(true), 10); // Thêm nhỏ delay để hiệu ứng hoạt động
-    //     }
-    // };
-
-    // // Xử lý khi click ra ngoài dropdown
-    // useEffect(() => {
-    //     const handleClickOutside = (e) => {
-    //         if (!e.target.closest(".custom-avatar-dropdown") && !e.target.closest(".custom-dropdown-menu")) {
-    //             setAnimateDropdown(false); // Ẩn hiệu ứng trước khi tắt
-    //             setTimeout(() => setShowDropdown(false), 200); // Chờ hiệu ứng chạy xong rồi tắt
-    //         }
-    //     };
-    //     if (showDropdown) {
-    //         document.addEventListener("click", handleClickOutside);
-    //     } else {
-    //         document.removeEventListener("click", handleClickOutside);
-    //     }
-
-    //     return () => document.removeEventListener("click", handleClickOutside);
-    // }, [showDropdown]);
 
     return (
         <div className="navigation">
             <header className="header_section long_section px-0">
                 <nav className="navbar navbar-expand-lg custom_nav-container">
-                    <div className="navbar-brand">
+                    <a className="navbar-brand">
                         <span><Link className="nav-link" to="/">Quizzet</Link></span>
-                    </div>
+                    </a>
                     <button className="navbar-toggler" type="button" onClick={toggleMenu} aria-controls="navbarSupportedContent" aria-expanded={isOpen} aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -95,6 +61,9 @@ const Nav = () => {
                             <ul className="navbar-nav">
                                 <li className="nav-item active">
                                     <NavLink className="nav-link" to="/">Home </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/flashcard">Flashcard</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <nav>
@@ -106,9 +75,10 @@ const Nav = () => {
                                         <NavLink className="nav-link" to="/contactus">Contact US</NavLink>
                                     </nav>
                                 </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="/viewprofile">About Us</NavLink>
-                                </li>
+                                {/* <li className="nav-item">
+                                    <NavLink className="nav-link" to="">About Us</NavLink>
+                                </li> */}
+
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">community</NavLink>
                                 </li> */}
@@ -143,20 +113,19 @@ const Nav = () => {
                                                 <FaUser className="mr-2" />
                                                 Profile
                                             </Dropdown.Item>
-
                                             <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
                                                 <FaCogs className="mr-2" />
                                                 Settings
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item onClick={() => handleLogout(setIsLoading, setError)} className="custom-dropdown-item">
+                                            <Dropdown.Item onClick={() => Logout(setIsLoading, setError)} className="custom-dropdown-item">
                                                 <FaSignOutAlt className="mr-2" />
                                                 Logout
                                             </Dropdown.Item>
                                         </>
                                     ) : (
-                                        <>
-                                        
+
+                                        <>                                     
                                             <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">User Login</Dropdown.Item>
                                             <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">Admin Login</Dropdown.Item>
                                         </>

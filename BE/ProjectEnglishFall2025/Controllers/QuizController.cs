@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -50,7 +51,8 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("add_quiz")]
-        public async Task<IActionResult> AddQuizs([FromBody] CreateQuizVM quiz)
+
+        public async Task<IActionResult> AddQuizs([FromForm] CreateQuizVM quiz)
         {
             try
             {
@@ -64,7 +66,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPut("update_quiz")]
-        public async Task<IActionResult> UpdateQuizs([FromBody] UpdateQuizVM quiz)
+        public async Task<IActionResult> UpdateQuizs([FromForm] UpdateQuizVM quiz)
         {
             try
             {
@@ -86,6 +88,34 @@ namespace ProjectEnglishFall2025.Controllers
             }catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetCountQuestionbyQuiz")]
+        public async Task<ActionResult> GetCountQuestionbyQuiz()
+        {
+            try
+            {
+                var res = await quizService.getCountQuestionInQuiz();
+                return Ok(res);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetQuestionByQuizId/{questionId}")]   
+        public async Task<ActionResult> GetQuestionByQuizId([FromRoute]string questionId)
+        {
+            try
+            {
+                var res=await quizService.GetQuestionsAndAnswersByQuizIdAsync(questionId);
+                return Ok(res);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }
