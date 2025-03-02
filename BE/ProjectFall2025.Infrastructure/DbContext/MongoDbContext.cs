@@ -25,10 +25,13 @@ namespace ProjectFall2025.Infrastructure.DbContext
             if (string.IsNullOrEmpty(settings.Value.DatabaseName))
                 throw new ArgumentException("Database name cannot be null or empty.", nameof(settings.Value.DatabaseName));
 
+
             var client = new MongoClient(settings.Value.ConnectionString);
             _database = client.GetDatabase(settings.Value.DatabaseName);
         }
 
+        // Thuộc tính để truy cập IMongoDatabase
+        public IMongoDatabase Database => _database;
 
         public IMongoCollection<User> GetCollectionUser()
         {

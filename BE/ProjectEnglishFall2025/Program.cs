@@ -22,6 +22,9 @@ using Microsoft.AspNetCore.Authentication.Google;
 using ProjectEnglishFall2025.Filter;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using ProjectFall2025.Application.UnitOfWork;
+using ProjectFall2025.Infrastructure.UnitOfWork;
+using MongoDB.Driver;
 namespace ProjectEnglishFall2025
 {
     public class Program
@@ -44,7 +47,7 @@ namespace ProjectEnglishFall2025
             builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbConfiguration"));
 
 
-            builder.Services.AddSingleton<MongoDbContext>();//dung singleton thi khoi tao di 1 lan den khi api dung
+            builder.Services.AddSingleton<MongoDbContext>(); //dung singleton thi khoi tao di 1 lan den khi api dung
 
             //JWT
             builder.Services.AddAuthentication(options =>
@@ -115,6 +118,7 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IUnitofWork, UnitofWork>();
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -135,11 +139,10 @@ namespace ProjectEnglishFall2025
             // Đăng ký tất cả Validators trong Assembly
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
 
-
-
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
+
 
             //config cloudiary
             builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
@@ -150,11 +153,9 @@ namespace ProjectEnglishFall2025
                      config["CloudName"],
                      config["ApiKey"],
                      config["ApiSecret"]
-                      );
+                );
                 return new Cloudinary(account);
-
             });
-
 
 
             //Iform file 

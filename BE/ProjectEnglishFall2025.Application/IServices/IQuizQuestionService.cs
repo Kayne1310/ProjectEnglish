@@ -12,8 +12,9 @@ namespace ProjectFall2025.Application.IServices
     {
         Task<List<QuizQuestion>> getAllQuizQuestion();
         Task<QuizQuestion> getQuizQuestionById(DeleteQuizQuestionVM quizQuestion);
-        Task<ReturnData> createQuizQuestion(CreateQuizQuestionVM quizQuestion);
+        //Task<ReturnData> createQuizQuestion(CreateQuizQuestionVM quizQuestion);
         Task<ReturnData> updateQuizQuestion(UpdateQuizQuestionVM quizQuestion);
         Task<ReturnData> deleteQuizQuestion(DeleteQuizQuestionVM quizQuestion);
+        Task<ReturnData> Handle(CreateQuizQuestionWithAnswersCommand command);
     }
 }
