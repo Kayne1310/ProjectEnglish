@@ -1,13 +1,13 @@
-﻿using System;
+
+﻿using Microsoft.AspNetCore.Http;
+using ProjectFall2025.Application.IServices;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Http;
-using ProjectFall2025.Application.IServices;
-
 namespace ProjectFall2025.Application.Services
 {
     public class CloudinaryService : ICloudinaryService
@@ -20,10 +20,13 @@ namespace ProjectFall2025.Application.Services
         }
         public async Task<string> UploadImageAsync(IFormFile file, string folder = "default")
         {
-            if (file == null || file.Length == 0)
-                 throw new ArgumentException("File is not provided!");
+            // kiểm tra file
+            if (file == null || file.Length == 0) throw new Exception("File is not provided!");
 
+            // đọc file
             using var stream = file.OpenReadStream();
+
+            // tạo tham số upload
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
@@ -32,11 +35,14 @@ namespace ProjectFall2025.Application.Services
                 Overwrite = true
             };  
 
+
+            // upload file
             var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
-            if (uploadResult?.StatusCode != System.Net.HttpStatusCode.OK)
-                throw new Exception("Error uploading image to Cloudinary");
+            // kiểm tra kết quả upload
+            if (uploadResult?.StatusCode != System.Net.HttpStatusCode.OK) throw new Exception("Upload image failed!");
 
+            // trả về đường dẫn file
             return uploadResult.SecureUrl.ToString();
         }
     }

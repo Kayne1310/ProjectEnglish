@@ -17,5 +17,10 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<Quiz> AddQuiz(Quiz quiz);
         Task<int> UpdateQuiz(Quiz quiz);
         Task<int> DeleteQuiz(DeleteQuizVM quiz);
+
+        Task<List<BsonDocument>> getCountQuestionbyQuiz();
+
+        Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId);
+
     }
 }

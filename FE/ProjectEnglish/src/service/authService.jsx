@@ -1,10 +1,11 @@
+
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
-// const API_URL ="https://localhost:7048/api"; 
+
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`${API_URL}/Account`, {
+        const response = await axios.post(`/Account`, {
             email: email,
             password: password
         }, { withCredentials: true });
@@ -22,6 +23,7 @@ const login = async (email, password) => {
         return { error: error.response?.data || error.message };
     }
 };
+
 
 const logout = async () => {
     try {
@@ -97,13 +99,12 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
+
         const apiResponse = await axios.post(
             `${API_URL}/Account/google-login`,
             userData,
             { withCredentials: true } // Bắt buộc để cookie hoạt động
           );
-          
-
         return apiResponse.data;
     } catch (error) {
         console.error("Google Login failed:", error.response?.data || error.message);
@@ -127,6 +128,7 @@ const facebookLogin = async (accessToken) => {
         };
 
         console.log("Facebook User:", userData);
+
 
         const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData, { withCredentials: true });
 
@@ -220,8 +222,6 @@ const authService = {
     resetPassword,
     forgotpassword,
     getUserInfor,
-
-
 };
 
 export default authService;

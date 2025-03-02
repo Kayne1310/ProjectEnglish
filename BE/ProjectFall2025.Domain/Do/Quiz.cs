@@ -16,6 +16,8 @@ namespace ProjectFall2025.Domain.Do
         public string? description { get; set; }
         public string image {  get; set; }
         public string difficutly { get; set; }
+        public string countryName { get; set; }
+        public string countryImg { get; set; }
         public DateTime? createAt { get; set; }
         public DateTime? updateAt { get; set; }
 

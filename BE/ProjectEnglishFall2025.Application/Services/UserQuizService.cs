@@ -71,7 +71,8 @@ namespace ProjectFall2025.Application.Services
                     time_start = FormatTime(userQuizVM.time_start),
                     time_end = FormatTime(userQuizVM.time_end),
                     createAt = DateTime.Now,
-                    quiz_id = ObjectId.Parse(userQuizVM.quiz_id)
+                    quiz_id = ObjectId.Parse(userQuizVM.quiz_id),
+                    UserID = ObjectId.Parse(userQuizVM.UserID)
                 };
 
                 var validate = await validator.ValidateAsync(data);
@@ -133,6 +134,7 @@ namespace ProjectFall2025.Application.Services
                     existingUserQuiz.time_end = FormatTime(userQuizVM.time_end);
                     existingUserQuiz.updateAt = DateTime.Now;
                     existingUserQuiz.quiz_id = ObjectId.Parse(userQuizVM.quiz_id);
+                    existingUserQuiz.UserID = ObjectId.Parse(userQuizVM.UserID);
                 }
 
                 var validate = await validator.ValidateAsync(existingUserQuiz);

@@ -488,3 +488,27 @@ body {
 .info_section .info_links .info_links_menu a:hover, .info_section .info_links .info_links_menu a.active {
   color: #f89646;
 }
+
+/* Dùng Bootstrap utilities */
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.transition-transform:hover {
+  transform: scale(1.1);
+}
+.d-block .w-100 .h-100{
+  cursor: pointer;
+}
+
+.card-img-overlay {
+  pointer-events: none;
+}
+
+.h6 .mb-0 .text-truncate .group-hover-underline .text-white{
+  text-decoration: none;
+}
+.card-img-overlay .d-flex .flex-column .justify-content-end .bg-gradient{
+  z-index: 9999;
+}

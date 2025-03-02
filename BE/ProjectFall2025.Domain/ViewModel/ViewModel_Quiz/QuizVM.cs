@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
+
 namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
 {
     public class CreateQuizVM
@@ -15,6 +16,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string? description { get; set; }
         public IFormFile image { get; set; }
         public string? difficutly { get; set; }
+        public string countryName { get; set; }
     }
 
     public class UpdateQuizVM
@@ -22,13 +24,27 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string quiz_id { get; set; }
         public string? name { get; set; }
         public string? description { get; set; }
-        public string? image { get; set; }
+        public IFormFile image { get; set; }
         public string? difficutly { get; set; }
+        public string countryName { get; set; }
     }
 
     public class DeleteQuizVM
     {
         public string quiz_id { get; set; }
+    }
+
+
+    public class QuizDto
+    {
+        public string quiz_id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string imageQuiz { get; set; }
+        public string difficutly { get; set; }
+        public string countryName { get; set; }
+        public string countryImg { get; set; }
+
     }
 
 }

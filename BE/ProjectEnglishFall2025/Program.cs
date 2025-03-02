@@ -65,6 +65,7 @@ namespace ProjectEnglishFall2025
                 };
             });
 
+
             //login with facebook and gooogle
             builder.Services.AddAuthentication(options =>
             {
@@ -115,7 +116,6 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
-
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAcountRepository, AccountRepository>();
@@ -136,9 +136,24 @@ namespace ProjectEnglishFall2025
             builder.Services.AddValidatorsFromAssemblyContaining<ValidateUser>();
 
 
+
             //email
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
+
+            //config cloudiary
+            builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
+            {
+                var config = builder.Configuration.GetSection("Cloudinary");
+
+                var account = new CloudinaryDotNet.Account(
+                     config["CloudName"],
+                     config["ApiKey"],
+                     config["ApiSecret"]
+                      );
+                return new Cloudinary(account);
+
+            });
 
 
 
