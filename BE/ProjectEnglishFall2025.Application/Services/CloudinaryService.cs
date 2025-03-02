@@ -30,10 +30,11 @@ namespace ProjectFall2025.Application.Services
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                Folder = folder, // chỉ định folder
-                PublicId = Guid.NewGuid().ToString(), // chỉ định Id file riêng trên cloudinary
-                Overwrite = true // nếu file đã tồn tại thì ghi đè
-            };
+                Folder = folder,  // Chỉ định folder thay vì gán trong PublicId
+                PublicId = Guid.NewGuid().ToString(), // Chỉ định ID file riêng biệt
+                Overwrite = true
+            };  
+
 
             // upload file
             var uploadResult = await cloudinary.UploadAsync(uploadParams);

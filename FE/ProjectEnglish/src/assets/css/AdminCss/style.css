@@ -28423,6 +28423,8 @@ div.tagsinput span.tag a {
   padding-left: 0;
   padding-right: 0;
   padding-top: 60px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .page-body-wrapper.full-page-wrapper {
@@ -28439,6 +28441,7 @@ div.tagsinput span.tag a {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
+  width: 100% !important;
 }
 
 @media (max-width: 991px) {
@@ -30597,4 +30600,13 @@ div.tagsinput span.tag a {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tùy chọn: thêm bóng nhẹ */
 }
 
+
+.sidebar {
+  width: 250px;
+  transition: all 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
 
