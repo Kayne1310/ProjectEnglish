@@ -9,7 +9,7 @@ namespace ProjectEnglishFall2025.Filter
 {
     public class AuthorizeAttribute : TypeFilterAttribute
     {
-        public AuthorizeAttribute(string requiredRole) : base(typeof(AuthorizeActionFilter))
+        public AuthorizeAttribute(params string [] requiredRole) : base(typeof(AuthorizeActionFilter))
         {
             Arguments = new object[] { requiredRole };
         }
@@ -17,12 +17,12 @@ namespace ProjectEnglishFall2025.Filter
 
     public class AuthorizeActionFilter : IAsyncAuthorizationFilter
     {
-        private readonly string _requiredRole;
+        private readonly string [] _requiredRole;
         private readonly IRedisService _redisService;
 
-        public AuthorizeActionFilter(string requiredRole, IRedisService redisService)
+        public AuthorizeActionFilter(string [] requiredRole, IRedisService redisService)
         {
-            _requiredRole = requiredRole;
+            _requiredRole = requiredRole ?? Array.Empty<string>();
             _redisService = redisService;
         }
 
@@ -53,10 +53,15 @@ namespace ProjectEnglishFall2025.Filter
                 }
 
                 // Check if the user has the required role
-                if (!string.Equals(role, _requiredRole, System.StringComparison.OrdinalIgnoreCase))
+                // Nếu không có yêu cầu role cụ thể => Bỏ qua kiểm tra role (chỉ cần có token hợp lệ)
+                if (_requiredRole.Length > 0)
                 {
-                    DenyAccess(context, "Bạn không có quyền truy cập chức năng này");
-                    return;
+                    // Kiểm tra user có ít nhất 1 role hợp lệ không
+                    if (!_requiredRole.Any(r => r.Equals(role, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        DenyAccess(context, "Bạn không có quyền truy cập chức năng này");
+                        return;
+                    }
                 }
             }
             else

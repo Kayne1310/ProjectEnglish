@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MongoDB.Bson;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.Do.FlashCard;
+using ProjectFall2025.Domain.ViewModel.FlashCard;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using ProjectFall2025.Domain.ViewModel.ViewModel_AIAnswer;
 using ProjectFall2025.Domain.ViewModel.ViewModel_History;
@@ -171,6 +173,12 @@ namespace ProjectFall2025.Application.Mapping
                 .ForMember(a => a.aiAnswer_id, b => b.MapFrom(src => src.aiAnswer_id.ToString()))
                 .ReverseMap()
                 .ForMember(a => a.aiAnswer_id, b => b.MapFrom(src => ObjectId.Parse(src.aiAnswer_id)));
+
+
+            //StudySet
+            CreateMap<StudySet, CreateStudySetVM>().ReverseMap();
+            CreateMap<StudySet, EditStudySetVM>().ReverseMap();
+            CreateMap<StudySet, DeleteStudySetVM>().ReverseMap();
 
         }
     }

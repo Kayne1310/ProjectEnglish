@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.Do.FlashCard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +74,10 @@ namespace ProjectFall2025.Infrastructure.DbContext
         public IMongoCollection<AIAnswer> GetCollectionAIAnswer()
         {
             return _database.GetCollection<AIAnswer>("AIAnswer");
+        }
+        public IMongoCollection<StudySet> GetCollectionStudySet()
+        {
+            return _database.GetCollection<StudySet>("StudySet");
         }
 
     }

@@ -297,7 +297,7 @@ namespace ProjectFall2025.Application.Services
                      ? q["QuestionAnswer"].AsBsonArray.Select(a => new AnswerVM
                      {
                          idAnswered = a["_id"].ToString(),
-                         descriptionAnswered = a["desciption"].ToString(),
+                         descriptionAnswered = a["description"].ToString(),
                          isCorrect = a["correct_answer"].ToBoolean(),
                      }).ToList()
                      : new List<AnswerVM>()
