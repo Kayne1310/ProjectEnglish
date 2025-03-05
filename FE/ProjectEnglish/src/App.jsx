@@ -54,6 +54,7 @@ const App = () => {
   return (
     <>
       <Nav />
+
       <div style={{ minHeight: 'calc(70vh - 100px)' }}>
         {isAppLoading === true ? (
           <div className="loading-container" style={{
@@ -68,6 +69,7 @@ const App = () => {
           <Outlet />
         )}
       </div>
+
       <Footer />
     </>
   );

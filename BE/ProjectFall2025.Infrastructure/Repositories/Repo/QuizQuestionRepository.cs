@@ -43,13 +43,21 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return res;
         }
 
-        public async Task<QuizQuestion> createQuizQuestion(QuizQuestion quizQuestion)
+        public async Task<QuizQuestion> createQuizQuestion(QuizQuestion quizQuestion, IClientSessionHandle session = null)
         {
             var db = dbcontext.GetCollectionQuizQuestion();
 
-            await db.InsertOneAsync(quizQuestion);
-
+            if (session != null)
+            {         
+                await db.InsertOneAsync(session, quizQuestion);            
+            }
+            else
+            {
+                await db.InsertOneAsync(quizQuestion);
+            }
             return quizQuestion;
+
+
         }
 
         public async Task<int> updateQuizQuestion(QuizQuestion quizQuestion)

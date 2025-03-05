@@ -7,4 +7,22 @@ const getAllFlashCard = async () =>{
     return reponse.data;
 }
 
-export {getAllFlashCard};
+const getALlStudySetService=async ()=>{
+    const response =await axios.get(`${API_URL}/StudySet/GetListStudy`);
+    console.log(response);
+    return response.data;
+}
+
+const getALlStudySetServiceByUserId=async ()=>{
+    const response =await axios.get(`${API_URL}/StudySet/GetListStudyByUserId`,{
+        withCredentials:true
+    });
+    console.log("data gell all by StudySet UserId",response);
+    return response.data;
+}
+
+
+
+
+
+export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId};

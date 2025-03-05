@@ -17,13 +17,13 @@ namespace ProjectFall2025.Domain.Do.FlashCard
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
 
+
         //public User User { get; set; }
         public string Title { get; set; }
         public string Language { get; set; }
         public string Desc { get; set; }
         public bool Public { get; set; }=false;
-        [BsonRepresentation(BsonType.ObjectId)]
-        public List<string>? FlashcardIds { get; set; } // Danh sách ID flashcards
+        public string? imageCountry { get; set; }
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime? LastPracticeDate { get; set; }

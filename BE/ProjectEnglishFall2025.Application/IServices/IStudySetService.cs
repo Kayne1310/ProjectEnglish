@@ -14,5 +14,8 @@ namespace ProjectFall2025.Application.IServices
          Task<ReturnData> updateStudySet(EditStudySetVM editStudySetVM);
         Task<ReturnData> deleteStudySet(DeleteStudySetVM deleteStudySetVM);
 
+        Task<ResStudySetWithCountVM> getStudySetWithCount();
+        Task<ResStudySetWithCountVM> getStudySetWithCountbyUserId(string UserId);
+
     }
 }

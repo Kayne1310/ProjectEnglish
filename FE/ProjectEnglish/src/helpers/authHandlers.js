@@ -107,7 +107,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     setIsRegisterSuccess(false);
 
     try {
-        const apiResponse = await authService.GoogleRegister(response.access_token,userInfor);
+        const apiResponse = await authService.GoogleRegister(response.access_token);
         console.log("API Response:", apiResponse);
 
 

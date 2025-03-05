@@ -180,6 +180,11 @@ namespace ProjectFall2025.Application.Mapping
             CreateMap<StudySet, EditStudySetVM>().ReverseMap();
             CreateMap<StudySet, DeleteStudySetVM>().ReverseMap();
 
+            //FlashCard
+            CreateMap<Flashcard,CreateFlashcardVM>().ReverseMap();  
+            CreateMap<Flashcard,UpdateFlashcardVM>().ReverseMap();  
+            CreateMap<Flashcard,DeleteFlashcardVM>().ReverseMap();
+
         }
     }
 

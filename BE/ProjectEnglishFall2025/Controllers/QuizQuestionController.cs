@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Application.Services;
+using ProjectFall2025.Application.UnitOfWork;
+using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 
 namespace ProjectEnglishFall2025.Controllers
@@ -44,19 +48,19 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
-        [HttpPost("create_QuizQuestion")]
-        public async Task<IActionResult> createQuizQuestion([FromForm] CreateQuizQuestionVM quizQuestion)
-        {
-            try
-            {
-                var result = await quizQuestionService.createQuizQuestion(quizQuestion);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        //[HttpPost("create_QuizQuestion")]
+        //public async Task<IActionResult> createQuizQuestion([FromForm] CreateQuizQuestionVM quizQuestion)
+        //{
+        //    try
+        //    {
+        //        var result = await quizQuestionService.createQuizQuestion(quizQuestion);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+        //}
 
         [HttpPut("update_QuizQuestion")]
         public async Task<IActionResult> updateQuizQuestion([FromForm] UpdateQuizQuestionVM quizQuestion)
@@ -78,6 +82,20 @@ namespace ProjectEnglishFall2025.Controllers
             try
             {
                 var result = await quizQuestionService.deleteQuizQuestion(quizQuestion);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("create_quizquestion_with_answers")]
+        public async Task<IActionResult> CreateQuizQuestionWithAnswers([FromForm] CreateQuizQuestionWithAnswersCommand command)
+        {
+            try
+            {
+                var result = await quizQuestionService.Handle(command);
                 return Ok(result);
             }
             catch (Exception ex)

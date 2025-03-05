@@ -5,7 +5,9 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
+using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
+using MongoDB.Bson;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
 using System;
 using System.Collections.Generic;
@@ -180,6 +182,40 @@ namespace ProjectFall2025.Application.Services
                 throw new Exception(ex.Message);
             }
         }
-    }
 
+        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)
+        {
+            var bsonResults = await answerRepository.GetCorrectQuizAnswersAsync(quizId);
+
+            return bsonResults.Select(bson => new QuizAnswerDto
+            {
+                quizAnswer_id = bson["_id"].ToString(),
+                description = bson["description"].AsString,
+                correctAnswer = bson["correct_answer"].AsBoolean,
+                questionInfo = new List<QuizQuestionDto>
+                {
+                    new QuizQuestionDto
+                    {
+                        question_id = bson["question_info"]["_id"].ToString(),
+                        description = bson["question_info"]["description"].AsString,
+                        quizInfo = new List<QuizDto>
+                        {
+                            new QuizDto
+                            {
+                                quiz_id = bson["question_info"]["quiz_info"]["_id"].ToString(),
+                                name = bson["question_info"]["quiz_info"]["name"].AsString,
+                                description = bson["question_info"]["quiz_info"]["description"].AsString,
+                                imageQuiz = bson["question_info"]["quiz_info"]["image"].AsString,
+                                difficutly = bson["question_info"]["quiz_info"]["difficutly"].AsString,
+                                countryName = bson["question_info"]["quiz_info"]["countryName"].AsString,
+                                countryImg = bson["question_info"]["quiz_info"]["countryImg"].AsString
+                            }
+                        }
+                    }
+                }
+            }).ToList();
+        }
+    }
 }
+
+

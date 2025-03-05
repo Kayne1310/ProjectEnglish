@@ -124,7 +124,7 @@ namespace ProjectEnglishFall2025.Controllers
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(exprired),
                 });
 
                 //tra ve token 

@@ -1,9 +1,0 @@
-/* filepath: /g:/Hoc Web API/ProjectEnglish/FE/ProjectEnglish/src/assets/css/Home/document.css */
-.custom-link {
-    color: black;
-    transition: color 0.3s ease;
-}
-
-.custom-link:hover {
-    color: blue;
-}

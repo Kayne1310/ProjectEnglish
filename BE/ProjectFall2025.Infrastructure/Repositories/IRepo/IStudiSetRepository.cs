@@ -15,7 +15,8 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<int> DeleteStudySet(DeleteStudySetVM deleteStudySetVM);
         Task<int> UpdateStudySet(StudySet studySet);
         Task<StudySet> getStudySetById(string id);
-
+        Task<List<StudySetWithCountVM>> GetPublicStudySetsWithFlashcardCountAsync();
+        Task<List<StudySetWithCountVM>> getListStudySetbyUserId(string userId);
 
     }
 }

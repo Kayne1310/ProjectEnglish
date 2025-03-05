@@ -68,6 +68,39 @@ namespace ProjectEnglishFall2025.Controllers
             }
         }
 
+        [HttpGet("GetListStudy")]
+        public async Task<ActionResult> getListStudy()
+        {
+            try
+            {
+                var res = await service.getStudySetWithCount();
+                return Ok(res);
+
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("GetListStudyByUserId")]
+        [Authorize("User")]
+        public async Task<ActionResult> getListStudyByUserID()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var res = await service.getStudySetWithCountbyUserId(userId);
+
+                return Ok(res);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
     }
 }

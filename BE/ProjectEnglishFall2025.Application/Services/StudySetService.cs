@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Common.ImgCountry;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.Do.FlashCard;
 using ProjectFall2025.Domain.ViewModel.FlashCard;
@@ -21,7 +22,7 @@ namespace ProjectFall2025.Application.Services
         private readonly IValidator<StudySet> validator;
         private readonly IMapper mapper;
 
-        public StudySetService(IStudiSetRepository repository,IValidator<StudySet> validator,IMapper mapper)
+        public StudySetService(IStudiSetRepository repository, IValidator<StudySet> validator, IMapper mapper)
         {
             this.repository = repository;
             this.validator = validator;
@@ -34,7 +35,7 @@ namespace ProjectFall2025.Application.Services
             {
                 var doData = mapper.Map<StudySet>(createStudySetVM);
 
-                doData.CreatedAt = DateTime.Now;
+        
                 //check validate data
                 var validdata = await validator.ValidateAsync(doData);
 
@@ -47,6 +48,9 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = string.Join(", ", errorMess)
                     };
                 }
+                doData.CreatedAt = DateTime.Now;
+                doData.imageCountry = Country.GetImageCountry(createStudySetVM.Language);
+
                 var res = await repository.CreateStudySet(doData);
                 return new ReturnData
                 {
@@ -59,7 +63,7 @@ namespace ProjectFall2025.Application.Services
                 throw new Exception(ex.Message);
             }
             //map vm to do
-    
+
 
 
         }
@@ -95,12 +99,68 @@ namespace ProjectFall2025.Application.Services
                     ReturnMessage = "Delete Sucesful !"
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
 
 
+        }
+
+        public async Task<ResStudySetWithCountVM> getStudySetWithCount()
+        {
+            try
+            {
+                var res = await repository.GetPublicStudySetsWithFlashcardCountAsync();
+                if (res == null)
+                {
+                    return new ResStudySetWithCountVM
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Data null"
+                    };
+                }
+                return new ResStudySetWithCountVM
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "Data call sucesullful",
+                    listStudySetWithCount=res
+                    
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<ResStudySetWithCountVM> getStudySetWithCountbyUserId(string UserId)
+        {
+            try
+            {
+                var res = await repository.getListStudySetbyUserId(UserId);
+                if (res == null)
+                {
+                    return new ResStudySetWithCountVM
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Data null"
+                    };
+
+                }
+                return new ResStudySetWithCountVM
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "Data collect Sucessful !",
+                    listStudySetWithCount = res
+                };
+            }
+            catch(Exception e)
+            {
+                throw new Exception($"{e.Message}");
+            }
+    
+         
         }
 
         public async Task<ReturnData> updateStudySet(EditStudySetVM editStudySetVM)
@@ -148,13 +208,13 @@ namespace ProjectFall2025.Application.Services
                     ReturnMessage = "Update Sucessful !"
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"{ex.Message}", ex);
             }
-     
 
-     
+
+
         }
     }
 }
