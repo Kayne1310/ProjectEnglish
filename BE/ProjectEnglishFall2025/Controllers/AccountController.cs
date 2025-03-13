@@ -119,7 +119,7 @@ namespace ProjectEnglishFall2025.Controllers
                 var res = await acountService.Account_UpdateRefeshToken(req);
 
                 //Gan token vao cookies 
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
@@ -244,7 +244,7 @@ namespace ProjectEnglishFall2025.Controllers
             await userSessionService.addUserSession(userSession);
             await acountService.Account_UpdateRefeshToken(req);
 
-            Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+            Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
             {
                 HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                 Secure = true,   // Chỉ hoạt động trên HTTPS
@@ -324,7 +324,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 await userSessionService.addUserSession(userSession);
                 //add cokkie
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS

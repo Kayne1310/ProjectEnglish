@@ -21,8 +21,12 @@ const getALlStudySetServiceByUserId=async ()=>{
     return response.data;
 }
 
+const getListFlashCardByStudySetId=async (id)=>{
+    const response =await axios.get(`${API_URL}/FlashCard/GetListFlashCardByStudySetId/${id}`);
+    console.log(response);
+    return response.data;
+    
+}
 
 
-
-
-export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId};
+export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId,getListFlashCardByStudySetId};

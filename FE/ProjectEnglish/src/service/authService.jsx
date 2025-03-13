@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`/Account`, {
+        const response = await axios.post(`${API_URL}/Account`, {
             email: email,
             password: password
         }, { withCredentials: true });

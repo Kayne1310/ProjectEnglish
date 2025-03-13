@@ -153,9 +153,13 @@ namespace ProjectFall2025.Application.Services
                 {
                     Id = getListFlashCard["_id"].AsObjectId.ToString(),
                     UserId = getListFlashCard["UserId"].AsObjectId.ToString(),
-                    Title = getListFlashCard["Title"].AsString,
-                    Language = getListFlashCard["Language"].AsString,
-                    Desc = getListFlashCard["Desc"].AsString,
+                    Title = getListFlashCard["Title"].AsString ??null,
+                    Language = getListFlashCard["Language"].AsString ?? null,
+                    Desc = getListFlashCard["Desc"].AsString ?? null,
+                    imageCountry = getListFlashCard.TryGetValue("imageCountry", out var imageCountryValue) && !imageCountryValue.IsBsonNull
+                    ? imageCountryValue.ToString()
+                    : null,
+
                     Public = getListFlashCard["Public"].AsBoolean,
                     LastPracticeDate = getListFlashCard["LastPracticeDate"].IsBsonNull ? (DateTime?)null : getListFlashCard["LastPracticeDate"].ToUniversalTime(),
                     CreatedAt = getListFlashCard["CreatedAt"].ToUniversalTime()
@@ -165,14 +169,22 @@ namespace ProjectFall2025.Application.Services
                 var flashcards = getListFlashCard["FlashcardInfor"].AsBsonArray
                .Select(bson => BsonSerializer.Deserialize<Flashcard>(bson.AsBsonDocument))
                .ToList();
-              
+
+                // Lấy thông tin UserName & PictureUrl
+                string username = getListFlashCard.Contains("userInfo")   ? getListFlashCard["userInfo"]["UserName"].ToString() : null;
+
+                string pictureUrl = getListFlashCard.Contains("userInfo")   ? getListFlashCard["userInfo"]["Picture"].ToString() : null;
+
+
                 return new ResponseListFlashCardVM
                 {
                     ReturnCode = 1,
                     ReturnMessage = "Data Response Successful !",
-                    StudySet=studySet,
-                    ListFlashcards = flashcards,         
-                };
+                    StudySet = studySet,
+                    ListFlashcards = flashcards,
+                    PictureUrl = pictureUrl,
+                    Username = username,
+            };
 
             }
             catch (Exception ex)

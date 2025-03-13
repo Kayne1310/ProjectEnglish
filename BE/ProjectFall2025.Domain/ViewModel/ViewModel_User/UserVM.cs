@@ -15,10 +15,12 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_User
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string? Picture { get; set; }
         public string? Refeshtoken { get; set; }
         public DateTime Expired { get; set; }
         public string role { get; set; }
-      
+        public string? FacebookId { get; set; }
+        public string? GoogleId { get; set; }
 
 
 

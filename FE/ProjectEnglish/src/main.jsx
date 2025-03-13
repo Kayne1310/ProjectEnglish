@@ -73,7 +73,7 @@ const router = createBrowserRouter([
         element: <Flashcard />
       },
       {
-        path: "/flashcardcanh",
+        path: "/ListFlashCard/:id",
         element: <Flashcardcanh/>
       },
       {

@@ -9,6 +9,7 @@ export const AuthContext = createContext({
     picture: null,
     facebookId: null,
     googleId: null,
+    userId: null,
 });
 
 // // Tạo Context
@@ -23,6 +24,7 @@ export const AuthWrapper = (props) => {
         picture: null,
         facebookId: null,
         googleId: null,
+        userId: null,
     });
     const [isAppLoading, setIsAppLoading] = useState(true);
 

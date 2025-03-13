@@ -176,18 +176,23 @@ namespace ProjectFall2025.Application.Services
             return listUservm;
         }
 
-        public async Task<User> getUserById(string id)
+        public async Task<UserVM> getUserById(string id)
         {
             try
             {
 
             var acb = ObjectId.Parse(id);
              var userExit = await repository.findUserById(acb);
+                //maping
             if(userExit == null)
             {
-                return new User();
+      
+                return new UserVM();
             }
-            return userExit;
+                //mapping
+                var datamap = mapper.Map<UserVM>(userExit);
+                datamap.UserID = id;
+                return datamap;
             }
             catch (Exception ex)
             {

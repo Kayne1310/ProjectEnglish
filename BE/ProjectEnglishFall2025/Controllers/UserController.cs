@@ -124,8 +124,8 @@ namespace ProjectEnglishFall2025.Controllers
                 var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
                 var role = User.FindFirst(ClaimTypes.Role)?.Value;
                 var user = await userService.getUserById(userId);
-                user.UserID.ToString();
-                return Ok(new LoginResponseData
+               
+                return Ok(new getUserDAtaResponseData
                 {
                     ReturnCode = -1,
                     ReturnMessage = "data user",

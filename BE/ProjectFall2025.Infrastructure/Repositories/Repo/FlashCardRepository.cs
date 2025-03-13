@@ -50,19 +50,36 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
                 //lookup 
                 new BsonDocument("$lookup", new BsonDocument
-                    {
-                        { "from", "Flashcard" },  // Tên collection chứa Flashcard
-                        { "localField", "_id" },  // ID của StudySet
-                        { "foreignField", "StudySetId" },  // ID của StudySet trong Flashcard
-                        { "as", "FlashcardInfor" }  // Tên field chứa kết quả join
-                    })
+                        {
+                            { "from", "Flashcard" },  // Tên collection chứa Flashcard
+                            { "localField", "_id" },  // ID của StudySet
+                            { "foreignField", "StudySetId" },  // ID của StudySet trong Flashcard
+                            { "as", "FlashcardInfor" }  // Tên field chứa kết quả join
+                        }),
+
+                 // Bước 3: Lookup lấy thông tin User dựa trên userId
+                        new BsonDocument("$lookup", new BsonDocument
+                        {
+                            { "from", "User" },  // Collection User
+                            { "localField", "UserId" },  // userId trong StudySet
+                            { "foreignField", "_id" },  // _id trong User
+                            { "as", "userInfo" }  // Gán kết quả vào userInfo
+                        }),
+
+                        // Bước 4: Unwind userInfo để dễ lấy dữ liệu
+                        new BsonDocument("$unwind", new BsonDocument
+                        {
+                            { "path", "$userInfo" },
+                            { "preserveNullAndEmptyArrays", true } // Nếu user không tồn tại thì không bị lỗi
+                        }),     
              };
+
+
             var result = await dbContext.GetCollectionStudySet().Aggregate<BsonDocument>(pipeline).FirstOrDefaultAsync();
 
             return result;
 
         }
-
         public async Task<int> updateFlashCard(Flashcard flashcard)
         {
             var filter = Builders<Flashcard>.Filter.Eq(x => x.Id, flashcard.Id);
