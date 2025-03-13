@@ -92,66 +92,41 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-                var data = new deleteQuizUserAnswerVM
+                // Kiểm tra nếu quizUserAnswer_id không hợp lệ
+                if (string.IsNullOrEmpty(quizUserAnswer.quizUserAnswer_id))
                 {
-                    quizUserAnswer_id = quizUserAnswer.quizUserAnswer_id,   
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "QuizUserAnswer ID is required."
+                    };
+                }
+
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new QuizUserAnswer
+                {
+                    quizUserAnswer_id = ObjectId.Parse(quizUserAnswer.quizUserAnswer_id),
+                    user_answers = quizUserAnswer.user_answers,
+                    updateAt = DateTime.Now,
+                    UserID = ObjectId.Parse(quizUserAnswer.UserID),
+                    //quiz_id = ObjectId.Parse(quizUserAnswer.quiz_id),
+                    //question_id = ObjectId.Parse(quizUserAnswer.question_id)
                 };
 
-                var existingQuizUserAnswer = await quizUserAnswerRepository.getIdQuizUserAnswer(data);
-                if (existingQuizUserAnswer == null)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! quizUserAnswer_id not found"
-                    };
-                }
-                else
-                {
-                    existingQuizUserAnswer.user_answers = quizUserAnswer.user_answers;
-                    existingQuizUserAnswer.updateAt = DateTime.Now;
-                    existingQuizUserAnswer.UserID = ObjectId.Parse(quizUserAnswer.UserID);
-                    existingQuizUserAnswer.quiz_id = ObjectId.Parse(quizUserAnswer.quiz_id);
-                    existingQuizUserAnswer.question_id = ObjectId.Parse(quizUserAnswer.question_id);
-                }
+                // Gửi dữ liệu cập nhật xuống Repository
+                var updateResult = await quizUserAnswerRepository.updateQuizUserAnswer(updateData);
 
-                var validate = await validator.ValidateAsync(existingQuizUserAnswer);
-                if (!validate.IsValid)
-                {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
-                    };
-                }
-                else
-                {
-                    var update = await quizUserAnswerRepository.updateQuizUserAnswer(existingQuizUserAnswer);
-                    if (update <= 0)
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
-                        };
-                    }
-                    else
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update successful!"
-                        };
-                    }
-                }
-
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return updateResult > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> deleteQuizUserAnswer(deleteQuizUserAnswerVM quizUserAnswer)
         {

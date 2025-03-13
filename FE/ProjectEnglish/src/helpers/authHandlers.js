@@ -32,7 +32,12 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
 
             setTimeout(() => {
                 setIsLoading(false);
-                navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                if(response.user.role === "User"){
+                    navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                }
+                if(response.user.role === "Admin"){
+                    navigate("/Admin") 
+                }
             }, 1000);
             return;
         }

@@ -103,5 +103,34 @@ namespace ProjectEnglishFall2025.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpPut("update_quizquestion_with_answers")]
+        public async Task<IActionResult> UpdateQuizQuestionWithAnswers([FromForm] UpdateQuizQuestionWithAnswerCommand command)
+        {
+            try
+            {
+                var result = await quizQuestionService.HandleUpdate(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        [HttpDelete("delete_quizquestion_with_answers")]
+        public async Task<IActionResult> DeleteQuizQuestionWithAnswers([FromForm] DeleteQuizQuestionVM command)
+        {
+            try
+            {
+                var result = await quizQuestionService.HandleDelete(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

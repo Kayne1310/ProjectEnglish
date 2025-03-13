@@ -92,61 +92,32 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-
-                // ánh xạ dữ liệu từ updateHistoryVM sang deleteHistoryVM
-                var historyId = new deleteHistoryVM 
+                // Kiểm tra nếu history_id không hợp lệ
+                if (string.IsNullOrEmpty(history.history_id))
                 {
-                    history_id = history.history_id 
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "History ID is required."
+                    };
+                }
+
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new History
+                {
+                    history_id = ObjectId.Parse(history.history_id),
+                    total_questions = history.total_questions,
+                    total_corrects = history.total_corrects,
+                    updateAt = DateTime.Now
                 };
 
-                // Tìm bản ghi cũ bằng hàm getHistoryById
-                var existingHistory = await historyRepository.getHistoryById(historyId);
-                if (existingHistory == null)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! history_id not found"
-                    };
-                }
-                else
-                {
-                    // Cập nhật dữ liệu mới nhưng giữ nguyên createAt
-                    existingHistory.total_questions = history.total_questions;
-                    existingHistory.total_corrects = history.total_corrects;
-                    existingHistory.updateAt = DateTime.Now;
-                }
+                // Gửi dữ liệu cập nhật xuống Repository
+                var updateResult = await historyRepository.updateHistory(updateData);
 
-
-                // Validate lại dữ liệu sau khi cập nhật
-                var validate = validator.Validate(existingHistory);
-                if (!validate.IsValid)
-                {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
-                    };
-                }
-
-                // Thực hiện cập nhật vào database
-                var updateResult = await historyRepository.updateHistory(existingHistory);
-
-                if (updateResult <= 0)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! Database error"
-                    };
-                }
-
-                return new ReturnData
-                {
-                    ReturnCode = 1,
-                    ReturnMessage = "Update successful!"
-                };
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return updateResult > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
@@ -160,7 +131,7 @@ namespace ProjectFall2025.Application.Services
             try
             {
                 var delete = await historyRepository.deleteHistory(history);
-                if(delete <= 0)
+                if (delete <= 0)
                 {
                     return new ReturnData
                     {

@@ -7,7 +7,6 @@ const ViewProfile = () => {
     userName: userInfor.userName || '',
     email: userInfor.email || '',
     picture: userInfor.picture || '',
-
   });
 console.log(userInfor);
   useEffect(() => {

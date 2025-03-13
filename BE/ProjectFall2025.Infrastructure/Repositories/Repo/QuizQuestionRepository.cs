@@ -30,17 +30,17 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return getAll;
         }
 
-        public async Task<QuizQuestion> getQuizQuestionById(DeleteQuizQuestionVM quizQuestion)
+        public async Task<QuizQuestion> getQuizQuestionById(DeleteQuizQuestionVM quizQuestion, IClientSessionHandle session = null)
         {
             var db = dbcontext.GetCollectionQuizQuestion();
-
             var objectId = ObjectId.Parse(quizQuestion.question_id);
-
             var filter = Builders<QuizQuestion>.Filter.Eq(x => x.question_id, objectId);
 
-            var res = await db.Find(filter).FirstOrDefaultAsync();
-
-            return res;
+            if (session != null)
+            {
+                return await db.Find(session, filter).FirstOrDefaultAsync();
+            }
+            return await db.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<QuizQuestion> createQuizQuestion(QuizQuestion quizQuestion, IClientSessionHandle session = null)
@@ -56,29 +56,73 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                 await db.InsertOneAsync(quizQuestion);
             }
             return quizQuestion;
-
-
         }
 
-        public async Task<int> updateQuizQuestion(QuizQuestion quizQuestion)
-        {
-            var update = await dbcontext.GetCollectionQuizQuestion()
-                .ReplaceOneAsync(x => x.question_id == quizQuestion.question_id, quizQuestion);
-
-            return (int)update.ModifiedCount;
-        }
-
-        public async Task<int> deleteQuizQuestion(DeleteQuizQuestionVM quizQuestion)
+        public async Task<int> updateQuizQuestion(QuizQuestion quizQuestion, IClientSessionHandle session = null)
         {
             var db = dbcontext.GetCollectionQuizQuestion();
 
-            var objectId = ObjectId.Parse(quizQuestion.question_id);
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<QuizQuestion>.Update
+                .Set(q => q.description, quizQuestion.description)
+                .Set(q => q.updateAt, DateTime.Now);
 
+            // Nếu có ảnh mới, cập nhật trường image
+            if (!string.IsNullOrEmpty(quizQuestion.image))
+            {
+                updateDefinition = updateDefinition.Set(q => q.image, quizQuestion.image);
+            }
+
+            // Thực hiện cập nhật trong MongoDB
+            UpdateResult updateResult;
+            if (session != null)
+            {
+                updateResult = await db.UpdateOneAsync(
+                    session,
+                    Builders<QuizQuestion>.Filter.Eq(x => x.question_id, quizQuestion.question_id),
+                    updateDefinition
+                );
+            }
+            else
+            {
+                updateResult = await db.UpdateOneAsync(
+                    Builders<QuizQuestion>.Filter.Eq(x => x.question_id, quizQuestion.question_id),
+                    updateDefinition
+                );
+            }
+
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
+        }
+
+
+        public async Task<int> deleteQuizQuestion(DeleteQuizQuestionVM quizQuestion, IClientSessionHandle session = null)
+        {
+            var db = dbcontext.GetCollectionQuizQuestion();
+            var objectId = ObjectId.Parse(quizQuestion.question_id);
             var filter = Builders<QuizQuestion>.Filter.Eq(i => i.question_id, objectId);
 
-            var res = await db.DeleteOneAsync(filter);
+            DeleteResult res;
+            if (session != null)
+            {
+                res = await db.DeleteOneAsync(session, filter);
+            }
+            else
+            {
+                res = await db.DeleteOneAsync(filter);
+            }
 
             return (int)res.DeletedCount;
+        }
+
+        public async Task<int> DeleteByQuizIdAsync(ObjectId quizId, IClientSessionHandle session = null)
+        {
+            var db = dbcontext.GetCollectionQuizQuestion();
+            var filter = Builders<QuizQuestion>.Filter.Eq(q => q.quiz_id, quizId);
+            DeleteResult result = session != null
+                ? await db.DeleteManyAsync(session, filter)
+                : await db.DeleteManyAsync(filter);
+            return (int)result.DeletedCount;
         }
     }
 }

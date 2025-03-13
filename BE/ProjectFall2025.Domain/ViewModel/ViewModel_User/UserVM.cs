@@ -18,7 +18,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_User
         public string? Refeshtoken { get; set; }
         public DateTime Expired { get; set; }
         public string role { get; set; }
-      
+        public string? Picture { get; set; }
 
 
 

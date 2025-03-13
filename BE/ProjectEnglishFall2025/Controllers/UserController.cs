@@ -33,8 +33,6 @@ namespace ProjectEnglishFall2025.Controllers
             {
 
                 var res = await userService.addUserService(user);
-
-
                 return Ok(res);
             }
 
@@ -46,8 +44,8 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
 
-        [HttpGet]
-        [Authorize("User")]
+        [HttpGet("Get_All_User")]
+        [Authorize("Admin")]
         public async Task<ActionResult> getAllUser()
         {
 
@@ -127,7 +125,7 @@ namespace ProjectEnglishFall2025.Controllers
                 user.UserID.ToString();
                 return Ok(new LoginResponseData
                 {
-                    ReturnCode = -1,
+                    ReturnCode = 1,
                     ReturnMessage = "data user",
                     user = user,
 

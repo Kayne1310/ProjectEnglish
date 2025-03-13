@@ -35,15 +35,15 @@ const AuthForm = ({
                             <Link to="#" className="icon" onClick={googleLogin} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#db4437", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                 <i className="fa-brands fa-google"></i>
                             </Link>
-                            
+
                             <LoginSocialFacebook
                                 isOnlyGetToken
                                 appId={import.meta.env.VITE_APP_FB_APP_ID2 || ''}
                                 onResolve={facebookLogin}
-                                  onReject={(err) => {
+                                onReject={(err) => {
                                     console.log(err)
-                                  }}
-                                >
+                                }}
+                            >
                                 <Link to="#" className="icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#3b5998", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>
                                     <i className="fa-brands fa-facebook-f"></i>
                                 </Link>
@@ -73,8 +73,8 @@ const AuthForm = ({
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        {!showSignUp && <Link to="/forgotpassword" className="forgot-password" >
 
+                        {!showSignUp && <Link to="/forgotpassword" className="forgot-password" >
                             Forget Your Password?
                         </Link>}
 

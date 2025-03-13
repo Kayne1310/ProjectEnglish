@@ -11,6 +11,8 @@ import { useEffect } from "react";
 import authService from "./service/authService";
 import { Spin } from 'antd';
 import { AuthContext } from "./components/layout/context/authContext";
+import "./assets/css/LoginCss/admin.css";
+
 const App = () => {
   const { setUser, isAppLoading, setIsAppLoading } = useContext(AuthContext);
   useEffect(() => {
@@ -41,7 +43,6 @@ const App = () => {
       //   window.location.href = "/loginuser";
       // }
     }
-
     catch (error) {
       throw error;
     }
@@ -50,11 +51,9 @@ const App = () => {
     }
   };
 
-
   return (
     <>
       <Nav />
-
       <div style={{ minHeight: 'calc(70vh - 100px)' }}>
         {isAppLoading === true ? (
           <div className="loading-container" style={{

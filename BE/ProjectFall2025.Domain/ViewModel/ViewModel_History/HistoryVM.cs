@@ -20,8 +20,8 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_History
         public string history_id { get; set; }
         public string? total_questions { get; set; }
         public string? total_corrects { get; set; }
-        public string UserID { get; set; }
-        public string quiz_id { get; set; }
+        //public string UserID { get; set; }
+        //public string quiz_id { get; set; }
     }
 
     public class deleteHistoryVM

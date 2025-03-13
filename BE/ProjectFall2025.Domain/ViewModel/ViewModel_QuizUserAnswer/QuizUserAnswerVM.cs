@@ -19,8 +19,8 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizUserAnswer
         public string quizUserAnswer_id { get; set; }
         public string? user_answers { get; set; }
         public string UserID { get; set; }
-        public string quiz_id { get; set; }
-        public string question_id { get; set; }
+        //public string quiz_id { get; set; }
+        //public string question_id { get; set; }
     }
 
     public class deleteQuizUserAnswerVM

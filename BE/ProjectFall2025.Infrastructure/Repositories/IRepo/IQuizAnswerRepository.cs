@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,13 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
     public interface IQuizAnswerRepository
     {
         Task<List<QuizAnswer>> getAllQuizAnswer();
-        Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId);
+        Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null);
         Task<QuizAnswer> createQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null);
-        Task<int> updateQuizAnswer(QuizAnswer quiz);
-        Task<int> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionId);
+        Task<int> updateQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null);
+        Task<int> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null);
+        Task<int> DeleteByQuestionIdAsync(ObjectId questionId, IClientSessionHandle session = null); // Phương thức tối ưu dành cho delete question with annswer
 
         // lookup QuizAnswer -> QuizQuestion -> Quiz
-        Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId);
+        Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId);
     }
 }

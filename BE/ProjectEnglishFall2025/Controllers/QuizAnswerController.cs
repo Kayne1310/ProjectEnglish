@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 
@@ -91,7 +92,7 @@ namespace ProjectEnglishFall2025.Controllers
 
 
         [HttpGet("correct-answers")]
-        public async Task<IActionResult> GetCorrectQuizAnswers(string quizId)
+        public async Task<IActionResult> GetCorrectQuizAnswers(DeleteQuizVM quizId)
         {
             try
             {

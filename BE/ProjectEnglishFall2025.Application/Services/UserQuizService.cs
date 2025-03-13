@@ -104,75 +104,53 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-                if (userQuizVM == null)
+                // Kiểm tra nếu userQuiz_id không hợp lệ
+                if (string.IsNullOrEmpty(userQuizVM.userQuiz_id))
                 {
                     return new ReturnData
                     {
                         ReturnCode = -1,
-                        ReturnMessage = ("is_finish is not null")
+                        ReturnMessage = "userQuiz_id is required."
                     };
                 }
 
-                var data = new DeleteUserQuizVM
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new UserQuiz
                 {
-                    userQuiz_id = userQuizVM.userQuiz_id,
+                    userQuiz_id = ObjectId.Parse(userQuizVM.userQuiz_id),
+                    is_finish = userQuizVM.is_finish,
+                    time_start = FormatTime(userQuizVM.time_start),
+                    time_end = FormatTime(userQuizVM.time_end),
+                    updateAt = DateTime.Now,
+                    //quiz_id = ObjectId.Parse(userQuizVM.quiz_id),
+                    //UserID = ObjectId.Parse(userQuizVM.UserID)
                 };
 
-                var existingUserQuiz = await userQuizRepository.getIdUserQuiz(data);
-                if (existingUserQuiz == null)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! userQuiz_id not found"
-                    };
-                }
-                else
-                {
-                    existingUserQuiz.is_finish = userQuizVM.is_finish;
-                    existingUserQuiz.time_start = FormatTime(userQuizVM.time_start);
-                    existingUserQuiz.time_end = FormatTime(userQuizVM.time_end);
-                    existingUserQuiz.updateAt = DateTime.Now;
-                    existingUserQuiz.quiz_id = ObjectId.Parse(userQuizVM.quiz_id);
-                    existingUserQuiz.UserID = ObjectId.Parse(userQuizVM.UserID);
-                }
-
-                var validate = await validator.ValidateAsync(existingUserQuiz);
+                // Validate dữ liệu trước khi update
+                var validate = await validator.ValidateAsync(updateData);
                 if (!validate.IsValid)
                 {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
+                    var errorMessages = validate.Errors.Select(e => e.ErrorMessage).ToList();
                     return new ReturnData
                     {
                         ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
+                        ReturnMessage = string.Join(", ", errorMessages)
                     };
                 }
-                else
-                {
-                    var update = await userQuizRepository.updateUserQuiz(existingUserQuiz);
-                    if (update <= 0)
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
-                        };
-                    }
-                    else
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update successful!"
-                        };
-                    }
-                }
+
+                // Cập nhật dữ liệu trong database
+                var updateResult = await userQuizRepository.updateUserQuiz(updateData);
+
+                return updateResult > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> deleteUserQuiz(DeleteUserQuizVM userQuizVM)
         {

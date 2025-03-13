@@ -58,10 +58,10 @@ namespace ProjectEnglishFall2025.Controllers
                 //2.1 tao Claims de luu thong tin users
 
                 var authClaims = new List<Claim> {
-                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.PrimarySid, user.UserID.ToString()),
-                    new Claim(ClaimTypes.Role,user.role),
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role,user.role),
 
                 };
                 var newtoken = CreateToken(authClaims);
@@ -69,9 +69,7 @@ namespace ProjectEnglishFall2025.Controllers
                 //buoc 2.3 tao refresh token
                 var exprired = Convert.ToInt32(configuration["JWT:RefreshTokenValidityInDays"]);
                 var refreshtokenExprired = DateTime.Now.AddDays(exprired);
-
                 var refreshtoken = GenerateRefreshToken();
-
                 var req = new Account_UpdateRefeshTokenRequestData
                 {
                     Exprired = refreshtokenExprired,
@@ -81,7 +79,6 @@ namespace ProjectEnglishFall2025.Controllers
                 };
 
                 // luu vao redis
-
                 var redisKeyAccessToken = $"user:{user.UserID}:accessToken";
                 var redisKeyRefreshToken = $"user:{user.UserID}:refreshToken";
 
@@ -102,8 +99,6 @@ namespace ProjectEnglishFall2025.Controllers
 
 
                 //luu vao monogodb userSession
-
-
                 var userSession = new UserSession
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(newtoken),
@@ -112,24 +107,21 @@ namespace ProjectEnglishFall2025.Controllers
                     expriresAt = refreshtokenExprired,
                     isRevoked = "false",
                 };
-
                 await userSessionService.addUserSession(userSession);
-
-
                 var res = await acountService.Account_UpdateRefeshToken(req);
 
                 //Gan token vao cookies 
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(7)
                 });
 
                 //tra ve token 
                 returnData.ReturnCode = 1;
-                returnData.user=user;
+                returnData.user = user;
                 returnData.ReturnMessage = result.ReturnMessage;
                 returnData.token = new JwtSecurityTokenHandler().WriteToken(newtoken);
                 returnData.user = user;
@@ -140,7 +132,7 @@ namespace ProjectEnglishFall2025.Controllers
                 throw;
             }
         }
-        
+
         [HttpPost("Logout")]
         //[Authorize("User")]
         public async Task<IActionResult> Logout()
@@ -244,7 +236,7 @@ namespace ProjectEnglishFall2025.Controllers
             await userSessionService.addUserSession(userSession);
             await acountService.Account_UpdateRefeshToken(req);
 
-            Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+            Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
             {
                 HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                 Secure = true,   // Chỉ hoạt động trên HTTPS
@@ -324,7 +316,7 @@ namespace ProjectEnglishFall2025.Controllers
 
                 await userSessionService.addUserSession(userSession);
                 //add cokkie
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
@@ -364,7 +356,7 @@ namespace ProjectEnglishFall2025.Controllers
                     return Ok(new ReturnData
                     {
                         ReturnCode = -1,
-                        ReturnMessage="User not exits"
+                        ReturnMessage = "User not exits"
                     });
 
 
@@ -372,7 +364,7 @@ namespace ProjectEnglishFall2025.Controllers
 
 
                 await emailService.SendPasswordResetEmailAsync(request.Email, token);
-                await userService.UpdateTokenUser(new ResetPasswordRequest { Email = request.Email, NewPassword = null ,Token=token});
+                await userService.UpdateTokenUser(new ResetPasswordRequest { Email = request.Email, NewPassword = null, Token = token });
 
                 return Ok(new ReturnData
                 {

@@ -18,6 +18,7 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> AddQuiz(CreateQuizVM quiz);
         Task<ReturnData> UpdateQuiz(UpdateQuizVM quiz);
         Task<ReturnData> DeleteQuiz(DeleteQuizVM quiz);
+        Task<ReturnData> HandleDelete(DeleteQuizVM request); // Xóa quiz và các question và answer liên quan
 
         Task<List<QuizzAndQuestionVM> > getCountQuestionInQuiz();
         Task<List<QuestionAndAnswerVM> > GetQuestionsAndAnswersByQuizIdAsync(String id);

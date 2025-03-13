@@ -54,11 +54,20 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
         public async Task<int> updateAIAnswer(AIAnswer aIAnswer)
         {
-            var db = await mongoDbContext.GetCollectionAIAnswer()
-                .ReplaceOneAsync(i => i.aiAnswer_id == aIAnswer.aiAnswer_id, aIAnswer);
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<AIAnswer>.Update
+                .Set(a => a.responseAI, aIAnswer.responseAI)
+                .Set(a => a.generatedAt, DateTime.Now);
+                //.Set(a => a.question_id, aIAnswer.question_id);
 
-            return (int)db.ModifiedCount;
+            // Thực hiện cập nhật trong MongoDB
+            var updateResult = await mongoDbContext.GetCollectionAIAnswer()
+                .UpdateOneAsync(a => a.aiAnswer_id == aIAnswer.aiAnswer_id, updateDefinition);
+
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
         }
+
 
         public async Task<int> deleteAIAnswer(deleteAIAnswerVM aIAnswer)
         {

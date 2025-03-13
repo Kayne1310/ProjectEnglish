@@ -1,19 +1,30 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Form } from 'react-bootstrap';
+import { getAllUser } from '../../../service/UserListService';
 
 
-const UserList = () => {
+const UserlistPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const users = [
-    { name: 'Toàn', email: 'toan@example.com', picture: "Face1", role: 'User' },
-    { name: 'Trọng', email: 'trong@example.com', picture: "Face1", role: 'Admin' },
-    { name: 'Khánh', email: 'khanh@example.com', picture: "Face1", role: 'User' },
-  ];
+  const [users, setUsers] = useState([]); // Khởi tạo mảng rỗng thay vì object
+
+  // Sử dụng useEffect để gọi API khi component mount
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userData = await getAllUser();
+        console.log("check userData: ", userData)
+        setUsers(userData); // Cập nhật state với dữ liệu từ API
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []); // Dependency array rỗng để chỉ chạy một lần khi mount
 
   const filteredUsers = users.filter(user => 
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (user?.userName?.toLowerCase()?.includes(searchTerm.toLowerCase()) || 
+     user?.email?.toLowerCase()?.includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -45,7 +56,7 @@ const UserList = () => {
                   <tbody>
                     {filteredUsers.map((user, index) => (
                       <tr key={index}>
-                        <td>{user.name}</td>
+                        <td>{user.userName}</td>
                         <td>{user.email}</td>
                         <td><img src={user.picture} alt="user" /></td>
                         <td>{user.role}</td>
@@ -62,4 +73,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default UserlistPage;

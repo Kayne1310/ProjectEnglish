@@ -5,10 +5,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const login = async (email, password) => {
     try {
-        const response = await axios.post(`/Account`, {
+        const response = await axios.post(`${API_URL}/Account`, {
             email: email,
             password: password
-        }, { withCredentials: true });
+        });
 
 
         console.log("Full API Response:", response); // Log toàn bộ response
@@ -28,7 +28,7 @@ const login = async (email, password) => {
 const logout = async () => {
     try {
         const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
-          withCredentials: true,
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -104,7 +104,7 @@ const googleLogin = async (accessToken) => {
             `${API_URL}/Account/google-login`,
             userData,
             { withCredentials: true } // Bắt buộc để cookie hoạt động
-          );
+        );
         return apiResponse.data;
     } catch (error) {
         console.error("Google Login failed:", error.response?.data || error.message);
@@ -167,13 +167,13 @@ const facebookRegister = async (accessToken) => {
 
 const resetPassword = async (email, token, newpassword) => {
 
-    try {   
-    const response = await axios.post(`${API_URL}/Account/reset-password`,
-        {
-            email: email,
-            token: token,
-            newpassword: newpassword
-        });
+    try {
+        const response = await axios.post(`${API_URL}/Account/reset-password`,
+            {
+                email: email,
+                token: token,
+                newpassword: newpassword
+            });
 
         console.log(response);
         return response.data;
@@ -186,15 +186,14 @@ const resetPassword = async (email, token, newpassword) => {
 };
 
 
-//
-const getUserInfor= async()=>{
+const getUserInfor = async () => {
 
-    try{
-            const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
-            return response.data;
+    try {
+        const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
+        return response.data;
     }
-    catch(error){
-            return error;
+    catch (error) {
+        return error;
     }
 };
 

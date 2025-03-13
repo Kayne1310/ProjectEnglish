@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
+using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -116,6 +118,21 @@ namespace ProjectEnglishFall2025.Controllers
             catch(Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+
+        [HttpDelete("delete_quiz_question_answers")]
+        public async Task<IActionResult> DeleteQuizQuestionWithAnswers([FromForm] DeleteQuizVM command)
+        {
+            try
+            {
+                var result = await quizService.HandleDelete(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }
