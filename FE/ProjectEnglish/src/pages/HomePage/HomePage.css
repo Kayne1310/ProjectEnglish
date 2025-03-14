@@ -1,0 +1,27 @@
+#chatbase-bubble-window {
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 20px !important;
+    width: 400px !important;
+    height: 500px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
+    display: none;
+}
+
+#chatbase-bubble-button {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 60px !important;
+    height: 60px !important;
+    background-color: #007bff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    z-index: 1001 !important;
+}
+
+.chatbase-powered-by {
+    display: none !important;
+}

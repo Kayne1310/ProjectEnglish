@@ -4,7 +4,12 @@
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
+// import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
+
+
+import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage/LoginAdminPage.jsx';
+
+
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
