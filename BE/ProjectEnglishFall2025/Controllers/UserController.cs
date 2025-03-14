@@ -127,7 +127,7 @@ namespace ProjectEnglishFall2025.Controllers
                
                 return Ok(new getUserDAtaResponseData
                 {
-                    ReturnCode = -1,
+                    ReturnCode = 1,
                     ReturnMessage = "data user",
                     user = user,
 

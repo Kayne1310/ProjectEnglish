@@ -29,4 +29,12 @@ const getListFlashCardByStudySetId=async (id)=>{
 }
 
 
-export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId,getListFlashCardByStudySetId};
+const createFlashCardWithStudySet=async (data)=>{
+    console.log("data",data);
+    const response =await axios.post(`${API_URL}/FlashCard/CreateFlashCardWithStudySet`,data,{withCredentials:true});
+    console.log(response);
+    return response.data;
+}
+
+
+export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId,getListFlashCardByStudySetId,createFlashCardWithStudySet};

@@ -10,7 +10,6 @@ const { Option } = Select;
 const FlashcardList = () => {
     const location = useLocation();
     const isFlashcardPage = location.pathname.includes("/flashcard"); // Kiểm tra nếu URL chứa "/flashcard"
-
     const [activeLang, setActiveLang] = useState("all");
     const [studySetByUserID, setStudySetByUserID] = useState([]);
     const [studyset, setStudyset] = useState([]);

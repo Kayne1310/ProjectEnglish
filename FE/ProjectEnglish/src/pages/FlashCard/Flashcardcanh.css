@@ -154,10 +154,9 @@
     padding: 20px;
     margin-top: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 45%;
+    width: 100%;
     max-width: 600px;
-    flex: 1;
-    max-width: 50%;
+    max-width: 100% !important;
     position: relative;
     height: 600px;
  
@@ -187,7 +186,7 @@
         justify-content: center; /* Căn giữa thay vì space-between */
     }
     .flashcardcanh-container {
-        width: 50%; /* Điều chỉnh để vừa hai cột */
+        width: 100%; /* Điều chỉnh để vừa hai cột */
     }
 }
 
@@ -243,3 +242,5 @@
 .flashcardcanh-examples {
     padding: 5px 0;
 }
+
+/* Đảm bảo các card có chiều cao bằng nhau trong cùng một hàng */
