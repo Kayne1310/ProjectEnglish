@@ -3,22 +3,26 @@ import './Flashcardcanh.css'; // Import file CSS
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 // import b2 from "../../assets/image/b2.jpg";
 import covn from '../../assets/image/covn.jpg'
-import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { createFlashCardWithStudySet, getListFlashCardByStudySetId } from '../../service/flashcardService';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { createFlashCardWithStudySet, deleteFlashCardWithStudySet, getListFlashCardByStudySetId, updateFlashCardWithStudySet } from '../../service/flashcardService';
 import { calculateDaysAgo } from '../../helpers/DateHepler';
 import { AuthContext } from '../../components/layout/context/authContext';
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { handleWordGeneration } from '../../helpers/wordGenerationHandler';
 import { prepareFlashcardData } from '../../helpers/flashcardHandler';
+import { updateStudySet, deleteStudySet } from '../../service/StudySetService';
 const { TextArea } = Input;
 
 
 
 
 const Flashcardcanh = () => {
+    const location = useLocation();
+    const flashcardCount = location.state?.flashcardCount;
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const { userInfor } = useContext(AuthContext);
     const [flashcards, setFlashcards] = useState([]);
     const { id } = useParams(); // Get studySet ID from URL
@@ -26,48 +30,78 @@ const Flashcardcanh = () => {
     // const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState(null);
     const [PictureUrl, setPictureUrl] = useState(null);
-
-
+    //ai generate word
+        const [wordData, setWordData] = useState({
+            id: '',
+            title: '',
+            define: '',
+            typeOfWord: '',
+            transcription: '',
+            examples: '',
+            note: '',
+    
+        });
+    //edit study set
     const [editData, setEditData] = useState({
+        id:"",
+        userId:"",
         title: "",
         language: "",
-        description: "",
-        isPublic: false
+        desc: "",
+        Public: false,
     });
+    const [deleteType, setDeleteType] = useState(''); // 'flashcard' hoặc 'studyset'
+    const fetchFlashcards = async () => {
+        try {
+            const data = await getListFlashCardByStudySetId(id);
+
+            // Access the data property from response
+
+            console.log("data", data);
+            setFlashcards(data.listFlashcards);
+            setStudySet(data.studySet);
+            setUserName(data.username);
+            setPictureUrl(data.pictureUrl);
+        } catch (error) {
+            console.error('Error fetching flashcards:', error);
+        }
+    };
 
     useEffect(() => {
         window.scroll(0, 0);
         const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => new bootstrap.Modal(modal));
+        modals.forEach(modal => {
+            new bootstrap.Modal(modal);
+        });
 
-        const fetchFlashcards = async () => {
-            try {
-                const data = await getListFlashCardByStudySetId(id);
-
-                // Access the data property from response
-
-                console.log("data", data);
-                setFlashcards(data.listFlashcards);
-                setStudySet(data.studySet);
-                setUserName(data.username);
-                setPictureUrl(data.pictureUrl);
-            } catch (error) {
-                console.error('Error fetching flashcards:', error);
-            }
-        };
+        // Thêm event listener cho modal
+        const addWordModal = document.getElementById('addWordModal');
+        if (addWordModal) {
+            addWordModal.addEventListener('hidden.bs.modal', handleResetForm);
+        }
 
         fetchFlashcards();
+
+        // Cleanup function
+        return () => {
+            if (addWordModal) {
+                addWordModal.removeEventListener('hidden.bs.modal', handleResetForm);
+            }
+        };
     }, [id]);
 
 
     // Thêm hàm xử lý
     const handleEditClick = () => {
         setEditData({
+            id: studySet.id,
+            userId: studySet.userId,
             title: studySet.title,
             language: studySet.language,
-            description: studySet.desc,
-            isPublic: studySet.public
+            desc: studySet.desc,
+            public: studySet.public,
         });
+        console.log("editData", editData);
         setIsEditModalVisible(true);
     };
 
@@ -75,12 +109,19 @@ const Flashcardcanh = () => {
         setIsEditModalVisible(false);
     };
 
-    const handleEditSubmit = async () => {
+    const handleEditStudySetSubmit = async () => {
         // Xử lý cập nhật studyset
         try {
             // Gọi API cập nhật ở đây
-            setIsEditModalVisible(false);
-
+            const response = await updateStudySet(editData);
+            if(response.returnCode == 1){
+                alert("Cập nhật thành công");
+                setIsEditModalVisible(false);
+                fetchFlashcards();
+            }
+            else{
+                alert("Cập nhật thất bại");
+            }
         } catch (error) {
             console.error('Error updating studyset:', error);
         }
@@ -88,16 +129,6 @@ const Flashcardcanh = () => {
 
 
 
-    //ai generate word
-    const [wordData, setWordData] = useState({
-        title: '',
-        define: '',
-        typeOfWord: '',
-        transcription: '',
-        examples: '',
-        note: '',
-
-    });
 
     // State loading khi gọi API
     const [isLoading, setIsLoading] = useState(false);
@@ -131,12 +162,14 @@ const Flashcardcanh = () => {
     const handleResetForm = () => {
         setWordData({
             title: '',
-            definition: '',
-            type: '',
-            phonetic: '',
+            define: '',
+            typeOfWord: '',
+            transcription: '',
             examples: '',
-            note: ''
+            note: '',
+            id: ''
         });
+        setIsEditMode(false);
     };
 
 
@@ -151,35 +184,126 @@ const Flashcardcanh = () => {
         try {
             // Chuẩn bị dữ liệu theo format API
             const preparedData = prepareFlashcardData(wordData, id);
+            if (isEditMode) {
 
-            // Gọi API tạo flashcard
-            const response = await createFlashCardWithStudySet(preparedData);
-            console.log('Created flashcard:', response);
+                // Khi edit: gửi kèm id
+                const updateData = {
+                    id: wordData.id, // Id chỉ cần khi edit
+                    title: wordData.title,
+                    define: wordData.define,
+                    typeOfWord: wordData.typeOfWord,
+                    transcription: wordData.transcription,
+                    note: wordData.note,
+                    status: 'Learning',
+                    exampleVM: preparedData.exampleVM
 
-            // Reset form
-            setWordData({
-                title: '',
-                define: '',
-                typeOfWord: '',
-                transcription: '',
-                examples: '',
-                note: ''
-            });
+                };
+                console.log('updateData', updateData);
+                const response = await updateFlashCardWithStudySet(updateData);
+                console.log('Updated flashcard:', response);
+                if (response.returnCode == 1) {
+                    alert("Update Sucessful");
+                    document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
+                    fetchFlashcards();
+                }
+                else {
+                    alert("Update Failed");
+                }
+            }
+            else {
 
-            // Đóng modal
-            const modal = document.getElementById('addWordModal');
-            const bootstrapModal = new bootstrap.Modal(modal);
-            bootstrapModal.hide();
+                const response = await createFlashCardWithStudySet(preparedData);
+                console.log('Created flashcard:', response);
+                // Reset form
+                setWordData({
+                    title: '',
+                    define: '',
+                    typeOfWord: '',
+                    transcription: '',
+                    examples: '',
+                    note: ''
+                });
+                document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
 
-            // Refresh danh sách flashcard
-            handleResetForm();
+                // Refresh danh sách flashcard
+                handleResetForm();
+                fetchFlashcards();
+            }
 
-           
+
         } catch (error) {
             console.error('Error creating flashcard:', error);
-            alert('Có lỗi xảy ra khi tạo flashcard');
+            alert(isEditMode ? 'Có lỗi xảy ra khi cập nhật flashcard' : 'Có lỗi xảy ra khi tạo flashcard');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    //handle edit flashcard
+    const handleEditFlashCard = (data) => {
+        setWordData({
+            id: data.id,
+            title: data.title,
+            define: data.define,
+            typeOfWord: data.typeOfWord,
+            transcription: data.transcription,
+            note: data.note,
+            // Format examples thành text theo định dạng yêu cầu
+            examples: data.exampleVM?.map(example => (
+                `ENG: ${example.en}\nTRANS: ${example.trans}\nVIET: ${example.vi}`
+            )).join('\n\n') || ''
+        });
+
+        // Set mode là edit
+        setIsEditMode(true);
+
+
+    };
+
+   
+   //handle delete flashcard
+    const handleDeleteFlashCard = (data) => {
+        setWordData({
+            id: data.id,
+        });
+        setDeleteType('flashcard');
+        setIsDeleteModalVisible(true);
+    };
+
+    // Thêm handler cho delete study set
+    const handleDeleteStudySet = () => {
+        setDeleteType('studyset');
+        setIsDeleteModalVisible(true);
+    };
+
+    //handle cancel delete flashcard
+    const handleDeleteCancel = () => {
+        setIsDeleteModalVisible(false);
+    };
+    //handle delete submit flashcard
+    const handleDeleteSubmit = async () => {
+        setIsDeleteModalVisible(false);
+        try {
+            if (deleteType === 'flashcard') {
+                const response = await deleteFlashCardWithStudySet(wordData.id);
+                if(response.returnCode == 1){
+                    alert("Xóa từ thành công");
+                    fetchFlashcards();
+                } else {
+                    alert("Xóa từ thất bại");
+                }
+            } else if (deleteType === 'studyset') {
+                const response = await deleteStudySet(studySet.id);
+                if(response.returnCode == 1){
+                    alert("Xóa study set thành công");
+                    window.location.href = '/flashcard';
+                } else {
+                    alert("Xóa study set thất bại");
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting:', error);
+            alert(`Có lỗi xảy ra khi xóa ${deleteType === 'flashcard' ? 'từ' : 'study set'}`);
         }
     };
 
@@ -194,7 +318,7 @@ const Flashcardcanh = () => {
 
                         <h2 className="flashcardcanh-header-title fs-1" style={{ color: "rgb(33 135 213", }}>Flashcard: {studySet.title}</h2>
                         {studySet.userId === userInfor.userId && (
-                            <div className="d-flex justify-content-between gap-2 align-items-center">
+                            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                                 <div className="d-flex gap-2 align-items-center" style={{ height: "36px" }}>
                                     <button className="btn btn-primary h-100 rounded"
                                         onClick={handleEditClick}>
@@ -203,12 +327,13 @@ const Flashcardcanh = () => {
                                     <button className="btn btn-primary h-100 rounded" data-bs-toggle="modal" data-bs-target="#addWordModal">
                                         <i className="bi bi-plus-lg"></i>
                                     </button>
-                                    <button className="btn btn-primary d-flex align-items-center gap-1 rounded">
+                                    <button className="btn btn-primary d-flex align-items-center gap-1 rounded" style={{minWidth:"5rem",maxHeight:"3rem"}}>
                                         <i className="bi bi-grid"></i> Thêm nhiều
                                     </button>
                                 </div>
                                 <div>
-                                    <button className="btn btn-danger d-flex align-items-center gap-1">
+                                    <button className="btn btn-danger d-flex align-items-center gap-1" 
+                                        onClick={handleDeleteStudySet}>
                                         <i className="bi bi-trash"></i> Xóa
                                     </button>
                                 </div>
@@ -244,16 +369,16 @@ const Flashcardcanh = () => {
                         <button className="flashcardcanh-btn-practice">Luyện tập</button>
                         <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
                     </div>
-                    <p className="flashcardcanh-mt-2 text-muted">
+                    <p className="flashcardcanh-mt-2 text-muted mt-3">
                         Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
                         chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
                     </p>
                     <div className="flashcardcanh-stats-box w-100">
                         <div className="flashcardcanh-row flashcardcanh-mt-3 w-100 ">
-                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-learned">Tất cả <br />51</div>
-                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-new">Đã nhớ<br />0</div>
-                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-review">Ôn tập<br />0</div>
-                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-mastered">Ghi nhớ <br />51</div>
+                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-learned fs-5 fw-bold">Tất cả <br />{flashcardCount}</div>
+                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-new fs-5 fw-bold">Đã nhớ<br />0</div>
+                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-review fs-5 fw-bold">Ôn tập<br />0</div>
+                            <div className="col-3 border flashcardcanh-stat-item flashcardcanh-mastered fs-5 fw-bold">Ghi nhớ <br />{flashcardCount}</div>
                         </div>
 
                     </div>
@@ -264,17 +389,26 @@ const Flashcardcanh = () => {
             <div className="flashcardcanh-columns">
                 <div className="row">
                     {flashcards && flashcards.map((data, index) => (
-                        <div key={index} className="col-md-6 mb-4">
+                        <div key={data.id} className="col-md-6 ">
                             <div className="flashcardcanh-container col-md-6 mb-4">
-                                <div className="flashcardcanh-header">
-                                    <span className="flashcardcanh-canontap">Thẻ cân ôn tập</span>
-                                    <span className="flashcardcanh-sobaihoc">Số bài học: 99+</span>
-                                    <span className="flashcardcanh-ghinho">Ghi nhớ: 99%+</span>
-                                </div>
+                                {studySet.userId === userInfor.userId && (
+                                    <div className="d-flex justify-content-end gap-5">
+                                        <i class="fas fa-edit fs-4 text-primary cursor-pointer mt-1"
+                                            onClick={() => handleEditFlashCard(data)}
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#addWordModal"
+                                        ></i>
+                                        <i class="bi bi-trash fs-4 text-danger cursor-pointer "
+                                            onClick={() => handleDeleteFlashCard(data)}
+                                        ></i>
+                                    </div>
+                                )}
                                 <h1 className="flashcardcanh-title">
                                     {data.title}
-                                    <span className="flashcardcanh-audio-icon">
-                                        <i className="bi bi-volume-up"></i>
+                                    <span className="fs-5 ml-2"  style={{color:"rgb(9, 64, 103)"}}>   {data.transcription}  </span>
+                                    <span className="flashcardcanh-audio-icon fs-5  " >
+                        
+                                        <i className="bi bi-volume-up ml-2 fs-4 " ></i>
                                     </span>
                                 </h1>
                                 <p className="flashcardcanh-subtitle f">( {data.typeOfWord} )</p>
@@ -291,7 +425,7 @@ const Flashcardcanh = () => {
                                     <div className="flashcardcanh-examples">
                                         {data.exampleVM?.map((example, idx) => (
                                             <div key={idx}>
-                                                <p className="font-weight-bold fs-5 mb-0">
+                                                <p className="font-weight-bold fs-6 mb-0">
                                                     {idx + 1}. {example.en}
                                                     <span className="flashcardcanh-audio-icon">
                                                         <i className="bi bi-volume-up"></i>
@@ -316,7 +450,9 @@ const Flashcardcanh = () => {
 
             {/* popup add word  edit*/}
 
-            <div className="modal fade" id="addWordModal" tabIndex="-1" aria-labelledby="addWordModalLabel" aria-hidden="true">
+            <div className="modal fade" id="addWordModal" tabIndex="-1"
+                aria-labelledby="addWordModalLabel" aria-hidden="true"
+                onHide={handleResetForm} >
                 <div className="modal-dialog modal-lg modal-dialog-centered" style={{ width: "30%" }}>
                     <div className="modal-content">
                         <div className="modal-header">
@@ -452,7 +588,8 @@ const Flashcardcanh = () => {
                                 disabled={!wordData.define}
                                 onClick={handleSubmit}
                             >
-                                Tạo
+                                {isEditMode ? "Cập nhật" : "Tạo"}
+
                             </button>
                         </div>
                     </div>
@@ -488,8 +625,8 @@ const Flashcardcanh = () => {
                     </Select>
                     <TextArea
                         placeholder="Mô tả"
-                        value={editData.description}
-                        onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                        value={editData.desc}
+                        onChange={(e) => setEditData({ ...editData, desc: e.target.value })}
                         className="w-100 m-3 custom-scroll"
                         style={{
                             maxHeight: "60px",
@@ -499,8 +636,8 @@ const Flashcardcanh = () => {
                     />
                     <div className="d-flex justify-content-left">
                         <Checkbox
-                            checked={editData.isPublic}
-                            onChange={(e) => setEditData({ ...editData, isPublic: e.target.checked })}
+                            checked={editData.Public}
+                            onChange={(e) => setEditData({ ...editData, Public: e.target.checked })}
                         >
                             Công khai
                         </Checkbox>
@@ -508,9 +645,31 @@ const Flashcardcanh = () => {
                 </div>
                 <div className="d-flex justify-content-center mt-3">
                     <Button onClick={handleEditCancel} className="me-2">Hủy</Button>
-                    <Button type="primary" onClick={handleEditSubmit}>Cập nhật</Button>
+                    <Button type="primary" onClick={handleEditStudySetSubmit}>Cập nhật</Button>
                 </div>
             </Modal>
+
+
+            {/* popup add word  Delete  Flashcard*/}
+            <Modal
+                title={deleteType === 'flashcard' ? "Xóa từ" : "Xóa Study Set"}
+                visible={isDeleteModalVisible}
+                onCancel={handleDeleteCancel}
+                footer={null} 
+                centered
+              >
+                <div className="d-flex flex-column align-items-center text-center space-y-2"
+                    style={{ minWidth: "15rem", minHeight: "5rem" }}>
+                    <p className='fs-5 fw-bold'>
+                        Bạn có chắc chắn muốn xóa {deleteType === 'flashcard' ? 'từ' : 'study set'} này không?
+                    </p>  
+                    <div className="d-flex justify-content-center mt-3 w-100">
+                        <Button onClick={handleDeleteCancel} className="me-2 btn-secondary w-25">Hủy</Button>
+                        <Button type="primary" onClick={handleDeleteSubmit} className="w-25 btn-danger">Xóa</Button>
+                    </div>
+                </div>
+            </Modal>
+
 
         </div>
 

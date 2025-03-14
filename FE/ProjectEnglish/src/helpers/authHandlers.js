@@ -9,7 +9,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
     try {
         const response = await authService.login(email, password);
 
-        console.log("API Response:", response); // Kiểm tra response trả về từ authService
+    
 
         if (!response || !response.user) {
             setError("Login failed. User data is missing.");
@@ -18,7 +18,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
             }, 1000);
             console.error("Missing user data:", response);
         } else {
-            console.log("User Data:", response.user);
+   
 
             localStorage.setItem("isLoggedIn", "true");
 
@@ -74,10 +74,10 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
     setIsLoading(true);
     setIsRegisterSuccess(false);
 
-    console.log("Registering user:", { name, email, password });
+
     try {
         const response = await authService.register(name, email, password);
-        console.log("API Response:", response);
+ 
         if (response.returnCode == -1) {
             setError(`Register failed. ${response.returnMessage}`);
             setTimeout(() => {
@@ -108,7 +108,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
     try {
         const apiResponse = await authService.GoogleRegister(response.access_token);
-        console.log("API Response:", apiResponse);
+
 
 
         if (apiResponse.returnCode == -1) {
@@ -181,7 +181,7 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
 
     try {
         const apiResponse = await authService.facebookRegister(response.accessToken);
-        console.log("API Response:", apiResponse);
+
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.data.returnMessage}`);
             setTimeout(() => {
@@ -214,7 +214,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
     try {
 
         const apiResponse = await authService.facebookLogin(data.accessToken);
-        console.log("API Response:", apiResponse);
+
 
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
@@ -249,7 +249,7 @@ export const handleResetPassword = async (password, email, token, setError, setI
     setIsSuccess(false);
     try {
         const response = await authService.resetPassword(email, token, password);
-        console.log("API Response:", response);
+      
         if (response.returnCode == -1) {
             setError(`Reset password failed. ${response.returnMessage}`);
             setTimeout(() => {
@@ -274,7 +274,7 @@ export const handleForgotPassword = async (email, setError, setIsLoading, setIsS
     setIsSuccess(false);
     try {
         const response = await authService.forgotpassword(email);
-        console.log("API Response:", response);
+    
         if (response.returnCode == -1) {
             setError(`Forgot password failed. ${response.returnMessage}`);
             setTimeout(() => {

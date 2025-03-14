@@ -38,36 +38,56 @@ const FlashcardList = () => {
     // Đóng popup
     const handleCancel = () => {
         setIsModalVisible(false);
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
     const handleCreate = async () => {
         setIsModalVisible(false);
-        await createStudySet(listName, language, isPublic, description);
+        var res = await createStudySet(listName, language, isPublic, description);
+        if (res.returnCode == 1) {
+            alert("Tạo list từ thành công");
+            fetchFlashcards();
+            gellAllListStudybyUser();
+        }
+        else {
+            alert(`Tạo list từ thất bại: ${res.returnMessage}`);
+        }
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
+
+    //fetch danh sách từ
+    const fetchFlashcards = async () => {
+        try {
+
+            const studyset = await getALlStudySetService();
+            setStudyset(studyset.listStudySetWithCount)
+        } catch (error) {
+            console.error('Error fetching quizzes:', error);
+        }
+    };
+    //fetch danh sách từ của user
+    const gellAllListStudybyUser = async () => {
+        try {
+            const studySetUserId = await getALlStudySetServiceByUserId();
+            setStudySetByUserID(studySetUserId.listStudySetWithCount);
+        }
+        catch (error) {
+
+        }
+    }
 
     useEffect(() => {
         window.scroll(0, 0);
-        const fetchFlashcards = async () => {
-            try {
-            
-                const studyset = await getALlStudySetService();
-                setStudyset(studyset.listStudySetWithCount)
-            } catch (error) {
-                console.error('Error fetching quizzes:', error);
-            }
-        };
-        const gellAllListStudybyUser= async()=>{
-            try{
-                const studySetUserId = await getALlStudySetServiceByUserId();
-                setStudySetByUserID(studySetUserId.listStudySetWithCount);
-            }
-            catch(error){
 
-            }
-        }
 
         fetchFlashcards();
         gellAllListStudybyUser();
-    }, []); 
+    }, []);
 
 
     return (
@@ -86,7 +106,7 @@ const FlashcardList = () => {
                     </div>
                     <div className="mt-4">
                         <h4 className="text-primary mb-2">List từ đã tạo</h4>
-                        <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll" style={{maxHeight: isFlashcardPage ? undefined : "350px", overflow: isFlashcardPage ? "visible" : "auto" }}>
+                        <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll" style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflow: isFlashcardPage ? "visible" : "auto" }}>
 
                             {/* Card Tạo Mới */}
                             <div className="col" style={{ width: "218px", height: "216px" }}>
@@ -104,7 +124,12 @@ const FlashcardList = () => {
                             {/* Render danh sách từ */}
                             {studySetByUserID.map((list) => (
                                 <div className="col custom-scroll " key={list.studySet.id} >
-                                    <Link to={`/ListFlashCard/${list.studySet.id}`} className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                    <Link to={`/ListFlashCard/${list.studySet.id}`}
+                                       state={{ 
+                                        flashcardCount: list.flashcardCount,
+                                        // Có thể truyền thêm data khác nếu cần
+                                         }}
+                                        className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                         <h5 className="fw-bold text-truncate" title={list.studySet.title}>{list.studySet.title}</h5>
                                         <h6 className="d-flex align-items-center">
                                             <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg ">
@@ -216,7 +241,7 @@ const FlashcardList = () => {
                         </div>
                         <div className="d-flex justify-content-center mt-3">
                             <Button onClick={handleCancel} className="me-2">Hủy</Button>
-                            <Button type="primary" onClick={handleCreate}>Tạo</Button>
+                            <Button type="primary" onClick={handleCreate}> Tạo</Button>
                         </div>
                     </Modal>
 
@@ -224,7 +249,11 @@ const FlashcardList = () => {
                         style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflowY: isFlashcardPage ? "visible" : "scroll" }}>
                         {studyset.map((data) => (
                             <div className="col" key={data.studySet.id}>
-                                <Link to={`/ListFlashCard/${data.studySet.id}`} className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                <Link to={`/ListFlashCard/${data.studySet.id}`}
+                                   state={{ 
+                                    flashcardCount: data.flashcardCount,
+                                }}
+                                className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                     <h5 className="fw-bold text-truncate" >{data.studySet.title}</h5>
                                     <h6 className="d-flex align-items-center">
                                         <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">

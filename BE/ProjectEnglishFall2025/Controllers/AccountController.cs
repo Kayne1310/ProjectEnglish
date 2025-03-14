@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver.Linq;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -329,7 +330,7 @@ namespace ProjectEnglishFall2025.Controllers
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(exprired)
                 });
 
                 // Tạo phản hồi trả về

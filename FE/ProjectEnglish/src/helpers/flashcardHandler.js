@@ -40,6 +40,7 @@ export const prepareFlashcardData = (formData,studySetId) => {
         note: formData.note || '',
         status: formData.status || 'Learning',
         exampleVM: parseExamples(formData.examples),
-        studySetId: studySetId || ''
+        studySetId: studySetId || '',
+    
     };
 };

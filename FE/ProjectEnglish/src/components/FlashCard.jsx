@@ -11,7 +11,7 @@ const Flashcard = () => {
 
   // Lấy quiz_id từ URL
   const { quizId } = useParams();
-  console.log(quizId);
+
 
 
   useEffect(() => {

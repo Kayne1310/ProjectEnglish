@@ -1,40 +1,57 @@
 import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL;
-const getAllFlashCard = async () =>{
+const getAllFlashCard = async () => {
 
-    const reponse=await axios.get(`${API_URL}/Quiz/get_all_quiz`);
+    const reponse = await axios.get(`${API_URL}/Quiz/get_all_quiz`);
     console.log(reponse);
     return reponse.data;
 }
 
-const getALlStudySetService=async ()=>{
-    const response =await axios.get(`${API_URL}/StudySet/GetListStudy`);
+const getALlStudySetService = async () => {
+    const response = await axios.get(`${API_URL}/StudySet/GetListStudy`);
     console.log(response);
     return response.data;
 }
 
-const getALlStudySetServiceByUserId=async ()=>{
-    const response =await axios.get(`${API_URL}/StudySet/GetListStudyByUserId`,{
-        withCredentials:true
+const getALlStudySetServiceByUserId = async () => {
+    const response = await axios.get(`${API_URL}/StudySet/GetListStudyByUserId`, {
+        withCredentials: true
     });
-    console.log("data gell all by StudySet UserId",response);
+    console.log("data gell all by StudySet UserId", response);
     return response.data;
 }
 
-const getListFlashCardByStudySetId=async (id)=>{
-    const response =await axios.get(`${API_URL}/FlashCard/GetListFlashCardByStudySetId/${id}`);
+const getListFlashCardByStudySetId = async (id) => {
+    const response = await axios.get(`${API_URL}/FlashCard/GetListFlashCardByStudySetId/${id}`);
     console.log(response);
     return response.data;
-    
+
 }
 
 
-const createFlashCardWithStudySet=async (data)=>{
-    console.log("data",data);
-    const response =await axios.post(`${API_URL}/FlashCard/CreateFlashCardWithStudySet`,data,{withCredentials:true});
+const createFlashCardWithStudySet = async (data) => {
+    console.log("data", data);
+    const response = await axios.post(`${API_URL}/FlashCard/CreateFlashCardWithStudySet`, data, { withCredentials: true });
     console.log(response);
     return response.data;
 }
 
+const updateFlashCardWithStudySet = async (data) => {
+    console.log("data", data);
+    const response = await axios.put(`${API_URL}/FlashCard/UpdateFlashCardWithStudySet`, data, { withCredentials: true });
+    console.log("updateFlashCardWithStudySet", response);
+    return response.data;
+}
 
-export {getAllFlashCard,getALlStudySetService,getALlStudySetServiceByUserId,getListFlashCardByStudySetId,createFlashCardWithStudySet};
+const deleteFlashCardWithStudySet = async (id) => {
+    const response = await axios.delete(`${API_URL}/FlashCard/DeleteFlashCardWithStudySet/${id}`, { withCredentials: true });
+    console.log("deleteFlashCardWithStudySet", response);
+    return response.data;
+}
+
+
+export {
+    getAllFlashCard, getALlStudySetService,
+    getALlStudySetServiceByUserId,
+    getListFlashCardByStudySetId, createFlashCardWithStudySet, updateFlashCardWithStudySet, deleteFlashCardWithStudySet
+};

@@ -190,6 +190,15 @@
     }
 }
 
+.cursor-pointer {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cursor-pointer:hover {
+    transform: scale(1.1);
+}
+
 .flashcardcanh-header {
     display: flex;
     justify-content: space-between;

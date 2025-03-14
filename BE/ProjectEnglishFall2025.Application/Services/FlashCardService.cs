@@ -92,9 +92,29 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public Task<ReturnData> deleteFlashCardinStudySet(DeleteFlashcardVM deleteFlashcardVM)
+        public async Task<ReturnData> deleteFlashCardinStudySet(DeleteFlashcardVM deleteFlashcardVM)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res=await repository.deleteFlashCard(deleteFlashcardVM);
+                if(res <= 0)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Delete Error Id not found"
+                    };
+                }
+                return new ReturnData
+                {
+                    ReturnCode = 1,
+                    ReturnMessage = "Delete Sucessful1"
+                };
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<RenposeFlashCard> getFlashCardById(string id)
@@ -223,7 +243,7 @@ namespace ProjectFall2025.Application.Services
                     return new ReturnData
                     {
                         ReturnCode = -1,
-                        ReturnMessage = "Error update failed "
+                        ReturnMessage = "Error Id flashcard not found update failed "
                     };
                 }
                 return new ReturnData
