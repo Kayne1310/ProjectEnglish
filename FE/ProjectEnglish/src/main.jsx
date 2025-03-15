@@ -20,7 +20,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
 import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
 import PrivateRoute from './pages/privateroute.jsx';
-import Flashcard from './components/FlashCard.jsx';
+
 import AppAdmin from './AppAdmin.jsx';
 import DashboardPage from './pages/Admin/DashboardPage/DashboardPage.jsx';
 import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
@@ -31,7 +31,7 @@ import ListDocument from './pages/Document/ListDocument.jsx';
 import DocumentItem from './pages/Document/documentItem.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
-
+import Flashcard from './pages/FlashCard/FlashCard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -67,6 +67,11 @@ const router = createBrowserRouter([
       {
         path: "/contactus",
         element: <ContactUs />
+      },
+
+      {
+        path: "/flashcard/practice/:studySetId",
+        element: <Flashcard />
       },
       {
         path: "/flashcard/:quizId",

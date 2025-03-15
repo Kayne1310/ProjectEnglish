@@ -1,52 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom"; // Lấy quiz_id từ URL
-import "../assets/css/FlashCardQuiz/flashcard.css";
-import { flashcard } from "../service/QuizService";
+import { useParams, useSearchParams, useLocation } from "react-router-dom"; // Lấy quiz_id từ URL
+import "../../assets/css/FlashCardQuiz/flashcard.css";
+import { flashcard } from "../../service/QuizService";
 import { Card, Col, Form, Row } from "react-bootstrap";
 
 const Flashcard = () => {
   const [flashcards, setFlashcards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [isQuizMode, setIsQuizMode] = useState(false);
 
   // Lấy quiz_id từ URL
   const { quizId } = useParams();
-
+  const location = useLocation();
 
 
   useEffect(() => {
     window.scroll(0, 0);
     const fetchFlashcards = async () => {
-      if (!quizId) {
-        console.error("Không có quiz_id trong URL!");
-        return;
-      }
+
 
       try {
-        // Gọi API lấy danh sách câu hỏi từ quizId
-        const response = await flashcard(quizId);
-
-        console.log("Dữ liệu từ API:", response);
-
-        if (!response || response.length === 0) {
-          console.warn("Không có dữ liệu từ API!");
-          return;
+        // Kiểm tra xem có data từ studyset không
+        if (location.state?.flashcards) {
+          setFlashcards(location.state.flashcards);
+          setIsQuizMode(false);
+        } 
+        // Nếu có quizId thì fetch data từ quiz
+        else if (quizId) {
+          const response = await flashcard(quizId);
+          if (response && response.length > 0) {
+            const formattedFlashcards = response.map(item => ({
+              question: item.questionInfo[0]?.description || "Không có câu hỏi",
+              answer: item.description || "Không có câu trả lời"
+            }));
+            setFlashcards(formattedFlashcards);
+            setIsQuizMode(true);
+          }
         }
-
-        // Định dạng dữ liệu flashcard từ API
-        const formattedFlashcards = response.map(item => ({
-          question: item.questionInfo[0]?.description || "Không có câu hỏi",
-          answer: item.description || "Không có câu trả lời"
-        }));
-
-        setFlashcards(formattedFlashcards);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu từ API:", error);
+        console.error("Lỗi khi lấy dữ liệu:", error);
       }
     };
 
     fetchFlashcards();
-  }, [quizId]);
+  }, [quizId, location]);
 
   // Cập nhật flashcard hiện tại
   const updateFlashcard = (index) => {
@@ -87,7 +85,10 @@ const Flashcard = () => {
                       <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentIndex]?.question); }}>
                         <i className="bi bi-volume-up"></i>
                       </button>
-                      <div className="content">{flashcards[currentIndex]?.question}</div>
+                      <div className="content fw-bold">{flashcards[currentIndex]?.question}
+                        <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentIndex]?.transcription}</div>
+
+                      </div>
                     </div>
 
                     <div className="back">

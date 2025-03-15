@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 // import b2 from "../../assets/image/b2.jpg";
 import covn from '../../assets/image/covn.jpg'
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { createFlashCardWithStudySet, deleteFlashCardWithStudySet, getListFlashCardByStudySetId, updateFlashCardWithStudySet } from '../../service/flashcardService';
 import { calculateDaysAgo } from '../../helpers/DateHepler';
 import { AuthContext } from '../../components/layout/context/authContext';
@@ -27,6 +27,7 @@ const Flashcardcanh = () => {
     const [flashcards, setFlashcards] = useState([]);
     const { id } = useParams(); // Get studySet ID from URL
     const [studySet, setStudySet] = useState(null);
+    const navigate = useNavigate();
     // const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState(null);
     const [PictureUrl, setPictureUrl] = useState(null);
@@ -172,6 +173,20 @@ const Flashcardcanh = () => {
         setIsEditMode(false);
     };
 
+//handle practice
+    const handlePractice = () => {
+        // Chuyển sang trang FlashCard với state chứa data studySet và flashcards
+        navigate(`/flashcard/practice/${studySet.id}`, {
+            state: {
+                flashcards: flashcards.map(card => ({
+                    question: card.title ,
+                    answer: card.define,
+                    examples: card.exampleVM,
+                    transcription: card.transcription
+                }))
+            }
+        });
+    };
 
     // Hàm xử lý khi submit form
     const handleSubmit = async () => {
@@ -366,7 +381,7 @@ const Flashcardcanh = () => {
                         />
                     </p>
                     <div className="flashcardcanh-mt-3">
-                        <button className="flashcardcanh-btn-practice">Luyện tập</button>
+                        <button className="flashcardcanh-btn-practice" onClick={handlePractice}>Luyện tập</button>
                         <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
                     </div>
                     <p className="flashcardcanh-mt-2 text-muted mt-3">
