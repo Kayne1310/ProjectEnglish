@@ -13,7 +13,7 @@ namespace ProjectFall2025.Domain.Do
         [BsonId]
         public ObjectId quizAnswer_id { get; set; }
         public string? description { get; set; }
-        public int? correct_answer { get; set; }
+        public bool? correct_answer { get; set; }
         public DateTime? createAt { get; set; }
         public DateTime? updateAt { get; set; }
         public ObjectId question_id { get; set; }

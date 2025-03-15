@@ -10,16 +10,16 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer
 {
     public class CreateAnswerQuestionVM
     {
-        public string? desciption { get; set; }
-        public int? correct_answer { get; set; }
+        public string? description { get; set; }
+        public bool? correct_answer { get; set; }
         public string question_id { get; set; }
     }
 
     public class UpdateAnswerQuestionVM
     {
         public string quizAnswer_id { get; set; }
-        public string? desciption { get; set; }
-        public int? correct_answer { get; set; }
+        public string? description { get; set; }
+        public bool? correct_answer { get; set; }
         public string question_id { get; set; }
     }
 
@@ -32,7 +32,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer
     {
         public string quizAnswer_id { get; set; }
         public string description { get; set; }
-        public bool correctAnswer { get; set; }
+        public bool? correctAnswer { get; set; }
         public List<QuizQuestionDto> questionInfo { get; set; }
     }
 

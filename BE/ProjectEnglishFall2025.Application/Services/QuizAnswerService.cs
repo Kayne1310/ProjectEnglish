@@ -51,7 +51,7 @@ namespace ProjectFall2025.Application.Services
                 var newData = new QuizAnswer
                 {
                     correct_answer = answerQuestionVM.correct_answer,
-                    description = answerQuestionVM.desciption,
+                    description = answerQuestionVM.description,
                     createAt = DateTime.Now,
                     question_id = ObjectId.Parse(answerQuestionVM.question_id),
                 };
@@ -106,7 +106,7 @@ namespace ProjectFall2025.Application.Services
                 }
                 else
                 {
-                    existingQuizAnswer.description = answerQuestionVM.desciption;
+                    existingQuizAnswer.description = answerQuestionVM.description;
                     existingQuizAnswer.correct_answer = answerQuestionVM.correct_answer;
                     existingQuizAnswer.updateAt = DateTime.Now;
                 }
