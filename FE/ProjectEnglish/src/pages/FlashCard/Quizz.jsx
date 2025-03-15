@@ -1,46 +1,60 @@
+// QuizletForm.js
 import React, { useEffect, useState } from "react";
-import "../../../assets/css/Home/QuizletForm.css"; // Import file CSS
-import test from "../../../assets/image/b1.jpg";
-import { getQuestionbyQuizId } from "../../../service/quizService";
-
-const quiz_id = "67b61e2096183609086a9709";
+import { useParams } from "react-router-dom"; // Import useParams để lấy quizId từ URL
+// import "../../assets/css/FlashCardQuiz/QuizletForm.css"; // Import file CSS
+import test from "../../assets/image/b1.jpg";
+import { getQuestionbyQuizId } from "../../service/quizService";
 
 const QuizletForm = () => {
-  const [getquestion, setquestion] = useState([]);
+  const { quizId } = useParams(); // Lấy quizId từ URL (ví dụ: /quiz/:quizId)
+  const [questions, setQuestions] = useState([]); // Đổi tên state cho rõ ràng hơn
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Để theo dõi câu hỏi hiện tại
+  const [loading, setLoading] = useState(true); // Thêm trạng thái loading
+  const [error, setError] = useState(null); // Thêm trạng thái lỗi
 
   useEffect(() => {
-    getQuestionData();
-  }, []);
-
-  const getQuestionData = async () => {
-    try {
-      const res = await getQuestionbyQuizId(quiz_id);
-      console.log('Fetched questions:', res); // Debugging
-      setquestion(res.data || []); // Ensure it's always an array
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-      setquestion([]); // Avoid errors on failure
+    if (!quizId) {
+      setError("Không tìm thấy quiz_id trong URL!");
+      setLoading(false);
+      return;
     }
-  };
+
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const res = await getQuestionbyQuizId(quizId);
+        console.log("Fetched questions:", res); // Debugging
+        setQuestions(res.data || []); // Đảm bảo luôn là mảng
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+        setError("Có lỗi xảy ra khi tải câu hỏi.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [quizId]); // Chỉ gọi lại khi quizId thay đổi
 
   // Xử lý câu hỏi và câu trả lời, kiểm tra dữ liệu rỗng
-  const processedQuiz = (getquestion || []).map(quiz => ({
+  const processedQuiz = (questions || []).map((quiz) => ({
     ...quiz,
     image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : test,
-    description: quiz.description && quiz.description !== "null" && quiz.description !== ""
-      ? quiz.description
-      : "Nội dung mặc định", // fallback cho description
-    answer: (quiz.answer && quiz.answer.length > 0)
-      ? quiz.answer.map(ans => ({
-        ...ans,
-        descriptionAnswered: ans.descriptionAnswered && ans.descriptionAnswered !== "null" && ans.descriptionAnswered !== ""
-          ? ans.descriptionAnswered
-          : "Câu trả lời không hợp lệ"
-      }))
-      : [{ idAnswered: "default", descriptionAnswered: "Không có câu trả lời", isCorrect: false }] // fallback nếu không có đáp án
+    description:
+      quiz.description && quiz.description !== "null" && quiz.description !== ""
+        ? quiz.description
+        : "Nội dung mặc định", // fallback cho description
+    answer:
+      quiz.answer && quiz.answer.length > 0
+        ? quiz.answer.map((ans) => ({
+            ...ans,
+            descriptionAnswered:
+              ans.descriptionAnswered && ans.descriptionAnswered !== "null" && ans.descriptionAnswered !== ""
+                ? ans.descriptionAnswered
+                : "Câu trả lời không hợp lệ",
+          }))
+        : [{ idAnswered: "default", descriptionAnswered: "Không có câu trả lời", isCorrect: false }], // fallback nếu không có đáp án
   }));
-
 
   // Hàm chuyển câu hỏi tiếp theo
   const goToNextQuestion = () => {
@@ -57,6 +71,10 @@ const QuizletForm = () => {
   };
 
   const currentQuestion = processedQuiz[currentQuestionIndex];
+
+  // Hiển thị loading hoặc lỗi trước khi render form
+  if (loading) return <div className="text-center">Đang tải câu hỏi...</div>;
+  if (error) return <div className="text-center">{error}</div>;
 
   return (
     <>

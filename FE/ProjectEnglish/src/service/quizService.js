@@ -15,6 +15,8 @@ const getDataQuiz = async (quiz_id) => {
 
 };
 
+
+
 const getQuestionbyQuizId = async (quiz_id) => {
     try {
         console.log(quiz_id);
@@ -32,6 +34,18 @@ const getQuestionbyQuizId = async (quiz_id) => {
 //     console.log("Quiz Data:", response);
 // });
 
+const flashcard = async (quizId) => {
+    try {
+        const response = await axios.get(`${API_URL}/QuizAnswer/correct-answers?`, {
+            params: { quizId: quizId }
+        });
+
+        return response.data;
+
+    } catch (error) {
+        throw error;
+    }
+}
 
 
-export { getDataQuiz, getQuestionbyQuizId };
+export { getDataQuiz, getQuestionbyQuizId, flashcard };

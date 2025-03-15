@@ -134,11 +134,9 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             { "QuestionInfor", new BsonDocument("$push", "$QuestionInfor") }
               })
               };
-
             var result = await dbContext.GetCollectionQuiz()
                 .Aggregate<BsonDocument>(pipeline)
                 .ToListAsync();
-
             return result;
         }
     }

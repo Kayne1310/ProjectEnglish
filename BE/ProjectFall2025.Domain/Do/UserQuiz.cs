@@ -18,5 +18,6 @@ namespace ProjectFall2025.Domain.Do
         public DateTime? createAt { get; set; }
         public DateTime? updateAt { get; set; }
         public ObjectId quiz_id { get; set; }
+        public ObjectId UserID { get; set; }
     }
 }

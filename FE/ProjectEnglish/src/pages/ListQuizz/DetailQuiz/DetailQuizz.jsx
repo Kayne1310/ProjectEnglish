@@ -6,6 +6,7 @@ import RightContent from "./RightContentQuiz/RightContent";
 import ModalResult from "./ModalResult";
 import "./DetailQuizz.scss"; // File chứa style cho cả DetailQuizz và Questions
 import testImage from "../../../assets/image/b1.jpg";
+import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 
 const DetailQuizz = () => {
   const { quizId } = useParams(); // Lấy đúng quizId theo route: /detailquiz/:quizId
@@ -15,17 +16,24 @@ const DetailQuizz = () => {
   const [error, setError] = useState(null);
   //   const [isShowModalResult, setIsShowModalResult] = useState(false);
   //   const [dataModalResult, setDataModalResult] = useState({});
+  const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
 
   useEffect(() => {
     const fetchQuestions = async () => {
+      let timer;
       try {
         setLoading(true);
         const res = await getQuestionbyQuizId(quizId);
         // Giả sử API trả về dữ liệu trong res.data
         setQuestions(res.data || []);
+        // Đảm bảo loading tối thiểu 2 giây
+        timer = setTimeout(() => {
+          setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
+        }, 2000);
       } catch (err) {
         console.error("Lỗi khi lấy câu hỏi:", err);
         setError("Có lỗi xảy ra khi tải câu hỏi.");
+        setIsLoading(false); // Tắt loading nếu có lỗi
       } finally {
         setLoading(false);
       }
@@ -80,7 +88,19 @@ const DetailQuizz = () => {
   const currentQuestion = processedQuiz[currentQuestionIndex];
 
   return (
-    <div className="detail-quiz-container">
+    
+    <>
+      {isLoading ? (
+        <div className="loading-container" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '50vh',
+        }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+    <div className="detail-quiz-container" >
       {loading && <p>Đang tải dữ liệu...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && processedQuiz.length > 0 && (
@@ -136,6 +156,8 @@ const DetailQuizz = () => {
         )
       }
     </div >
+     )}
+    </>
   );
 };
 

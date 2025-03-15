@@ -1,9 +1,11 @@
+
 import React, { useState, useContext } from "react";
 import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
 import {AuthContext} from "../../../components/layout/context/authContext";
 import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -17,6 +19,8 @@ const Login = () => {
         e.preventDefault();
         handleLogin( email, password, setError, setIsLoading, setUser,navigate);
     };
+    // const userInfo=useContext(userContext);
+    // console.log(userInfo);
 
     const HandleGoogleLogin = useGoogleLogin({
         onSuccess: async (response) => {

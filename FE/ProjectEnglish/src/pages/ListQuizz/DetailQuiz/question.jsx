@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Lightbox from "react-awesome-lightbox";
-import "react-awesome-lightbox/build/style.css";
+// import Lightbox from "react-awesome-lightbox";
+// import "react-awesome-lightbox/build/style.css";
 
 const Questions = ({ question, questionIndex }) => {
   if (!question) return <p>Không có câu hỏi.</p>;
@@ -36,19 +36,19 @@ const Questions = ({ question, questionIndex }) => {
         {/* Ảnh - Khi click vào sẽ mở Lightbox */}
         <img
           src={question.image}
-          alt="Question"
-          style={{ cursor: "pointer"}}
-          onClick={() => setOpen(true)}
+          // alt="Question"
+          // style={{ cursor: "pointer"}}
+          // onClick={() => setOpen(true)}
         />
 
         {/* Lightbox hiển thị khi open = true */}
-        {open === true &&(
-          <Lightbox
-            image={question.image}
-            title="Xem ảnh"
-            onClose={() => setOpen(false)}
-          />
-        )}
+        {/* {open === true &&(
+          // <Lightbox
+          //   image={question.image}
+          //   title="Xem ảnh"
+          //   onClose={() => setOpen(false)}
+          // />
+        )} */}
       </div>
 
       <div className="question">

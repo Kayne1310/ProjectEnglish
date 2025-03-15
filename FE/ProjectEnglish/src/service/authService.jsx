@@ -2,21 +2,6 @@
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
-// const API_URL ="https://localhost:7048/api"; 
-
-// const getQuizByUser = () =>{
-//     return axios.get('/api/v1/quiz-by-participant');
-// }
-
-// const getDataQuiz = (id) =>{
-    // console.log(id);
-//     return axios.get(`/api/v1/questions-by-quiz?quizId=${id}`);
-// }
-
-// const postSubmitQuiz = (data)=>{
-//     console.log(...data)// check ...data gồm những data or cấu trúc như thế nào
-//     return axios.post('/api/v1/quiz-submit',{...data});
-// }
 
 const login = async (email, password) => {
     try {
@@ -86,7 +71,7 @@ const GoogleRegister = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`/User/GoogleRegister`, userData);
+        const apiResponse = await axios.post(`${API_URL}/User/GoogleRegister`, userData);
 
         return apiResponse.data;
     } catch (error) {
@@ -170,7 +155,7 @@ const facebookRegister = async (accessToken) => {
 
         console.log("Facebook User:", userData);
 
-        const apiResponse = await axios.post(`/User/FacebookRegister`, userData);
+        const apiResponse = await axios.post(`${API_URL}/User/FacebookRegister`, userData);
 
         return apiResponse;
     } catch (error) {

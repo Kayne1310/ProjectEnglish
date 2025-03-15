@@ -13,7 +13,7 @@ const Nav = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const {userInfor}=useContext(AuthContext);
+    const { userInfor } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const toggleMenu = () => {
@@ -25,7 +25,7 @@ const Nav = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true");
     const [user, setUser] = useState({
         name: userInfor.userName || "",
-        avatar: userInfor.picture|| avatar,
+        avatar: userInfor.picture || avatar,
     });
 
     // Cập nhật lại khi component render lại (nếu có thay đổi)
@@ -35,13 +35,13 @@ const Nav = () => {
 
         setIsLoggedIn(loggedIn);
         setUser({
-            name: userInfor.userName  || "User",
+            name: userInfor.userName || "User",
             avatar: userAvatar || avatar,
         });
     }, []);
 
     const Logout = async () => {
-           await handleLogout(setIsLoading, setError,navigate);
+        await handleLogout(setIsLoading, setError, navigate);
         localStorage.removeItem("isLoggedIn");
         setIsLoggedIn(false);
     };
@@ -63,7 +63,9 @@ const Nav = () => {
                                     <NavLink className="nav-link" to="/">Home </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/quizlet">Flashcard</NavLink>
+
+                                    <NavLink className="nav-link" to="/flashcard">Flashcard</NavLink>
+
                                 </li>
                                 <li className="nav-item">
                                     <nav>
@@ -85,16 +87,14 @@ const Nav = () => {
                             </ul>
                         </div>
                         <div className="quote_btn-container">
-
-                            <Dropdown >
+                            <Dropdown>
                                 {isLoggedIn ? (
                                     <Dropdown.Toggle className="custom-avatar-dropdown" bsPrefix="custom-toggle">
                                         <img
-                                            src={user.avatar || avatar}  // Sử dụng biến `avatar` đã import
+                                            src={user.avatar || avatar}
                                             alt="User Avatar"
                                             className="avatar-img"
-                                            onError={(e) => { e.target.src = avatar; }} // Nếu ảnh lỗi, đổi sang ảnh mặc định
-
+                                            onError={(e) => { e.target.src = avatar; }}
                                         />
                                     </Dropdown.Toggle>
                                 ) : (
@@ -103,37 +103,61 @@ const Nav = () => {
                                     </Dropdown.Toggle>
                                 )}
 
-
-                                {/* <Dropdown.Menu className={`custom-dropdown-menu ${animateDropdown ? "show" : ""}`}> */}
-                                <Dropdown.Menu className="custom-dropdown-menu ">
-
+                                <Dropdown.Menu className="custom-dropdown-menu">
                                     {isLoggedIn ? (
                                         <>
+                                            {/* Phần hiển thị tên và email */}
+                                            <div className="custom-user-info p-3">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="border-2 border-gray-300 rounded-full overflow-hidden w-8 h-8 flex-shrink-0">
+                                                        <img
+                                                            src={user.avatar || avatar}
+                                                            alt="User Avatar"
+                                                            className="w-8 h-8 object-cover"
+                                                            onError={(e) => { e.target.src = avatar; }}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-medium">{user.name || "Error display "}</p>
+                                                        <p className="text-xs text-gray-500">{userInfor.email || "errordisplay@gmail.com"}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr className="border-gray-200 my-2 mx-1" />
+                                            {/* Các mục menu */}
                                             <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">
-                                                <FaUser className="mr-2" />
-                                                Profile
+                                                <i className="far fa-user-circle mr-2"></i> View profile
                                             </Dropdown.Item>
                                             <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
-                                                <FaCogs className="mr-2" />
-                                                Settings
+                                                <i className="fas fa-cog mr-2"></i> Settings
                                             </Dropdown.Item>
-                                            <Dropdown.Divider />
+                                            <Dropdown.Item as={Link} to="/memes" className="custom-dropdown-item">
+                                                <i className="far fa-image mr-2"></i> Memes
+                                            </Dropdown.Item>
+                                            <Dropdown.Item className="custom-dropdown-item">
+                                                <img
+                                                    src="https://cf.quizizz.com/img/flag_icons/us.png"
+                                                    alt="English"
+                                                    className="w-4 h-4 mr-2 object-cover rounded"
+                                                />
+                                                English
+                                            </Dropdown.Item>
                                             <Dropdown.Item onClick={() => Logout(setIsLoading, setError)} className="custom-dropdown-item">
-                                                <FaSignOutAlt className="mr-2" />
-                                                Logout
+                                                <i className="fas fa-sign-out-alt mr-2"></i> Logout
                                             </Dropdown.Item>
                                         </>
                                     ) : (
-
-                                        <>                                     
-                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">User Login</Dropdown.Item>
-                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">Admin Login</Dropdown.Item>
+                                        <>
+                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">
+                                                User Login
+                                            </Dropdown.Item>
+                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">
+                                                Admin Login
+                                            </Dropdown.Item>
                                         </>
                                     )}
                                 </Dropdown.Menu>
-
                             </Dropdown>
-
                         </div>
 
                     </div>

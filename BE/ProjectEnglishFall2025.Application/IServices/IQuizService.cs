@@ -13,7 +13,7 @@ namespace ProjectFall2025.Application.IServices
 {
     public interface IQuizService
     {
-        Task<List<Quiz>> GetAllQuizs();
+        Task<List<QuizDto>> GetAllQuizs();
         Task<Quiz> GetIdQuiz(DeleteQuizVM quiz);
         Task<ReturnData> AddQuiz(CreateQuizVM quiz);
         Task<ReturnData> UpdateQuiz(UpdateQuizVM quiz);

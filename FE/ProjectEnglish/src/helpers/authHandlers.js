@@ -1,6 +1,6 @@
 
-import authService from "../service/authService"; // Đảm bảo đường dẫn đúng
-
+import authService from "../service/authService";
+import { toast } from "react-toastify"; // Import toast
 // Sử dụng hook navigate để chuyển hướng trang
 export const handleLogin = async (email, password, setError, setIsLoading, setUser, navigate) => {
     setError("");
@@ -12,7 +12,9 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
         console.log("API Response:", response); // Kiểm tra response trả về từ authService
 
         if (!response || !response.user) {
-            setError("Login failed. User data is missing.");
+            const errorMessage ="Login failed. User data is missing.";
+            // setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -29,7 +31,8 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
             }); // Lưu thông tin user vào context
-
+         
+            toast.success("Login successfully!");
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/") // Chuyển hướng sau khi đăng nhập thành công
@@ -37,7 +40,9 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
             return;
         }
     } catch (err) {
-        setError(`Login failed. ${err.message}`);
+        const errorMessage = `Login failed. ${err.message}`;
+        // setError(errorMessage);// Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -58,11 +63,15 @@ export const handleLogout = async (setIsLoading, setError,navigate) => {
         // Xóa thông tin khỏi localStorage
         if(res.returnCode==1){
             localStorage.removeItem("isLoggedIn");
+            toast.success("Logout successfully!"); // Toast thành công
             window.location.href="/";// Chuyển hướng về trang đăng nhập
         }       
 
-    } catch (error) {
-        setError(`Logout failed. ${error.message}`);
+   } catch (error) {
+        // setError(`Logout failed. ${error.message}`);
+        toast.error(`Logout failed: ${error.message}`); // Toast lỗi
+    } finally {
+        setIsLoading(false);
     }
 };
 
@@ -79,7 +88,8 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
         const response = await authService.register(name, email, password);
         console.log("API Response:", response);
         if (response.returnCode == -1) {
-            setError(`Register failed. ${response.returnMessage}`);
+            // setError(`Register failed. ${response.returnMessage}`);
+            toast.error(`Register failed. ${response.returnMessage}`); // hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -91,9 +101,11 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
             }, 1000); // Hide loader after 2 seconds
+            toast.success("Register successfully!"); // Hiển thị toast thành công
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        // setError(`Register failed. ${err.message}`);
+        toast.error(`Register failed. ${err.message}`); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
 
@@ -109,6 +121,8 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     try {
         const apiResponse = await authService.GoogleRegister(response.access_token);
         console.log("API Response:", apiResponse);
+
+
         if (apiResponse.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
@@ -141,9 +155,15 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
-        console.log("API Response:", apiResponse);
+        // console.log("Context Response:", userInfo.email);
+        // console.log("Context Response:", userInfo.userId);
+        // console.log("Context Response:", userInfo.name);
+        // console.log("Context Response:", userInfo.picture);
+        // console.log("API Response:", apiResponse);
         if (apiResponse.returnCode == -1) {
-            setError(`Register failed. ${apiResponse.returnMessage}`);
+            const errorMessage = `Register failed. ${apiResponse.returnMessage}`
+            setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -154,12 +174,16 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/");
-
+                const successMessage = "Đăng nhập bằng Google thành công!";
+                setError(""); // Reset lỗi (hoặc không cần nếu không hiển thị trên form)
+                toast.success(successMessage); // Hiển thị toast thành công
 
             }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        const errorMessage = `Register failed. ${err.message}`;
+        setError(errorMessage); // Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);

@@ -11,6 +11,9 @@ import { useEffect } from "react";
 import authService from "./service/authService";
 import { Spin } from 'antd';
 import { AuthContext } from "./components/layout/context/authContext";
+
+
+
 const App = () => {
   const { setUser, isAppLoading, setIsAppLoading } = useContext(AuthContext);
   useEffect(() => {
@@ -53,24 +56,31 @@ const App = () => {
 
   return (
     <>
-      <Nav />
-      <div style={{ minHeight: 'calc(70vh - 100px)' }}>
-        {isAppLoading === true ? (
-          <div className="loading-container" style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '50vh', // Full viewport height
-          }}>
-            <Spin size="large" />
+      {isAppLoading ? (
+        // Hiển thị spinner khi đang load
+        <div className="loading-container" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh' // Full viewport height để che toàn bộ trang
+        }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        // Hiển thị nội dung sau khi load xong
+        <>
+          <Nav />
+          <div style={{ minHeight: 'calc(70vh - 100px)' }}>
+            <Outlet />
           </div>
-        ) : (
-          <Outlet />
-        )}
-      </div>
-      <Footer />
+          <Footer />
+        </>
+      )}
+
+
     </>
   );
+
 }
 
 export default App;

@@ -9,11 +9,13 @@ body {
 .wrapper {
   margin: 10vh;
 }
+
 /* Card wrapper */
 .listquiz-card {
   position: relative;
   width: 100%;
-  height: 450px; /* Tăng chiều cao */
+  height: 450px;
+  /* Tăng chiều cao */
   border-radius: 20px;
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -44,7 +46,8 @@ body {
   left: 0;
   right: 0;
   padding: 15px;
-  background: rgba(0, 0, 0, 0.6); /* Làm tối nền */
+  background: rgba(0, 0, 0, 0.6);
+  /* Làm tối nền */
   color: white;
 }
 
@@ -103,4 +106,98 @@ body {
 .listquiz-btn-primary:hover {
   background-color: darkblue;
   color: inherit;
+}
+
+@media (max-width: 900px) {
+  .wrapper {
+    margin: 5vh;
+    /* Giảm khoảng cách */
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5px;
+    /* Tạo khoảng cách giữa các cột */
+  }
+
+  .col-sm-12 {
+    margin-bottom: 5px;
+    /* Tạo khoảng cách dọc giữa các hàng */
+  }
+
+  .listquiz-card {
+    margin-bottom: 10px;
+    /* Khoảng cách giữa các card */
+  }
+
+  .listquiz-card-content {
+    padding: 10px;
+  }
+
+  .listquiz-card-title {
+    font-size: 12px;
+    /* Giảm font size */
+  }
+
+  .listquiz-card-footer {
+    flex-direction: column;
+    /* Xếp dọc footer */
+    align-items: center;
+    gap: 5px;
+  }
+
+  .listquiz-avatar {
+    width: 25px;
+    height: 25px;
+  }
+
+  .listquiz-user-info h6 {
+    font-size: 10px;
+  }
+
+  .listquiz-user-info span {
+    font-size: 8px;
+  }
+
+  .listquiz-btn-primary {
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    margin: 3vh;
+  }
+  .listquiz-card-content {
+    padding: 8px;
+  }
+
+  .listquiz-card-title {
+    font-size: 10px;
+  }
+
+  .listquiz-card-footer {
+    gap: 3px;
+  }
+
+  .listquiz-avatar {
+    width: 20px;
+    height: 20px;
+  }
+
+  .listquiz-user-info h6 {
+    font-size: 9px;
+  }
+
+  .listquiz-user-info span {
+    font-size: 7px;
+  }
+
+  .listquiz-btn-primary {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
 }

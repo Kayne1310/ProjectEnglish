@@ -8,6 +8,9 @@ import './listquizz.css';
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { getDataQuiz } from "../../service/quizService";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
+import AOS from "aos";
+
+
 
 const ListQuizz = () => {
   const location = useLocation();
@@ -40,14 +43,19 @@ const ListQuizz = () => {
         console.error("Error fetching quiz data:", error);
         setIsLoading(false); // Tắt loading nếu có lỗi
       }
+      
     };
-
+    
+    if (isHomePage) {
+      AOS.init({ duration: 1000, once: true });
+  }
     fetchData();
-
     // Cleanup timer nếu component unmount trước khi 2 giây trôi qua
     return () => {
       if (timer) clearTimeout(timer);
+      AOS.refreshHard();
     };
+    
   }, []);
 
   console.log("arrQuiz:", arrQuiz);
@@ -68,7 +76,7 @@ const ListQuizz = () => {
         <>
           {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
           {!isQuizletPage && (
-            <section className="wrapper">
+             <section className="wrapper" data-aos={isHomePage ? "fade-up" : ""}>
               <div className="container">
                 <div className="row">
                   {processedQuiz && processedQuiz.length > 0 &&
@@ -114,6 +122,7 @@ const ListQuizz = () => {
             </section>
           )}
           <Outlet />
+
         </>
       )}
     </>

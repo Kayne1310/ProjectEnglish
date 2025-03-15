@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -51,7 +52,7 @@ namespace ProjectEnglishFall2025.Controllers
 
         [HttpPost("add_quiz")]
 
-        public async Task<IActionResult> AddQuizs([FromForm]CreateQuizVM quiz)
+        public async Task<IActionResult> AddQuizs([FromForm] CreateQuizVM quiz)
         {
             try
             {
@@ -65,7 +66,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPut("update_quiz")]
-        public async Task<IActionResult> UpdateQuizs([FromBody] UpdateQuizVM quiz)
+        public async Task<IActionResult> UpdateQuizs([FromForm] UpdateQuizVM quiz)
         {
             try
             {

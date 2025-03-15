@@ -1,22 +1,17 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using CloudinaryDotNet;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Common.ImgCountry;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
-using ProjectFall2025.Infrastructure.DbContext;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
-using ProjectFall2025.Infrastructure.Repositories.Repo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ProjectFall2025.Application.Services
 {
@@ -33,14 +28,30 @@ namespace ProjectFall2025.Application.Services
             this.mapper = mapper;
             this.validator = validator;
             this.cloudinary = cloudinary;
+
         }
 
-        public async Task<List<Quiz>> GetAllQuizs()
+        public async Task<List<QuizDto>> GetAllQuizs()
         {
+            try
+            {
+                var getAll = await quizRepository.GetAllQuizs();
+                var list = new List<QuizDto>();
 
-            var getAll = await quizRepository.GetAllQuizs();
+                foreach (var item in getAll)
+                {
+                    //map do to dto
+                    var dto=mapper.Map<QuizDto>(item);
+                    list.Add(dto);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
-            return getAll;
+        
         }
 
         public async Task<Quiz> GetIdQuiz(DeleteQuizVM quiz)
@@ -63,11 +74,31 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
+                // Upload ảnh quiz lên Cloudinary
+                string image = await cloudinary.UploadImageAsync(quiz.image, "QUIZ");
 
-                //goi service upload len cloudiary
-                string image = await cloudinary.UploadImageAsync(quiz.image,"QUIZ");
-
-
+                // Validate country name và lấy ảnh quốc gia
+                string countryImg;
+                try
+                {
+                    countryImg = Country.GetImageCountry(quiz.countryName);
+                }
+                catch (ArgumentException ex)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = $"Error: {ex.Message}"
+                    };
+                }
+                catch (KeyNotFoundException)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Invalid country name. Please enter in the following format: Vietnam, UK, Japan, Korea, China."
+                    };
+                }
 
                 var data = new Quiz
                 {
@@ -75,9 +106,12 @@ namespace ProjectFall2025.Application.Services
                     description = quiz.description,
                     image = image,
                     difficutly = quiz.difficutly,
-                    createAt = DateTime.Now,
+                    countryName = quiz.countryName,
+                    countryImg = countryImg,
+                    createAt = DateTime.Now
                 };
 
+                // Validate dữ liệu đầu vào
                 var validate = await validator.ValidateAsync(data);
                 if (!validate.IsValid)
                 {
@@ -88,83 +122,98 @@ namespace ProjectFall2025.Application.Services
                         ReturnMessage = string.Join(", ", errorMess)
                     };
                 }
-                else
+
+                // Thêm vào database
+                var addQuiz = await quizRepository.AddQuiz(data);
+                return new ReturnData
                 {
-                    var addQuiz = await quizRepository.AddQuiz(data);
-                    return new ReturnData
-                    {
-                        ReturnCode = 1,
-                        ReturnMessage = "Add successful!"
-                    };
-                }
+                    ReturnCode = 1,
+                    ReturnMessage = "Add successful!"
+                };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> UpdateQuiz(UpdateQuizVM quiz)
         {
             try
             {
-                var data = new DeleteQuizVM
-                {
-                    quiz_id = quiz.quiz_id,
-                };
-
-                var exitingQuiz = await quizRepository.GetQuizById(data);
-                if (exitingQuiz == null)
+                // Kiểm tra xem quiz có tồn tại không
+                var existingQuiz = await quizRepository.GetQuizById(new DeleteQuizVM { quiz_id = quiz.quiz_id });
+                if (existingQuiz == null)
                 {
                     return new ReturnData
                     {
                         ReturnCode = -1,
-                        ReturnMessage = ("Update failed! idUserQuiz is not found")
+                        ReturnMessage = "Update failed! Quiz not found."
                     };
                 }
 
-                exitingQuiz.name = quiz.name;
-                exitingQuiz.description = quiz.description;
-                exitingQuiz.image = quiz.image;
-                exitingQuiz.difficutly = quiz.difficutly;
-                exitingQuiz.updateAt = DateTime.Now;
-
-                var validate = await validator.ValidateAsync(exitingQuiz);
-                if (!validate.IsValid)
+                // Nếu có ảnh mới, upload lên Cloudinary
+                if (quiz.image != null && quiz.image.Length > 0)
                 {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
-                    return new ReturnData
+                    existingQuiz.image = await cloudinary.UploadImageAsync(quiz.image, "QUIZ");
+                }
+
+                // Validate country name và cập nhật ảnh quốc gia
+                if (!string.IsNullOrEmpty(quiz.countryName) && quiz.countryName != existingQuiz.countryName)
+                {
+                    try
                     {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
-                    };
-                }
-                else
-                {
-                    var update = await quizRepository.UpdateQuiz(exitingQuiz);
-                    if (update <= 0)
+                        existingQuiz.countryName = quiz.countryName;
+                        existingQuiz.countryImg = Country.GetImageCountry(quiz.countryName);
+                    }
+                    catch (ArgumentException ex)
                     {
                         return new ReturnData
                         {
                             ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
+                            ReturnMessage = $"Error: {ex.Message}"
                         };
                     }
-                    else
+                    catch (KeyNotFoundException)
                     {
                         return new ReturnData
                         {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update successful!"
+                            ReturnCode = -1,
+                            ReturnMessage = "Invalid country name. Please enter in the following format: Vietnam, UK, Japan, Korea, China."
                         };
                     }
                 }
+
+                // Cập nhật các thông tin khác
+                existingQuiz.name = quiz.name;
+                existingQuiz.description = quiz.description;
+                existingQuiz.difficutly = quiz.difficutly;
+                existingQuiz.updateAt = DateTime.Now;
+
+                // Validate dữ liệu đầu vào
+                var validate = await validator.ValidateAsync(existingQuiz);
+                if (!validate.IsValid)
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = string.Join(", ", validate.Errors.Select(e => e.ErrorMessage))
+                    };
+                }
+
+                // Cập nhật vào database
+                var update = await quizRepository.UpdateQuiz(existingQuiz);
+                return update > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> DeleteQuiz(DeleteQuizVM quiz)
         {
@@ -194,7 +243,6 @@ namespace ProjectFall2025.Application.Services
                 throw new Exception(ex.Message);
             }
         }
-
         public async Task<List<QuizzAndQuestionVM>> getCountQuestionInQuiz()
         {
             try
@@ -215,24 +263,24 @@ namespace ProjectFall2025.Application.Services
 
                 return res;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               
-            throw new NotImplementedException();
+
+                throw new NotImplementedException();
             }
         }
 
         public async Task<List<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(string id)
         {
             ObjectId Quizid = ObjectId.Parse(id);
-            var data=await quizRepository.GetQuestionByQuizId(Quizid);
+            var data = await quizRepository.GetQuestionByQuizId(Quizid);
             return data
              .Where(doc => doc.Contains("QuestionInfor") && doc["QuestionInfor"].BsonType == BsonType.Array)
              .SelectMany(doc => doc["QuestionInfor"].AsBsonArray.Select(q => new QuestionAndAnswerVM
              {
                  question_id = q["_id"].ToString(),
-                 description =  q["description"].ToString() ,
-                 image =q["image"].ToString() ,
+                 description = q["description"].ToString(),
+                 image = q["image"].ToString(),
                  quiz_id = doc["_id"].ToString(),
 
                  // Thông tin Quiz
@@ -249,12 +297,13 @@ namespace ProjectFall2025.Application.Services
                      ? q["QuestionAnswer"].AsBsonArray.Select(a => new AnswerVM
                      {
                          idAnswered = a["_id"].ToString(),
-                         descriptionAnswered =  a["desciption"].ToString() ,
-                         isCorrect = a["correct_answer"].ToBoolean() ,
+                         descriptionAnswered = a["desciption"].ToString(),
+                         isCorrect = a["correct_answer"].ToBoolean(),
                      }).ToList()
                      : new List<AnswerVM>()
              })).ToList();
 
         }
+
     }
 }

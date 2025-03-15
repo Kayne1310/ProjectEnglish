@@ -45,7 +45,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("create_QuizQuestion")]
-        public async Task<IActionResult> createQuizQuestion([FromBody] CreateQuizQuestionVM quizQuestion)
+        public async Task<IActionResult> createQuizQuestion([FromForm] CreateQuizQuestionVM quizQuestion)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPut("update_QuizQuestion")]
-        public async Task<IActionResult> updateQuizQuestion([FromBody] UpdateQuizQuestionVM quizQuestion)
+        public async Task<IActionResult> updateQuizQuestion([FromForm] UpdateQuizQuestionVM quizQuestion)
         {
             try
             {
