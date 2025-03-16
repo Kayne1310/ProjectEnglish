@@ -1,6 +1,6 @@
 // Flashcard.js
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // Chỉ cần useParams cho quizId
+import { useParams, useSearchParams, useLocation } from "react-router-dom"; // Lấy quiz_id từ URL
 import "../../assets/css/FlashCardQuiz/flashcard.css";
 import "../../assets/css/FlashCardQuiz/QuizletForm.css";
 import { flashcard as getFlashcards } from "../../service/quizService.js";
@@ -24,6 +24,11 @@ const Flashcard = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
   const [skipped, setSkipped] = useState(false);
+
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const location = useLocation();
+  const [isQuizMode, setIsQuizMode] = useState(false);
 
   const handleSkip = () => {
     const correctAnswer = currentItem.answer.find(ans => ans.isCorrect);
@@ -60,37 +65,41 @@ const Flashcard = () => {
     audio.play();
   };
 
+
   useEffect(() => {
     let timer;
 
     window.scroll(0, 0);
     const fetchData = async () => {
-      if (!quizId) {
-        setError("Không có quiz_id trong URL!");
-        setLoading(false);
-        return;
-      }
+
 
       setLoading(true);
       try {
         // Gọi API cho Flashcard
-        const flashcardResponse = await getFlashcards(quizId);
-        if (!flashcardResponse || flashcardResponse.length === 0) {
-          console.warn("Không có dữ liệu flashcard từ API!");
-        } else {
-          const formattedFlashcards = flashcardResponse.map((item) => ({
-            question: item.questionInfo[0]?.description || "Không có câu hỏi",
-            answer: item.description || "Không có câu trả lời",
-          }));
-          setFlashcards(formattedFlashcards);
+        if (location.state?.flashcards) {
+          setFlashcards(location.state.flashcards);
+          setIsQuizMode(false);
         }
-
-        // Gọi API cho Quiz
-        const quizResponse = await getQuestionbyQuizId(quizId);
-        if (!quizResponse.data || quizResponse.data.length === 0) {
-          console.warn("Không có dữ liệu quiz từ API!");
-        } else {
-          setQuestions(quizResponse.data);
+        // Nếu có quizId thì fetch data từ quiz
+        else if (quizId) {
+          const flashcardResponse = await getFlashcards(quizId);
+          if (!flashcardResponse || flashcardResponse.length === 0) {
+            console.warn("Không có dữ liệu flashcard từ API!");
+          } else {
+            const formattedFlashcards = flashcardResponse.map((item) => ({
+              question: item.questionInfo[0]?.description || "Không có câu hỏi",
+              answer: item.description || "Không có câu trả lời",
+            }));
+            setFlashcards(formattedFlashcards);
+          }
+          // Gọi API cho Quiz
+          const quizResponse = await getQuestionbyQuizId(quizId);
+          if (!quizResponse.data || quizResponse.data.length === 0) {
+            console.warn("Không có dữ liệu quiz từ API!");
+          } else {
+            setQuestions(quizResponse.data);
+          }
+          setIsQuizMode(true);
         }
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu từ API:", error);
@@ -108,7 +117,7 @@ const Flashcard = () => {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [quizId]);
+  }, [quizId, location]);
 
   // Cập nhật flashcard hoặc question hiện tại
   const updateItem = (index) => {
@@ -195,40 +204,42 @@ const Flashcard = () => {
             <div className="container">
               <Row className="mt-5">
                 {/* Phần trung tâm - Form chính (Flashcard hoặc Quiz) */}
-                <Col md={10} className="d-flex flex-column align-items-center">
-                  <div className="quizlet-container bg-white p-0 rounded-3 shadow-sm d-flex flex-column border" style={{ marginBottom: "120px", width: "100%", maxWidth: "825px" }}>
-
-                    {mode === "flashcard" ? (
-                      flashcards.length > 0 ? (
-                        <>
-                          <div className={`flashcard ${flipped ? "flipped" : ""}`} onClick={() => setFlipped(!flipped)}>
-                            <div className="front">
-                              <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint: Think about the basics!"); }}>
-                                <i className="bi bi-lightbulb"></i>
-                              </button>
-                              <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.question); }}>
-                                <i className="bi bi-volume-up"></i>
-                              </button>
-                              <div className="content">{flashcards[currentQuestionIndex]?.question}</div>
-                            </div>
-                            <div className="back">
-                              <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
-                                <i className="bi bi-lightbulb"></i>
-                              </button>
-                              <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.answer); }}>
-                                <i className="bi bi-volume-up"></i>
-                              </button>
-                              <div className="content">{flashcards[currentQuestionIndex]?.answer}</div>
-                            </div>
+                <Col md={9} className="d-flex flex-column align-items-center mb-5">
+                  {/* Flashcard Container */}
+                  {mode === "flashcard" && (
+                    <div className="flashcard-container" style={{ width: "100%", maxWidth: "825px" }}>
+                      {flashcards.length > 0 ? (
+                        <div className={`flashcard ${flipped ? "flipped" : ""}`} onClick={() => setFlipped(!flipped)}>
+                          <div className="front">
+                            <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint: Think about the basics!"); }}>
+                              <i className="bi bi-lightbulb"></i>
+                            </button>
+                            <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.question); }}>
+                              <i className="bi bi-volume-up"></i>
+                            </button>
+                            <div className="content">{flashcards[currentQuestionIndex]?.question}</div>
                           </div>
-                        </>
+                          <div className="back">
+                            <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
+                              <i className="bi bi-lightbulb"></i>
+                            </button>
+                            <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.answer); }}>
+                              <i className="bi bi-volume-up"></i>
+                            </button>
+                            <div className="content">{flashcards[currentQuestionIndex]?.answer}</div>
+                          </div>
+                        </div>
                       ) : (
                         <p className="text-center">Không có dữ liệu flashcard...</p>
-                      )
-                    ) : (
-                      questions.length > 0 ? (
-                        <>
+                      )}
+                    </div>
+                  )}
 
+                  {/* Quizlet Container */}
+                  {mode !== "flashcard" && (
+                    <div className="quizlet-container bg-white p-0 rounded-3 shadow-sm d-flex flex-column border" style={{ width: "100%", maxWidth: "825px" }}>
+                      {questions.length > 0 ? (
+                        <>
                           <div className="quizlet-definition-section">
                             <div className="quizlet-definition-label">
                               <i className="fas fa-lightbulb"></i>
@@ -244,7 +255,7 @@ const Flashcard = () => {
                             </div>
                             <div className="quizlet-image-wrapper">
                               <div className="quizlet-image-container">
-                                <img src={currentItem.image} alt="lôi thôi, lếch thếch" />
+                                <img src={currentItem.image} alt="Quizlet hình ảnh" />
                               </div>
                             </div>
                           </div>
@@ -253,21 +264,12 @@ const Flashcard = () => {
                             {currentItem.answer.map((ans, index) => (
                               <button
                                 key={index}
-                                className={`quizlet-option ${selectedAnswer === ans.idAnswered
-                                  ? isCorrect
-                                    ? "correct"
-                                    : "incorrect"
-                                  : ""
-                                  }`}
+                                className={`quizlet-option ${selectedAnswer === ans.idAnswered ? (isCorrect ? "correct" : "incorrect") : ""}`}
                                 onClick={() => handleAnswerClick(ans)}
                               >
                                 <span className="answer-number">
                                   {selectedAnswer === ans.idAnswered ? (
-                                    isCorrect ? (
-                                      <i className="fas fa-check-circle"></i>
-                                    ) : (
-                                      <i className="fas fa-times-circle"></i>
-                                    )
+                                    isCorrect ? <i className="fas fa-check-circle"></i> : <i className="fas fa-times-circle"></i>
                                   ) : (
                                     index + 1
                                   )}
@@ -276,8 +278,6 @@ const Flashcard = () => {
                               </button>
                             ))}
                           </div>
-
-
 
                           <div className="quizlet-help-link">
                             {skipped ? (
@@ -288,29 +288,30 @@ const Flashcard = () => {
                               </button>
                             )}
                           </div>
-
                         </>
                       ) : (
                         <p className="text-center">Không có dữ liệu quiz...</p>
-                      )
-                    )}
-                    {/* Footer cố định trong form, giống hình ảnh */}
-                    <div className="custom-footer-navigation position-absolute bottom-0 start-50 translate-middle-x bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center" style={{ width: "100%", maxWidth: "825px", zIndex: 1000, marginBottom: "20px" }}>
-                      <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToPreviousQuestion} disabled={currentQuestionIndex === 0}>
-                        <i className="fas fa-chevron-left"></i>
-                        <span>Lùi lại</span>
-                      </button>
-                      <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToNextQuestion} disabled={currentQuestionIndex === (mode === "flashcard" ? flashcards.length : questions.length) - 1}>
-                        <span>Tiến tới</span>
-                        <i className="fas fa-chevron-right"></i>
-                      </button>
+                      )}
                     </div>
-                  </div>
+                  )}
 
+                  {/* Footer đặt ngoài để không bị ảnh hưởng */}
+                  <div className="custom-footer-navigation position-absolute bottom-0 start-50 translate-middle-x bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center"
+                    style={{ width: "100%", maxWidth: "825px", zIndex: 1000, marginBottom: "20px" }}>
+                    <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToPreviousQuestion} disabled={currentQuestionIndex === 0}>
+                      <i className="fas fa-chevron-left"></i>
+                      <span>Lùi lại</span>
+                    </button>
+                    <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToNextQuestion} disabled={currentQuestionIndex === (mode === "flashcard" ? flashcards.length : questions.length) - 1}>
+                      <span>Tiến tới</span>
+                      <i className="fas fa-chevron-right"></i>
+                    </button>
+                  </div>
                 </Col>
 
+
                 {/* Sidebar - Giữ nguyên từ thiết kế trước đó */}
-                <Col md={2} className="p-2 bg-white rounded-3">
+                <Col md={3} className="p-2 bg-white rounded-3">
                   {/* Phát âm giọng UK, US - Chỉ hiển thị khi mode là flashcard */}
                   {mode === "flashcard" && (
                     <div className="custom-audio-section mb-3">

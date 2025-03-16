@@ -8,6 +8,7 @@ body {
 
 .wrapper {
   margin: 10vh;
+  margin-top: 15vh;
 }
 
 /* Card wrapper */
@@ -111,6 +112,7 @@ body {
 @media (max-width: 900px) {
   .wrapper {
     margin: 5vh;
+    margin-top: 10vh;
     /* Giảm khoảng cách */
   }
 
@@ -170,6 +172,7 @@ body {
 @media (max-width: 480px) {
   .wrapper {
     margin: 3vh;
+    margin-top: 10vh;
   }
   .listquiz-card-content {
     padding: 8px;

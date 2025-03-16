@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 // import Lightbox from "react-awesome-lightbox";
 // import "react-awesome-lightbox/build/style.css";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 const Questions = ({ question, questionIndex }) => {
   if (!question) return <p>Không có câu hỏi.</p>;
@@ -10,6 +12,7 @@ const Questions = ({ question, questionIndex }) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
+  
 
   // Quản lý trạng thái hiển thị toàn bộ hoặc rút gọn text
   const [showFullText, setShowFullText] = useState({});
@@ -33,22 +36,20 @@ const Questions = ({ question, questionIndex }) => {
     <div className="question-container">
       {/* Hiển thị image trong Questions */}
       <div className="q-image">
-        {/* Ảnh - Khi click vào sẽ mở Lightbox */}
-        <img
+           {/* Ảnh - Khi click vào sẽ mở Lightbox */}
+           <img
           src={question.image}
-          // alt="Question"
-          // style={{ cursor: "pointer"}}
-          // onClick={() => setOpen(true)}
+          alt="Question"
+          style={{ cursor: "pointer", maxWidth: "200px" }}
+          onClick={() => setOpen(true)}
         />
 
         {/* Lightbox hiển thị khi open = true */}
-        {/* {open === true &&(
-          // <Lightbox
-          //   image={question.image}
-          //   title="Xem ảnh"
-          //   onClose={() => setOpen(false)}
-          // />
-        )} */}
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          slides={[{ src: question.image }]} // Phải truyền ảnh vào mảng slides
+        />
       </div>
 
       <div className="question">

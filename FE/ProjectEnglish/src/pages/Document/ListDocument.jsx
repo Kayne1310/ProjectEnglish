@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../../assets/css/Home/document.css';
 
-
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getAllQuiz } from "../../service/documentService";
 
@@ -84,8 +83,6 @@ const ListDocument = () => {
                                 </svg>  Flashcard
                             </Link>
                         </div>
-
-
 
                         <div className="row ">
                             {quizzes.map((quiz,index) => (

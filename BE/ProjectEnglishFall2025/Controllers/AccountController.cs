@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver.Linq;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -119,12 +120,12 @@ namespace ProjectEnglishFall2025.Controllers
                 var res = await acountService.Account_UpdateRefeshToken(req);
 
                 //Gan token vao cookies 
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newtoken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(exprired),
                 });
 
                 //tra ve token 
@@ -244,7 +245,7 @@ namespace ProjectEnglishFall2025.Controllers
             await userSessionService.addUserSession(userSession);
             await acountService.Account_UpdateRefeshToken(req);
 
-            Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+            Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
             {
                 HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                 Secure = true,   // Chỉ hoạt động trên HTTPS
@@ -324,12 +325,12 @@ namespace ProjectEnglishFall2025.Controllers
 
                 await userSessionService.addUserSession(userSession);
                 //add cokkie
-                Response.Cookies.Append("accesToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
+                Response.Cookies.Append("accessToken", new JwtSecurityTokenHandler().WriteToken(newToken), new CookieOptions
                 {
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(exprired)
                 });
 
                 // Tạo phản hồi trả về

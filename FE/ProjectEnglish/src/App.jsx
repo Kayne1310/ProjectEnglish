@@ -35,7 +35,9 @@ const App = () => {
           email: res.user.email,
           picture: res.user.picture,
           facebookId: res.user.facebookId,
-          googleId: res.user.googleId,
+          googleId: res.user.googleId, 
+          userId:res.user.userID,
+          
         });
         console.log("User Data:", res.user);
       }

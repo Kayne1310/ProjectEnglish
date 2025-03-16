@@ -107,22 +107,28 @@ const Nav = () => {
                                     {isLoggedIn ? (
                                         <>
                                             {/* Phần hiển thị tên và email */}
-                                            <div className="custom-user-info p-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="border-2 border-gray-300 rounded-full overflow-hidden w-8 h-8 flex-shrink-0">
-                                                        <img
-                                                            src={user.avatar || avatar}
-                                                            alt="User Avatar"
-                                                            className="w-8 h-8 object-cover"
-                                                            onError={(e) => { e.target.src = avatar; }}
-                                                        />
+                                            <div className="custom-user-info p-3 flex items-center justify-center text-center">
+                                                <div className="flex items-center gap-2 ">
+                                                    {/* Avatar */}
+                                                    <div className=" p-2 w-12 flex justify-center">
+                                                       
+                                                            <img
+                                                                src={user.avatar || avatar}
+                                                                alt="User Avatar"
+                                                                className="w-full h-full object-cover object-center"
+                                                                onError={(e) => { e.target.src = avatar; }}
+                                                            />
+                                                 
                                                     </div>
+
+                                                    {/* Thông tin User */}
                                                     <div>
-                                                        <p className="text-sm font-medium">{user.name || "Error display "}</p>
+                                                        <p className="text-sm font-medium">{user.name || "Error display"}</p>
                                                         <p className="text-xs text-gray-500">{userInfor.email || "errordisplay@gmail.com"}</p>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <hr className="border-gray-200 my-2 mx-1" />
                                             {/* Các mục menu */}
                                             <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">

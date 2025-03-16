@@ -27,12 +27,23 @@ import DetailQuizz from './pages/ListQuizz/DetailQuiz/DetailQuizz.jsx';
 import Flashcard from './pages/FlashCard/FlashCard.jsx';
 import ListDocument from './pages/Document/ListDocument.jsx';
 import DocumentItem from './pages/Document/documentItem.jsx';
-import FlashcardList from './pages/FlashCard/ListFlashCard.jsx';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import AppAdmin from './AppAdmin.jsx';
+import DashboardPage from './pages/Admin/DashboardPage/DashboardPage.jsx';
+import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
+import ChartPage from './pages/Admin/ChartPage/ChartPage.jsx';
+import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
+import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
+import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
+import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
+
+
+
 
 const router = createBrowserRouter([
   {
+    // USER
     path: "/",
     element: <App />,
     children: [
@@ -71,9 +82,18 @@ const router = createBrowserRouter([
         path: "/contactus",
         element: <ContactUs />
       },
+
+      {
+        path: "/flashcard/practice/:studySetId",
+        element: <Flashcard />
+      },
       {
         path: "/flashcard/:quizId",
         element: <Flashcard />
+      },
+      {
+        path: "/ListFlashCard/:id",
+        element: <Flashcardcanh/>
       },
       {
         path: "/listdocument/detaildocument/flashcard/:quizId",
@@ -110,10 +130,37 @@ const router = createBrowserRouter([
     path: "/loginadmin",
     element: <LoginAdminPage />
   },
+
+
+  // ADMIN
   {
-    path: "/resetpassword",
-    element: <ResetPasswordPage />
-  }
+    path: "/Admin",
+    element: <AppAdmin />,
+    children: [
+      {
+        index: true,
+        element: <DashboardPage />
+      },
+      {
+
+        path: "userlist",
+        element: <UserlistPage />
+      },
+      {
+        path: "chart",
+        element: <ChartPage />
+      },
+      {
+        path: "quiz",
+        element: <QuizPage />
+      },
+      {
+        path: "quizquestionanswer",
+        element: <QuizQuestionAnswerPage />
+      },
+    ]
+  },
+
 
 ]);
 

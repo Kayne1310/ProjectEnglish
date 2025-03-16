@@ -13,7 +13,7 @@
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Cookies.TryGetValue("accesToken", out var token))
+            if (context.Request.Cookies.TryGetValue("accessToken", out var token))
             {
                 context.Request.Headers.Append("Authorization", $"Bearer {token}");
             }

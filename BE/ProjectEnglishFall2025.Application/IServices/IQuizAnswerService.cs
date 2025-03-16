@@ -15,5 +15,8 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> addQuizAnswer(CreateAnswerQuestionVM answerQuestionVM);
         Task<ReturnData> updateQuizAnswer(UpdateAnswerQuestionVM answerQuestionVM);
         Task<ReturnData> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionVM);
+
+        // correct answers
+        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId);
     }
 }

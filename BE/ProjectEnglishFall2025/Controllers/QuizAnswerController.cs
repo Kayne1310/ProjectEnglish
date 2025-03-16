@@ -12,12 +12,10 @@ namespace ProjectEnglishFall2025.Controllers
     public class QuizAnswerController : ControllerBase
     {
         private readonly IQuizAnswerService quizAnswerService;
-        private readonly IQuizAnswerRepository quizAnswerRepository;
 
-        public QuizAnswerController(IQuizAnswerService quizAnswerService, IQuizAnswerRepository quizAnswerRepository1)
+        public QuizAnswerController(IQuizAnswerService quizAnswerService)
         {
             this.quizAnswerService = quizAnswerService;
-            this.quizAnswerRepository = quizAnswerRepository1;
         }
 
         [HttpGet("get_all_quizAnswer")]
@@ -95,9 +93,16 @@ namespace ProjectEnglishFall2025.Controllers
         [HttpGet("correct-answers")]
         public async Task<IActionResult> GetCorrectQuizAnswers(string quizId)
         {
-            var results = await quizAnswerRepository.GetCorrectQuizAnswersAsync(quizId);
-            return Ok(results);
-        }
+            try
+            {
+                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(quizId);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
+        }
     }
 }
