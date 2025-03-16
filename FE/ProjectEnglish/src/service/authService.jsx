@@ -30,6 +30,7 @@ const logout = async () => {
         const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
           withCredentials: true,
         });
+       
         return response.data;
     } catch (error) {
         throw error;

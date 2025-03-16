@@ -25,6 +25,8 @@ using CloudinaryDotNet.Actions;
 using ProjectFall2025.Application.UnitOfWork;
 using ProjectFall2025.Infrastructure.UnitOfWork;
 using MongoDB.Driver;
+using ProjectEnglishFall2025.Hubs;
+
 namespace ProjectEnglishFall2025
 {
     public class Program
@@ -66,6 +68,7 @@ namespace ProjectEnglishFall2025
                     ValidAudience = builder.Configuration["Jwt:ValidAudience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                 };
+            
             });
 
 
@@ -139,6 +142,9 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IAIAnswerRepository, AIAnswerRepository>();
             builder.Services.AddScoped<IStudiSetRepository, StudiSetRepository>();
             builder.Services.AddScoped<IFlashCardRepository, FlashCardRepository>();
+            builder.Services.AddScoped<IChatRepository, ChatRepository>();
+
+          
 
             //res validator
             builder.Services.AddFluentValidationAutoValidation();
@@ -199,6 +205,11 @@ namespace ProjectEnglishFall2025
                                             .AllowCredentials();
                                   });
             });
+            //SignalIR
+            builder.Services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true; // Hiển thị lỗi chi tiết
+            });
 
 
 
@@ -220,6 +231,8 @@ namespace ProjectEnglishFall2025
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.MapHub<ChatHub>("/chatHub");
 
 
             app.MapControllers();

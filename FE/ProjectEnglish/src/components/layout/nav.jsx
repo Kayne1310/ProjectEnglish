@@ -75,9 +75,9 @@ const Nav = () => {
                                         <NavLink className="nav-link" to="/contactus">Contact US</NavLink>
                                     </nav>
                                 </li>
-                                {/* <li className="nav-item">
-                                    <NavLink className="nav-link" to="">About Us</NavLink>
-                                </li> */}
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/community">Community</NavLink>
+                                </li>
 
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">community</NavLink>

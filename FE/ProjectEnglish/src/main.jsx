@@ -32,6 +32,8 @@ import DocumentItem from './pages/Document/documentItem.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import Flashcard from './pages/FlashCard/FlashCard.jsx';
+import { Community } from './pages/Community/community.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -88,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: "/flashcard",
         element: <FlashcardList />
+      },
+      {
+        path: "/community",
+        element: <Community />
       }
     
     ]
