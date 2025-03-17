@@ -26,7 +26,6 @@ const Flashcard = () => {
   const [skipped, setSkipped] = useState(false);
 
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const location = useLocation();
   const [isQuizMode, setIsQuizMode] = useState(false);
 
@@ -217,8 +216,12 @@ const Flashcard = () => {
                             <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.question); }}>
                               <i className="bi bi-volume-up"></i>
                             </button>
-                            <div className="content">{flashcards[currentQuestionIndex]?.question}</div>
+                            <div className="content fw-bold">{flashcards[currentQuestionIndex]?.question}
+                        <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
+
+                      </div>
                           </div>
+                          
                           <div className="back">
                             <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
                               <i className="bi bi-lightbulb"></i>

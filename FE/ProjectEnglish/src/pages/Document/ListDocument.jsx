@@ -28,7 +28,7 @@ const ListDocument = () => {
 
             {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
    
-                <section className="about_section layout_padding" style={{ backgroundColor: '#f9fafa' }} data-aos="fade-up">
+                <section className="about_section layout_padding" style={{ backgroundColor: '#f9fafa' }} >
                     <div className="container">
                         <div className="mt-10 mb-5 text-third">
                             <h1 className="text-3xl font-bold">Tài liệu</h1>
@@ -99,7 +99,7 @@ const ListDocument = () => {
                                         <div className="card-custom-avatar">
                                             <img
                                                 className="img-fluid"
-                                                src="https://scontent.fhan2-3.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c379.0.1290.1290a_cp0_dst-jpg_s50x50_tt6&_nc_cat=1&ccb=1-7&_nc_sid=7565cd&_nc_eui2=AeF2IVd41-b8yGHepbghN72Vik--Qfnh2B6KT75B-eHYHnm_ViUHtY5FwQVRs2Lgi_x6XpAWterpDWSlCVy9rsPO&_nc_ohc=aG4wLkfBojIQ7kNvgFREMO7&_nc_oc=Adj2CDWA8K7xlUx0Nd6ceJNen9WWNUkbOjjyBZosXAKGdUxe6RoaAaX9RB4UF1JZCvQ&_nc_zt=24&_nc_ht=scontent.fhan2-3.fna&edm=AP4hL3IEAAAA&_nc_gid=AHnkCKPOQW0jQnWvQ1A9x-T&oh=00_AYAKZok1aKLxlEe-EO11uiMcEmbEi22Phgxa-_ujtPoA6A&oe=67D15119"
+                                                src="https://lh3.googleusercontent.com/a/ACg8ocKCC7S34GPA39ZSn9vC5VtbTqXGjwKtttuidg8_-SZQn605TO8=s96-c"
                                                 alt="Avatar"
                                             />
                                         </div>

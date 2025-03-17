@@ -435,7 +435,7 @@ const Flashcardcanh = () => {
 
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <p className="flashcardcanh-source font-weight-bold mb-0">Ví dụ:</p>
-                                    <span className="flashcardcanh-time p-1">{calculateDaysAgo(data.createdAt)} ngày trước</span>
+                                    <span className="flashcardcanh-time p-1">{calculateDaysAgo(data.createdAt)} </span>
                                 </div>
 
                                 <div className="border border-secondary rounded p-3 flashcardcanh-examples-container custom-scroll">

@@ -27,7 +27,7 @@ const DocumentItem = () => {
     }, [id]);
     return (
         <>
-            <section className="light" data-aos="fade-up">
+            <section className="light" >
                 <div className="container py-2">
                     <div className="h1 text-center text-dark" id="pageHeaderTitle">Tài liệu : {title}</div>
                     <div className="mb-3">

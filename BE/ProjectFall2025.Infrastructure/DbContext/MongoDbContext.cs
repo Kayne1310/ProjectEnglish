@@ -86,6 +86,10 @@ namespace ProjectFall2025.Infrastructure.DbContext
         {
             return _database.GetCollection<Flashcard>("Flashcard");
         }
+        public IMongoCollection<ChatMessage> GetCollectionChatMessage()
+        {
+            return _database.GetCollection<ChatMessage>("ChatMessage");
+        }
 
     }
 

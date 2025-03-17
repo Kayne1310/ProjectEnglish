@@ -168,6 +168,15 @@ namespace ProjectEnglishFall2025.Controllers
                 }
                 await userSessionService.removeUserSession(new LogoutRequest { UserId = userId });
 
+                // **Xóa Cookie `accessToken` từ phía server**
+                Response.Cookies.Append("accessToken", "", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddDays(-1) // Đặt ngày hết hạn trong quá khứ để xóa cookie
+                });
+
                 response.ReturnCode = 1;
                 response.ReturnMessage = "Đăng xuất thành công.";
                 return Ok(response);

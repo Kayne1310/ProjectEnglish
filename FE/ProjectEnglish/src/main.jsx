@@ -36,8 +36,11 @@ import ChartPage from './pages/Admin/ChartPage/ChartPage.jsx';
 import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
 import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
+
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 
+
+import { Community } from './pages/Community/community.jsx';
 
 
 
@@ -102,6 +105,10 @@ const router = createBrowserRouter([
       {
         path: "/flashcard",
         element: <FlashcardList />
+      },
+      {
+        path: "/community",
+        element: <Community />
       }
 
     ]
