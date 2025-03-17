@@ -221,7 +221,7 @@ const Community = () => {
         <>
             <div className="container">
                 <div className="row">
-                    <div className="mt-10  text-third ml-1 mt-5">
+                    <div className="text-third ml-1 " style={{ marginTop: "100px" }}>
                         <h1 className="text-3xl font-bold text-primary">Community</h1>
                         <p>
                             Tham gia trò chuyện, chia sẻ kinh nghiệm và kết nối với những người học tiếng Anh khác.
@@ -236,7 +236,7 @@ const Community = () => {
                                         <div
                                             ref={chatContainerRef}
                                             className="chat-container custom-scroll"
-                                            style={{ height: "600px", maxHeight: "700px", overflowY: "scroll" }}
+                                            style={{ height: "500px", maxHeight: "500px", overflowY: "scroll" }}
                                         >
                                             {isLoading && messages.length === 0 && (
                                                 <div className="text-center p-3">

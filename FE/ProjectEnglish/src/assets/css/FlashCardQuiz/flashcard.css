@@ -1,4 +1,18 @@
-/* Reset và thiết lập cơ bản cho trang */
+.flashcard-container,
+.quizlet-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.quiz-footer {
+  margin-top: auto;
+}/* Reset và thiết lập cơ bản cho trang */
 
 /* Container chứa flashcard - tạo không gian 3D */
 .flashcard-container {
@@ -15,8 +29,8 @@
 /* Thiết lập cho flashcard chính */
 .flashcard {
   position: relative;
-  width: 800px;
-  height: 400px;
+  width: 100%;
+  height: 450px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
@@ -33,7 +47,7 @@
 .flashcard .front,
 .flashcard .back {
   position: absolute;
-  width: 825px;
+  width: 100%;
   height: 100%;
   backface-visibility: hidden;
   display: flex;
@@ -46,12 +60,12 @@
 
 /* Thiết lập riêng cho mặt trước */
 .flashcard .front {
-  background: rgb(255, 235, 198);
+  background:rgb(255, 255, 255);
 }
 
 /* Thiết lập riêng cho mặt sau */
 .flashcard .back {
-  background: #69b2ff;
+  background: rgb(255, 255, 255);
   color: rgb(255, 255, 255);
   transform: rotateX(180deg);
 }
@@ -63,6 +77,7 @@
   padding: 20px;
   font-size: 30px;
   cursor: pointer;
+  color: black;
 }
 
 /* Thiết lập cho các nút icon */
@@ -78,6 +93,7 @@
   align-items: center;
   justify-content: center;
   transition: opacity 0.3s;
+  
 }
 
 /* Định vị nút bên trái */
@@ -102,7 +118,7 @@
 
 /* Màu sắc icon cho mặt sau */
 .back .icon-button {
-  color: white;
+  color: rgb(97, 17, 17);
 }
 
 /* Hiệu ứng hover cho icon */
@@ -320,7 +336,7 @@
   }
   .custom-footer-navigation {
     width: 95%;
-    padding: 10px 20px;
+
   }
   .custom-footer-button {
     height: 45px;
@@ -340,3 +356,111 @@
     height: 25px;
   }
 }
+
+.navigation-btn {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.navigation-btn[style*="cursor: not-allowed"] {
+  opacity: 0.5;
+}
+
+/* Nếu bạn muốn thêm border giữa 2 nút */
+.navigation-btn:first-child {
+  border-right: 1px solid #dee2e6;
+}
+
+
+/* Thêm vào file CSS của bạn */
+@media (max-width: 768px) {
+  .flashcard-container {
+    padding: 1rem;
+  }
+
+  .flashcard {
+    min-height: 300px !important;
+    margin: 10px 0;
+  }
+
+  .flashcard .front,
+  .flashcard .back {
+    padding: 1rem !important;
+  }
+
+  .flashcard .content {
+    font-size: 16px !important;
+    padding: 0.5rem !important;
+  }
+
+  .flashcard .transcription {
+    font-size: 14px !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .icon-button {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+
+  .icon-button.left {
+    left: 8px !important;
+  }
+
+  .icon-button.right {
+    right: 8px !important;
+  }
+}
+
+/* Thêm styles cho tablet nếu cần */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .flashcard {
+    min-height: 350px !important;
+  }
+}
+
+
+
+/* keyboard */
+.custom-keyboard-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  height: 30px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}
+
+.custom-keyboard-key:active,
+.key-pressed {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+/* Animation khi phím được nhấn */
+@keyframes keyPress {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+.key-pressed {
+  animation: keyPress 0.2s ease;
+}
+
+
+

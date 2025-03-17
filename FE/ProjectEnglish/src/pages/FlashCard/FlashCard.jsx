@@ -24,7 +24,8 @@ const Flashcard = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
   const [skipped, setSkipped] = useState(false);
-
+  const [pressedKey, setPressedKey] = useState(null);
+  const [learnedCards, setLearnedCards] = useState(new Set());
 
   const location = useLocation();
   const [isQuizMode, setIsQuizMode] = useState(false);
@@ -64,6 +65,75 @@ const Flashcard = () => {
     audio.play();
   };
 
+  // Tách các handlers thành các hàm riêng
+  const handleFlipCard = (e) => {
+    if (mode === "flashcard") {
+      e.preventDefault();
+      setFlipped(prev => !prev);
+      playKeySound();
+    }
+  };
+
+  const handleNextCard = () => {
+    if (currentQuestionIndex < (mode === "flashcard" ? flashcards.length : questions.length) - 1) {
+      // Đánh dấu card hiện tại là đã học
+      setLearnedCards(prev => new Set([...prev, currentQuestionIndex]));
+      goToNextQuestion();
+      playKeySound();
+    }
+  };
+
+  const handlePreviousCard = () => {
+    if (currentQuestionIndex > 0) {
+      goToPreviousQuestion();
+      playKeySound();
+    }
+  };
+
+  // Hàm phát âm thanh khi nhấn phím
+  const playKeySound = () => {
+    // Có thể tùy chỉnh âm thanh khác nhau cho mỗi hành động
+    const audio = new Audio('/path/to/key-sound.mp3');
+    audio.volume = 0.2;
+    audio.play().catch(() => {}); // Catch để tránh lỗi khi browser block autoplay
+  };
+
+  // Custom hook để xử lý keyboard events
+  const useKeyboardControls = (handlers) => {
+    useEffect(() => {
+      const handleKeyPress = (e) => {
+        // Ngăn chặn xử lý khi đang nhập liệu
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+          return;
+        }
+
+        // Thêm animation class
+        setPressedKey(e.key);
+        
+        // Xóa class sau 200ms
+        setTimeout(() => {
+          setPressedKey(null);
+        }, 200);
+
+        switch (e.key) {
+          case 'ArrowRight':
+            handlers.onNext();
+            break;
+          case 'ArrowLeft':
+            handlers.onPrevious();
+            break;
+          case ' ':
+            handlers.onFlip(e);
+            break;
+          default:
+            break;
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [handlers]);
+  };
 
   useEffect(() => {
     let timer;
@@ -182,8 +252,59 @@ const Flashcard = () => {
 
   const currentItem = mode === "flashcard" ? flashcards[currentQuestionIndex] : processedQuiz[currentQuestionIndex];
 
+  // Sử dụng custom hook
+  useKeyboardControls({
+    onNext: handleNextCard,
+    onPrevious: handlePreviousCard,
+    onFlip: handleFlipCard
+  });
+
+  // Sửa lại cách tính tiến trình
+  const calculateProgress = () => {
+    const totalCards = mode === "flashcard" ? flashcards.length : questions.length;
+    // Tính số card đã học (tính cả card hiện tại)
+    const learned = currentQuestionIndex + 1;
+    return {
+      count: Math.min(learned, totalCards), // Đảm bảo không vượt quá tổng số
+      percentage: totalCards > 0 ? Math.min(Math.round((learned / totalCards) * 100), 100) : 0
+    };
+  };
+
+  // Reset tiến trình và quay về card đầu tiên
+  const resetProgress = () => {
+    setLearnedCards(new Set());
+    setCurrentQuestionIndex(0);
+    setFlipped(false);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setSkipped(false);
+  };
+
+  // Reset khi đổi mode hoặc shuffle
+  useEffect(() => {
+    resetProgress();
+  }, [mode, flashcards]); // Reset khi đổi mode hoặc shuffle cards
+
   if (loading) return <div className="text-center">Đang tải dữ liệu...</div>;
   if (error) return <div className="text-center">{error}</div>;
+
+  // JSX cho phần hiển thị phím tắt
+  const KeyboardShortcuts = () => (
+    <Card className="bg-white p-3 rounded-3">
+      <div className="d-flex align-items-center gap-2 mb-2">
+        <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === 'ArrowRight' ? 'key-pressed' : ''}`}>→</kbd>
+        <span className="text-secondary">Tiến tới</span>
+      </div>
+      <div className="d-flex align-items-center gap-2 mb-2">
+        <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === 'ArrowLeft' ? 'key-pressed' : ''}`}>←</kbd>
+        <span className="text-secondary">Lùi lại</span>
+      </div>
+      <div className="d-flex align-items-center gap-2">
+        <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === ' ' ? 'key-pressed' : ''}`}>Space</kbd>
+        <span className="text-secondary">Lật thẻ</span>
+      </div>
+    </Card>
+  );
 
   return (
     <>
@@ -208,7 +329,7 @@ const Flashcard = () => {
                   {mode === "flashcard" && (
                     <div className="flashcard-container" style={{ width: "100%", maxWidth: "825px" }}>
                       {flashcards.length > 0 ? (
-                        <div className={`flashcard ${flipped ? "flipped" : ""}`} onClick={() => setFlipped(!flipped)}>
+                        <div className={`flashcard ${flipped ? "flipped" : ""}`} onClick={handleFlipCard}>
                           <div className="front">
                             <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint: Think about the basics!"); }}>
                               <i className="bi bi-lightbulb"></i>
@@ -217,11 +338,11 @@ const Flashcard = () => {
                               <i className="bi bi-volume-up"></i>
                             </button>
                             <div className="content fw-bold">{flashcards[currentQuestionIndex]?.question}
-                        <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
+                              <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
 
-                      </div>
+                            </div>
                           </div>
-                          
+
                           <div className="back">
                             <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
                               <i className="bi bi-lightbulb"></i>
@@ -240,10 +361,17 @@ const Flashcard = () => {
 
                   {/* Quizlet Container */}
                   {mode !== "flashcard" && (
-                    <div className="quizlet-container bg-white p-0 rounded-3 shadow-sm d-flex flex-column border" style={{ width: "100%", maxWidth: "825px" }}>
+                    <div className="quizlet-container bg-white p-3 rounded-3 shadow-sm d-flex flex-column border mb-4"
+                      style={{
+                        width: "100%",
+                        maxWidth: "825px",
+                        maxHeight: "450px",
+                        marginTop: "20px"
+                      }}>
                       {questions.length > 0 ? (
-                        <>
-                          <div className="quizlet-definition-section">
+                        <div className="d-flex flex-column h-100">
+                          {/* Header */}
+                          <div className="d-flex justify-content-between align-items-center mb-0">
                             <div className="quizlet-definition-label">
                               <i className="fas fa-lightbulb"></i>
                             </div>
@@ -252,63 +380,107 @@ const Flashcard = () => {
                             </button>
                           </div>
 
-                          <div className="quizlet-content-wrapper">
-                            <div className="quizlet-question-container">
-                              <p>{currentItem.description}</p>
+                          {/* Content */}
+                          <div className="flex-grow-1 d-flex flex-column flex-md-row gap-3 mb-3">
+                            <div className="question-section flex-grow-1 d-flex align-items-center justify-content-center p-3 bg-white rounded">
+                              <p className="m-0 text-center">{currentItem.description}</p>
                             </div>
-                            <div className="quizlet-image-wrapper">
-                              <div className="quizlet-image-container">
-                                <img src={currentItem.image} alt="Quizlet hình ảnh" />
+
+                            {currentItem.image && (
+                              <div className="image-section d-flex align-items-center justify-content-center">
+                                <div className="position-relative"
+                                  style={{
+                                    width: "194px",
+                                    height: "194px",
+                                    minWidth: "194px"
+                                  }}>
+                                  <img
+                                    src={currentItem.image}
+                                    alt="Quiz"
+                                    className="rounded w-100 h-100 object-fit-cover"
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          </div>
-
-                          <div className="quizlet-options">
-                            {currentItem.answer.map((ans, index) => (
-                              <button
-                                key={index}
-                                className={`quizlet-option ${selectedAnswer === ans.idAnswered ? (isCorrect ? "correct" : "incorrect") : ""}`}
-                                onClick={() => handleAnswerClick(ans)}
-                              >
-                                <span className="answer-number">
-                                  {selectedAnswer === ans.idAnswered ? (
-                                    isCorrect ? <i className="fas fa-check-circle"></i> : <i className="fas fa-times-circle"></i>
-                                  ) : (
-                                    index + 1
-                                  )}
-                                </span>
-                                <span className="quizlet-option-text">{ans.descriptionAnswered}</span>
-                              </button>
-                            ))}
-                          </div>
-
-                          <div className="quizlet-help-link">
-                            {skipped ? (
-                              <span className="skipped-text">Đã bỏ qua</span>
-                            ) : (
-                              <button className="skip-button" onClick={handleSkip}>
-                                Bạn không biết?
-                              </button>
                             )}
                           </div>
-                        </>
+
+                          {/* Options */}
+                          <div className="options-grid row row-cols-1 row-cols-md-2 g-2 mb-3"
+                            style={{ height: "100px" }}> {/* Cố định chiều cao cho container */}
+                            {currentItem.answer.map((ans, index) => (
+                              <div className="col h-50" key={index}> {/* Đặt height 50% để chia đều 2 hàng */}
+                                <button
+                                  className={`quizlet-option w-100 h-100 d-flex align-items-center ${selectedAnswer === ans.idAnswered
+                                    ? (isCorrect ? "correct" : "incorrect")
+                                    : ""
+                                    }`}
+                                  onClick={() => handleAnswerClick(ans)}
+                                >
+                                  <span className="answer-number d-flex align-items-center justify-content-center"
+                                    style={{ minWidth: "24px", height: "24px" }}>
+                                    {selectedAnswer === ans.idAnswered ? (
+                                      isCorrect ?
+                                        <i className="fas fa-check-circle"></i> :
+                                        <i className="fas fa-times-circle"></i>
+                                    ) : (
+                                      index + 1
+                                    )}
+                                  </span>
+                                  <span className="quizlet-option-text px-2 text-truncate">
+                                    {ans.descriptionAnswered}
+
+                                  </span>
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                          {/* Help Link */}
+                          <div className="text-center mt-auto">
+                            {skipped ? (
+                              <span className="skipped-text" style={{ fontSize: "12px" }}>Đã bỏ qua</span>
+                            ) : (
+                              <div
+                                className="skip-button text-secondary d-inline-block position-relative cursor-pointer mt-2"
+                                onClick={handleSkip}
+                                style={{
+                                  transition: 'all 0.3s ease',
+                                  cursor: 'pointer',
+                                  padding: '4px 8px',
+                                  paddingBottom:'9px',
+                                  borderRadius: '20px'
+                                }}
+                              >
+                                <span className="position-relative z-1 " style={{ fontSize: "12px" }}>Bạn không biết?</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       ) : (
                         <p className="text-center">Không có dữ liệu quiz...</p>
                       )}
                     </div>
                   )}
 
-                  {/* Footer đặt ngoài để không bị ảnh hưởng */}
-                  <div className="custom-footer-navigation position-absolute bottom-0 start-50 translate-middle-x bg-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-center"
-                    style={{ width: "100%", maxWidth: "825px", zIndex: 1000, marginBottom: "20px" }}>
-                    <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToPreviousQuestion} disabled={currentQuestionIndex === 0}>
+                  {/* Navigation Footer */}
+                  <div className=" border rounded-3  bg-white w-100 d-flex " style={{ width: "100%", maxWidth: "825px" }}>
+                    <div
+                      className="flex-1  p-3 d-flex flex-column gap-2 justify-content-center align-items-center navigation-btn"
+                      onClick={handlePreviousCard}
+                      style={{ cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer' }}
+                    >
+
                       <i className="fas fa-chevron-left"></i>
-                      <span>Lùi lại</span>
-                    </button>
-                    <button className="custom-footer-button d-flex align-items-center gap-2 btn btn-outline-secondary" onClick={goToNextQuestion} disabled={currentQuestionIndex === (mode === "flashcard" ? flashcards.length : questions.length) - 1}>
-                      <span>Tiến tới</span>
+                      <p className="m-0 fs-6">Lùi lại</p>
+                    </div>
+
+                    <div
+                      className="flex-1 p-3 d-flex flex-column gap-2 justify-content-center align-items-center navigation-btn"
+                      onClick={handleNextCard}
+                      style={{ cursor: currentQuestionIndex === (mode === "flashcard" ? flashcards.length : questions.length) - 1 ? 'not-allowed' : 'pointer' }}
+                    >
                       <i className="fas fa-chevron-right"></i>
-                    </button>
+                      <p className="m-0 fs-6">Tiến tới</p>
+                    </div>
                   </div>
                 </Col>
 
@@ -345,14 +517,15 @@ const Flashcard = () => {
                     <h2 className="fw-medium" style={{ fontSize: "medium" }}>
                       Cài đặt Random
                     </h2>
-                    <Card className="bg-white p-3">
+                    <Card className="bg-white p-3 border">
                       <Row className="align-items-center justify-content-between">
                         <Col xs="auto" className="d-flex align-items-center gap-2">
-                          <span className="text-secondary">Random câu hỏi</span>
+                          <span className="text">Random câu hỏi</span>
                           <Form.Check
-                            type="switch"
+                            type="switch" 
                             id="random-switch"
                             onChange={() => shuffleFlashcards()}
+                           className="mb-4"
                           />
                         </Col>
                       </Row>
@@ -397,36 +570,43 @@ const Flashcard = () => {
                     <h2 className="custom-section-title fw-medium" style={{ fontSize: "medium" }}>
                       Tiến trình
                     </h2>
-                    <div className="custom-card bg-light p-3 rounded-3">
-                      <div className="d-flex justify-content-between mb-2">
+                    <div className="custom-card bg-white border p-3 rounded-3">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
                         <span>Đã học:</span>
-                        <span>0</span>
+                        <div className="d-flex align-items-center gap-2">
+                          <span>{calculateProgress().count}/{mode === "flashcard" ? flashcards.length : questions.length}</span>
+                          <div 
+                            className="border btn btn-sm btn-outline-primary d-flex align-items-center gap-1" 
+                            onClick={resetProgress}
+                            title="Reset tiến trình"
+                          >
+                            <i className="fas fa-redo-alt"></i>
+                            <span className="d-none d-md-inline">Reset</span>
+                          </div>
+                        </div>
                       </div>
                       <div className="progress custom-progress">
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "0%" }} aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div 
+                          className="progress-bar bg-primary" 
+                          role="progressbar" 
+                          style={{ 
+                            width: `${calculateProgress().percentage}%`,
+                            transition: 'width 0.3s ease-in-out' 
+                          }} 
+                          aria-valuenow={calculateProgress().percentage} 
+                          aria-valuemin="0" 
+                          aria-valuemax="100"
+                        >
+                          {/* Đã xóa {calculateProgress().percentage}% */}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Phím tắt */}
                   <div className="custom-shortcut-section">
-                    <h2 className="custom-section-title fw-medium" style={{ fontSize: "medium" }}>
-                      Phím tắt
-                    </h2>
-                    <Card className="bg-light p-3 rounded-3">
-                      <div className="d-flex align-items-center gap-2 mb-2">
-                        <kbd className="custom-keyboard-key px-2 py-1 bg-dark text-white rounded shadow-sm">→</kbd>
-                        <span className="text-secondary">Tiến tới</span>
-                      </div>
-                      <div className="d-flex align-items-center gap-2 mb-2">
-                        <kbd className="custom-keyboard-key px-2 py-1 bg-dark text-white rounded shadow-sm">←</kbd>
-                        <span className="text-secondary">Lùi lại</span>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <kbd className="custom-keyboard-key px-2 py-1 bg-dark text-white rounded shadow-sm">Space</kbd>
-                        <span className="text-secondary">Lật thẻ</span>
-                      </div>
-                    </Card>
+                    <h2 className="custom-section-title">Phím tắt</h2>
+                    <KeyboardShortcuts />
                   </div>
                 </Col>
               </Row>

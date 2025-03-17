@@ -41,7 +41,7 @@ console.log(userInfor);
   };
 
   return (
-    <div className="editprofile-body">
+    <div className="editprofile-body " style={{marginTop:'100px'}}>
       <div className="container py-4 editprofile-container">
         <div className="row g-3">
           {/* Avatar + Thông tin */}

@@ -5,6 +5,7 @@ import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId }
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
+import { toast } from "react-toastify";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 
 const { TextArea } = Input;
@@ -20,8 +21,8 @@ const FlashcardList = () => {
     const [language, setLanguage] = useState("Tiếng Anh-Mỹ");
     const [isPublic, setIsPublic] = useState(false);
     const [description, setDescription] = useState("");
-  const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
-  const isHomePage = location.pathname === "/";
+    const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
+    const isHomePage = location.pathname === "/";
 
 
     const languages = [
@@ -48,20 +49,25 @@ const FlashcardList = () => {
         setDescription("");
     };
     const handleCreate = async () => {
-        setIsModalVisible(false);
-        var res = await createStudySet(listName, language, isPublic, description);
-        if (res.returnCode == 1) {
-            alert("Tạo list từ thành công");
-            fetchFlashcards();
-            gellAllListStudybyUser();
+        try {
+            setIsModalVisible(false);
+            var res = await createStudySet(listName, language, isPublic, description);
+            if (res.returnCode == 1) {
+                toast.success("Tạo list từ thành công");
+                fetchFlashcards();
+                gellAllListStudybyUser();
+            }
+            else {
+                toast.error(`Tạo list từ thất bại: ${res.returnMessage}`);
+            }
+            setListName("");
+            setLanguage("Tiếng Anh-Mỹ");
+            setIsPublic(false);
+            setDescription("");
         }
-        else {
-            alert(`Tạo list từ thất bại: ${res.returnMessage}`);
+        catch (error) {
+            toast.error(`Tạo list từ thất bại: ${error}`);
         }
-        setListName("");
-        setLanguage("Tiếng Anh-Mỹ");
-        setIsPublic(false);
-        setDescription("");
     };
 
     //fetch danh sách từ
@@ -88,15 +94,15 @@ const FlashcardList = () => {
     useEffect(() => {
         window.scroll(0, 0);
         let timer;
-        try{
+        try {
             timer = setTimeout(() => {
-            setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-          }, 2000);
-        fetchFlashcards();
-        gellAllListStudybyUser();
+                setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
+            }, 1000);
+            fetchFlashcards();
+            gellAllListStudybyUser();
         } catch (error) {
 
-        setIsLoading(false);
+            setIsLoading(false);
         }
     }, []);
 
@@ -104,13 +110,13 @@ const FlashcardList = () => {
     return (
 
         <> {!isHomePage && isLoading ? (
-                <div className="loading-container" style={{
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'
-                }}>
-                  <Spin size="large" />
-                </div>
-              ) : (
-            <section className="about_section layout_padding long_section"style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <div className="loading-container" style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'
+            }}>
+                <Spin size="large" />
+            </div>
+        ) : (
+            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
                     <div className="mt-10 mb-5 text-third ml-1">
@@ -141,10 +147,10 @@ const FlashcardList = () => {
                             {studySetByUserID.map((list) => (
                                 <div className="col custom-scroll " key={list.studySet.id} >
                                     <Link to={`/ListFlashCard/${list.studySet.id}`}
-                                       state={{ 
-                                        flashcardCount: list.flashcardCount,
-                                        // Có thể truyền thêm data khác nếu cần
-                                         }}
+                                        state={{
+                                            flashcardCount: list.flashcardCount,
+                                            // Có thể truyền thêm data khác nếu cần
+                                        }}
                                         className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                         <h5 className="fw-bold text-truncate" title={list.studySet.title}>{list.studySet.title}</h5>
                                         <h6 className="d-flex align-items-center">
@@ -233,12 +239,12 @@ const FlashcardList = () => {
                                 value={language}
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
+                                defaultValue="UK"
                             >
-                                <Option value="Tiếng Anh-Mỹ">Tiếng Anh-Mỹ</Option>
-                                <Option value="Tiếng Anh-Anh">Tiếng Anh-Anh</Option>
+                                <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
-                                <Option value="Tiếng Nhật">Tiếng Nhật</Option>
-                                <Option value="Tiếng Trung Quốc">Tiếng Trung Quốc</Option>
+                                <Option value="Japan">Tiếng Nhật</Option>
+                                <Option value="China">Tiếng Trung Quốc</Option>
                             </Select>
                             <TextArea
                                 placeholder="Mô tả"
@@ -266,10 +272,10 @@ const FlashcardList = () => {
                         {studyset.map((data) => (
                             <div className="col" key={data.studySet.id}>
                                 <Link to={`/ListFlashCard/${data.studySet.id}`}
-                                   state={{ 
-                                    flashcardCount: data.flashcardCount,
-                                }}
-                                className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                    state={{
+                                        flashcardCount: data.flashcardCount,
+                                    }}
+                                    className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                     <h5 className="fw-bold text-truncate" >{data.studySet.title}</h5>
                                     <h6 className="d-flex align-items-center">
                                         <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
