@@ -24,6 +24,7 @@ const HomePage = () => {
 
     return (
         <>
+        
          <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
             <div className="hero_area">
                 {/* <!-- slider section --> */}

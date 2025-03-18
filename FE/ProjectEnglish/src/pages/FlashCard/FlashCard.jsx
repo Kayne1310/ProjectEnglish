@@ -240,7 +240,7 @@ const Flashcard = () => {
 
                   {/* Quizlet Container */}
                   {mode !== "flashcard" && (
-                    <div className="quizlet-container bg-white p-0 rounded-3 shadow-sm d-flex flex-column border" style={{ width: "100%", maxWidth: "825px" }}>
+                    <div className="quizlet-container bg-white p-3 rounded-3 shadow-sm d-flex flex-column border" style={{ width: "100%", maxWidth: "825px" }}>
                       {questions.length > 0 ? (
                         <>
                           <div className="quizlet-definition-section">

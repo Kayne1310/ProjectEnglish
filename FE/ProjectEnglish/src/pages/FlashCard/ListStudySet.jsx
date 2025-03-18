@@ -20,16 +20,16 @@ const FlashcardList = () => {
     const [language, setLanguage] = useState("Tiếng Anh-Mỹ");
     const [isPublic, setIsPublic] = useState(false);
     const [description, setDescription] = useState("");
-  const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
-  const isHomePage = location.pathname === "/";
+    const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
+    const isHomePage = location.pathname === "/";
 
 
     const languages = [
-        { id: "all", label: "Tất cả", icon: true },
-        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English" },
-        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese" },
-        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese" },
-        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French" }
+        { id: "all", label: "Tất cả", icon: true, imageCountry: "all" },
+        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png" },
+        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg" },
+        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png" },
+        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png" }
     ];
 
 
@@ -88,29 +88,34 @@ const FlashcardList = () => {
     useEffect(() => {
         window.scroll(0, 0);
         let timer;
-        try{
+        try {
             timer = setTimeout(() => {
-            setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-          }, 2000);
-        fetchFlashcards();
-        gellAllListStudybyUser();
+                setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
+            }, 2000);
+            fetchFlashcards();
+            gellAllListStudybyUser();
         } catch (error) {
 
-        setIsLoading(false);
+            setIsLoading(false);
         }
     }, []);
 
+    const filteredStudySet = studyset.filter(data => {
+        if (activeLang === "all") return true;
+        const selectedLanguage = languages.find(lang => lang.id === activeLang);
+        return data.studySet.imageCountry === selectedLanguage.imageCountry;
+    });
 
     return (
 
         <> {!isHomePage && isLoading ? (
-                <div className="loading-container" style={{
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'
-                }}>
-                  <Spin size="large" />
-                </div>
-              ) : (
-            <section className="about_section layout_padding long_section"style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <div className="loading-container" style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'
+            }}>
+                <Spin size="large" />
+            </div>
+        ) : (
+            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
                     <div className="mt-10 mb-5 text-third ml-1">
@@ -141,10 +146,10 @@ const FlashcardList = () => {
                             {studySetByUserID.map((list) => (
                                 <div className="col custom-scroll " key={list.studySet.id} >
                                     <Link to={`/ListFlashCard/${list.studySet.id}`}
-                                       state={{ 
-                                        flashcardCount: list.flashcardCount,
-                                        // Có thể truyền thêm data khác nếu cần
-                                         }}
+                                        state={{
+                                            flashcardCount: list.flashcardCount,
+                                            // Có thể truyền thêm data khác nếu cần
+                                        }}
                                         className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                         <h5 className="fw-bold text-truncate" title={list.studySet.title}>{list.studySet.title}</h5>
                                         <h6 className="d-flex align-items-center">
@@ -234,11 +239,10 @@ const FlashcardList = () => {
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
                             >
-                                <Option value="Tiếng Anh-Mỹ">Tiếng Anh-Mỹ</Option>
-                                <Option value="Tiếng Anh-Anh">Tiếng Anh-Anh</Option>
+                                <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
-                                <Option value="Tiếng Nhật">Tiếng Nhật</Option>
-                                <Option value="Tiếng Trung Quốc">Tiếng Trung Quốc</Option>
+                                <Option value="Japan">Tiếng Nhật</Option>
+                                <Option value="China">Tiếng Trung Quốc</Option>
                             </Select>
                             <TextArea
                                 placeholder="Mô tả"
@@ -263,13 +267,13 @@ const FlashcardList = () => {
 
                     <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll"
                         style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflowY: isFlashcardPage ? "visible" : "scroll" }}>
-                        {studyset.map((data) => (
+                        {filteredStudySet.map((data) => (
                             <div className="col" key={data.studySet.id}>
                                 <Link to={`/ListFlashCard/${data.studySet.id}`}
-                                   state={{ 
-                                    flashcardCount: data.flashcardCount,
-                                }}
-                                className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                    state={{
+                                        flashcardCount: data.flashcardCount,
+                                    }}
+                                    className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                     <h5 className="fw-bold text-truncate" >{data.studySet.title}</h5>
                                     <h6 className="d-flex align-items-center">
                                         <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">

@@ -66,7 +66,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/listquizz",
-        element: <ListQuizz />,
+        element:
+          <PrivateRoute>
+            <ListQuizz />
+          </PrivateRoute>,
         children: [{
           path: "detailquiz/:quizId", element: <DetailQuizz />
 
@@ -75,7 +78,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/listdocument",
-        element: <ListDocument />
+        element: <ListDocument />,
       },
       {
         path: "/listdocument/detaildocument/:id",
@@ -96,7 +99,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/ListFlashCard/:id",
-        element: <Flashcardcanh/>
+        element: <Flashcardcanh />
       },
       {
         path: "/listdocument/detaildocument/flashcard/:quizId",
