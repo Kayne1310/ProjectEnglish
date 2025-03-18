@@ -117,9 +117,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return (int)result.DeletedCount;
         }
 
-
-
-
         //get all Count Quetion in Quiz
         public async Task<List<BsonDocument>> getCountQuestionbyQuiz()
         {

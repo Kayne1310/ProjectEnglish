@@ -15,5 +15,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<History> addHistory(History history);
         Task<int> updateHistory(History history);
         Task<int> deleteHistory(deleteHistoryVM history);
+        Task InsertAsync(History history);
     }
 }

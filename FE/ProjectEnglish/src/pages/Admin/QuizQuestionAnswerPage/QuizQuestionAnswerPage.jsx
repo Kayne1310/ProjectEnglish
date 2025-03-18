@@ -108,24 +108,44 @@ const QuizQuestionAnswerPage = () => {
     }));
   };
 
+  // Thêm state để theo dõi trạng thái loading
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async () => {
-    const result = await createQuizQuestionWithAnswers(quizData);
-    if (result && result.returnCode === 1) {
-      alert("Quiz created successfully!");
-      setShowCreateModal(false);
-      setQuizData({
-        description: "",
-        quiz_id: "",
-        image: null,
-        answers: [
-          { description: "", correct_answer: false },
-          { description: "", correct_answer: false },
-          { description: "", correct_answer: false },
-          { description: "", correct_answer: false },
-        ],
-      });
-    } else {
-      alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
+    // Nếu đang submit thì không cho thực hiện tiếp
+    if (isSubmitting) return;
+
+    try {
+      // Bật trạng thái loading
+      setIsSubmitting(true);
+
+      const result = await createQuizQuestionWithAnswers(quizData);
+      if (result && result.returnCode === 1) {
+        alert("Quiz created successfully!");
+        setShowCreateModal(false);
+        setQuizData({
+          description: "",
+          quiz_id: "",
+          image: null,
+          answers: [
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+          ],
+        });
+        if (selectedQuizId) {
+          const updatedQuestions = await getQuestionsByQuizId(selectedQuizId);
+          setQuestions(updatedQuestions || []);
+        }
+      } else {
+        alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
+    } finally {
+      // Tắt trạng thái loading dù thành công hay thất bại
+      setIsSubmitting(false);
     }
   };
 
@@ -327,8 +347,8 @@ const QuizQuestionAnswerPage = () => {
             <Button variant="light" onClick={() => setShowCreateModal(false)}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleSubmit}>
-              Submit
+            <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create Quiz"}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -468,9 +488,7 @@ const QuizQuestionAnswerPage = () => {
                     return;
                   }
                   await deleteQuizQuestionWithAnswers(selectedQuestion.question_id);
-                  alert("Question deleted successfully!");
                   setShowDeleteModal(false);
-
                   // xử lý load UI khi xóa question bằng cách gọi lại id quiz để lấy lại danh sách câu hỏi mới nhất
                   if (selectedQuizId) {
                     const updatedQuestions = await getQuestionsByQuizId(selectedQuizId);

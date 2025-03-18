@@ -20,6 +20,9 @@ namespace ProjectFall2025.Application.Services
         }
         public async Task<string> UploadImageAsync(IFormFile file, string folder = "default")
         {
+            try
+            {
+
             // kiểm tra file
             if (file == null || file.Length == 0) throw new Exception("File is not provided!");
 
@@ -44,6 +47,11 @@ namespace ProjectFall2025.Application.Services
 
             // trả về đường dẫn file
             return uploadResult.SecureUrl.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -83,5 +83,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             return (int)delete.DeletedCount;
         }
+
+        public async Task InsertManyAsync(List<QuizUserAnswer> userAnswers)
+        {
+            var db = mongoDbContext.GetCollectionQuizUserAnswer();
+
+            await db.InsertManyAsync(userAnswers);
+        }
     }
 }

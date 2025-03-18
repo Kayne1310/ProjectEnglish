@@ -1,0 +1,245 @@
+/* body {
+    background-color: #c8d0e4;
+    font-family: Arial, sans-serif;
+} */
+
+.flashcardcanh-container-fluid {
+    padding: 20px 50px;
+}
+
+.flashcardcanh-header-title {
+    color: yellowgreen;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.flashcardcanh-flag-img {
+    width: 30px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.flashcardcanh-creator {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.flashcardcanh-mt-3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.flashcardcanh-btn-practice {
+    background-color: #007bff;
+    color: white;
+    border: 2px solid white;
+    padding: 12px 40px;
+    margin-right: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    width: auto;
+    flex: 1; /* Chia đôi chiều rộng */
+    text-align: center; /* Canh giữa text */
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.flashcardcanh-btn-practice:hover {
+    background-color: green;
+    border-color: #0056b3;
+}
+
+.flashcardcanh-stats-box {
+
+    margin-top: 20px;
+    box-shadow: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.flashcardcanh-stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 20px 10px;  /* Increased padding to make boxes taller */
+    border-radius: 12px;  /* More rounded corners */
+    margin: 0;
+    font-size: 14px;
+    color: white;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid white;
+    transition: transform 0.2s;
+    height: 100px;  /* Fixed height for taller boxes */
+    border-radius: 10px !important;
+}
+
+.flashcardcanh-stat-item:hover {
+    transform: scale(1.05);
+}
+
+.flashcardcanh-row {
+    display: flex;
+    justify-content: space-between; /* Phân bố đều các phần tử */
+    gap: 10px; /* Khoảng cách giữa các stat-item */
+    flex-wrap: nowrap; /* Ngăn xuống dòng, giữ trên 1 hàng */
+    padding: 0; /* Loại bỏ padding thừa */
+}
+
+.flashcardcanh-stat-item {
+    flex: 1; /* Mỗi stat-item chiếm đều không gian */
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0; /* Loại bỏ margin để tiết kiệm không gian */
+    font-size: 14px;
+    color: white;
+    min-width: 0; /* Cho phép thu nhỏ nếu cần */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid white;
+    transition: transform 0.2s;
+}
+
+.flashcardcanh-stat-item:hover {
+    transform: scale(1.05);
+}
+
+.flashcardcanh-learned { background-color: #28a745; }
+.flashcardcanh-new { background-color: #007bff; }
+.flashcardcanh-review { background-color: #ffc107; }
+.flashcardcanh-mastered { background-color: #6f42c1; }
+
+.flashcardcanh-avatar {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+.flashcardcanh-btn-back {
+    background-color: #e0f3ff;
+    border: 1px solid #b3d7ff;
+    color: #007bff;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 4px;
+}
+
+.flashcardcanh-btn-back:hover {
+    background-color: #cce5ff;
+    border-color: #b3d7ff;
+    color: #0056b3;
+}
+.flashcardcanh-columns {
+    display: flex;
+    justify-content: space-between; /* Tạo khoảng cách giữa 2 cột */
+    gap: 20px; /* Khoảng cách giữa các cột */
+}
+
+.flashcardcanh-container {
+    background-color: #f0f4f8;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    max-width: 600px;
+    flex: 1;
+    max-width: 50%;
+    position: relative;
+    height: 600px;
+ 
+}
+
+.flashcardcanh-note {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  
+}
+
+
+.flashcardcanh-flashcard-wrapper {
+    display: flex;
+    justify-content: center; /* Căn giữa các flashcard */
+    gap: 20px; /* Khoảng cách giữa các flashcard */
+    padding: 0 50px;
+    flex-wrap: wrap; /* Cho phép xuống dòng nếu cần */
+    margin-bottom: 50px; /* Thêm khoảng cách dưới cùng */
+}
+
+@media (min-width: 768px) {
+    .flashcardcanh-flashcard-wrapper {
+        justify-content: center; /* Căn giữa thay vì space-between */
+    }
+    .flashcardcanh-container {
+        width: 50%; /* Điều chỉnh để vừa hai cột */
+    }
+}
+
+.flashcardcanh-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}
+
+.flashcardcanh-title {
+    color: #007bff;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.flashcardcanh-audio-icon {
+    font-size: 1em;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.flashcardcanh-subtitle {
+    color: #333;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.flashcardcanh-definition {
+    color: #333;
+    font-size: 1em;
+    margin: 0; 
+}
+
+.flashcardcanh-time {
+    font-size: 0.8em;
+    color: #6c757d;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.flashcardcanh-examples-container {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.flashcardcanh-examples {
+    padding: 5px 0;
+}

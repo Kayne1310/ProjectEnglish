@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
+using ProjectFall2025.Domain.ViewModel.ViewModel_SubmitQuiz;
+using System.Security.Claims;
+using AuthorizeAttribute = ProjectEnglishFall2025.Filter.AuthorizeAttribute;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -74,7 +78,8 @@ namespace ProjectEnglishFall2025.Controllers
             {
                 var updateQuizs = await quizService.UpdateQuiz(quiz);
                 return Ok(updateQuizs);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -87,7 +92,8 @@ namespace ProjectEnglishFall2025.Controllers
             {
                 var deleteQuizs = await quizService.DeleteQuiz(quiz);
                 return Ok(deleteQuizs);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -101,21 +107,21 @@ namespace ProjectEnglishFall2025.Controllers
                 var res = await quizService.getCountQuestionInQuiz();
                 return Ok(res);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetQuestionByQuizId/{questionId}")]   
-        public async Task<ActionResult> GetQuestionByQuizId([FromRoute]string questionId)
+        [HttpGet("GetQuestionByQuizId/{quizId}")]
+        public async Task<ActionResult> GetQuestionByQuizId([FromRoute] string quizId)
         {
             try
             {
-                var res=await quizService.GetQuestionsAndAnswersByQuizIdAsync(questionId);
+                var res = await quizService.GetQuestionsAndAnswersByQuizIdAsync(quizId);
                 return Ok(res);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -133,6 +139,31 @@ namespace ProjectEnglishFall2025.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("submit")]
+        [Authorize("User")]
+        public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizRequest request)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.PrimarySid);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("User ID not found in token.");
+                }
+
+                var response = await quizService.SubmitQuizAsync(request, userId);
+                return Ok(response);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest($"Invalid request: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"An error occurred: {e.Message}");
             }
         }
     }

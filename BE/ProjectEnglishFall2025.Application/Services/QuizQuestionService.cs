@@ -79,6 +79,7 @@ namespace ProjectFall2025.Application.Services
                 };
 
                 var validate = await validatorQuestion.ValidateAsync(data);
+
                 if (!validate.IsValid)
                 {
                     var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();

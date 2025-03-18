@@ -2,13 +2,15 @@
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Cấu hình mặc định để gửi cookie
+axios.defaults.withCredentials = true;
 
 const login = async (email, password) => {
     try {
         const response = await axios.post(`${API_URL}/Account`, {
             email: email,
             password: password
-        });
+        }, { withCredentials: true });
 
 
         console.log("Full API Response:", response); // Log toàn bộ response
@@ -17,7 +19,7 @@ const login = async (email, password) => {
             console.error("Error: response.data is undefined!");
             return null;
         }
-        return response.data; // Trả về `response.data` thay vì `response`
+        return response.data; 
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
         return { error: error.response?.data || error.message };
@@ -27,15 +29,20 @@ const login = async (email, password) => {
 
 const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
-            withCredentials: true,
-        });
-        return response.data;
+      const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
+        withCredentials: true,
+      });
+      console.log("Full Logout Response:", response);
+      if (!response || !response.data) {
+        console.error("Error: response.data is undefined!");
+        return null;
+      }
+      return response.data;
     } catch (error) {
-        throw error;
+      console.error("Logout failed:", error.response?.data || error.message);
+      return { error: error.response?.data || error.message };
     }
-};
-
+  };
 
 const register = async (username, email, password) => {
     try {
@@ -187,7 +194,6 @@ const resetPassword = async (email, token, newpassword) => {
 
 
 const getUserInfor = async () => {
-
     try {
         const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
         return response.data;

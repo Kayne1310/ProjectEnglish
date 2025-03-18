@@ -37,7 +37,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var objectId = ObjectId.Parse(history.history_id);
 
             var filter = Builders<History>.Filter.Eq(x => x.history_id, objectId);
-            
+
             var res = await db.Find(filter).FirstOrDefaultAsync();
 
             return res;
@@ -49,7 +49,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             await add.InsertOneAsync(history);
 
-            return history; 
+            return history;
         }
 
         public async Task<int> updateHistory(History history)
@@ -80,6 +80,13 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var res = await delete.DeleteOneAsync(filter);
 
             return (int)res.DeletedCount;
+        }
+
+        public async Task InsertAsync(History history)
+        {
+            var db = dbContext.GetCollectionHistory();
+
+            await db.InsertOneAsync(history);
         }
     }
 }

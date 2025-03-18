@@ -112,6 +112,11 @@ const QuizPage = () => {
         setNewQuiz({ name: "", description: "", countryName: "", difficulty: "", image: null }); // Reset form
         setImagePreview(null); // Reset preview
         setError(null); // Xóa lỗi
+        alert("Create Quiz Successful");
+
+        // Cập nhật danh sách quiz sau khi create
+        const updatedQuizList = await getAllQuiz();
+        setQuizzes(updatedQuizList || []);
       } else {
         setError("Failed to create quiz. Please try again.");
       }
@@ -166,6 +171,11 @@ const QuizPage = () => {
         setImagePreview(null); // Reset preview
         setError(null); // Xóa lỗi
         console.log("check res: ", response)
+        alert("Update quiz successful");
+        
+        // Cập nhật danh sách quiz sau khi create
+        const updatedQuizList = await getAllQuiz();
+        setQuizzes(updatedQuizList || []);
       } else {
         setError("Failed to update quiz. Please try again.");
       }

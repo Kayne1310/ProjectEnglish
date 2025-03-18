@@ -5,6 +5,7 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizUserAnswer;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
+using ProjectFall2025.Infrastructure.Repositories.Repo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace ProjectFall2025.Application.Services
         private readonly IQuizUserAnswerRepository quizUserAnswerRepository;
         private readonly IMapper mapper;
         private readonly IValidator<QuizUserAnswer> validator;
+        private readonly IQuizAnswerRepository quizAnswerRepository;
 
-        public QuizUserAnswerService(IQuizUserAnswerRepository quizUserAnswerRepository, IMapper mapper, IValidator<QuizUserAnswer> validator)
+        public QuizUserAnswerService(IQuizUserAnswerRepository quizUserAnswerRepository, IMapper mapper, IValidator<QuizUserAnswer> validator, IQuizAnswerRepository quizAnswerRepository)
         {
             this.quizUserAnswerRepository = quizUserAnswerRepository;
             this.mapper = mapper;
             this.validator = validator;
+            this.quizAnswerRepository = quizAnswerRepository;
         }
 
         public async Task<List<QuizUserAnswer>> getAllQuizUserAnswer()
@@ -55,7 +58,7 @@ namespace ProjectFall2025.Application.Services
             {
                 var data = new QuizUserAnswer
                 {
-                    user_answers = quizUserAnswer.user_answers,
+                    user_answers = ObjectId.Parse(quizUserAnswer.user_answers),
                     createAt = DateTime.Now,
                     UserID = ObjectId.Parse(quizUserAnswer.UserID),
                     quiz_id = ObjectId.Parse(quizUserAnswer.quiz_id),
@@ -95,6 +98,7 @@ namespace ProjectFall2025.Application.Services
                 // Kiểm tra nếu quizUserAnswer_id không hợp lệ
                 if (string.IsNullOrEmpty(quizUserAnswer.quizUserAnswer_id))
                 {
+
                     return new ReturnData
                     {
                         ReturnCode = -1,
@@ -106,7 +110,7 @@ namespace ProjectFall2025.Application.Services
                 var updateData = new QuizUserAnswer
                 {
                     quizUserAnswer_id = ObjectId.Parse(quizUserAnswer.quizUserAnswer_id),
-                    user_answers = quizUserAnswer.user_answers,
+                    user_answers = ObjectId.Parse(quizUserAnswer.user_answers),
                     updateAt = DateTime.Now,
                     UserID = ObjectId.Parse(quizUserAnswer.UserID),
                     //quiz_id = ObjectId.Parse(quizUserAnswer.quiz_id),
@@ -154,6 +158,38 @@ namespace ProjectFall2025.Application.Services
             {
                 throw new Exception(ex.Message);
             }
+
+
         }
+        //check  exam user coorect answer
+        //public async Task<ResponsExamQuizAnswerByUserVM> checkExamUserCorrectAnswer(ExamQuizAnswerByUserVM exam)
+        //{
+        //    //lay question va dap an dung  dua vao quizid
+        //    var questionAndAnswerCorrect = await quizAnswerRepository.GetCorrectQuizAnswersAsync(exam.quiz_id);
+        //    if (questionAndAnswerCorrect == null)
+        //    {
+        //        return new ResponsExamQuizAnswerByUserVM
+        //        {
+        //            returnData = new ReturnData { ReturnCode = -1, ReturnMessage = "error because quizid not found" }
+        //        };
+        //    }
+        //    //check tiep user dap an co dung voi dap an he thong ko
+        //    questionAndAnswerCorrect.ForEach(answer =>
+        //    {
+        //        if (answer.quizAnswer_id == exam.quiz_id)
+        //        {
+        //            return new ResponsExamQuizAnswerByUserVM
+        //            {
+        //                returnData= new ReturnData { ReturnCode = 1,ReturnMessage="Successful"},
+        //                listResponsExamQuizAnswerByUserVMs=new List<listResponsExamQuizAnswerByUserVM> { }
+                        
+                        
+        //            };
+        //        }
+        //    });
+        //    return new ResponsExamQuizAnswerByUserVM { };
+
+        //}
+
     }
 }

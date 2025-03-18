@@ -118,7 +118,12 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IQuizUserAnswerService, QuizUserAnswerService>();
             builder.Services.AddScoped<IAIAnswerService, AIAnswerService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IStudySetService, StudySetService>();
+            builder.Services.AddScoped<IFlashCardService, FlashCardService>();
+
+            //UOK
             builder.Services.AddScoped<IUnitofWork, UnitofWork>();
+
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -132,6 +137,8 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
             builder.Services.AddScoped<IQuizUserAnswerRepository, QuizUserAnswerRepository>();
             builder.Services.AddScoped<IAIAnswerRepository, AIAnswerRepository>();
+            builder.Services.AddScoped<IStudiSetRepository, StudiSetRepository>();
+            builder.Services.AddScoped<IFlashCardRepository, FlashCardRepository>();
 
             //res validator
             builder.Services.AddFluentValidationAutoValidation();

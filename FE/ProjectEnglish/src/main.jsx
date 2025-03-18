@@ -28,8 +28,9 @@ import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
 import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
 import ListDocument from './pages/Document/ListDocument.jsx';
 import DocumentItem from './pages/Document/documentItem.jsx';
-import FlashcardList from './pages/FlashCard/ListFlashCard.jsx';
 import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
+import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
+import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 
 
 const router = createBrowserRouter([
@@ -69,7 +70,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/flashcard/:quizId",
-        element: <Flashcard />
+        element: <FlashcardList />
+      },
+      {
+        path: "/ListFlashCard/:id",
+        element: <Flashcardcanh/>
       },
       {
         path: "/listdocument/detaildocument/flashcard/:quizId",

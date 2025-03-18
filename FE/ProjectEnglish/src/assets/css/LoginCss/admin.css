@@ -4,99 +4,52 @@
   height: 100vh;
   margin: 0;
   background: linear-gradient(to bottom right, #e6e6fa, #e0f6ff);
-  display: grid;
-  place-items: center;
-}
-
-* {
-  box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
 }
 
 main {
-  background: #ffffff;
-  display: grid;
-  grid-template-columns: 45% 55%;
-  place-items: center;
   width: 700px;
+  max-width: 90%;
+  background: #fff;
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: "Quicksand";
-}
-
-.left-side {
-  height: 100%;
-  width: 100%;
-  position: relative;
-  border-radius: 20px 0 0 20px;
+  overflow: hidden;
 }
 
 .left-side img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  border-radius: 20px 0 0 20px;
 }
 
-.right-side {
-  padding: 50px;
-}
-
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 20px;
-  border: 2px solid #ccc;
-  outline: 0;
-  border-radius: 5px;
-  background-color: transparent;
-  font-size: 0.85rem;
+.login-title {
+  font-size: 2rem;
   font-weight: 600;
-  transition: all 0.5s;
+  color: #333;
 }
 
-input:focus {
-  border: 2px solid #000;
-}
-
-label {
-  font-weight: 600;
+.login-subtitle {
   font-size: 0.9rem;
-  display: block;
-}
-
-.show-password-container {
-  margin: 8px 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.show-password-container input[type="checkbox"] {
-  margin: 0;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.5;
 }
 
 .show-password-label {
   font-size: 0.9rem;
   font-weight: 500;
-  margin: 0;
   cursor: pointer;
+  margin-bottom: 0;
 }
 
 .login-btn {
-  width: 100%;
-  background-color: #000000;
-  border: 2px solid #6b7280;
   font-size: 0.9rem;
   font-weight: 600;
-  padding: 8px 24px;
-  margin: 0;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.5s;
+  padding: 10px 20px;
+  background-color: #000;
+  border: none;
+  color: #fff;
+  width: 250px;
 }
 
 .login-btn:hover {
@@ -104,101 +57,87 @@ label {
   color: #eee;
 }
 
-.logo-container {
+/* Bố cục tùy chỉnh cho form group */
+.form-group-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Nhãn căn trái */
+  margin-bottom: 1rem;
+}
+
+.form-group-custom label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.custom-input {
+  max-width: 250px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  font-size: 0.9rem;
+  margin-left: auto; /* Đẩy input sang phải để căn giữa */
+  margin-right: auto; /* Đẩy input sang phải để căn giữa */
+}
+
+/* Checkbox wrapper */
+.checkbox-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
 }
 
-img {
-  height: auto;
-  object-fit: contain;
-  margin: 0 auto;
-}
-
-#logo{
-    max-width: 150px;
-}
-
-#bear{
-    max-width: 350px;
-}
-
-.login-title {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.login-subtitle {
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: #666;
-  text-align: center;
-  margin-bottom: 30px;
-  line-height: 1.5;
+.checkbox-wrapper label {
+  margin-left: 0.5rem; /* Khoảng cách giữa checkbox và nhãn */
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   main {
-    grid-template-columns: 100%;
     width: 90%;
     max-width: 400px;
   }
-  .left-side {
-    display: none;
-  }
-  .right-side {
-    padding: 30px;
-  }
-  .logo-container {
-    margin-bottom: 15px;
-  }
-  img {
-    max-width: 150px;
-  }
+
   .login-title {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
   }
+
   .login-subtitle {
     font-size: 0.85rem;
+  }
+
+  .logo-container img {
+    max-width: 80px;
+  }
+
+  .custom-input,
+  .login-btn {
+    max-width: 200px;
   }
 }
 
 @media (max-width: 480px) {
-  .right-side {
-    padding: 20px;
-  }
-  .logo-container {
-    margin-bottom: 10px;
-  }
-  img {
-    max-width: 90px;
-  }
   .login-title {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
+
   .login-subtitle {
     font-size: 0.8rem;
-    margin-bottom: 20px;
   }
-  input[type="text"],
-  input[type="password"] {
-    padding: 10px 15px;
-    font-size: 0.8rem;
+
+  .logo-container img {
+    max-width: 60px;
   }
-  .login-btn {
-    padding: 6px 20px;
-    font-size: 0.85rem;
-  }
-  label {
-    font-size: 0.85rem;
-  }
+
   .show-password-label {
     font-size: 0.85rem;
+  }
+
+  .custom-input,
+  .login-btn {
+    max-width: 150px;
   }
 }

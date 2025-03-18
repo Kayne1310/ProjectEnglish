@@ -12,6 +12,7 @@ using ProjectFall2025.Common.ImgCountry;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
+using ProjectFall2025.Domain.ViewModel.ViewModel_SubmitQuiz;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
 
@@ -27,10 +28,23 @@ namespace ProjectFall2025.Application.Services
         private readonly IUnitofWork _unitOfWork;
         private readonly IQuizQuestionRepository quizQuestionRepository;
         private readonly IQuizAnswerRepository quizAnswerRepository;
+        private readonly IQuizUserAnswerRepository userAnswerRepository;
+        private readonly IHistoryRepository historyRepository;
         private readonly IValidator<QuizQuestion> validatorQuestion;
         private readonly IValidator<QuizAnswer> validatorAnswer;
 
-        public QuizService(IQuizRepository quizRepository, IMapper mapper, ICloudinaryService cloudinary, IUnitofWork unitOfWork, IQuizQuestionRepository quizQuestionRepository, IQuizAnswerRepository quizAnswerRepository, IValidator<QuizQuestion> validatorQuestion, IValidator<QuizAnswer> validatorAnswer, IValidator<Quiz> validator)
+        public QuizService(
+            IQuizRepository quizRepository,
+            IMapper mapper,
+            ICloudinaryService cloudinary,
+            IUnitofWork unitOfWork,
+            IQuizQuestionRepository quizQuestionRepository,
+            IQuizAnswerRepository quizAnswerRepository,
+            IQuizUserAnswerRepository userAnswerRepository,
+            IHistoryRepository historyRepository,
+            IValidator<QuizQuestion> validatorQuestion,
+            IValidator<QuizAnswer> validatorAnswer,
+            IValidator<Quiz> validator)
         {
             this.quizRepository = quizRepository;
             this.mapper = mapper;
@@ -38,6 +52,8 @@ namespace ProjectFall2025.Application.Services
             this._unitOfWork = unitOfWork;
             this.quizQuestionRepository = quizQuestionRepository;
             this.quizAnswerRepository = quizAnswerRepository;
+            this.userAnswerRepository = userAnswerRepository;
+            this.historyRepository = historyRepository;
             this.validator = validator;
             this.validatorQuestion = validatorQuestion;
             this.validatorAnswer = validatorAnswer;
@@ -53,7 +69,7 @@ namespace ProjectFall2025.Application.Services
                 foreach (var item in getAll)
                 {
                     //map do to dto
-                    var dto=mapper.Map<QuizDto>(item);
+                    var dto = mapper.Map<QuizDto>(item);
                     list.Add(dto);
                 }
                 return list;
@@ -367,10 +383,96 @@ namespace ProjectFall2025.Application.Services
                      }).ToList()
                      : new List<AnswerVM>()
              })).ToList();
-
-
-
         }
 
+        public async Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId)
+        {
+            if (request == null)
+                throw new ArgumentException("Request body is null.");
+            if (string.IsNullOrEmpty(request.QuizId))
+                throw new ArgumentException("QuizId is null or empty.");
+
+            var quizQuestions = await GetQuestionsAndAnswersByQuizIdAsync(request.QuizId);
+            if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
+
+            var response = new SubmitQuizResponse
+            {
+                QuizId = request.QuizId,
+                QuizTitle = quizQuestions.FirstOrDefault()?.QuizInforVM?.name ?? "No tital available",
+                QuizDescription = quizQuestions.FirstOrDefault()?.QuizInforVM?.description ?? "No description available",
+                CountTotal = quizQuestions.Count,
+                CountCorrect = 0
+            };
+
+            if (request.Answers == null || !request.Answers.Any())
+            {
+                return response;
+            }
+
+            var userAnswersToSave = new List<QuizUserAnswer>();
+
+            foreach (var userAnswer in request.Answers)
+            {
+                if (userAnswer == null || string.IsNullOrEmpty(userAnswer.QuestionId) || string.IsNullOrEmpty(userAnswer.UserAnswerId))
+                    continue;
+
+                var question = quizQuestions.FirstOrDefault(q => q.question_id == userAnswer.QuestionId);
+                if (question == null) continue;
+
+                // Lấy ID của đáp án đúng
+                var correctAnswerId = question.answers.FirstOrDefault(a => a.correct_answer)?.idAnswered;
+                if (correctAnswerId == null) continue;
+
+                // Lấy nae của đáp án người dùng chọn
+                var userAnswerDescription = question.answers.FirstOrDefault(a => a.idAnswered == userAnswer.UserAnswerId)?.description ?? "Unknown";
+
+                // So sánh ID để xác định isCorrect
+                bool isCorrect = userAnswer.UserAnswerId == correctAnswerId;
+                if (isCorrect) response.CountCorrect++;
+
+                response.QuizData.Add(new QuizResult
+                {
+                    QuestionId = userAnswer.QuestionId,
+                    QuestionDescription = question.description,
+                    IsCorrect = isCorrect,
+                    UserAnswerId = userAnswer.UserAnswerId,
+                    UserAnswerDescription = userAnswerDescription,
+                    SystemAnswers = question.answers.Select(a => new AnswerDto // Trả về tất cả đáp án
+                    {
+                        Id = a.idAnswered,
+                        Description = a.description,
+                        CorrectAnswer = a.correct_answer
+                    }).ToList()
+                });
+
+                // Thêm vào bảng QuizUserAnswer
+                userAnswersToSave.Add(new QuizUserAnswer
+                {
+                    quizUserAnswer_id = ObjectId.GenerateNewId(),
+                    user_answers = new ObjectId(userAnswer.UserAnswerId), // Lưu ID đáp án người dùng chọn
+                    createAt = DateTime.UtcNow,
+                    updateAt = DateTime.UtcNow,
+                    UserID = new ObjectId(userId),
+                    quiz_id = new ObjectId(request.QuizId),
+                    question_id = new ObjectId(userAnswer.QuestionId)
+                });
+            }
+
+            var history = new History
+            {
+                history_id = ObjectId.GenerateNewId(),
+                total_questions = response.CountTotal.ToString(),
+                total_corrects = response.CountCorrect.ToString(),
+                createAt = DateTime.UtcNow,
+                updateAt = DateTime.UtcNow,
+                UserID = new ObjectId(userId),
+                quiz_id = new ObjectId(request.QuizId)
+            };
+
+            await userAnswerRepository.InsertManyAsync(userAnswersToSave);
+            await historyRepository.InsertAsync(history);
+
+            return response;
+        }
     }
 }
