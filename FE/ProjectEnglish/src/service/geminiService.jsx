@@ -21,3 +21,31 @@ export const generateContentWithGemini = async (prompt) => {
         throw error;
     }
 };
+
+
+export const speak = (text, voiceType = "UK English Male") => {
+    return new Promise((resolve, reject) => {
+        try {
+            if (!responsiveVoice) {
+                throw new Error("ResponsiveVoice not loaded");
+            }
+
+            responsiveVoice.speak(text, voiceType, {
+                pitch: 1,
+                rate: 0.9,
+                volume: 1,
+                onend: () => resolve(),
+                onerror: (error) => reject(error)
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+// Hàm dừng phát âm
+export const stopSpeak = () => {
+    if (responsiveVoice) {
+        responsiveVoice.cancel();
+    }
+};

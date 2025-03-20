@@ -30,7 +30,7 @@ namespace ProjectEnglishFall2025.Controllers
         {
             try
             {
-                var res = await chatRepository.GetRecentMessages(25);
+                var res = await chatRepository.GetRecentMessages(50);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -45,7 +45,7 @@ namespace ProjectEnglishFall2025.Controllers
         {
             try
             {
-                var res = await chatRepository.GetOlderMessages(lastMessageTime, 25);
+                var res = await chatRepository.GetOlderMessages(lastMessageTime, 50);
                 return Ok(res);
             }
             catch (Exception ex)

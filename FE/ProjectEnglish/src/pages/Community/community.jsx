@@ -5,6 +5,7 @@ import { calculateDaysAgo } from '../../helpers/DateHepler';
 import '../../assets/css/Community/comunity.css';
 import { useNavigate } from 'react-router-dom';
 import AuthDialog from '../LoginAndRes/AuthDialog';
+import EmojiPicker from 'emoji-picker-react';
 
 const Community = () => {
     const [messages, setMessages] = useState([]);
@@ -16,6 +17,8 @@ const Community = () => {
     const [hasMore, setHasMore] = useState(true);
     const [showAuthDialog, setShowAuthDialog] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const emojiPickerRef = useRef(null);
 
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     // Lấy tin nhắn ban đầu
@@ -69,6 +72,12 @@ const Community = () => {
         }
     }, [messages, isLoading, hasMore]);
 
+
+    // Sửa lại hàm xử lý khi chọn emoji
+    const onEmojiClick = (emojiData) => {
+        setMessage(prevMessage => prevMessage + emojiData.emoji);
+        setShowEmojiPicker(false);
+    };
 
     useEffect(() => {
         getInitialMessages();
@@ -168,6 +177,27 @@ const Community = () => {
             }
         };
     }, [navigate]);
+
+    // Thêm useEffect để xử lý click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Kiểm tra nếu click ra ngoài emoji picker và không phải là nút emoji
+            if (emojiPickerRef.current && 
+                !emojiPickerRef.current.contains(event.target) && 
+                !event.target.closest('.emoji-button')) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        // Thêm event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     // Thêm event listener cho scroll
 
     // Hàm scroll mượt
@@ -218,9 +248,9 @@ const Community = () => {
     };
 
     return (
-        <>
-            <div className="container">
-                <div className="row">
+     <>
+     <div className="container">
+        <div className="row">
                     <div className="text-third ml-1 " style={{ marginTop: "100px" }}>
                         <h1 className="text-3xl font-bold text-primary">Community</h1>
                         <p>
@@ -230,7 +260,7 @@ const Community = () => {
                     </div>
                     <div className="col-md-9">
                         <div className="row mb-3 mb-md-5 mt-3 mt-md-5">
-                            <div className="col-12">
+            <div className="col-12">
                                 <div className="mx-auto " style={{ maxWidth: "700px" }}>
                                     <div className="border border-primary rounded p-2 p-md-4">
                                         <div
@@ -322,23 +352,44 @@ const Community = () => {
                                                         onChange={(e) => setMessage(e.target.value)}
                                                         value={message}
                                                     />
-                                                    <button className="btn btn-primary  " >
-                                                        <i class="bi bi-emoji-smile ml-1 mr-1"></i>
+                                                    <button 
+                                                        className="btn btn-primary emoji-button"
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setShowEmojiPicker(!showEmojiPicker);
+                                                        }}
+                                                    >
+                                                        <i className="bi bi-emoji-smile ml-1 mr-1"></i>
                                                     </button>
                                                     <button type="submit" className="btn btn-primary">
-                                                        <i class="bi bi-send ml-1 mr-1"></i>
+                                                        <i className="bi bi-send ml-1 mr-1"></i>
                                                     </button>
                                                 </div>
                                             </form>
+                                            {showEmojiPicker && (
+                                                    <div 
+                                                        ref={emojiPickerRef}
+                                                        style={{ 
+                                                            position: 'absolute', 
+                                                            bottom: '60px', 
+                                                            right: '20px',
+                                                            zIndex: 1000 
+                                                        }}
+                                                    >
+                                                        <EmojiPicker onEmojiClick={onEmojiClick} />
+                                                    </div>
+                                            )}
+
 
                                         </div>
 
 
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+        </div>
+     </div>
 
                  
                     <div className="col-md-3 col-12 mb-5">

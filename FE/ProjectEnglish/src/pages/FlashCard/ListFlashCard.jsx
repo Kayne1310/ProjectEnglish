@@ -13,12 +13,14 @@ import { handleWordGeneration } from '../../helpers/wordGenerationHandler';
 import { prepareFlashcardData } from '../../helpers/flashcardHandler';
 import { updateStudySet, deleteStudySet } from '../../service/StudySetService';
 import { toast } from "react-toastify"; // Import toast
+import { speak, stopSpeak } from '../../service/geminiService';
 const { TextArea } = Input;
 
 
 
 
 const Flashcardcanh = () => {
+    const [playingId, setPlayingId] = useState(null);
     const location = useLocation();
     const flashcardCount = location.state?.flashcardCount;
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -73,7 +75,22 @@ const Flashcardcanh = () => {
             console.error('Error fetching flashcards:', error);
         }
     };
-
+    const handleSpeak = async (text, id) => {
+        try {
+            // Nếu đang phát âm từ khác, dừng lại
+            if (playingId) {
+                stopSpeak();
+            }
+            
+            setPlayingId(id);
+            await speak(text);
+            setPlayingId(null);
+        } catch (error) {
+            console.error('Error playing audio:', error);
+            setPlayingId(null);
+            toast.error('Bạn đừng Spam nhé');
+        }
+    };
     useEffect(() => {
         window.scroll(0, 0);
 
@@ -95,6 +112,7 @@ const Flashcardcanh = () => {
             if (addWordModal) {
                 addWordModal.removeEventListener('hidden.bs.modal', handleResetForm);
             }
+            stopSpeak();
         };
     }, [id]);
 
@@ -352,10 +370,10 @@ const Flashcardcanh = () => {
         <>
             <div className="flashcard-overview">
 
-                {/* Container Fluid */}
+            {/* Container Fluid */}
                 {studySet && (
                     <>
-                        <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
+                <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
                         <div className="d-flex justify-content-between align-items-center">
 
                             <h2 className="flashcardcanh-header-title fs-1" style={{ color: "rgb(33 135 213", }}>Flashcard: {studySet.title}</h2>
@@ -386,44 +404,44 @@ const Flashcardcanh = () => {
                         <p className="fs-3 font-italic" style={{ color: "rgb(126 154 210)", }}>{studySet.desc}</p>
                         <p >
                             Ngôn ngữ :
-                            <img
-                                style={{
-                                    width: '30px',
-                                    height: '20px',
-                                    marginRight: '10px',
+                    <img
+                        style={{
+                            width: '30px',
+                            height: '20px',
+                            marginRight: '10px',
                                     verticalAlign: 'middle',
                                     marginLeft: '10px',
-                                }}
+                        }}
                                 src={studySet.imageCountry} />
 
 
-                        </p>
+                </p>
 
-                        <p className="flashcardcanh-creator">
+                <p className="flashcardcanh-creator">
                             Người tạo: {userName}
-                            <img
-                                className="flashcardcanh-avatar"
+                    <img
+                        className="flashcardcanh-avatar"
                                 src={PictureUrl}
-                                alt="Avatar người tạo"
-                            />
-                        </p>
-                        <div className="flashcardcanh-mt-3">
+                        alt="Avatar người tạo"
+                    />
+                </p>
+                <div className="flashcardcanh-mt-3">
                             <button className="flashcardcanh-btn-practice" onClick={handlePractice}>Luyện tập</button>
-                            <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
-                        </div>
+                    <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
+                </div>
                         <p className="flashcardcanh-mt-2 text-muted mt-3">
-                            Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
-                            chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
-                        </p>
+                    Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
+                    chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
+                </p>
                         <div className="flashcardcanh-stats-box w-100">
                             <div className="flashcardcanh-row flashcardcanh-mt-3 w-100 ">
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-learned fs-5 fw-bold">Tất cả <br />{flashcardCount}</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-new fs-5 fw-bold">Đã nhớ<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-review fs-5 fw-bold">Ôn tập<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-mastered fs-5 fw-bold">Ghi nhớ <br />{flashcardCount}</div>
-                            </div>
+                    </div>
 
-                        </div>
+            </div>
                     </>
                 )}
 
@@ -448,7 +466,7 @@ const Flashcardcanh = () => {
                                     <h1 className="flashcardcanh-title">
                                         {data.title}
                                         <span className="fs-5 ml-2" style={{ color: "rgb(9, 64, 103)" }}>   {data.transcription}  </span>
-                                        <span className="flashcardcanh-audio-icon fs-5  " >
+                                        <span className="flashcardcanh-audio-icon fs-5  " onClick={() => handleSpeak(data.title, data.id)}>
 
                                             <i className="bi bi-volume-up ml-2 fs-4 " ></i>
                                         </span>
@@ -469,7 +487,7 @@ const Flashcardcanh = () => {
                                                 <div key={idx}>
                                                     <p className="font-weight-bold fs-6 mb-0">
                                                         {idx + 1}. {example.en}
-                                                        <span className="flashcardcanh-audio-icon">
+                                                        <span className="flashcardcanh-audio-icon " onClick={() => handleSpeak(example.en, data.id)}>
                                                             <i className="bi bi-volume-up"></i>
                                                         </span>
                                                     </p>
@@ -647,7 +665,7 @@ const Flashcardcanh = () => {
                         </div>
                     </div>
                 </div>
-
+   
 
                 {/* popup add word  edit Studyset*/}
                 <Modal
@@ -718,8 +736,8 @@ const Flashcardcanh = () => {
                         <div className="d-flex justify-content-center mt-3 w-100">
                             <Button onClick={handleDeleteCancel} className="me-2 btn-secondary w-25">Hủy</Button>
                             <Button type="primary" onClick={handleDeleteSubmit} className="w-25 btn-danger">Xóa</Button>
-                        </div>
-                    </div>
+                </div>
+                </div> 
                 </Modal>
 
 

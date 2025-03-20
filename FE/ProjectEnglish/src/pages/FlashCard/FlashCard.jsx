@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, useLocation } from "react-router-dom"; // Lấy quiz_id từ URL
 import "../../assets/css/FlashCardQuiz/flashcard.css";
 import "../../assets/css/FlashCardQuiz/QuizletForm.css";
+
 import { flashcard as getFlashcards } from "../../service/quizService.js";
 import { getQuestionbyQuizId } from "../../service/quizService.js"; // Thêm để gọi API cho Quiz
 import { Card, Col, Form, Row } from "react-bootstrap";
@@ -10,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 import correctSound from "../../assets/sound/correct-156911.mp3";
 import incorrectSound from "../../assets/sound/wrong-47985.mp3";
+import { speak, stopSpeak } from '../../service/geminiService';
 
 const Flashcard = () => {
   const { quizId } = useParams(); // Lấy quizId từ URL
@@ -26,6 +28,7 @@ const Flashcard = () => {
   const [skipped, setSkipped] = useState(false);
   const [pressedKey, setPressedKey] = useState(null);
   const [learnedCards, setLearnedCards] = useState(new Set());
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const location = useLocation();
   const [isQuizMode, setIsQuizMode] = useState(false);
@@ -205,9 +208,21 @@ const Flashcard = () => {
   };
 
   // Đọc to nội dung (chỉ cho Flashcard)
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
+  const handleSpeak = async (text, isUKVoice = true) => {
+    try {
+      // Dừng audio đang phát (nếu có)
+      stopSpeak();
+      
+      setIsPlaying(true);
+      // Chọn giọng đọc dựa trên toggle UK/US
+      const voiceType = isUKVoice ? "UK English Male" : "US English Male";
+      
+      await speak(text, voiceType);
+      setIsPlaying(false);
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      setIsPlaying(false);
+    }
   };
 
   // Hàm chuyển câu hỏi tiếp theo (chung cho cả Flashcard và Quiz)
@@ -285,6 +300,13 @@ const Flashcard = () => {
     resetProgress();
   }, [mode, flashcards]); // Reset khi đổi mode hoặc shuffle cards
 
+  // Cleanup khi component unmount
+  useEffect(() => {
+    return () => {
+      stopSpeak();
+    };
+  }, []);
+
   if (loading) return <div className="text-center">Đang tải dữ liệu...</div>;
   if (error) return <div className="text-center">{error}</div>;
 
@@ -334,8 +356,15 @@ const Flashcard = () => {
                             <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint: Think about the basics!"); }}>
                               <i className="bi bi-lightbulb"></i>
                             </button>
-                            <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.question); }}>
-                              <i className="bi bi-volume-up"></i>
+                            <button 
+                              className="icon-button right" 
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                handleSpeak(flashcards[currentQuestionIndex]?.question);
+                              }}
+                              disabled={isPlaying}
+                            >
+                              <i className={`bi ${isPlaying ? 'bi-volume-up-fill' : 'bi-volume-up'}`}></i>
                             </button>
                             <div className="content fw-bold">{flashcards[currentQuestionIndex]?.question}
                               <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
@@ -347,8 +376,15 @@ const Flashcard = () => {
                             <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
                               <i className="bi bi-lightbulb"></i>
                             </button>
-                            <button className="icon-button right" onClick={(e) => { e.stopPropagation(); speak(flashcards[currentQuestionIndex]?.answer); }}>
-                              <i className="bi bi-volume-up"></i>
+                            <button 
+                              className="icon-button right" 
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                handleSpeak(flashcards[currentQuestionIndex]?.answer);
+                              }}
+                              disabled={isPlaying}
+                            >
+                              <i className={`bi ${isPlaying ? 'bi-volume-up-fill' : 'bi-volume-up'}`}></i>
                             </button>
                             <div className="content">{flashcards[currentQuestionIndex]?.answer}</div>
                           </div>
@@ -375,8 +411,13 @@ const Flashcard = () => {
                             <div className="quizlet-definition-label">
                               <i className="fas fa-lightbulb"></i>
                             </div>
-                            <button className="quizlet-audio-btn" title="sound">
-                              <i className="fas fa-volume-up"></i>
+                            <button 
+                              className="quizlet-audio-btn" 
+                              title="sound"
+                              onClick={() => handleSpeak(currentItem.description)}
+                              disabled={isPlaying}
+                            >
+                              <i className={`fas ${isPlaying ? 'fa-volume-up text-primary' : 'fa-volume-up'}`}></i>
                             </button>
                           </div>
 

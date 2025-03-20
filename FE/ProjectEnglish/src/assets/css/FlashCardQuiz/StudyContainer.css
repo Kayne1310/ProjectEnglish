@@ -1,0 +1,126 @@
+@media (max-width: 768px) {
+  /* Giữ nguyên 2 cột cho mobile nhưng giảm khoảng cách */
+  .row-cols-2 > .col {
+    width: calc(50% - 0.25rem) !important;
+    height: 50% !important;
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem !important;
+  }
+
+  .card-create-new {
+    height: 100% !important;
+    width: 200px !important;
+    padding: 0.35rem !important;
+    border-width: 1px !important;
+    box-shadow: none !important;
+  }
+  /* Giảm padding và viền cho card */
+  .card {
+    padding: 0.35rem !important;
+    height: 200px !important;
+    border-width: 1px !important;
+    box-shadow: none !important;
+  }
+
+  /* Giảm margin và padding cho nội dung */
+  .card-body {
+    padding: 0.25rem !important;
+  }
+
+  /* Điều chỉnh kích thước text */
+  h5.fw-bold {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem !important;
+  }
+
+  h6 {
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Thu nhỏ avatar */
+  .rounded-circle {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Thu gọn phần mô tả */
+  .text-muted.text-truncate {
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Thu nhỏ icon */
+  svg {
+    height: 0.875em !important;
+    width: 0.875em !important;
+  }
+
+  /* Thu nhỏ ảnh quốc kỳ */
+  img.border {
+    width: 16px !important;
+    height: 12px !important;
+  }
+
+  /* Thu gọn username */
+  .text-truncate.overflow-hidden.text-nowrap {
+    max-width: 5rem !important;
+    font-size: 0.7rem;
+  }
+
+  /* Thu gọn timestamp */
+  .text-truncate[style*="font-size"] {
+    font-size: 0.65rem !important;
+  }
+
+  /* Giảm khoảng cách giữa các phần tử */
+  .gap-2 {
+    gap: 0.2rem !important;
+  }
+
+  .mt-2 {
+    margin-top: 0.25rem !important;
+  }
+
+  /* Thu gọn nút filter */
+  .btn.rounded-pill {
+    width: calc(33.33% - 0.5rem) !important; /* Chia 3 cột đều nhau */
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.7rem;
+    border-width: 1px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 2rem !important;
+    margin: 0.25rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Container cho các nút filter */
+  .d-flex.flex-wrap.align-items-center.gap-3.py-3 {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    margin: -0.25rem !important; /* Bù trừ margin của các nút */
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Label "Lọc theo ngôn ngữ" */
+  .fw-bold {
+    width: 100% !important;
+    font-size: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Icon và ảnh trong nút */
+  .btn.rounded-pill svg,
+  .btn.rounded-pill img {
+    width: 14px !important;
+    height: 14px !important;
+    margin-right: 0.25rem !important;
+    flex-shrink: 0 !important;
+  }
+}

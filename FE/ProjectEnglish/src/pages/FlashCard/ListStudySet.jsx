@@ -1,4 +1,5 @@
 import { Justify } from "react-bootstrap-icons";
+import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId } from "../../service/flashcardService";
@@ -131,7 +132,7 @@ const FlashcardList = () => {
                         <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll" style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflow: isFlashcardPage ? "visible" : "auto" }}>
 
                             {/* Card Tạo Mới */}
-                            <div className="col" style={{ width: "218px", height: "216px" }}>
+                            <div className="col card-create-new" style={{ width: "218px", height: "216px" }}>
                                 <Link className="card border shadow-sm p-3 bg-white rounded h-100 text-decoration-none text-dark" onClick={showModal}>
                                     <div className="d-flex flex-column align-items-center justify-content-center h-100">
                                         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="30" width="30" xmlns="http://www.w3.org/2000/svg">
