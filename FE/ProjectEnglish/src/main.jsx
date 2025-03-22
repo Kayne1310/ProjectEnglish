@@ -27,6 +27,8 @@ import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
 import PrivateRoute from './pages/privateroute.jsx';
 import Flashcard from './components/FlashCard.jsx';
 
+import ChangePasswordForm from './pages/LoginAndRes/User/ChangePasswordForm.jsx';
+
 
 import Flashcardcanh from './pages/FlashCard/Flashcardcanh.jsx';
 // import ListDocument from './pages/Document/ListDocument.jsx';
@@ -43,87 +45,75 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
-
       { path: "/contactus", element: <ContactUs /> },
       {
-        path: "/viewprofile", element:
-          (<PrivateRoute>
-            <ViewProfile />,
-          </PrivateRoute>)
+        path: "/viewprofile",
+        element: (
+          <PrivateRoute>
+            <ViewProfile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/listquizz",
         element: <ListQuizz />,
-        children: [{
-          path: "detailquiz", element: <DetailQuizz />
-        },
+        children: [
+          {
+            path: "detailquiz",
+            element: <DetailQuizz />,
+          },
         ],
       },
-      // {
-      //   path: "/listdocument",
-      //   element: <ListDocument />
-      // },
-      // {
-      //   path: "/listdocument/detaildocument/:id",
-      //   element: <DocumentItem />
-      // },
       {
         path: "/contactus",
-        element: <ContactUs />
+        element: <ContactUs />,
       },
       {
         path: "/flashcard/:quizId",
-        element: <Flashcard />
+        element: <Flashcard />,
       },
       {
         path: "/listdocument/detaildocument/flashcard/:quizId",
-        element: <Flashcard />
+        element: <Flashcard />,
       },
-      // {
-      //   path: "/flashcard",
-      //   element: <FlashcardList />
-      // }
-
       {
         path: "/flashcardcanh",
-        element: <Flashcardcanh/>
-      }
-    
-    ]
+        element: <Flashcardcanh />,
+      }, // <-- Added missing comma here
+      {
+        path: "/changepassword",
+        element: <ChangePasswordForm />,
+      }, // <-- Added missing comma here
+    ],
   },
-
   {
     path: "/quizlet",
-    element: <QuizletForm />
+    element: <QuizletForm />,
   },
-
   {
     path: "/resetpassword",
-    element: <ResetPasswordPage />
+    element: <ResetPasswordPage />,
   },
   {
     path: "/forgotpassword",
-    element: <ForgotpasswordPage />
+    element: <ForgotpasswordPage />,
   },
-
   {
     path: "/loginuser",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/registeruser",
-    element: <Register />
+    element: <Register />,
   },
-
   {
     path: "/loginadmin",
-    element: <LoginAdminPage />
+    element: <LoginAdminPage />,
   },
   {
     path: "/resetpassword",
-    element: <ResetPasswordPage />
-  }
-
+    element: <ResetPasswordPage />,
+  },
 ]);
 
 const dotenvClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;

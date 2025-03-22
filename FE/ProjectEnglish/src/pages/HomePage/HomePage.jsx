@@ -1,3 +1,4 @@
+// HomePage.jsx
 import "../../assets/css/Home/home.css";
 import Slider from "../../assets/image/slider-img.png";
 import About from "../../assets/image/about-img.png";
@@ -7,69 +8,15 @@ import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
 import { Link } from "react-router-dom";
+// import FlashcardList from "../FlashCard/ListFlashCard";
+// import ListDocument from "../Document/ListDocument";
 import AOS from "aos";
 import "../../../node_modules/aos/dist/aos.css";
 import { useEffect } from "react";
-import './HomePage.css';
 
 const HomePage = () => {
     useEffect(() => {
-        AOS.init({ duration: 500, once: true });
-
-        // Thêm Chatbase script và logic toggle --- chat base co
-        const initializeChatbase = () => {
-            if (!window.chatbase || window.chatbase("getState") !== "initialized") {
-                window.chatbase = (...args) => {
-                    if (!window.chatbase.q) window.chatbase.q = [];
-                    window.chatbase.q.push(args);
-                };
-                window.chatbase = new Proxy(window.chatbase, {
-                    get(target, prop) {
-                        if (prop === "q") return target.q;
-                        return (...args) => target(prop, ...args);
-                    }
-                });
-            }
-
-
-            const CHATBASE = import.meta.env.VITE_CHATBASE_ID;
-
-            const script = document.createElement("script");
-            script.src = "https://www.chatbase.co/embed.min.js";
-            script.id = CHATBASE;
-            script.setAttribute("chatbotId", CHATBASE);
-            script.async = true;
-            document.body.appendChild(script);
-
-            const checkChatbase = setInterval(() => {
-                const bubbleWindow = document.getElementById("chatbase-bubble-window");
-                const bubbleButton = document.getElementById("chatbase-bubble-button");
-
-                if (bubbleWindow && bubbleButton) {
-                    clearInterval(checkChatbase);
-                    bubbleButton.addEventListener("click", (event) => {
-                        event.stopPropagation();
-                        bubbleWindow.style.display = bubbleWindow.style.display === "block" ? "none" : "block";
-                    });
-                    document.addEventListener("click", (event) => {
-                        if (!bubbleWindow.contains(event.target) && !bubbleButton.contains(event.target) && bubbleWindow.style.display === "block") {
-                            bubbleWindow.style.display = "none";
-                        }
-                    });
-                }
-            }, 500);
-
-            return () => {
-                document.body.removeChild(script);
-                clearInterval(checkChatbase);
-            };
-        };
-
-        initializeChatbase();
-        // chat base co
-
-
-
+        AOS.init({ duration: 1000, once: true });
     }, []);
 
     return (
@@ -131,7 +78,7 @@ const HomePage = () => {
                 </section>
             </div>
 
-            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
+            <div className="w-100 bg-white" style={{ height: "50px" }}></div>
 
             <section className="about_section layout_padding long_section">
                 <div className="container">
@@ -146,9 +93,9 @@ const HomePage = () => {
                                 <div className="heading_container">
                                     <h2>About Us</h2>
                                 </div>
-                                <p>Welcome to Our English Learning Platform!
-                                    We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether youre a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community.
-                                    Start your journey to mastering English today!</p>
+                                <p>
+                                    Welcome to Our English Learning Platform! We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether you're a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community. Start your journey to mastering English today!
+                                </p>
                                 <a href="">Read More</a>
                             </div>
                         </div>
@@ -156,7 +103,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
+            <div className="w-100 bg-white" style={{ height: "50px" }}></div>
 
             <section className="blog_section layout_padding">
                 <div className="container">
@@ -204,7 +151,9 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* <FlashcardList />
             <ListQuizz />
+            <ListDocument /> */}
             <ContactUs />
         </>
     );
