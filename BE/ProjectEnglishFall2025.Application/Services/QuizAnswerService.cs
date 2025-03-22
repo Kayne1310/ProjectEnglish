@@ -92,67 +92,40 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-                var quizAnswerData = new DeleteAnswerQuestionVM
+                // Kiểm tra nếu quizAnswer_id không hợp lệ
+                if (string.IsNullOrEmpty(answerQuestionVM.quizAnswer_id))
                 {
-                    quizAnswer_id = answerQuestionVM.quizAnswer_id
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Quiz Answer ID is required."
+                    };
+                }
+
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new QuizAnswer
+                {
+                    quizAnswer_id = ObjectId.Parse(answerQuestionVM.quizAnswer_id),
+                    description = answerQuestionVM.description,
+                    correct_answer = answerQuestionVM.correct_answer,
+                    updateAt = DateTime.Now
                 };
 
-                var existingQuizAnswer = await answerRepository.findQuizAnswerById(quizAnswerData);
-                if (existingQuizAnswer == null)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! quizAnswer_id is not found"
-                    };
-                }
-                else
-                {
-                    existingQuizAnswer.description = answerQuestionVM.description;
-                    existingQuizAnswer.correct_answer = answerQuestionVM.correct_answer;
-                    existingQuizAnswer.updateAt = DateTime.Now;
-                }
+                // Gửi dữ liệu cập nhật xuống Repository
+                var updateRepo = await answerRepository.updateQuizAnswer(updateData);
 
 
-                var validateData = await validator.ValidateAsync(existingQuizAnswer);
-                if (!validateData.IsValid)
-                {
-                    var errorMessage = validateData.Errors.Select(e => e.ErrorMessage).ToList();
-
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMessage)
-                    };
-                }
-                else
-                {
-                    var updateRepo = await answerRepository.updateQuizAnswer(existingQuizAnswer);
-
-                    if (updateRepo <= 0)
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
-                        };
-                    }
-                    else
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update quizAnswer successful!"
-                        };
-                    }
-                }
-
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return updateRepo > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update quizAnswer successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionVM)
         {
@@ -183,7 +156,7 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)
+        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
         {
             var bsonResults = await answerRepository.GetCorrectQuizAnswersAsync(quizId);
 
@@ -205,8 +178,8 @@ namespace ProjectFall2025.Application.Services
                                 quiz_id = bson["question_info"]["quiz_info"]["_id"].ToString(),
                                 name = bson["question_info"]["quiz_info"]["name"].AsString,
                                 description = bson["question_info"]["quiz_info"]["description"].AsString,
-                                imageQuiz = bson["question_info"]["quiz_info"]["image"].AsString,
-                                difficutly = bson["question_info"]["quiz_info"]["difficutly"].AsString,
+                                image = bson["question_info"]["quiz_info"]["image"].AsString,
+                                difficulty = bson["question_info"]["quiz_info"]["difficutlty"].AsString,
                                 countryName = bson["question_info"]["quiz_info"]["countryName"].AsString,
                                 countryImg = bson["question_info"]["quiz_info"]["countryImg"].AsString
                             }

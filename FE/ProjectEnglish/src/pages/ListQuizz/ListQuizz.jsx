@@ -109,7 +109,6 @@ const ListQuizz = () => {
       if (timer) clearTimeout(timer);
       AOS.refreshHard();
     };
-
   }, []);
 
   console.log("arrQuiz:", arrQuiz);
@@ -209,7 +208,7 @@ const ListQuizz = () => {
                   </div>
                   {processedQuiz && processedQuiz.length > 0 &&
                     processedQuiz.map((quiz, index) => (
-                      <div key={`${index}-quiz`} className="col-sm-12 col-md-4 col-lg-3">
+                      <div key={`${index}-quiz`} className="col-sm-12 col-md-4 col-lg-3 my-3">
                         <div className="listquiz-card">
                           <div
                             className="listquiz-card-bg"

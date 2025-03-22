@@ -22,7 +22,53 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
         } else {
    
 
-            localStorage.setItem("isLoggedIn", "true");
+            setUser({
+                userName: response.user.userName,
+                email: response.user.email,
+                picture: response.user.picture,
+                facebookId: response.user.facebookId,
+                googleId: response.user.googleId,
+            }); // Lưu thông tin user vào context
+            toast.success("Login successfully!");
+            setTimeout(() => {
+                setIsLoading(false);
+                if (response.user.role === "User") {
+                    navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                } else {
+                    setError("Login failed. Invalid role!");
+                }
+            }, 1000);
+            return;
+        }
+    } catch (err) {
+        setError(`Login failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+
+    setTimeout(() => {
+        setIsLoading(false);
+    }, 1000);
+};
+
+export const handleLoginAdmin = async (email, password, setError, setIsLoading, setUser, navigate) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+        const response = await authService.login(email, password);
+
+        console.log("API Response:", response); // Kiểm tra response trả về từ authService
+
+        if (!response || !response.user) {
+            setError("Login failed. User data is missing.");
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+            console.error("Missing user data:", response);
+        } else {
+            console.log("User Data:", response.user);
 
             setUser({
                 userName: response.user.userName,
@@ -35,7 +81,11 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
             toast.success("Login successfully!");
             setTimeout(() => {
                 setIsLoading(false);
-                navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                if (response.user.role === "Admin") {
+                    navigate("/Admin")
+                } else {
+                    setError("Login failed. Invalid role!");
+                }
             }, 1000);
             return;
         }
@@ -54,23 +104,36 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
 };
 
 
-export const handleLogout = async (setIsLoading, setError,navigate) => {
+export const handleLogout = async (
+    setIsLoading,
+    setError,
+    setUser,
+    navigate
+) => {
     setError("");
-    try {
-        // Gọi API logout (nếu cần)
-        setIsLoading(true);
-        var res=    await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
-        // Xóa thông tin khỏi localStorage
-        if(res.returnCode==1){
-            localStorage.removeItem("isLoggedIn");
-            toast.success("Logout successfully!"); // Toast thành công
-            window.location.href="/";// Chuyển hướng về trang đăng nhập
-        }       
 
-   } catch (error) {
+    setIsLoading(true);
+
+    try {
+        const res = await authService.logout();
+
+        console.log("Logout Response:", res);
+
+        if (!res || res.error || res.returnCode !== 1) {
+            throw new Error(res?.returnMessage || "Logout failed");
+            
+
+        } else {
+            setUser(null); // Xóa user trong context/state
+            setIsLoading(false);
+            navigate("/");
+            toast.success("Logout successfully!"); // Toast thành công
+
+        }
+    } catch (error) {
         // setError(`Logout failed. ${error.message}`);
-        toast.error(`Logout failed: ${error.message}`); // Toast lỗi
-    } finally {
+        toast.error(`Logout failed: ${res?.returnMessage}`); // Toast lỗi
+
         setIsLoading(false);
     }
 };
@@ -146,6 +209,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
 
 }
+
 
 
 

@@ -3,7 +3,7 @@
     gap: 50px;
     padding: 90px;
     width: 90%; // Mở rộng container
-    // max-width: 1200px; // Giới hạn chiều rộng tối đa
+    max-width: 1500px; // Giới hạn chiều rộng tối đa
     margin: auto; // Căn giữa trang
 
     // flex-wrap: wrap;
@@ -69,6 +69,7 @@
                     gap: 16px; // Khoảng cách giữa các nút
                     margin: 20px auto 0; // Căn giữa và tạo khoảng cách trên
                     padding: 0 20px; // Thêm padding trái/phải để căn lề phù hợp với form
+
 
                     .answer-option-wrapper {
                         // width: 100%; // Chiếm toàn bộ chiều rộng của cột
@@ -160,11 +161,13 @@
                         }
 
                         &:focus {
-                            outline: none;
-                            border-color: #6c7a89;
-                            box-shadow: 0 0 5px rgba(108, 122, 137, 0.5);
+                            background: #4a90e2;
+                            color: white;
+                            border-color: #2c6bb2;
+                            font-weight: bold;
                         }
                     }
+                    
 
                     // Hiệu ứng khi chọn
                     .answer-option.selected {
@@ -186,9 +189,10 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 50px;
 
             button {
+                width: 200px;
                 padding: 10px 20px;
                 font-size: 16px;
                 font-weight: 600;
@@ -275,6 +279,12 @@
                 background-color: rgb(222, 135, 135);
             }
 
+            // &.answered {
+            //     background-color: #c9974d;
+            //     color: white;
+            //     border-color: #c9974d;
+            // }
+
             &.clicked {
                 color: red
             }
@@ -309,7 +319,7 @@
         flex-direction: column;
         align-items: center;
         padding: 50px;
-        width: 100% !important; 
+        width: 100% !important;
     }
 
     .left-content {
@@ -328,14 +338,17 @@
     }
 
     .answer-option {
-        display: block; /* Đảm bảo không bị inline */
-        width: 100% !important; /* Chiếm toàn bộ chiều rộng */
+        display: block;
+        /* Đảm bảo không bị inline */
+        width: 100% !important;
+        /* Chiếm toàn bộ chiều rộng */
         max-width: 400px;
     }
 
     .footer {
         flex-direction: column;
         align-items: center;
+
         button {
             width: 100%;
         }
@@ -348,7 +361,8 @@
     }
 
     .left-content {
-        width: 100% !important; 
+        width: 100% !important;
+
         .title {
             font-size: 24px;
         }

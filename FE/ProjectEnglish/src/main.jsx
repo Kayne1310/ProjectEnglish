@@ -4,7 +4,6 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginAdminPage from './pages/LoginAndRes/LoginAdminPage.jsx';
 import ListQuizz from './pages/ListQuizz/ListQuizz.jsx';
 import ContactUs from './pages/HomePage/ContactUsPage.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
@@ -35,8 +34,10 @@ import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
 import ChartPage from './pages/Admin/ChartPage/ChartPage.jsx';
 import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
 import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
-import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 
+import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
+
+import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 
 
@@ -95,7 +96,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/flashcard/:quizId",
-        element: <Flashcard />
+        element: <FlashcardList />
       },
       {
         path: "/ListFlashCard/:id",

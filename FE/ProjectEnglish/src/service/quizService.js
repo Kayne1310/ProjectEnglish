@@ -47,5 +47,18 @@ const flashcard = async (quizId) => {
     }
 }
 
+const submitQuiz = async (quizId, submitData) => {
+    try {
+        const response = await axios.post(`${API_URL}/Quiz/submit`, submitData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error submitting quiz:", error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
 
-export { getDataQuiz, getQuestionbyQuizId, flashcard };
+export { getDataQuiz, getQuestionbyQuizId, flashcard, submitQuiz };

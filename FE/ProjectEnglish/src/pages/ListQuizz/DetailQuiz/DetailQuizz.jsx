@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getQuestionbyQuizId } from "../../../service/quizService";
+import { getQuestionbyQuizId, submitQuiz } from "../../../service/quizService";
 import Questions from "./question";
 import RightContent from "./RightContentQuiz/RightContent";
 import ModalResult from "./ModalResult";
@@ -14,9 +14,12 @@ const DetailQuizz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  //   const [isShowModalResult, setIsShowModalResult] = useState(false);
-  //   const [dataModalResult, setDataModalResult] = useState({});
+  const [isShowModalResult, setIsShowModalResult] = useState(false);
+  const [dataModalResult, setDataModalResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
+  const [userAnswers, setUserAnswers] = useState({});
+  const [isSubmitQuiz, setIsSubmitQuiz] = useState(false);
+  const [isShowAnswer, setIsShowAnswer] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -53,14 +56,14 @@ const DetailQuizz = () => {
         ? quiz.description
         : "Nội dung mặc định",
     answer:
-      quiz.answer && quiz.answer.length > 0
-        ? quiz.answer.map((ans) => ({
+      quiz.answers && quiz.answers.length > 0
+        ? quiz.answers.map((ans) => ({
           ...ans,
-          descriptionAnswered:
-            ans.descriptionAnswered &&
-              ans.descriptionAnswered !== "null" &&
-              ans.descriptionAnswered !== ""
-              ? ans.descriptionAnswered
+          description:
+            ans.description &&
+              ans.description !== "null" &&
+              ans.description !== ""
+              ? ans.description
               : "Câu trả lời không hợp lệ",
         }))
         : [
@@ -73,22 +76,53 @@ const DetailQuizz = () => {
   }));
 
   // Điều hướng giữa các câu hỏi
-  const goToNextQuestion = () => {
-    if (currentQuestionIndex < processedQuiz.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
-  const goToPreviousQuestion = () => {
+  const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex(prev => prev - 1);
+      console.log("prev", prev);
     }
   };
 
-  const currentQuestion = processedQuiz[currentQuestionIndex];
+  const handleAnswerSelect = (questionId, answerId) => {
+    setUserAnswers((prev) => ({
+      ...prev,
+      [questionId]: answerId,
+    }));
+  };
+
+  const handleShowAnswers = () => {
+    setIsShowAnswer(true);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const formattedAnswers = Object.entries(userAnswers).map(([questionId, userAnswerId]) => ({
+        questionId,
+        userAnswerId
+      }));
+
+      const submitData = {
+        quizId,
+        answers: formattedAnswers
+      };
+
+      const result = await submitQuiz(quizId, submitData);
+      setDataModalResult(result);
+      setIsShowModalResult(true);
+      setIsSubmitQuiz(true);
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      setError("Failed to submit quiz. Please try again.");
+    }
+  };
 
   return (
-    
     <>
       {isLoading ? (
         <div className="loading-container" style={{
@@ -100,63 +134,69 @@ const DetailQuizz = () => {
           <Spin size="large" />
         </div>
       ) : (
-    <div className="detail-quiz-container" >
-      {loading && <p>Đang tải dữ liệu...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && processedQuiz.length > 0 && (
-        <>
-          <div className="left-content">
-            <div className="title">
-              Quiz: {processedQuiz.length > 0 ? processedQuiz[0].quizInforVM.name : quizId}
-            </div>
+        <div className="detail-quiz-container" >
+          {loading && <p>Đang tải dữ liệu...</p>}
+          {error && <p>{error}</p>}
+          {!loading && !error && processedQuiz.length > 0 && (
+            <>
+              <div className="left-content">
+                <div className="title">
+                  Quiz: {processedQuiz.length > 0 ? processedQuiz[0].quizInforVM.name : quizId}
+                </div>
 
-
-            <hr />
-            {/* Không hiển thị image ở đây */}
-            <div className="q-content">
-              <Questions
-                question={currentQuestion}
-                questionIndex={currentQuestionIndex}
+                <hr />
+                {/* Không hiển thị image ở đây */}
+                <div className="q-content">
+                  <Questions
+                    question={questions[currentQuestionIndex]}
+                    questionIndex={currentQuestionIndex}
+                    userAnswers={userAnswers}
+                    handleAnswerSelect={handleAnswerSelect}
+                    isShowAnswer={isShowAnswer}
+                    isSubmitQuiz={isSubmitQuiz}
+                  />
+                </div>
+                <div className="footer">
+                  <button onClick={handlePrevQuestion} className="btn btn-secondary">
+                    Prev
+                  </button>
+                  <button onClick={handleNextQuestion} className="btn btn-primary">
+                    Next
+                  </button>
+                  {!isSubmitQuiz && (
+                    <button
+                      onClick={handleSubmit}
+                      className="btn btn-warning"
+                      disabled={Object.keys(userAnswers).length !== processedQuiz.length}
+                    >
+                      Finish
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="right-content">
+                <RightContent
+                  questions={processedQuiz}
+                  currentQuestionIndex={currentQuestionIndex}
+                  userAnswers={userAnswers}
+                  setCurrentQuestionIndex={setCurrentQuestionIndex}
+                />
+              </div>
+              <ModalResult
+                show={isShowModalResult}
+                setShow={setIsShowModalResult}
+                dataModalResult={dataModalResult}
+                handleShowAnswers={handleShowAnswers}
               />
-            </div>
-            <div className="footer">
-              <button onClick={goToPreviousQuestion} className="btn btn-secondary">
-                Prev
-              </button>
-              <button onClick={goToNextQuestion} className="btn btn-primary">
-                Next
-              </button>
-              <button
-                onClick={() => {
-                  /* Xử lý logic nộp bài */
-                }}
-                className="btn btn-warning"
-              >
-                Finish
-              </button>
-            </div>
-          </div>
-          <div className="right-content">
-            <RightContent
-              questions={processedQuiz}
-              currentQuestionIndex={currentQuestionIndex}
-            />
-          </div>
-          {/* <ModalResult
-            show={isShowModalResult}
-            setShow={setIsShowModalResult}
-            dataModalResult={dataModalResult}
-          /> */}
-        </>
-      )
-      }
-      {
-        !loading && !error && processedQuiz.length === 0 && (
-          <p>Không có câu hỏi nào để hiển thị.</p>
-        )
-      }
-    </div >
-     )}
+            </>
+          )}
+          {
+            !loading && !error && processedQuiz.length === 0 && (
+              <p>Không có câu hỏi nào để hiển thị.</p>
+            )
+          }
+        </div >
+      )}
     </>
   );
 };

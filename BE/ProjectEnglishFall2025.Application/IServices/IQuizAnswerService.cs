@@ -1,4 +1,5 @@
 ﻿using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,6 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionVM);
 
         // correct answers
-        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId);
+        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId);
     }
 }

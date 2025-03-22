@@ -37,7 +37,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var objectId = ObjectId.Parse(history.history_id);
 
             var filter = Builders<History>.Filter.Eq(x => x.history_id, objectId);
-            
+
             var res = await db.Find(filter).FirstOrDefaultAsync();
 
             return res;
@@ -49,16 +49,25 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             await add.InsertOneAsync(history);
 
-            return history; 
+            return history;
         }
 
         public async Task<int> updateHistory(History history)
         {
-            var update = await dbContext.GetCollectionHistory()
-                .ReplaceOneAsync(x => x.history_id == history.history_id, history);
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<History>.Update
+                .Set(h => h.total_questions, history.total_questions)
+                .Set(h => h.total_corrects, history.total_corrects)
+                .Set(h => h.updateAt, DateTime.Now);
 
-            return (int)update.ModifiedCount;
+            // Thực hiện cập nhật trong MongoDB
+            var updateResult = await dbContext.GetCollectionHistory()
+                .UpdateOneAsync(h => h.history_id == history.history_id, updateDefinition);
+
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
         }
+
 
         public async Task<int> deleteHistory(deleteHistoryVM history)
         {
@@ -71,6 +80,13 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var res = await delete.DeleteOneAsync(filter);
 
             return (int)res.DeletedCount;
+        }
+
+        public async Task InsertAsync(History history)
+        {
+            var db = dbContext.GetCollectionHistory();
+
+            await db.InsertOneAsync(history);
         }
     }
 }

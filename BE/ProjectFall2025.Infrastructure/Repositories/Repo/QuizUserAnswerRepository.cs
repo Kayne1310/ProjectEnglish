@@ -54,11 +54,22 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
         public async Task<int> updateQuizUserAnswer(QuizUserAnswer quizUserAnswer)
         {
-            var update = await mongoDbContext.GetCollectionQuizUserAnswer()
-                .ReplaceOneAsync(x => x.quizUserAnswer_id == quizUserAnswer.quizUserAnswer_id, quizUserAnswer);
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<QuizUserAnswer>.Update
+                .Set(q => q.user_answers, quizUserAnswer.user_answers)
+                .Set(q => q.updateAt, DateTime.Now)
+                .Set(q => q.UserID, quizUserAnswer.UserID)
+                //.Set(q => q.quiz_id, quizUserAnswer.quiz_id)
+                .Set(q => q.question_id, quizUserAnswer.question_id);
 
-            return (int)update.ModifiedCount;
+            // Thực hiện cập nhật trong MongoDB
+            var updateResult = await mongoDbContext.GetCollectionQuizUserAnswer()
+                .UpdateOneAsync(q => q.quizUserAnswer_id == quizUserAnswer.quizUserAnswer_id, updateDefinition);
+
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
         }
+
 
         public async Task<int> deleteQuizUserAnswer(deleteQuizUserAnswerVM quizUserAnswer)
         {
@@ -71,6 +82,13 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             var delete = await db.DeleteOneAsync(filter);
 
             return (int)delete.DeletedCount;
+        }
+
+        public async Task InsertManyAsync(List<QuizUserAnswer> userAnswers)
+        {
+            var db = mongoDbContext.GetCollectionQuizUserAnswer();
+
+            await db.InsertManyAsync(userAnswers);
         }
     }
 }
