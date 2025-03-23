@@ -80,6 +80,9 @@ const Nav = () => {
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/community">Community</NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/chatwithai">Chat with AI</NavLink>
+                                </li>
 
                                 {/* <li className="nav-item">
                                     <NavLink className="nav-link" to="">community</NavLink>

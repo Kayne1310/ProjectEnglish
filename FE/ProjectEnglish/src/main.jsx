@@ -41,6 +41,7 @@ import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 
 
 import { Community } from './pages/Community/community.jsx';
+import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
 
 
 
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: "/community",
         element: <Community />
+      },
+      {
+        path: "/chatwithai",
+        element: <ChatGemini />
       }
 
     ]
