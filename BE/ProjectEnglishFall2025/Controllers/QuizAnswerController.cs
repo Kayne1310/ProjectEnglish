@@ -92,7 +92,7 @@ namespace ProjectEnglishFall2025.Controllers
 
 
         [HttpGet("correct-answers")]
-        public async Task<IActionResult> GetCorrectQuizAnswers(DeleteQuizVM quizId)
+        public async Task<IActionResult> GetCorrectQuizAnswers(string quizId)
         {
             try
             {

@@ -156,7 +156,7 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
+        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)
         {
             var bsonResults = await answerRepository.GetCorrectQuizAnswersAsync(quizId);
 
@@ -179,7 +179,7 @@ namespace ProjectFall2025.Application.Services
                                 name = bson["question_info"]["quiz_info"]["name"].AsString,
                                 description = bson["question_info"]["quiz_info"]["description"].AsString,
                                 image = bson["question_info"]["quiz_info"]["image"].AsString,
-                                difficulty = bson["question_info"]["quiz_info"]["difficutlty"].AsString,
+                                difficulty = bson["question_info"]["quiz_info"]["difficulty"].AsString,
                                 countryName = bson["question_info"]["quiz_info"]["countryName"].AsString,
                                 countryImg = bson["question_info"]["quiz_info"]["countryImg"].AsString
                             }

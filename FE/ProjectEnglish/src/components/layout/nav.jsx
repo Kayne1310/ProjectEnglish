@@ -99,8 +99,8 @@ const Nav = () => {
                                             <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">
                                                 <FaUser className="mr-2" /> Profile
                                             </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
-                                                <FaCogs className="mr-2" /> Settings
+                                            <Dropdown.Item as={Link} to="/changepassword" className="custom-dropdown-item">
+                                                <FaCogs className="mr-2" /> Change Password
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
                                             <Dropdown.Item onClick={onLogout} className="custom-dropdown-item">

@@ -132,7 +132,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return (int)deleteResult.DeletedCount;
         }
 
-        public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
+        public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId)
         {
             var db = dbContext.GetCollectionQuizAnswer();
 
@@ -155,7 +155,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                                     new BsonDocument("$match", new BsonDocument
                                     {
                                         { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
-                                        { "_id", new ObjectId(quizId.quiz_id) }
+                                        { "_id", new ObjectId(quizId) }
                                     })
                                 }
                             },

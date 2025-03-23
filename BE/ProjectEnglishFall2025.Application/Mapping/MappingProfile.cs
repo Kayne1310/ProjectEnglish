@@ -167,6 +167,7 @@ namespace ProjectFall2025.Application.Mapping
             CreateMap<Flashcard,UpdateFlashcardVM>().ReverseMap();  
             CreateMap<Flashcard,DeleteFlashcardVM>().ReverseMap();
 
+
         }
     }
 

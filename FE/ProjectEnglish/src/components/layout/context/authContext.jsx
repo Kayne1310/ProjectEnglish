@@ -8,6 +8,10 @@ export const AuthContext = createContext({
     userInfor: {
         userName: "",
         email: "",
+        address: "",
+        age: "",
+        phone: "",
+        gender: "",
         picture: null,
         facebookId: null,
         googleId: null,
@@ -32,6 +36,10 @@ export const AuthWrapper = (props) => {
             setUser({
                 userName: userData.user.userName,
                 email: userData.user.email,
+                address: userData.user.address,
+                age: userData.user.age,
+                phone: userData.user.phone,
+                gender: userData.user.gender,
                 picture: userData.user.picture,
                 facebookId: userData.user.facebookId,
                 googleId: userData.user.googleId,

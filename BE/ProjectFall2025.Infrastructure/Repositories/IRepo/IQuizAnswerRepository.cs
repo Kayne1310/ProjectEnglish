@@ -21,6 +21,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<int> DeleteByQuestionIdAsync(ObjectId questionId, IClientSessionHandle session = null); // Phương thức tối ưu dành cho delete question with annswer
 
         // lookup QuizAnswer -> QuizQuestion -> Quiz
-        Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId);
+        Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId);
     }
 }

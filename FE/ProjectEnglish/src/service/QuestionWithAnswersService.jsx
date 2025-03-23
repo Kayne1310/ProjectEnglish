@@ -49,10 +49,6 @@ const getAllQuiz = async () => {
     return response.data;
 };
 
-// const getQuestionsByQuizId = async (quizId) => {
-//     const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quizId}`);
-//     return response.data;
-// };
 
 const getQuestionsByQuizId = async (quizId) => {
     try {

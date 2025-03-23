@@ -31,6 +31,7 @@ import DocumentItem from './pages/Document/documentItem.jsx';
 import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
+import ViewChangePassword from './pages/ChangePassword/ViewChangePassword.jsx';
 
 
 const router = createBrowserRouter([
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
       {
         path: "/flashcard",
         element: <FlashcardList />
+      },
+      {
+        path: "/changepassword",
+        element: <ViewChangePassword />
       }
     
     ]
