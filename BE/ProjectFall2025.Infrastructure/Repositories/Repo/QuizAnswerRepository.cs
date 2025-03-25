@@ -15,23 +15,23 @@ using System.Threading.Tasks;
 
 namespace ProjectFall2025.Infrastructure.Repositories.Repo
 {
-    public class QuizAnswerRepository : IQuizAnswerRepository
-    {
-        private readonly MongoDbContext dbContext;
+	public class QuizAnswerRepository : IQuizAnswerRepository
+	{
+		private readonly MongoDbContext dbContext;
 
-        public QuizAnswerRepository(MongoDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+		public QuizAnswerRepository(MongoDbContext dbContext)
+		{
+			this.dbContext = dbContext;
+		}
 
-        public async Task<List<QuizAnswer>> getAllQuizAnswer()
-        {
-            var res = await dbContext.GetCollectionQuizAnswer()
-                .Find(_ => true)
-                .ToListAsync();
+		public async Task<List<QuizAnswer>> getAllQuizAnswer()
+		{
+			var res = await dbContext.GetCollectionQuizAnswer()
+				.Find(_ => true)
+				.ToListAsync();
 
-            return res;
-        }
+			return res;
+		}
 
         public async Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null)
         {
@@ -46,21 +46,22 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return await connection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<QuizAnswer> createQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
-        {
-            var collection = dbContext.GetCollectionQuizAnswer();
 
-            if (session != null)
-            {
-                await collection.InsertOneAsync(session, quiz);
-            }
-            else
-            {
-                await collection.InsertOneAsync(quiz);
-            }
+		public async Task<QuizAnswer> createQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
+		{
+			var collection = dbContext.GetCollectionQuizAnswer();
 
-            return quiz;
-        }
+			if (session != null)
+			{
+				await collection.InsertOneAsync(session, quiz);
+			}
+			else
+			{
+				await collection.InsertOneAsync(quiz);
+			}
+
+			return quiz;
+		}
 
         public async Task<int> updateQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
         {
@@ -111,8 +112,9 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                 res = await connection.DeleteOneAsync(filter);
             }
 
-            return (int)res.DeletedCount;
-        }
+
+			return (int)res.DeletedCount;
+		}
 
         // Delete question with answer
         public async Task<int> DeleteByQuestionIdAsync(ObjectId questionId, IClientSessionHandle session = null)
@@ -132,51 +134,52 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return (int)deleteResult.DeletedCount;
         }
 
-        public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId)
-        {
-            var db = dbContext.GetCollectionQuizAnswer();
 
-            var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
-            {
-                { "from", "QuizQuestion" },
-                { "let", new BsonDocument("questionId", "$question_id") },
-                { "pipeline", new BsonArray
-                    {
-                        new BsonDocument("$match", new BsonDocument
-                        {
-                            { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
-                        }),
-                        new BsonDocument("$lookup", new BsonDocument
-                        {
-                            { "from", "Quiz" },
-                            { "let", new BsonDocument("quizId", "$quiz_id") },
-                            { "pipeline", new BsonArray
-                                {
-                                    new BsonDocument("$match", new BsonDocument
-                                    {
-                                        { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
-                                        { "_id", new ObjectId(quizId) }
-                                    })
-                                }
-                            },
-                            { "as", "quiz_info" }
-                        }),
-                        new BsonDocument("$unwind", "$quiz_info")
-                    }
-                },
-                { "as", "question_info" }
-            });
+		public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId)
+		{
+			var db = dbContext.GetCollectionQuizAnswer();
 
-            var unwindQuestion = new BsonDocument("$unwind", "$question_info");
+			var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
+			{
+				{ "from", "QuizQuestion" },
+				{ "let", new BsonDocument("questionId", "$question_id") },
+				{ "pipeline", new BsonArray
+					{
+						new BsonDocument("$match", new BsonDocument
+						{
+							{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
+						}),
+						new BsonDocument("$lookup", new BsonDocument
+						{
+							{ "from", "Quiz" },
+							{ "let", new BsonDocument("quizId", "$quiz_id") },
+							{ "pipeline", new BsonArray
+								{
+									new BsonDocument("$match", new BsonDocument
+									{
+										{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
+										{ "_id", new ObjectId(quizId) }
+									})
+								}
+							},
+							{ "as", "quiz_info" }
+						}),
+						new BsonDocument("$unwind", "$quiz_info")
+					}
+				},
+				{ "as", "question_info" }
+			});
 
-            var matchCorrectAnswer = new BsonDocument("$match", new BsonDocument
-            {
-                { "correct_answer", true }
-            });
+			var unwindQuestion = new BsonDocument("$unwind", "$question_info");
 
-            var pipeline = new[] { lookupQuestion, unwindQuestion, matchCorrectAnswer };
+			var matchCorrectAnswer = new BsonDocument("$match", new BsonDocument
+			{
+				{ "correct_answer", true }
+			});
 
-            return await db.Aggregate<BsonDocument>(pipeline).ToListAsync();
-        }
-    }
+			var pipeline = new[] { lookupQuestion, unwindQuestion, matchCorrectAnswer };
+
+			return await db.Aggregate<BsonDocument>(pipeline).ToListAsync();
+		}
+	}
 }

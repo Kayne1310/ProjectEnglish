@@ -1,5 +1,4 @@
 
-
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -13,13 +12,15 @@ import Login from './pages/LoginAndRes/User/Login.jsx';
 import Register from './pages/LoginAndRes/User/Register.jsx';
 import ResetPasswordPage from './pages/LoginAndRes/User/ResetPasword.jsx';
 import ForgotpasswordPage from './pages/LoginAndRes/User/ForgotPassword.jsx';
-import QuizletForm from './pages/ListQuizz/Quizz.jsx';
+import QuizletForm from './pages/FlashCard/Quizz.jsx';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
-import DetailQuizz from './pages/ListQuizz/DetailQuizz.jsx';
 import PrivateRoute from './pages/privateroute.jsx';
-import Flashcard from './components/FlashCard.jsx';
+import DetailQuizz from './pages/ListQuizz/DetailQuiz/DetailQuizz.jsx';
+import Flashcard from './pages/FlashCard/FlashCard.jsx';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import AppAdmin from './AppAdmin.jsx';
 import DashboardPage from './pages/Admin/DashboardPage/DashboardPage.jsx';
 import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
@@ -32,6 +33,8 @@ import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 import ViewChangePassword from './pages/ChangePassword/ViewChangePassword.jsx';
+import { Community } from './pages/Community/community.jsx';
+
 
 
 const router = createBrowserRouter([
@@ -50,10 +53,16 @@ const router = createBrowserRouter([
           </PrivateRoute>)
       },
       {
+
+        path: "/quizlet",
+        element: <QuizletForm />
+      },
+      {
         path: "/listquizz",
         element: <ListQuizz />,
         children: [{
-          path: "detailquiz", element: <DetailQuizz />
+          path: "detailquiz/:quizId", element: <DetailQuizz />
+
         },
         ],
       },
@@ -69,13 +78,18 @@ const router = createBrowserRouter([
         path: "/contactus",
         element: <ContactUs />
       },
+
+      {
+        path: "/flashcard/practice/:studySetId",
+        element: <Flashcard />
+      },
       {
         path: "/flashcard/:quizId",
         element: <FlashcardList />
       },
       {
         path: "/ListFlashCard/:id",
-        element: <Flashcardcanh/>
+        element: <Flashcardcanh />
       },
       {
         path: "/listdocument/detaildocument/flashcard/:quizId",
@@ -86,17 +100,19 @@ const router = createBrowserRouter([
         element: <FlashcardList />
       },
       {
+
         path: "/changepassword",
         element: <ViewChangePassword />
+      },
+      {
+        path: "/community",
+        element: <Community />
+
       }
-    
+
     ]
   },
 
-  {
-    path: "/quizlet",
-    element: <QuizletForm />
-  },
 
   {
     path: "/resetpassword",
@@ -154,12 +170,24 @@ const router = createBrowserRouter([
 
 ]);
 
+
+
 const dotenvClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <AuthWrapper>
     <GoogleOAuthProvider clientId={dotenvClientId}>
       <RouterProvider router={router} />
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+        style={{ zIndex: 9999 }} // Đặt z-index cao hơn thanh nav bar
+      />
     </GoogleOAuthProvider>
   </AuthWrapper>
   // </StrictMode>

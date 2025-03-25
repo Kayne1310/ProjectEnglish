@@ -1,7 +1,6 @@
 import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL;
 const getAllFlashCard = async () => {
-
     const reponse = await axios.get(`${API_URL}/Quiz/get_all_quiz`);
     console.log(reponse);
     return reponse.data;
@@ -28,5 +27,34 @@ const getListFlashCardByStudySetId = async (id) => {
 
 }
 
+const createFlashCardWithStudySet = async (data) => {
+    console.log("data", data);
+    const response = await axios.post(`${API_URL}/FlashCard/CreateFlashCardWithStudySet`, data, { withCredentials: true });
+    console.log(response);
+    return response.data;
+}
 
-export { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId, getListFlashCardByStudySetId };
+const updateFlashCardWithStudySet = async (data) => {
+    console.log("data", data);
+    const response = await axios.put(`${API_URL}/FlashCard/UpdateFlashCardWithStudySet`, data, { withCredentials: true });
+    console.log("updateFlashCardWithStudySet", response);
+    return response.data;
+}
+
+const deleteFlashCardWithStudySet = async (id) => {
+    const response = await axios.delete(`${API_URL}/FlashCard/DeleteFlashCardWithStudySet/${id}`, { withCredentials: true });
+    console.log("deleteFlashCardWithStudySet", response);
+    return response.data;
+}
+
+
+export {
+    getAllFlashCard, 
+    getALlStudySetService,
+    getALlStudySetServiceByUserId,
+    getListFlashCardByStudySetId, 
+    createFlashCardWithStudySet, 
+    updateFlashCardWithStudySet, 
+    deleteFlashCardWithStudySet
+};
+

@@ -1,0 +1,559 @@
+/* Tạo class body riêng cho form Quizlet để tránh đè lên CSS khác */
+.quizlet-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f6f7fb;
+    padding: 40px 0;
+    /* Cách đều phần navbar và footer */
+}
+
+.quizlet-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+}
+
+.quizlet-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 800px;
+    /* Tăng kích thước form */
+    max-width: 90%;
+    text-align: center;
+
+}
+
+.quizlet-definition-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.quizlet-definition-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: blue;
+}
+
+.quizlet-audio-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: blue;
+}
+
+.quizlet-content-wrapper {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.quizlet-question-container {
+    flex: 1;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    padding: 20px;
+    background: #f6f7fb;
+    border-radius: 10px;
+}
+
+.quizlet-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+}
+
+.quizlet-image-container {
+    width: 194px;
+    height: 259px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: white;
+}
+
+.quizlet-image-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    margin-right: 10px;
+    object-fit: cover;
+
+}
+
+.quizlet-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.quizlet-option {
+    width: 100%;
+    height: 50px;
+    padding: 10px 16px;
+    background: #f8f9fd;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+/* Khi chọn đúng */
+.correct {
+    border-color: #4CAF50 !important;
+    /* Màu xanh */
+    border-style: dashed;
+    /* Viền nét đứt */
+    animation: correctEffect 0.3s ease-in-out;
+}
+
+/* Khi chọn sai */
+.incorrect {
+    border-color: #ff4c4c !important;
+    /* Màu đỏ */
+    /* border-style: dashed; */
+    animation: shake 0.3s ease-in-out;
+    /* Rung */
+}
+
+/* Hiệu ứng rung khi chọn sai */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Hiệu ứng highlight khi chọn đúng */
+@keyframes correctEffect {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+.quizlet-option-text {
+    color: black;
+    /* Chỉ thay đổi màu của chữ bên trong */
+}
+
+
+.quizlet-option:hover {
+    background: #e2e6f2;
+    border-color: #b0b8c5;
+    transform: translateY(-2px);
+}
+
+.quizlet-option:focus {
+    outline: none;
+    border-color: #6c7a89;
+    box-shadow: 0 0 5px rgba(108, 122, 137, 0.5);
+}
+
+.quizlet-help-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.quizlet-help-link a {
+    text-decoration: none;
+    color: #4255ff;
+    font-size: 14px;
+}
+
+/* Nút "Bạn không biết?" */
+.skip-button {
+    transition: all 0.3s ease;
+    background: linear-gradient(to right, transparent 50%, #28a745 50%);
+    background-size: 200% 100%;
+    background-position: left bottom;
+}
+
+.skip-button:hover {
+    color: white !important;
+    background-position: right bottom;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 85, 255, 0.2);
+}
+
+.skip-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 233, 7, 0.1);
+    border-radius: 20px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.skip-button:hover::before {
+    opacity: 1;
+}
+
+/* Thêm hiệu ứng ripple khi click */
+.skip-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(159, 124, 9, 0.2);
+}
+
+
+/* Span "Đã bỏ qua" */
+.skipped-text {
+    color: #586380;
+    font-size: 14px;
+}
+
+/* Footer nhỏ hơn nhưng giữ nguyên chiều dài */
+/* .quizlet-footer-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    margin-top: 20px;
+    border-radius: 15px;
+    width: 800px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.quizlet-footer-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    cursor: pointer;
+} */
+
+
+.answer-number {
+    width: 24px;
+    height: 24px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.answer-number i {
+    font-size: 1.5rem;
+    color: inherit;
+}
+
+.correct .answer-number i {
+    color: #4CAF50;
+    /* Màu xanh */
+}
+
+.incorrect .answer-number i {
+    color: #F44336;
+    /* Màu đỏ */
+}
+
+
+/* Thêm vào file QuizletForm.css */
+.quizlet-container {
+    transition: all 0.3s ease;
+}
+
+.question-section {
+    min-height: 150px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.image-section img {
+    object-fit: cover;
+}
+
+.options-grid .quizlet-option {
+    min-height: 50px;
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: #f8f9fd;
+    transition: all 0.2s ease;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .quizlet-container {
+        padding: 1rem !important;
+    }
+
+    .image-section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .image-section>div {
+        width: 150px !important;
+        height: 150px !important;
+        min-width: 150px !important;
+    }
+
+    .question-section {
+        min-height: 100px;
+    }
+
+    .options-grid .quizlet-option {
+        min-height: 44px;
+        padding: 0.5rem;
+    }
+}
+
+/* Tablet Responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .image-section>div {
+        width: 170px !important;
+        height: 170px !important;
+        min-width: 170px !important;
+    }
+}
+
+
+.options-grid {
+    height: 110px !important;
+    /* Cố định chiều cao */
+}
+
+.quizlet-option {
+    height: 100% !important;
+    padding: 8px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: #f8f9fd;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    /* Tránh tràn nội dung */
+}
+
+.quizlet-option-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .options-grid {
+        height: 250px !important;
+        /* Tăng chiều cao trên mobile vì hiển thị 1 cột */
+    }
+
+    .col.h-50 {
+        height: 25% !important;
+        /* Chia đều 4 phần trên mobile */
+    }
+}
+
+
+
+/* Thêm vào QuizletForm.css */
+@media (max-width: 768px) {
+    .quizlet-container {
+      margin-top: 10px !important;
+      max-height: none !important;
+      height: auto !important;
+    }
+  
+    /* Điều chỉnh content section */
+    .flex-grow-1.d-flex.flex-column.flex-md-row {
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+  
+    /* Điều chỉnh question section */
+    .question-section {
+      min-height: 80px !important;
+      padding: 0.75rem !important;
+    }
+  
+    /* Điều chỉnh image section */
+    .image-section > div {
+      width: 150px !important;
+      height: 150px !important;
+      min-width: 150px !important;
+      margin: 0 auto;
+    }
+  
+    /* Điều chỉnh options grid */
+    .options-grid {
+      height: auto !important;
+      margin-bottom: 1rem !important;
+    }
+  
+    .options-grid .col {
+      height: 48px !important;
+    }
+  
+    .quizlet-option {
+      padding: 8px !important;
+      font-size: 14px !important;
+    }
+  
+    /* Điều chỉnh skip button */
+    .skip-button {
+      margin-top: 0.5rem !important;
+      padding: 4px 8px !important;
+    }
+  }
+
+
+
+/* Thêm vào file CSS của bạn */
+.navigation-footer {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .navigation-btn {
+    flex: 1;
+    position: relative;
+    transition: all 0.3s ease;
+    border-right: 1px solid #e2e8f0;
+    min-height: 80px;
+  }
+  
+  .navigation-btn:last-child {
+    border-right: none;
+  }
+  
+  .navigation-btn:not([style*="cursor: not-allowed"]) {
+    cursor: pointer;
+  }
+  
+  .navigation-btn:not([style*="cursor: not-allowed"]):hover {
+    background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  }
+  
+  .navigation-btn:not([style*="cursor: not-allowed"]):active {
+    background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+    transform: translateY(1px);
+  }
+  
+  .navigation-btn i {
+    font-size: 1.25rem;
+    color: #64748b;
+    transition: all 0.3s ease;
+  }
+  
+  .navigation-btn p {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+  
+  .navigation-btn:not([style*="cursor: not-allowed"]):hover i,
+  .navigation-btn:not([style*="cursor: not-allowed"]):hover p {
+    color: #3b82f6;
+    transform: scale(1.05);
+  }
+  
+  /* Disabled state */
+  .navigation-btn[style*="cursor: not-allowed"] {
+    opacity: 0.5;
+    background: #f8fafc;
+  }
+  
+  /* Ripple effect */
+  .navigation-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+  
+  .navigation-btn:not([style*="cursor: not-allowed"]):active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+    transition: 0s;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .navigation-btn {
+      min-height: 60px;
+    }
+  
+    .navigation-btn i {
+      font-size: 1rem;
+    }
+  
+    .navigation-btn p {
+      font-size: 0.75rem;
+    }
+  }
+
+

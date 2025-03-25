@@ -8,22 +8,27 @@ import b1 from "../../assets/image/b1.jpg";
 import b2 from "../../assets/image/b2.jpg";
 import b3 from "../../assets/image/b3.jpg";
 import { Link } from "react-router-dom";
+
 import FlashcardList from "../FlashCard/ListStudySet";
+
 import ListDocument from "../Document/ListDocument";
 import AOS from "aos";
 import "../../../node_modules/aos/dist/aos.css";
 import { useEffect } from "react";
+
 const HomePage = () => {
     useEffect(() => {
         AOS.init({ duration: 1000, once: true }); // Hiệu ứng 1 giây, chạy một lần duy nhất
+        
       }, []);
 
     return (
         <>
+         <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
             <div className="hero_area">
                 {/* <!-- slider section --> */}
-
                 <section className="slider_section long_section">
+                   
                     <div id="customCarousel" className="carousel slide" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             <div className="carousel-item active">
@@ -80,12 +85,14 @@ const HomePage = () => {
                             <span className="carousel-control-next-icon" aria-hidden="true"></span>
                         </a>
                     </div>
+                  
                 </section>
 
                 {/* <!-- end slider section --> */}
             </div>
 
-            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
+            <div className="w-100" style={{ height: '50px', backgroundColor: '#f9fafa' }}></div>
+
 
 
 
@@ -117,7 +124,8 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <div className="w-100 bg-white" style={{ height: '50px' }}></div>
+            <div className="w-100" style={{ height: '50px', backgroundColor: '#f9fafa' }}></div>
+
             {/* <!-- end about section -->
 
             <!-- blog section --> */}
@@ -166,13 +174,16 @@ const HomePage = () => {
                     </div>
                 </div>
             </section>
+     
+            <FlashcardList aos={AOS}/>
 
-            <FlashcardList/>
+            <ListQuizz aos={AOS} />
 
-            <ListQuizz/>
             <ListDocument/>
             {/* <!-- Contact Section --> */}
             <ContactUs />
+            
+            <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
 
             {/* <!-- Info Section --> */}
 

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using ProjectFall2025.Common.ImgCountry;
 using ProjectFall2025.Domain.Do.FlashCard;
 using ProjectFall2025.Domain.ViewModel.FlashCard;
 using ProjectFall2025.Infrastructure.DbContext;
@@ -116,9 +117,21 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             //  Chỉ update nếu có giá trị mới
             if (!string.IsNullOrEmpty(studySet.Title))
                 updates.Add(updateBuilder.Set(x => x.Title, studySet.Title));
+            if (!string.IsNullOrEmpty(studySet.Language))
+            {
+
+                updates.Add(updateBuilder.Set(x => x.Language, studySet.Language));
+                updates.Add(updateBuilder.Set(x => x.imageCountry, Country.GetImageCountry(studySet.Language)));
+
+            }
 
             if (!string.IsNullOrEmpty(studySet.Desc))
+            {
+
                 updates.Add(updateBuilder.Set(x => x.Desc, studySet.Desc));
+            }
+            updates.Add(updateBuilder.Set(x => x.Public, studySet.Public));
+
 
             if (!updates.Any()) return 0; // Không có gì thay đổi -> Không cần update
 

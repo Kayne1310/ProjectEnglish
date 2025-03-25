@@ -66,8 +66,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Account
     }
     public class ChangePasswordRequest
     {
-     
-
+ 
         public string oldPassword { get; set; }
         public string newPassword { get; set; }
         public string reNewPassword { get; set; }

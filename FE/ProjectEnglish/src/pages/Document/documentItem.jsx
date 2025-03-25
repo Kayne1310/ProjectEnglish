@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../assets/css/Home/document.css';
 import { Link, useParams } from 'react-router-dom';
-import { flashcard } from '../../service/QuizService';
+// import { flashcard } from '../../service/QuizService';
 import { Button, Col, Row } from 'react-bootstrap';
 
 const DocumentItem = () => {
@@ -27,7 +27,7 @@ const DocumentItem = () => {
     }, [id]);
     return (
         <>
-            <section className="light">
+            <section className="light" >
                 <div className="container py-2">
                     <div className="h1 text-center text-dark" id="pageHeaderTitle">Tài liệu : {title}</div>
                     <div className="mb-3">

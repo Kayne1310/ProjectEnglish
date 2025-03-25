@@ -1,151 +1,309 @@
-/* Reset và thiết lập cơ bản cho trang */
+.flashcard-container,
+.quizlet-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Container chứa flashcard - tạo không gian 3D */
-  .flashcard-container {
-    display: grid;
-    place-items: center; /* Căn giữa cả hai chiều */
-    width: 100vw;
-    perspective: 1000px;
-    position: relative;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+.quiz-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.quiz-footer {
+  margin-top: auto;
+}/* Reset và thiết lập cơ bản cho trang */
+
+/* Container chứa flashcard - tạo không gian 3D */
+.flashcard-container {
+  display: grid;
+  /* place-items: center;  */
+  /* Căn giữa cả hai chiều */
+  width: 100vw;
+  perspective: 1000px;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Thiết lập cho flashcard chính */
+.flashcard {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Class được thêm vào khi flashcard được lật */
+.flashcard.flipped {
+  transform: rotateX(180deg);
+}
+
+/* Thiết lập chung cho cả mặt trước và mặt sau */
+.flashcard .front,
+.flashcard .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Thiết lập riêng cho mặt trước */
+.flashcard .front {
+  background:rgb(255, 255, 255);
+}
+
+/* Thiết lập riêng cho mặt sau */
+.flashcard .back {
+  background: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  transform: rotateX(180deg);
+}
+
+/* Phần chứa nội dung của flashcard */
+.content {
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  font-size: 30px;
+  cursor: pointer;
+  color: black;
+}
+
+/* Thiết lập cho các nút icon */
+.icon-button {
+  position: absolute;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
   
-  /* Thiết lập cho flashcard chính */
-  .flashcard {
-    position: relative;
-    width: 800px;
-    height: 400px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-    transform-style: preserve-3d;
-    transition: transform 0.5s ease-in-out;
-  }
-  
-  /* Class được thêm vào khi flashcard được lật */
-  .flashcard.flipped {
-    transform: rotateX(180deg);
-  }
-  
-  /* Thiết lập chung cho cả mặt trước và mặt sau */
-  .flashcard .front,
-  .flashcard .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  /* Thiết lập riêng cho mặt trước */
-  .flashcard .front {
-    background: rgb(255, 235, 198);
-  }
-  
-  /* Thiết lập riêng cho mặt sau */
-  .flashcard .back {
-    background: #69b2ff;
-    color: rgb(255, 255, 255);
-    transform: rotateX(180deg);
-  }
-  
-  /* Phần chứa nội dung của flashcard */
-  .content {
-    text-align: center;
-    width: 100%;
-    padding: 20px;
-    font-size: 30px;
-    cursor: pointer;
-  }
-  
-  /* Thiết lập cho các nút icon */
-  .icon-button {
-    position: absolute;
-    top: 10px;
-    width: 30px;
-    height: 30px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s;
-  }
-  
-  /* Định vị nút bên trái */
-  .icon-button.left {
-    left: 10px;
-  }
-  
-  /* Định vị nút bên phải */
-  .icon-button.right {
-    right: 10px;
-  }
-  
-  /* Kích thước icon */
-  .icon-button i {
-    font-size: 20px;
-  }
-  
-  /* Màu sắc icon cho mặt trước */
-  .front .icon-button {
-    color: #007bff;
-  }
-  
-  /* Màu sắc icon cho mặt sau */
-  .back .icon-button {
-    color: white;
-  }
-  
-  /* Hiệu ứng hover cho icon */
-  .icon-button:hover {
-    opacity: 0.8;
-  }
-  
-  /* Phần điều khiển (nút Previous, Shuffle, Next) */
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  /* Thiết lập cho các nút điều khiển */
-  .controls button {
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background: #f89646;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-    
-  }
-  
-  /* Trạng thái disabled của nút */
-  .controls button:disabled {
-    background: #dcdcdc;
-    cursor: not-allowed;
-  }
-  
-  /* Hiệu ứng hover cho nút điều khiển */
-  .controls button:hover:not(:disabled) {
-    background: #c9691a;
-  }
+}
+
+/* Định vị nút bên trái */
+.icon-button.left {
+  left: 10px;
+}
+
+/* Định vị nút bên phải */
+.icon-button.right {
+  right: 10px;
+}
+
+/* Kích thước icon */
+.icon-button i {
+  font-size: 20px;
+}
+
+/* Màu sắc icon cho mặt trước */
+.front .icon-button {
+  color: #007bff;
+}
+
+/* Màu sắc icon cho mặt sau */
+.back .icon-button {
+  color: rgb(97, 17, 17);
+}
+
+/* Hiệu ứng hover cho icon */
+.icon-button:hover {
+  opacity: 0.8;
+}
+
+
+/* Sidebar styles - Thêm mới */
+
+/* Section chung cho sidebar */
+.custom-audio-section,
+.custom-random-section,
+.custom-mode-section,
+.custom-progress-section,
+.custom-shortcut-section {
+  margin-bottom: 0.75rem;
+}
+
+.custom-section-title {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Phát âm giọng UK, US */
+.custom-audio-section {
+  margin-bottom: 0.75rem;
+}
+
+.custom-audio-label {
+  font-size: 1rem;
+}
+
+.custom-switch-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #6c757d;
+  border-radius: 1rem;
+}
+
+.custom-switch-handle {
+  width: 1rem;
+  height: 1rem;
+  background-color: #6c757d;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+}
+
+.custom-switch-inner {
+  display: flex;
+  align-items: center;
+}
+
+.custom-switch-inner-checked,
+.custom-switch-inner-unchecked {
+  font-size: 0.875rem;
+}
+
+/* Chế độ học */
+.custom-mode-section {
+  margin-bottom: 0.75rem;
+}
+
+.custom-mode-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-mode-btn.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.custom-mode-btn.btn-outline-secondary {
+  background-color: transparent;
+  color: black;
+  border: 1px solid #6c757d;
+}
+
+.custom-mode-btn:hover.btn-outline-secondary {
+  background-color: #e9ecef;
+  border-color: #6c757d;
+}
+
+/* Tiến trình */
+.custom-progress-section {
+  margin-bottom: 0.75rem;
+}
+
+.custom-card {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+}
+
+.custom-progress {
+  height: 0.5rem;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}
+
+/* Phím tắt */
+.custom-shortcut-section {
+  margin-bottom: 0.75rem;
+}
+
+.custom-keyboard-key {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #212529;
+  color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer navigation chung cho cả Flashcard và Quiz */
+.custom-footer-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #f0f0f0; /* Màu xám nhạt như trong ảnh */
+  margin-top: 20px;
+  border-radius: 15px;
+  width: 100%; /* Đảm bảo ngang bằng với form */
+  max-width: 800px; /* Giữ kích thước ngang bằng với form */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 12px 24px; /* Tăng padding để lớn hơn */
+  position: absolute; /* Cố định trong form, không toàn trang */
+  bottom: -100px; /* Đặt dưới form, điều chỉnh để cách đều */
+  left: 50%; /* Căn giữa theo chiều ngang */
+  transform: translateX(-50%); /* Điều chỉnh vị trí để căn giữa chính xác */
+  z-index: 1000; /* Đảm bảo footer luôn ở trên cùng */
+}
+/* Nút footer */
+.custom-footer-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* font-size: 14px; */
+  height: 50px; /* Tăng chiều cao để dễ nhấn */
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px; /* Bo góc nhiều hơn như trong ảnh */
+  background-color: #d0d0d0; /* Màu xám nhạt */
+  color: #333;
+  border: none;
+  transition: background-color 0.3s, transform 0.1s, box-shadow 0.1s; /* Thêm hiệu ứng click và shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow nhẹ như trong ảnh */
+}
+
+/* Hiệu ứng hover */
+.custom-footer-button:hover {
+  background-color: #c0c0c0; /* Xám đậm hơn khi hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tăng shadow khi hover */
+}
+
+/* Hiệu ứng click (ấn xuống) */
+.custom-footer-button:active {
+  transform: scale(0.98); /* Thu nhỏ nhẹ khi click */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Giảm shadow khi click */
+}
+
+/* Trạng thái disabled */
+.custom-footer-button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.about_section2 {
+  background-color: #f9fafa!important;
+}
+
 
   button{
     margin-right: 10px;
   }
 
   .custom-scroll::-webkit-scrollbar {
-    width: 3px; /* Thanh cuộn mỏng */
+    width: 6px; /* Thanh cuộn mỏng */
   }
   
   .custom-scroll::-webkit-scrollbar-track {
@@ -154,7 +312,7 @@
   }
   
   .custom-scroll::-webkit-scrollbar-thumb {
-    background: #888; /* Màu thanh trượt */
+    background: blue; /* Màu thanh trượt */
     border-radius: 5px;
   }
   
@@ -167,4 +325,142 @@
   color: black;
   transition: color 0.3s ease;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .flashcard {
+    height: 300px;
+  }
+  .content {
+    font-size: 20px;
+  }
+  .custom-footer-navigation {
+    width: 95%;
+
+  }
+  .custom-footer-button {
+    height: 45px;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flashcard {
+    height: 250px;
+  }
+  .content {
+    font-size: 18px;
+  }
+  .icon-button {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.navigation-btn {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.navigation-btn[style*="cursor: not-allowed"] {
+  opacity: 0.5;
+}
+
+/* Nếu bạn muốn thêm border giữa 2 nút */
+.navigation-btn:first-child {
+  border-right: 1px solid #dee2e6;
+}
+
+
+/* Thêm vào file CSS của bạn */
+@media (max-width: 768px) {
+  .flashcard-container {
+    padding: 1rem;
+  }
+
+  .flashcard {
+    min-height: 300px !important;
+    margin: 10px 0;
+  }
+
+  .flashcard .front,
+  .flashcard .back {
+    padding: 1rem !important;
+  }
+
+  .flashcard .content {
+    font-size: 16px !important;
+    padding: 0.5rem !important;
+  }
+
+  .flashcard .transcription {
+    font-size: 14px !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .icon-button {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+
+  .icon-button.left {
+    left: 8px !important;
+  }
+
+  .icon-button.right {
+    right: 8px !important;
+  }
+}
+
+/* Thêm styles cho tablet nếu cần */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .flashcard {
+    min-height: 350px !important;
+  }
+}
+
+
+
+/* keyboard */
+.custom-keyboard-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  height: 30px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}
+
+.custom-keyboard-key:active,
+.key-pressed {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+/* Animation khi phím được nhấn */
+@keyframes keyPress {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+.key-pressed {
+  animation: keyPress 0.2s ease;
+}
+
+
 

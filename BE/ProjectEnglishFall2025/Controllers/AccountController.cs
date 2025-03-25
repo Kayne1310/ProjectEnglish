@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver.Linq;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -158,6 +159,15 @@ namespace ProjectEnglishFall2025.Controllers
 
                 }
                 await userSessionService.removeUserSession(new LogoutRequest { UserId = userId });
+
+                // **Xóa Cookie `accessToken` từ phía server**
+                Response.Cookies.Append("accessToken", "", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddDays(-1) // Đặt ngày hết hạn trong quá khứ để xóa cookie
+                });
 
                 response.ReturnCode = 1;
                 response.ReturnMessage = "Đăng xuất thành công.";
@@ -321,7 +331,7 @@ namespace ProjectEnglishFall2025.Controllers
                     HttpOnly = true, // Ngăn chặn truy cập từ JavaScript
                     Secure = true,   // Chỉ hoạt động trên HTTPS
                     SameSite = SameSiteMode.None, // Ngăn chặn CSRF
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddDays(exprired)
                 });
 
                 // Tạo phản hồi trả về

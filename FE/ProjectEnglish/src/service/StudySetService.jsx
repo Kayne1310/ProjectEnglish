@@ -9,7 +9,20 @@ const createStudySet = async (title, language, isPublic, desc) => {
         desc: desc,
         public: isPublic
     }, { withCredentials: true });
-    console.log(response);
+    return response.data;
 }
 
-export { createStudySet };
+//update study set
+const updateStudySet = async (data) => {
+    const response = await axios.put(`${API_URL}/StudySet/UpdateStudySet`, data, { withCredentials: true });
+    console.log("updateStudySet", response);
+    return response.data;
+}
+
+//delete study set  
+const deleteStudySet = async (id) => {
+    const response = await axios.delete(`${API_URL}/StudySet/DeleteStudySet/${id}`, { withCredentials: true });
+    return response.data;
+}
+
+export { createStudySet, updateStudySet, deleteStudySet };

@@ -1,16 +1,19 @@
 import { Justify } from "react-bootstrap-icons";
+import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId } from "../../service/flashcardService";
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
+import { toast } from "react-toastify";
+import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
+
 const { TextArea } = Input;
 const { Option } = Select;
 const FlashcardList = () => {
     const location = useLocation();
     const isFlashcardPage = location.pathname.includes("/flashcard"); // Kiểm tra nếu URL chứa "/flashcard"
-
     const [activeLang, setActiveLang] = useState("all");
     const [studySetByUserID, setStudySetByUserID] = useState([]);
     const [studyset, setStudyset] = useState([]);
@@ -19,6 +22,8 @@ const FlashcardList = () => {
     const [language, setLanguage] = useState("Tiếng Anh-Mỹ");
     const [isPublic, setIsPublic] = useState(false);
     const [description, setDescription] = useState("");
+    const [isLoading, setIsLoading] = useState(true); // Thêm trạng thái loading
+    const isHomePage = location.pathname === "/";
 
 
     const languages = [
@@ -39,43 +44,80 @@ const FlashcardList = () => {
     // Đóng popup
     const handleCancel = () => {
         setIsModalVisible(false);
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
     const handleCreate = async () => {
-        setIsModalVisible(false);
-        await createStudySet(listName, language, isPublic, description);
+        try {
+            setIsModalVisible(false);
+            var res = await createStudySet(listName, language, isPublic, description);
+            if (res.returnCode == 1) {
+                toast.success("Tạo list từ thành công");
+                fetchFlashcards();
+                gellAllListStudybyUser();
+            }
+            else {
+                toast.error(`Tạo list từ thất bại: ${res.returnMessage}`);
+            }
+            setListName("");
+            setLanguage("Tiếng Anh-Mỹ");
+            setIsPublic(false);
+            setDescription("");
+        }
+        catch (error) {
+            toast.error(`Tạo list từ thất bại: ${error}`);
+        }
     };
+
+    //fetch danh sách từ
+    const fetchFlashcards = async () => {
+        try {
+
+            const studyset = await getALlStudySetService();
+            setStudyset(studyset.listStudySetWithCount)
+        } catch (error) {
+            console.error('Error fetching quizzes:', error);
+        }
+    };
+    //fetch danh sách từ của user
+    const gellAllListStudybyUser = async () => {
+        try {
+            const studySetUserId = await getALlStudySetServiceByUserId();
+            setStudySetByUserID(studySetUserId.listStudySetWithCount);
+        }
+        catch (error) {
+
+        }
+    }
 
     useEffect(() => {
         window.scroll(0, 0);
-        const fetchFlashcards = async () => {
-            try {
-            
-                const studyset = await getALlStudySetService();
-                setStudyset(studyset.listStudySetWithCount)
-            } catch (error) {
-                console.error('Error fetching quizzes:', error);
-            }
-        };
-        const gellAllListStudybyUser= async()=>{
-            try{
-                const studySetUserId = await getALlStudySetServiceByUserId();
-                setStudySetByUserID(studySetUserId.listStudySetWithCount);
-            }
-            catch(error){
+        let timer;
+        try {
+            timer = setTimeout(() => {
+                setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
+            }, 1000);
+            fetchFlashcards();
+            gellAllListStudybyUser();
+        } catch (error) {
 
-            }
+            setIsLoading(false);
         }
-
-        fetchFlashcards();
-        gellAllListStudybyUser();
-    }, []); 
+    }, []);
 
 
     return (
 
-        <>
-
-            <section className="about_section layout_padding long_section">
+        <> {!isHomePage && isLoading ? (
+            <div className="loading-container" style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'
+            }}>
+                <Spin size="large" />
+            </div>
+        ) : (
+            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
                     <div className="mt-10 mb-5 text-third ml-1">
@@ -87,11 +129,11 @@ const FlashcardList = () => {
                     </div>
                     <div className="mt-4">
                         <h4 className="text-primary mb-2">List từ đã tạo</h4>
-                        <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll" style={{maxHeight: isFlashcardPage ? undefined : "350px", overflow: isFlashcardPage ? "visible" : "auto" }}>
+                        <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll" style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflow: isFlashcardPage ? "visible" : "auto" }}>
 
                             {/* Card Tạo Mới */}
-                            <div className="col" style={{ width: "218px", height: "216px" }}>
-                                <Link className="card border shadow-sm p-3 bg-light rounded h-100 text-decoration-none text-dark" onClick={showModal}>
+                            <div className="col card-create-new" style={{ width: "218px", height: "216px" }}>
+                                <Link className="card border shadow-sm p-3 bg-white rounded h-100 text-decoration-none text-dark" onClick={showModal}>
                                     <div className="d-flex flex-column align-items-center justify-content-center h-100">
                                         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="30" width="30" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8Z"></path>
@@ -105,7 +147,12 @@ const FlashcardList = () => {
                             {/* Render danh sách từ */}
                             {studySetByUserID.map((list) => (
                                 <div className="col custom-scroll " key={list.studySet.id} >
-                                    <Link to={`/ListFlashCard/${list.studySet.id}`} className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                    <Link to={`/ListFlashCard/${list.studySet.id}`}
+                                        state={{
+                                            flashcardCount: list.flashcardCount,
+                                            // Có thể truyền thêm data khác nếu cần
+                                        }}
+                                        className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                         <h5 className="fw-bold text-truncate" title={list.studySet.title}>{list.studySet.title}</h5>
                                         <h6 className="d-flex align-items-center">
                                             <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg ">
@@ -136,7 +183,7 @@ const FlashcardList = () => {
                                                         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M18 8H20C20.5523 8 21 8.44772 21 9V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V9C3 8.44772 3.44772 8 4 8H6V7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7V8ZM16 8V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V8H16ZM7 11V13H9V11H7ZM7 14V16H9V14H7ZM7 17V19H9V17H7Z"></path>
                                                         </svg>
-                                                        <p className="mb-0 ms-1 text-truncate " style={{ fontSize: "0.8rem" }}>{calculateDaysAgo(list.studySet.createdAt)} ngày trước</p>
+                                                        <p className="mb-0 ms-1 text-truncate " style={{ fontSize: "0.8rem" }}>{calculateDaysAgo(list.studySet.createdAt)}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,12 +240,12 @@ const FlashcardList = () => {
                                 value={language}
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
+                                defaultValue="UK"
                             >
-                                <Option value="Tiếng Anh-Mỹ">Tiếng Anh-Mỹ</Option>
-                                <Option value="Tiếng Anh-Anh">Tiếng Anh-Anh</Option>
+                                <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
-                                <Option value="Tiếng Nhật">Tiếng Nhật</Option>
-                                <Option value="Tiếng Trung Quốc">Tiếng Trung Quốc</Option>
+                                <Option value="Japan">Tiếng Nhật</Option>
+                                <Option value="China">Tiếng Trung Quốc</Option>
                             </Select>
                             <TextArea
                                 placeholder="Mô tả"
@@ -217,7 +264,7 @@ const FlashcardList = () => {
                         </div>
                         <div className="d-flex justify-content-center mt-3">
                             <Button onClick={handleCancel} className="me-2">Hủy</Button>
-                            <Button type="primary" onClick={handleCreate}>Tạo</Button>
+                            <Button type="primary" onClick={handleCreate}> Tạo</Button>
                         </div>
                     </Modal>
 
@@ -225,7 +272,11 @@ const FlashcardList = () => {
                         style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflowY: isFlashcardPage ? "visible" : "scroll" }}>
                         {studyset.map((data) => (
                             <div className="col" key={data.studySet.id}>
-                                <Link to={`/ListFlashCard/${data.studySet.id}`} className="d-block w-100 bg-light rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
+                                <Link to={`/ListFlashCard/${data.studySet.id}`}
+                                    state={{
+                                        flashcardCount: data.flashcardCount,
+                                    }}
+                                    className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
                                     <h5 className="fw-bold text-truncate" >{data.studySet.title}</h5>
                                     <h6 className="d-flex align-items-center">
                                         <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -254,7 +305,7 @@ const FlashcardList = () => {
                                                 <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M18 8H20C20.5523 8 21 8.44772 21 9V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V9C3 8.44772 3.44772 8 4 8H6V7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7V8ZM16 8V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V8H16ZM7 11V13H9V11H7ZM7 14V16H9V14H7ZM7 17V19H9V17H7Z"></path>
                                                 </svg>
-                                                <p className="mb-0 ms-1 text-truncate" style={{ fontSize: "0.8rem" }}> {calculateDaysAgo(data.studySet.createdAt)} ngày trước</p>
+                                                <p className="mb-0 ms-1 text-truncate" style={{ fontSize: "0.8rem" }}> {calculateDaysAgo(data.studySet.createdAt)} </p>
                                             </div>
                                         </div>
                                     </div>
@@ -266,6 +317,7 @@ const FlashcardList = () => {
 
                 </div>
             </section>
+        )}
         </>
     );
 };

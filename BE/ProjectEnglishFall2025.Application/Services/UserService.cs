@@ -115,7 +115,7 @@ namespace ProjectFall2025.Application.Services
                 return new ReturnData
                 {
                     ReturnCode = -1,
-                    ReturnMessage = "NewPassword and ReNewPassword are not the same ",
+                    ReturnMessage = "NewPassword and ReNewPassword are not the same",
                 };
 
             }

@@ -38,6 +38,7 @@ const logout = async () => {
         return null;
       }
       return response.data;
+
     } catch (error) {
       console.error("Logout failed:", error.response?.data || error.message);
       return { error: error.response?.data || error.message };

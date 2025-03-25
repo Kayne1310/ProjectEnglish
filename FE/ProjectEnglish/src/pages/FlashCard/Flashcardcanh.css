@@ -3,9 +3,14 @@
     font-family: Arial, sans-serif;
 } */
 
+.flashcard-overview {
+   margin: 150px;
+   padding: 20px;
+}
 .flashcardcanh-container-fluid {
     padding: 20px 50px;
 }
+
 
 .flashcardcanh-header-title {
     color: yellowgreen;
@@ -149,15 +154,14 @@
 }
 
 .flashcardcanh-container {
-    background-color: #f0f4f8;
+    background-color: white;
     border-radius: 5px;
     padding: 20px;
     margin-top: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 45%;
+    width: 100%;
     max-width: 600px;
-    flex: 1;
-    max-width: 50%;
+    max-width: 100% !important;
     position: relative;
     height: 600px;
  
@@ -187,8 +191,17 @@
         justify-content: center; /* Căn giữa thay vì space-between */
     }
     .flashcardcanh-container {
-        width: 50%; /* Điều chỉnh để vừa hai cột */
+        width: 100%; /* Điều chỉnh để vừa hai cột */
     }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cursor-pointer:hover {
+    transform: scale(1.1);
 }
 
 .flashcardcanh-header {
@@ -243,3 +256,279 @@
 .flashcardcanh-examples {
     padding: 5px 0;
 }
+
+/* Đảm bảo các card có chiều cao bằng nhau trong cùng một hàng */
+@media (max-width: 768px) {
+    /* Bỏ padding không cần thiết, sử dụng padding của container */
+    .flashcard-overview {
+      padding: 0 !important;
+      margin: 1rem  !important;
+      margin-top: 5rem !important;
+      margin-bottom: 3rem !important;
+    }
+    
+    /* Header title */
+    .flashcardcanh-header-title {
+      font-size: 1.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    /* Button quay lại */
+    .flashcardcanh-btn-back {
+      font-size: 0.8rem !important;
+      padding: 0.25rem 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+      display: inline-block !important;
+    }
+    
+    /* Mô tả */
+    .flashcard-overview .fs-3 {
+      font-size: 1rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    /* Thông tin ngôn ngữ */
+    .flashcard-overview p img {
+      width: 20px !important;
+      height: 15px !important;
+      margin-left: 5px !important;
+    }
+    
+    /* Người tạo */
+    .flashcardcanh-creator {
+      font-size: 0.8rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .flashcardcanh-avatar {
+      width: 25px !important;
+      height: 25px !important;
+      margin-left: 5px !important;
+    }
+    
+    /* Nút luyện tập */
+    .flashcardcanh-btn-practice {
+      padding: 0.4rem 0.6rem !important;
+      font-size: 0.8rem !important;
+      margin-right: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+      white-space: nowrap !important;
+    }
+    
+    /* Text muted */
+    .flashcardcanh-mt-2.text-muted {
+      font-size: 0.7rem !important;
+      margin-top: 0.5rem !important;
+    }
+    
+    /* Stats box */
+    .flashcardcanh-stats-box {
+      margin-bottom: 1rem !important;
+    }
+    
+    .flashcardcanh-stat-item {
+      font-size: 0.8rem !important;
+      padding: 0.5rem 0.25rem !important;
+      text-align: center !important;
+    }
+    
+    /* Flashcard container */
+    .flashcardcanh-columns .row {
+      margin: 0 !important; /* Bỏ margin không cần thiết */
+    }
+    
+    .flashcardcanh-columns .col-md-6 {
+      padding: 0 0.25rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .flashcardcanh-container {
+      width: 100% !important;
+      height: 100% !important;
+      padding: 1rem !important;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+      border: 1px solid #e0e0e0 !important;
+    }
+    
+    /* Title, button edit, delete */
+    .flashcardcanh-container .d-flex.justify-content-end {
+      gap: 0.5rem !important;
+    }
+    
+    .flashcardcanh-container i.fs-4 {
+      font-size: 1rem !important;
+    }
+    
+    .flashcardcanh-title {
+      font-size: 1.1rem !important;
+      margin-bottom: 0.25rem !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: wrap !important;
+    }
+    
+    .flashcardcanh-title .fs-5 {
+      font-size: 0.8rem !important;
+      margin-left: 0.25rem !important;
+    }
+    
+    .flashcardcanh-audio-icon.fs-5 i {
+      font-size: 1rem !important;
+    }
+    
+    /* Subtitle & definition */
+    .flashcardcanh-subtitle {
+      font-size: 0.8rem !important;
+      margin-bottom: 0.25rem !important;
+    }
+    
+    .flashcardcanh-definition {
+      font-size: 0.8rem !important;
+      font-weight: bold !important;
+    }
+    
+    /* Examples container */
+    .flashcardcanh-examples-container {
+      padding: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+      max-height: 150px !important;
+      overflow-y: auto !important;
+    }
+    
+    .flashcardcanh-examples p {
+      font-size: 0.75rem !important;
+      margin-bottom: 0.25rem !important;
+    }
+    
+    /* Note */
+    .flashcardcanh-note {
+      font-size: 0.75rem !important;
+      margin-top: 0.5rem !important;
+    }
+    
+    /* Edit buttons container */
+    .flashcardcanh-overview .d-flex.flex-column.flex-md-row {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+    }
+    
+    .flashcardcanh-overview .d-flex.gap-2 {
+      gap: 0.25rem !important;
+    }
+    
+    .flashcardcanh-overview .btn {
+      font-size: 0.8rem !important;
+      padding: 0.25rem 0.5rem !important;
+    }
+    
+    .flashcardcanh-overview .btn i {
+      font-size: 0.8rem !important;
+    }
+    
+    /* Modal responsive */
+  
+
+
+    .modal-dialog {
+        margin: 0.5rem !important;
+        width: 95% !important;
+        min-width: auto !important;
+        max-height: 60vh !important; /* Chiều cao tối đa 90% viewport height */
+        display: flex !important;
+      }
+    
+      .modal-content {
+        border-radius: 8px !important;
+        max-height: 60vh !important;
+        overflow: hidden !important; /* Ngăn scroll cho modal-content */
+        display: flex !important;
+        flex-direction: column !important;
+      }
+    
+      /* Modal body với scroll */
+      .modal-body {
+        padding: 1rem !important;
+        overflow-y: auto !important; /* Cho phép scroll */
+        -webkit-overflow-scrolling: touch !important; /* Smooth scroll cho iOS */
+        flex: 1 1 auto !important; /* Cho phép body mở rộng */
+      }
+    
+      /* Giữ header và footer cố định */
+      .modal-header {
+        padding: 0.75rem 1rem !important;
+        flex: 0 0 auto !important;
+      }
+    
+      .modal-footer {
+        padding: 0.75rem 1rem !important;
+        flex: 0 0 auto !important;
+      }
+    
+      /* Ant Design Modal adjustments */
+      .ant-modal {
+        margin: 0 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+        max-height: 60vh !important;
+      }
+    
+      .ant-modal-content {
+        max-height: 60vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+    
+      .ant-modal-body {
+        padding: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex: 1 1 auto !important;
+      }
+    
+      /* Đảm bảo các phần tử trong modal body không bị overflow */
+      .modal-body .container-fluid {
+        padding: 0 !important;
+        width: 100% !important;
+      }
+    
+      /* Điều chỉnh textarea để không vượt quá kích thước */
+      .modal-body textarea {
+        max-height: 150px !important;
+        resize: none !important;
+      }
+    
+      /* Custom scrollbar cho modal body */
+      .modal-body::-webkit-scrollbar {
+        width: 4px !important;
+      }
+    
+      .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1 !important;
+      }
+    
+      .modal-body::-webkit-scrollbar-thumb {
+        background: #888 !important;
+        border-radius: 4px !important;
+      }
+    
+      .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #555 !important;
+      }
+  }
+  
+  /* Điều chỉnh thêm cho màn hình rất nhỏ */
+  @media (max-width: 375px) {
+    .flashcardcanh-btn-practice {
+      font-size: 0.7rem !important;
+      padding: 0.3rem 0.4rem !important;
+    }
+    
+    .flashcardcanh-stat-item {
+      font-size: 0.7rem !important;
+      padding: 0.25rem !important;
+    }
+    
+    .flashcardcanh-container {
+      padding: 0.5rem !important;
+    }
+  }

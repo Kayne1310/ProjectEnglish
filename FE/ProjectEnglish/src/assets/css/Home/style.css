@@ -32,8 +32,8 @@ body {
 }
 
 .long_section {
-  margin-left: 45px;
-  margin-right: 45px;
+  margin-left: 110px;
+  margin-right: 110px;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -224,7 +224,7 @@ a:focus {
   -ms-flex-align: center;
   align-items: center;
   position: relative;
-  background-color: #f9fafa;
+  background-color: white;
 }
 
 .slider_section .row {

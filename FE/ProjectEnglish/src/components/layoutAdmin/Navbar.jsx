@@ -7,14 +7,13 @@ const AdminNavbar = ({ toggleSidebar }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { userInfor, setUser } = useContext(AuthContext); // Lấy user từ context
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Không cần set lại user ở đây vì đã có trong context
   }, [userInfor]);
 
   const onLogout = async () => {
-    await handleLogout(setIsLoading, setError, setUser, navigate);
+    await handleLogout(setIsLoading, setError, setUser);
   };
 
   return (

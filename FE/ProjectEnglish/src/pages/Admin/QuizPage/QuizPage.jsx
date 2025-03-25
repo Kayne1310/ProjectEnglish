@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { getAllQuiz } from "../../../service/QuestionWithAnswersService";
-import { createQuiz, updateQuiz, deleteQuizWithQuestionsAndAnswers } from "../../../service/QuizService";
+import { createQuiz, updateQuiz, deleteQuizWithQuestionsAndAnswers } from "../../../service/QuizletService";
 
 const QuizPage = () => {
   const [searchTerm, setSearchTerm] = useState("");

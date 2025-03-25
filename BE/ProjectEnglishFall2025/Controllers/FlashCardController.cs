@@ -32,6 +32,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPut("UpdateFlashCardWithStudySet")]
+        [Authorize("User", "Admin")]
         public async Task<ActionResult> UpdateFlashCard(UpdateFlashcardVM updateFlashcardVM)
         {
 
@@ -47,6 +48,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet("GetFlashCardById/{id}")]
+        [Authorize("User", "Admin")]
         public async Task<ActionResult> getFlashCardbyId(string id)
         {
             try
@@ -61,6 +63,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet("GetListFlashCardByStudySetId/{studySetId}")]
+
         public async Task<ActionResult> getListFlashCard([FromRoute] string studySetId)
         {
             try
@@ -73,6 +76,25 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(e.Message);
             }
         }
-         
+
+        [HttpDelete("DeleteFlashCardWithStudySet/{flashcardId}")]
+        [Authorize("User", "Admin")]
+
+        public async Task<ActionResult> deleteListFlashCard(string flashcardId)
+        {
+            try
+            {
+                var res=await service.deleteFlashCardinStudySet(new DeleteFlashcardVM { Id = flashcardId });
+                return Ok(res);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+
+            }
+        }
+
+
+
     }
 }

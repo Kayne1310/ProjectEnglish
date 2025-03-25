@@ -4,6 +4,7 @@ import { updateUser } from '../../service/ProfileService';
 
 const ViewProfile = () => {
   const { userInfor, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [userData, setUserData] = useState({
     userId: userInfor.userId || '',
@@ -55,6 +56,7 @@ const ViewProfile = () => {
 
   const handleUpdate = async () => {
     try {
+      setIsLoading(true);
       const updatedData = {
         UserID: userData.userId,
         UserName: userData.userName,
@@ -67,7 +69,7 @@ const ViewProfile = () => {
 
       const response = await updateUser(updatedData);
 
-      if (response && !response.error) {
+      if (response.returnCode === 1) {
         const updatedUser = {
           ...userInfor,
           userName: userData.userName,
@@ -75,17 +77,20 @@ const ViewProfile = () => {
           age: userData.age,
           phone: userData.phone,
           gender: userData.gender,
-          picture: response.picture || userData.picture,
+          picture: previewImage,
         };
+  
         setUser(updatedUser);
-        setPreviewImage(response.picture || previewImage);
-        alert('Cập nhật thông tin thành công!');
+        setPreviewImage(previewImage);
+        alert(response.returnMessage);
       } else {
-        alert('Cập nhật thất bại: ' + (response?.error || 'Lỗi không xác định'));
+        alert(response.returnMessage);
       }
     } catch (error) {
       console.error('Error in handleUpdate:', error);
       alert('Đã xảy ra lỗi khi cập nhật thông tin.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,7 +99,7 @@ const ViewProfile = () => {
   }
 
   return (
-    <div className="editprofile-body">
+    <div className="editprofile-body " style={{marginTop:'100px'}}>
       <div className="container py-4 editprofile-container">
         <div className="row g-3">
           {/* Avatar + Thông tin */}
@@ -208,8 +213,13 @@ const ViewProfile = () => {
                 </div>
                 <div className="d-flex justify-content-end mt-4">
                   <button type="button" className="btn btn-secondary me-2">Cancel</button>
-                  <button type="button" className="btn btn-primary" onClick={handleUpdate}>
-                    Update
+                  <button 
+                    type="button" 
+                    className="btn btn-primary" 
+                    onClick={handleUpdate}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Đang cập nhật...' : 'Update'}
                   </button>
                 </div>
               </div>

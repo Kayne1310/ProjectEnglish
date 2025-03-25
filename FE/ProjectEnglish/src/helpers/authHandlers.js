@@ -1,6 +1,6 @@
 
 import authService from "../service/authService";
-
+import { toast } from "react-toastify"; // Import toast
 // Sử dụng hook navigate để chuyển hướng trang
 export const handleLogin = async (email, password, setError, setIsLoading, setUser, navigate) => {
     setError("");
@@ -9,21 +9,22 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
     try {
         const response = await authService.login(email, password);
 
-        console.log("API Response:", response); // Kiểm tra response trả về từ authService
+    
 
         if (!response || !response.user) {
-            setError("Login failed. User data is missing.");
+            const errorMessage ="Login failed. User data is missing.";
+            // setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
             console.error("Missing user data:", response);
         } else {
-            console.log("User Data:", response.user);
+   
 
             setUser({
                 userName: response.user.userName,
                 email: response.user.email,
-                picture: response.user.picture,
                 picture: response.user.picture,
                 address: response.user.address,
                 age: response.user.age,
@@ -32,7 +33,8 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
             }); // Lưu thông tin user vào context
-
+         
+            toast.success("Login successfully!");
             setTimeout(() => {
                 setIsLoading(false);
                 if (response.user.role === "User") {
@@ -96,7 +98,9 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
             return;
         }
     } catch (err) {
-        setError(`Login failed. ${err.message}`);
+        const errorMessage = `Login failed. ${err.message}`;
+        // setError(errorMessage);// Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -112,7 +116,6 @@ export const handleLogout = async (
     setIsLoading,
     setError,
     setUser,
-    navigate
 ) => {
     setError("");
     setIsLoading(true);
@@ -127,7 +130,7 @@ export const handleLogout = async (
         } else {
             setUser(null); // Xóa user trong context/state
             setIsLoading(false);
-            navigate("/");
+            window.location.href="/" // load sau khi điêu hướng
         }
     } catch (error) {
         setError(`Logout failed. ${error.message}`);
@@ -143,12 +146,13 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
     setIsLoading(true);
     setIsRegisterSuccess(false);
 
-    console.log("Registering user:", { name, email, password });
+
     try {
         const response = await authService.register(name, email, password);
-        console.log("API Response:", response);
+ 
         if (response.returnCode == -1) {
-            setError(`Register failed. ${response.returnMessage}`);
+            // setError(`Register failed. ${response.returnMessage}`);
+            toast.error(`Register failed. ${response.returnMessage}`); // hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -160,9 +164,11 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
             }, 1000); // Hide loader after 2 seconds
+            toast.success("Register successfully!"); // Hiển thị toast thành công
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        // setError(`Register failed. ${err.message}`);
+        toast.error(`Register failed. ${err.message}`); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
 
@@ -177,7 +183,9 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
     try {
         const apiResponse = await authService.GoogleRegister(response.access_token);
+
         console.log("API Response:", apiResponse);
+
 
 
         if (apiResponse.returnCode == -1) {
@@ -218,7 +226,9 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
         // console.log("Context Response:", userInfo.picture);
         // console.log("API Response:", apiResponse);
         if (apiResponse.returnCode == -1) {
-            setError(`Register failed. ${apiResponse.returnMessage}`);
+            const errorMessage = `Register failed. ${apiResponse.returnMessage}`
+            setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -229,12 +239,16 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/");
-
+                const successMessage = "Đăng nhập bằng Google thành công!";
+                setError(""); // Reset lỗi (hoặc không cần nếu không hiển thị trên form)
+                toast.success(successMessage); // Hiển thị toast thành công
 
             }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        const errorMessage = `Register failed. ${err.message}`;
+        setError(errorMessage); // Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -250,7 +264,7 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
 
     try {
         const apiResponse = await authService.facebookRegister(response.accessToken);
-        console.log("API Response:", apiResponse);
+
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.data.returnMessage}`);
             setTimeout(() => {
@@ -283,7 +297,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
     try {
 
         const apiResponse = await authService.facebookLogin(data.accessToken);
-        console.log("API Response:", apiResponse);
+
 
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
@@ -318,7 +332,7 @@ export const handleResetPassword = async (password, email, token, setError, setI
     setIsSuccess(false);
     try {
         const response = await authService.resetPassword(email, token, password);
-        console.log("API Response:", response);
+      
         if (response.returnCode == -1) {
             setError(`Reset password failed. ${response.returnMessage}`);
             setTimeout(() => {
@@ -343,7 +357,7 @@ export const handleForgotPassword = async (email, setError, setIsLoading, setIsS
     setIsSuccess(false);
     try {
         const response = await authService.forgotpassword(email);
-        console.log("API Response:", response);
+    
         if (response.returnCode == -1) {
             setError(`Forgot password failed. ${response.returnMessage}`);
             setTimeout(() => {
