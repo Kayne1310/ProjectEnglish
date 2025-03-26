@@ -1,18 +1,19 @@
 // Flashcard.js
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams, useLocation } from "react-router-dom"; // Lấy quiz_id từ URL
+import { useParams, useLocation } from "react-router-dom"; // Lấy quiz_id từ URL
 import "../../assets/css/FlashCardQuiz/flashcard.css";
 import "../../assets/css/FlashCardQuiz/QuizletForm.css";
 import "../../assets/css/FlashCardQuiz/listening.css";
 
 import { flashcard as getFlashcards } from "../../service/quizService.js";
 import { getQuestionbyQuizId } from "../../service/quizService.js"; // Thêm để gọi API cho Quiz
-import { Card, Col, Form, Row } from "react-bootstrap";
+import { Card, Col, Form, Row, Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 import correctSound from "../../assets/sound/correct-156911.mp3";
 import incorrectSound from "../../assets/sound/wrong-47985.mp3";
 import { speak, stopSpeak } from '../../service/geminiService';
+import { generateContentWithGemini } from '../../service/geminiService';
 
 const Flashcard = () => {
   const { quizId } = useParams(); // Lấy quizId từ URL
@@ -35,6 +36,9 @@ const Flashcard = () => {
   const [listeningAnswer, setListeningAnswer] = useState("");
   const [showAnswer, setShowAnswer] = useState(false);
   const [isListeningCorrect, setIsListeningCorrect] = useState(null);
+  const [showAIAnswerModal, setShowAIAnswerModal] = useState(false);
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
 
   const handleSkip = () => {
     const correctAnswer = currentItem.answer.find(ans => ans.correct_answer);
@@ -50,11 +54,12 @@ const Flashcard = () => {
       // Đổi trạng thái sau khi bỏ qua
       setTimeout(() => {
         goToNextQuestion();
-      }, 2000);
+      }, 1000);
 
       setSkipped(true); // Đánh dấu là đã bỏ qua
     }
   };
+
   const handleAnswerClick = (ans) => {
     setSelectedAnswer(ans.idAnswered);
     setIsCorrect(ans.correct_answer);
@@ -162,7 +167,7 @@ const Flashcard = () => {
           const flashcardResponse = await getFlashcards(quizId);
           if (!flashcardResponse || flashcardResponse.length === 0) {
             console.warn("Không có dữ liệu flashcard từ API!");
-          } 
+          }
           else // gán dữ liệu flashcard vào flashcards
           {
             const formattedFlashcards = flashcardResponse.map((item) => ({
@@ -200,12 +205,12 @@ const Flashcard = () => {
   }, [quizId, location]);
 
   // Cập nhật flashcard hoặc question hiện tại
-  const updateItem = (index) => {
-    if (index >= 0 && index < (mode === "flashcard" ? flashcards.length : questions.length)) {
-      setCurrentQuestionIndex(index);
-      setFlipped(mode === "flashcard" ? false : false); // Chỉ reset flip cho Flashcard
-    }
-  };
+  // const updateItem = (index) => {
+  //   if (index >= 0 && index < (mode === "flashcard" ? flashcards.length : questions.length)) {
+  //     setCurrentQuestionIndex(index);
+  //     setFlipped(mode === "flashcard" ? false : false); // Chỉ reset flip cho Flashcard
+  //   }
+  // };
 
   // Xáo trộn flashcards (chỉ áp dụng cho Flashcard)
   const shuffleFlashcards = () => {
@@ -327,7 +332,7 @@ const Flashcard = () => {
   // Thêm hàm xử lý cho Listening
   const handleListeningSubmit = () => {
     if (!listeningAnswer.trim()) return;
-    
+
     let correctAnswer;
     // if (location.pathname.includes('/practice/')) {
     //   correctAnswer = currentItemListent.description;
@@ -337,12 +342,12 @@ const Flashcard = () => {
     correctAnswer = currentItemListent.question;
     const userAnswer = listeningAnswer.trim();
     const correctAnswerWithoutParentheses = getTextBeforeParentheses(correctAnswer);
-    
+
     // Kiểm tra cả hai trường hợp: đáp án đầy đủ hoặc chỉ phần trước dấu ngoặc
     const isCorrect = userAnswer === correctAnswer || userAnswer === correctAnswerWithoutParentheses;
-    
+
     setIsListeningCorrect(isCorrect);
-    
+
     // Phát âm thanh tương ứng
     const audio = new Audio(isCorrect ? correctSound : incorrectSound);
     audio.play();
@@ -361,81 +366,32 @@ const Flashcard = () => {
     setShowAnswer(true);
   };
 
-  // Thêm hàm xử lý ExampleVM
-  const getExampleWithBlank = (example, title) => {
-    if (!example || !title) return '';
-    
-    // Tạo regex để tìm từ trong câu (có thể đứng một mình hoặc nằm trong từ ghép)
-    const regex = new RegExp(`\\b${title}\\b`, 'gi');
-    
-    // Thay thế từ tìm được bằng dấu gạch dưới
-    return example.replace(regex, '___');
-  };
+
 
   // Thêm hàm lọc ví dụ có chứa từ cần tìm
   // const getMatchingExamples = (examples, title) => {
   //   if (!examples || !title) return [];
-    
+
   //   return examples.filter(example => {
   //     const regex = new RegExp(`\\b${title}\\b`, 'gi');
   //     return regex.test(example.En) || regex.test(example.Vi);
   //   });
   // };
 
-  // Thêm hàm kiểm tra ngôn ngữ của từ
-  const isEnglishWord = (word) => {
-    // Kiểm tra xem từ có chứa ký tự tiếng Việt không
-    const vietnamesePattern = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i;
-    return !vietnamesePattern.test(word);
-  };
 
-  // Thêm hàm lấy random example và hiển thị câu ví dụ cùng ngôn ngữ với Title
-  const getRandomMatchingExample = (examples, title) => {
-    if (!examples || !title || !Array.isArray(examples)) return null;
-    
-    // Xác định ngôn ngữ của title
-    const isEnglish = isEnglishWord(title);
-    
-    // Lọc các ví dụ có chứa từ cần tìm trong ngôn ngữ tương ứng
-    const matchingExamples = examples.filter(example => {
-      const titleLower = title.toLowerCase();
-      // Nếu title là tiếng Anh, tìm trong câu tiếng Anh
-      if (isEnglish) {
-        const enLower = example.en?.toLowerCase() || '';
-        return enLower.includes(titleLower);
-      }
-      // Nếu title là tiếng Việt, tìm trong câu tiếng Việt
-      else {
-        const viLower = example.vi?.toLowerCase() || '';
-        return viLower.includes(titleLower);
-      }
-    });
-    
-    if (matchingExamples.length === 0) return null;
-    
-    // Lấy ngẫu nhiên một ví dụ
-    const randomIndex = Math.floor(Math.random() * matchingExamples.length);
-    const example = matchingExamples[randomIndex];
-    
-    // Trả về câu ví dụ cùng ngôn ngữ với title
-    return {
-      displayText: isEnglish ? example.en : example.vi,
-      // trans: example.Trans
-    };
-  };
 
   // Thêm hàm xử lý Fill Blank Submit
   const handleFillBlankSubmit = () => {
     if (!listeningAnswer.trim()) return;
-    
+
     const userAnswer = listeningAnswer.trim();
     const correctAnswer = currentItemFill?.question;
-    
+
     // So sánh đáp án (phân biệt hoa thường vì đây là từ vựng)
     const isCorrect = userAnswer === correctAnswer;
-    
+
     setIsListeningCorrect(isCorrect);
-    
+
     // Phát âm thanh tương ứng
     const audio = new Audio(isCorrect ? correctSound : incorrectSound);
     audio.play();
@@ -448,6 +404,117 @@ const Flashcard = () => {
         setShowAnswer(false);
       }, 2000);
     }
+  };
+
+  const handleShowAIAnswer = async () => {
+    try {
+      // Kiểm tra nếu đang loading thì không cho phép click tiếp
+      if (isLoadingAI) return;
+
+      setIsLoadingAI(true);
+      setAiAnswer("Đang tải câu trả lời...");
+      setShowAIAnswerModal(true);
+
+      let currentWord;
+      // Xử lý currentWord dựa trên mode
+      switch (mode) {
+        case "flashcard":
+          currentWord = flashcards[currentQuestionIndex]?.question;
+          break;
+        case "quiz":
+          currentWord = currentItem?.description;
+          break;
+        case "listening":
+          currentWord = currentItemListent?.question;
+          break;
+        case "fillblank":
+          currentWord = currentItemFill?.question;
+          break;
+        default:
+          currentWord = "";
+      }
+
+      // Kiểm tra nếu không có currentWord thì throw error
+      if (!currentWord) {
+        throw new Error("Không tìm thấy nội dung câu hỏi");
+      }
+
+      let prompt;
+      // Kiểm tra xem có phải đang ở đường dẫn /flashcard/practice/ không
+      const isPracticePath = location.pathname.includes('/flashcard/practice/');
+
+      if (isPracticePath) {
+        // Prompt cho chế độ practice
+        prompt = `Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy cung cấp thông tin ngắn gọn cho từ "${currentWord}" theo định dạng sau (giới hạn 100 từ):
+
+        1. Định nghĩa:
+        [Định nghĩa ngắn gọn và dễ hiểu bằng tiếng Việt]
+
+        2. Loại từ:
+        [Danh từ/Động từ/Tính từ/...]
+
+        3. Phát âm:
+        [IPA pronunciation]
+
+        Ví dụ định dạng:
+        Giải thích về từ "${currentWord}":
+        1. Định nghĩa: Bàn (mặt phẳng có chân, dùng để ăn, làm việc, v.v.)
+        2. Loại từ: 
+        - Danh từ (noun)
+        - Động từ (verb)
+        - Tính từ (adjective)
+        - Trạng từ (adverb)
+        - Giới từ (preposition)
+        - Liên từ (conjunction)
+        3. Phát âm: /ˈteɪbl/`;
+      } else {
+        // Prompt cho chế độ quiz
+        prompt = `Bạn là một giáo sư chuyên nghiệp. Hãy giúp tôi trả lời câu hỏi sau theo định dạng dưới đây (giới hạn 100 từ):
+
+        Giải thích về câu hỏi: "${currentWord}"
+
+        1. Đáp án đúng:
+        [Chọn đáp án chính xác từ các lựa chọn đã cho]
+
+        2. Giải thích:
+        [Giải thích chi tiết lý do chọn đáp án đó, bao gồm:
+        - Phân tích câu hỏi và các đáp án
+        - Lý do đáp án được chọn là đúng
+        - Tại sao các đáp án khác không phù hợp]
+
+        Ví dụ định dạng:
+        Giải thích về câu hỏi "${currentWord}":
+        1. Đáp án đúng:
+        - goes
+
+        2. Giải thích:
+        - Câu hỏi yêu cầu chọn dạng đúng của động từ trong thì hiện tại đơn
+        - Chủ ngữ "She" là ngôi thứ 3 số ít nên động từ phải thêm "s/es"
+        - "goes" là dạng đúng của động từ "go" cho chủ ngữ ngôi thứ 3 số ít`;
+      }
+
+      const response = await generateContentWithGemini(prompt);
+      if (response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        // Loại bỏ dòng đầu tiên nếu có chứa "Tuyệt vời, tôi sẽ giúp bạn"
+        let answerText = response.candidates[0].content.parts[0].text;
+        const lines = answerText.split('\n');
+        if (lines[0].includes('Tuyệt vời')) {
+          lines.shift();
+        }
+        setAiAnswer(lines.join('\n'));
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (error) {
+      console.error('Lỗi khi lấy câu trả lời từ AI:', error);
+      setAiAnswer("Xin lỗi, đã có lỗi xảy ra khi lấy câu trả lời từ AI.");
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
+  const handleCloseAIAnswer = () => {
+    setShowAIAnswerModal(false);
   };
 
   if (loading) return <div className="text-center">Đang tải dữ liệu...</div>;
@@ -496,8 +563,15 @@ const Flashcard = () => {
                       {flashcards.length > 0 ? (
                         <div className={`flashcard ${flipped ? "flipped" : ""}`} onClick={handleFlipCard}>
                           <div className="front">
-                            <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint: Think about the basics!"); }}>
-                              <i className="bi bi-lightbulb"></i>
+                            <button
+                              className="icon-button left no-hover"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleShowAIAnswer();
+                              }}
+                              disabled={isLoadingAI}
+                            >
+                              <i className={`bi bi-robot ${isLoadingAI ? 'text-muted' : ''}`}></i>
                             </button>
                             <button
                               className="icon-button right"
@@ -511,14 +585,13 @@ const Flashcard = () => {
                             </button>
                             <div className="content fw-bold">{flashcards[currentQuestionIndex]?.question}
                               <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
-
                             </div>
                           </div>
 
                           <div className="back">
-                            <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
+                            {/* <button className="icon-button left" onClick={(e) => { e.stopPropagation(); alert("Hint for answer: Try to recall!"); }}>
                               <i className="bi bi-lightbulb"></i>
-                            </button>
+                            </button> */}
                             <button
                               className="icon-button right"
                               onClick={(e) => {
@@ -551,9 +624,17 @@ const Flashcard = () => {
                         <div className="d-flex flex-column h-100">
                           {/* Header */}
                           <div className="d-flex justify-content-between align-items-center mb-0">
-                            <div className="quizlet-definition-label">
-                              <i className="fas fa-lightbulb"></i>
-                            </div>
+
+                            <button
+                              className="quizlet-audio-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleShowAIAnswer();
+                              }}
+                              disabled={isLoadingAI}
+                            >
+                              <i className={`bi bi-robot ${isLoadingAI ? 'text-muted' : ''}`}></i>
+                            </button>
                             <button
                               className="quizlet-audio-btn"
                               title="sound"
@@ -676,8 +757,8 @@ const Flashcard = () => {
                         </div>
 
                         <div className="input-section">
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Điền từ bạn nghe được"
                             className={`listening-input ${isListeningCorrect !== null ? (isListeningCorrect ? 'correct' : 'incorrect') : ''}`}
                             value={listeningAnswer}
@@ -685,7 +766,7 @@ const Flashcard = () => {
                             onKeyPress={(e) => e.key === 'Enter' && handleListeningSubmit()}
                             disabled={isListeningCorrect === true}
                           />
-                          <button 
+                          <button
                             className="submit-btn"
                             onClick={handleListeningSubmit}
                             disabled={!listeningAnswer.trim() || isListeningCorrect === true}
@@ -708,7 +789,7 @@ const Flashcard = () => {
                                 {/* {location.pathname.includes('/practice/') 
                                   ? currentItemListent.question 
                                   : currentItemListent.question} */}
-                                  {currentItemListent.question}
+                                {currentItemListent.question}
                               </span>
                             </div>
                           )}
@@ -751,8 +832,22 @@ const Flashcard = () => {
                                   // Hàm xử lý ẩn từ trong câu
                                   const hideWordInSentence = (sentence, wordToHide) => {
                                     if (!sentence || !wordToHide) return sentence;
-                                    const regex = new RegExp(`\\b${wordToHide}\\b`, 'gi');
-                                    return sentence.replace(regex, '___');
+
+                                    // Chuyển về chữ thường để so sánh
+                                    const lowerSentence = sentence.toLowerCase();
+                                    const lowerWordToHide = wordToHide.toLowerCase();
+
+                                    // Tìm vị trí của từ trong câu (không phân biệt hoa thường)
+                                    const wordIndex = lowerSentence.indexOf(lowerWordToHide);
+                                    if (wordIndex === -1) return sentence;
+
+                                    // Lấy phần từ cần ẩn với đúng định dạng chữ hoa/thường
+                                    const originalWord = sentence.slice(wordIndex, wordIndex + wordToHide.length);
+
+                                    // Thay thế từ gốc bằng dấu gạch ngang
+                                    const result = sentence.slice(0, wordIndex) + '___' + sentence.slice(wordIndex + wordToHide.length);
+
+                                    return result;
                                   };
 
                                   // Kiểm tra xem Title có trong En hay Vi không
@@ -782,19 +877,19 @@ const Flashcard = () => {
                         </div>
 
                         <div className="input-section">
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Điền từ còn thiếu"
                             className={`listening-input ${isListeningCorrect !== null ? (isListeningCorrect ? 'correct' : 'incorrect') : ''}`}
                             value={listeningAnswer}
                             onChange={(e) => setListeningAnswer(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleFillBlankSubmit()}
-                            disabled={isListeningCorrect === true || !currentItemFill?.examples || currentItemFill.examples.length === 0}
+                            disabled={isListeningCorrect === true}
                           />
-                          <button 
+                          <button
                             className="submit-btn"
                             onClick={handleFillBlankSubmit}
-                            disabled={!listeningAnswer.trim() || isListeningCorrect === true || !currentItemFill?.examples || currentItemFill.examples.length === 0}
+                            disabled={!listeningAnswer.trim() || isListeningCorrect === true}
                           >
                             {isListeningCorrect !== null ? (
                               isListeningCorrect ? '✓' : '✗'
@@ -803,7 +898,7 @@ const Flashcard = () => {
                         </div>
 
                         <div className="answer-section">
-                          {!showAnswer && isListeningCorrect !== true && currentItemFill?.examples && currentItemFill.examples.length > 0 && (
+                          {!showAnswer && isListeningCorrect !== true && (
                             <button className="show-answer-btn" onClick={handleShowAnswer}>
                               Hiện đáp án
                             </button>
@@ -967,6 +1062,53 @@ const Flashcard = () => {
               </Row>
             </div>
           </section>
+
+          {/* AI Answer Modal */}
+          <Modal show={showAIAnswerModal} onHide={handleCloseAIAnswer} centered className="ai-answer-modal">
+            <Modal.Header closeButton>
+              <Modal.Title>Giải thích từ AI</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="ai-answer-content">
+                {aiAnswer.split('\n').map((line, index) => {
+                  const trimmedLine = line.trim().replace(/\*/g, ''); // Loại bỏ ký tự *
+                  if (!trimmedLine) return null;
+
+                  // Xử lý dòng "Giải thích về câu hỏi..."
+                  if (trimmedLine.includes('Giải thích về')) {
+                    const parts = trimmedLine.split('"');
+                    if (parts.length >= 3) {
+                      return (
+                        <p key={index}>
+                          {parts[0]}"<span style={{ color: 'red' }}>{parts[1]}</span>"{parts[2]}
+                        </p>
+                      );
+                    }
+                  }
+
+                  if (trimmedLine.startsWith('1.')) {
+                    return <p key={index}>{trimmedLine}</p>;
+                  }
+
+                  if (trimmedLine.startsWith('2.')) {
+                    return <p key={index}>{trimmedLine}</p>;
+                  }
+
+                  // Xử lý các dòng bắt đầu bằng dấu -
+                  if (trimmedLine.startsWith('-')) {
+                    return <p key={index} className="ml-3">{trimmedLine}</p>;
+                  }
+
+                  return <p key={index}>{trimmedLine}</p>;
+                })}
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseAIAnswer}>
+                Đóng
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </>
