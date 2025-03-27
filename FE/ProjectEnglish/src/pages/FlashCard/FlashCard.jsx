@@ -150,6 +150,7 @@ const Flashcard = () => {
         // Gọi API cho Flashcard
         if (location.state?.flashcards) {
           setFlashcards(location.state.flashcards);
+          console.log("data flashcard",flashcards);
           setIsQuizMode(false);
         }
         // Nếu có quizId thì fetch data từ quiz
@@ -266,6 +267,7 @@ const Flashcard = () => {
   }));
 
   const currentItem = mode === "flashcard" ? flashcards[currentQuestionIndex] : processedQuiz[currentQuestionIndex];
+
 
   // Sử dụng custom hook
   useKeyboardControls({

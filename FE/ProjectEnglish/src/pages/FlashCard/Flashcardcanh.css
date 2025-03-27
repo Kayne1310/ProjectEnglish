@@ -289,8 +289,8 @@
     
     /* Thông tin ngôn ngữ */
     .flashcard-overview p img {
-      width: 20px !important;
-      height: 15px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
     }
     
@@ -301,8 +301,8 @@
     }
     
     .flashcardcanh-avatar {
-      width: 25px !important;
-      height: 25px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
     }
     

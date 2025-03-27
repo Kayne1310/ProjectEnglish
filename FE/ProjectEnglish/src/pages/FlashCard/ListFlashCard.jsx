@@ -209,7 +209,8 @@ const Flashcardcanh = () => {
                     question: card.title,
                     answer: card.define,
                     examples: card.exampleVM,
-                    transcription: card.transcription
+                    transcription: card.transcription,
+                    description:card.title
                 }))
             }
         });
@@ -450,7 +451,7 @@ const Flashcardcanh = () => {
                     <div className="row">
                         {flashcards && flashcards.map((data, index) => (
                             <div key={data.id} className="col-md-6 ">
-                                <div className="flashcardcanh-container col-md-6 mb-4">
+                                <div className="flashcardcanh-container  mb-4">
                                     {studySet.userId === userInfor.userId && (
                                         <div className="d-flex justify-content-end gap-5">
                                             <i class="fas fa-edit fs-4 text-primary cursor-pointer mt-1"
