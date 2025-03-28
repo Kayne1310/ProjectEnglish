@@ -11,7 +11,7 @@ export const AuthContext = createContext({
         picture: null,
         facebookId: null,
         googleId: null,
-        userId: null,
+        userId: "",
     },
     setUser: () => { },
     isAppLoading: false,

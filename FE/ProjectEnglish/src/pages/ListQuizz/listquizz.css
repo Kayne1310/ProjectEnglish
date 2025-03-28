@@ -174,13 +174,13 @@ body {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .wrapper {
-    margin: 3vh;
+    margin: 2vh;
     margin-top: 10vh;
   }
   .listquiz-card-content {
-    padding: 8px;
+    padding: 3px;
   }
 
   .listquiz-card-title {

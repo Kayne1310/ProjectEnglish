@@ -1,5 +1,3 @@
-
-
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -18,10 +16,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
 
-
 import PrivateRoute from './pages/privateroute.jsx';
 import DetailQuizz from './pages/ListQuizz/DetailQuiz/DetailQuizz.jsx';
-
 
 import Flashcard from './pages/FlashCard/FlashCard.jsx';
 import ListDocument from './pages/Document/ListDocument.jsx';
@@ -40,10 +36,8 @@ import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 
-
 import { Community } from './pages/Community/community.jsx';
-
-
+import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
 
 const router = createBrowserRouter([
   {
@@ -73,8 +67,11 @@ const router = createBrowserRouter([
           </PrivateRoute>,
         children: [{
           path: "detailquiz/:quizId", element: <DetailQuizz />
-
         },
+        {
+          path: "detailquiz/:quizId/result",
+          element: <ResultQuizz />
+        }
         ],
       },
       {
@@ -118,7 +115,10 @@ const router = createBrowserRouter([
     ]
   },
 
-
+  {
+    path: "/resultquiz/:quizId",
+    element: <ResultQuizz />
+  },
   {
     path: "/resetpassword",
     element: <ResetPasswordPage />
@@ -185,7 +185,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <RouterProvider router={router} />
       <ToastContainer
         position="top-center"
-        autoClose={3000}
+        autoClose={1000}
         hideProgressBar={false}
         closeOnClick
         pauseOnHover

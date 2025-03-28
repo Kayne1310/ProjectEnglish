@@ -2,7 +2,7 @@ import CountDown from "./CountDown";
 
 const RightContent = (props) => {
   // Sử dụng destructuring cho các props
-  const { questions, currentQuestionIndex, userAnswers, setCurrentQuestionIndex } = props;
+  const { questions, currentQuestionIndex, userAnswers, setCurrentQuestionIndex, onTimeUpdate } = props;
 
   const onTimeUp = () => {
     alert("endgame");
@@ -15,10 +15,16 @@ const RightContent = (props) => {
     setCurrentQuestionIndex(index);
   };
 
+  const handleTimeUpdate = (currentTime) => {
+    if (onTimeUpdate) {
+      onTimeUpdate(currentTime);
+    }
+  };
+
   return (
     <div>
       <div className="main-timer">
-        <CountDown onTimeUp={onTimeUp} />
+        <CountDown onTimeUp={onTimeUp} onTimeUpdate={handleTimeUpdate} />
       </div>
       <div className="main-question">
         {questions &&

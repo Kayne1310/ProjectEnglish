@@ -1,10 +1,12 @@
 .detail-quiz-container {
     display: flex;
-    gap: 50px;
-    padding: 90px;
-    width: 90%; // Mở rộng container
-    max-width: 1500px; // Giới hạn chiều rộng tối đa
+    gap: 20px;
+    // padding: 90px;
+    width: 1300px; // Mở rộng container
+    max-width: 1280px; // Giới hạn chiều rộng tối đa
     margin: auto; // Căn giữa trang
+    margin-top: 80px;
+    margin-bottom: 50px;
 
     // flex-wrap: wrap;
     .left-content,
@@ -22,40 +24,68 @@
 
     .left-content {
         border: 2px solid #ccc;
-        width: 70%;
-        // background-color: #fff;
-        border-radius: 5px;
-        padding: 20px;
+        width: 76%;
+        border-radius: 12px;
+        // padding: 30px;
         background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
         .title {
-            font-size: 30px;
-            font-weight: 600;
-            // color: #333;
+            font-size: 23px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100px;
+                height: 2px;
+                background-color: #3498db;
+            }
         }
 
         .q-content {
             text-align: center;
 
             .question {
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: 600;
-                padding: 20px 0;
+                padding: 15px 20px;
+                color: #34495e;
+                line-height: 1.5;
+                margin-bottom: 20px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+                text-align: center;
             }
 
             .q-image {
-
-                width: 200px;
+                width: 300px;
                 height: 200px;
-                margin: 0 auto; // Căn giữa chính xác
-                // display: flex; // Dùng flexbox
-                justify-content: center;
-                align-items: center;
+                margin: 0 auto 30px;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    transform: scale(1.02);
+                }
 
                 img {
                     width: 100%;
-                    height: 100%;
-                    display: block; // Đảm bảo không bị lệch do inline
+                    height: 200px;
+                    object-fit: cover;
+                    display: block;
                 }
             }
 
@@ -65,120 +95,108 @@
                     min-height: 116px;
                     max-width: 1000px;
                     display: grid;
-                    grid-template-columns: 1fr 1fr; // Hiển thị 2 cột
-                    gap: 16px; // Khoảng cách giữa các nút
-                    margin: 20px auto 0; // Căn giữa và tạo khoảng cách trên
-                    padding: 0 20px; // Thêm padding trái/phải để căn lề phù hợp với form
-
-
-                    .answer-option-wrapper {
-                        // width: 100%; // Chiếm toàn bộ chiều rộng của cột
-                    }
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                    margin: 20px auto 0;
 
                     .answer-option {
-                        width: 100%; // Chiếm toàn bộ chiều rộng của cột trong grid
-                        height: 50px; // Chiều cao cố định ban đầu, phù hợp với ảnh
-                        padding: 10px 16px;
-                        // background: #f8f9fd;
+                        width: 100%;
+                        height: 60px;
+                        padding: 0 16px;
                         background: white;
                         border: 2px solid #e0e0e0;
-                        border-radius: 8px; // Bo góc nhẹ giống ảnh
+                        border-radius: 10px;
                         cursor: pointer;
-                        transition: all 0.3s ease;
+                        transition: all 0.2s ease;
                         font-size: 16px;
                         font-weight: 500;
                         color: #333;
-                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                        display: flex; // Sử dụng flex để sắp xếp số và text
-                        align-items: center; // Căn giữa theo chiều dọc
-                        justify-content: flex-start; // Đẩy nội dung về bên trái
-                        overflow: hidden; // Ẩn phần tràn ban đầu
+                        display: flex;
+                        align-items: center;
+                        position: relative;
 
-                        // Phần text container để chứa text và nút "Xem thêm"/"(Ẩn)"
-                        .answer-option-text-container {
-                            display: flex;
-                            flex-direction: column; // Sắp xếp text và nút "Xem thêm" theo cột
-                            width: 100%;
-                            align-items: flex-start; // Căn trái
-
-                            .answer-option-text {
-                                max-width: calc(100% - 36px); // Đảm bảo text không vượt quá không gian còn lại sau số
-                                color: inherit;
-                                font-size: 16px;
-
-                                // Khi hiển thị rút gọn (ban đầu)
-                                &:not(.expanded) {
-                                    white-space: nowrap; // Ngăn text xuống dòng
-                                    overflow: hidden; // Ẩn phần text tràn
-                                    text-overflow: ellipsis; // Hiển thị dấu "..." khi text tràn
-                                }
-
-                                // Khi hiển thị full text (khi click), cho phép xuống dòng theo chiều dọc trong chiều rộng cố định
-                                &.expanded {
-                                    white-space: normal; // Cho phép xuống dòng
-                                    overflow: auto; // Cho phép cuộn nếu text quá dài
-                                    display: block; // Hiển thị như block để xuống dòng
-                                    line-height: 1.2; // Khoảng cách dòng dễ đọc
-                                    max-height: 150px; // Giới hạn chiều cao tối đa để tránh tràn quá nhiều
-                                    padding: 10px 0; // Thêm padding để text không sát viền
-                                    width: 100%; // Đảm bảo text chiếm toàn bộ chiều rộng nút
-                                }
-                            }
-
-                            .expand-toggle {
-                                font-size: 14px;
-                                color: #007bff;
-                                cursor: pointer;
-                                margin-top: 5px; // Khoảng cách giữa text và nút "Xem thêm"
-                            }
-                        }
-
-                        // Phần số thứ tự
                         .answer-number {
-                            width: 24px; // Kích thước cố định cho số
-                            height: 24px; // Kích thước cố định cho số
-                            background: #e0e0e0; // Màu nền xám nhạt giống ảnh
-                            border-radius: 50%; // Tạo hình tròn
+                            min-width: 32px;
+                            height: 32px;
+                            background: #f1f1f1;
+                            border-radius: 50%;
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            margin-right: 12px; // Khoảng cách giữa số và text
-                            font-size: 14px;
+                            margin-right: 12px;
+                            font-size: 16px;
                             font-weight: 600;
                             color: #666;
+                            transition: all 0.2s ease;
+                        }
+
+                        .answer-option-text-container {
+                            flex: 1;
+                            text-align: left;
+                            position: relative;
+
+                            .answer-option-text {
+                                display: block;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            &:hover {
+                                .answer-option-text[data-full-text] {
+                                    &::before {
+                                        content: attr(data-full-text);
+                                        position: absolute;
+                                        left: -16px;
+                                        right: -16px;
+                                        top: -50px;
+                                        background: #333;
+                                        color: white;
+                                        padding: 8px 16px;
+                                        border-radius: 6px;
+                                        font-size: 14px;
+                                        line-height: 1.4;
+                                        white-space: normal;
+                                        z-index: 1000;
+                                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                                    }
+
+                                    &::after {
+                                        content: '';
+                                        position: absolute;
+                                        left: 20px;
+                                        top: -12px;
+                                        border-left: 8px solid transparent;
+                                        border-right: 8px solid transparent;
+                                        border-top: 8px solid #333;
+                                    }
+                                }
+                            }
                         }
 
                         &:hover {
-                            background: #e2e6f2;
-                            border-color: #b0b8c5;
+                            border-color: #3498db;
+                            background: #f8f9fa;
                             transform: translateY(-2px);
                         }
 
                         &:active {
-                            background: #cdd4e0;
-                            border-color: #8f99a9;
-                            transform: translateY(1px);
+                            transform: translateY(0);
                         }
 
-                        &:focus {
-                            background: #4a90e2;
-                            color: white;
-                            border-color: #2c6bb2;
-                            font-weight: bold;
-                        }
-                    }
-                    
+                        &.selected {
+                            background: rgba(52, 152, 219, 0.15);
+                            color: #2980b9;
+                            border-color: #3498db;
 
-                    // Hiệu ứng khi chọn
-                    .answer-option.selected {
-                        background: #4a90e2;
-                        color: white;
-                        border-color: #2c6bb2;
-                        font-weight: bold;
+                            .answer-number {
+                                background: #3498db;
+                                color: white;
+                            }
 
-                        .answer-number {
-                            background: #2c6bb2;
-                            color: white;
+                            &:hover {
+                                background: rgba(52, 152, 219, 0.25);
+                            }
                         }
                     }
                 }
@@ -193,11 +211,40 @@
 
             button {
                 width: 200px;
-                padding: 10px 20px;
+                padding: 12px 24px;
                 font-size: 16px;
                 font-weight: 600;
                 border-radius: 8px;
-                transition: all 0.3s ease-in-out;
+                transition: all 0.2s ease;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    transform: none !important;
+                }
+
+                &:active {
+                    transform: scale(0.98);
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateX(-100%);
+                    transition: transform 0.3s ease;
+                }
+
+                &:active::after {
+                    transform: translateX(0);
+                }
             }
 
             .btn-secondary {
@@ -205,9 +252,8 @@
                 color: white;
                 border: none;
 
-                &:hover {
+                &:hover:not(:disabled) {
                     background-color: #5a6268;
-                    transform: scale(1.05);
                 }
             }
 
@@ -216,23 +262,20 @@
                 color: white;
                 border: none;
 
-                &:hover {
+                &:hover:not(:disabled) {
                     background-color: #0056b3;
-                    transform: scale(1.05);
                 }
             }
 
             .btn-warning {
-                background-color: rgb(241, 241, 86);
-                color: black;
+                background-color: #ffc107;
+                color: #000;
                 border: none;
 
-                &:hover {
-                    background-color: #c8e650;
-                    transform: scale(1.05);
+                &:hover:not(:disabled) {
+                    background-color: #e0a800;
                 }
             }
-
         }
 
     }
@@ -241,7 +284,7 @@
 
 .right-content {
     border: 2px solid #ccc;
-    width: 30%;
+    width: 26%;
     // background-color: #f9f9f9;
     border-radius: 5px;
     padding: 20px;
@@ -308,7 +351,7 @@
 
     .left-content {
         .answer-options {
-            grid-template-columns: 1fr; // Display 1 column
+            grid-template-columns: 1fr !important; // Display 1 column
         }
     }
 }
@@ -343,6 +386,7 @@
         width: 100% !important;
         /* Chiếm toàn bộ chiều rộng */
         max-width: 400px;
+        
     }
 
     .footer {
@@ -379,6 +423,7 @@
 
             .answer-option {
                 font-size: 14px;
+                min-width: 100px;
                 height: 40px;
                 grid-template-columns: 1fr; // Display 1 column
             }
@@ -395,6 +440,129 @@
                 height: 30px;
                 width: 30px;
                 font-size: 14px;
+            }
+        }
+    }
+}
+
+// Custom styles cho modal xác nhận
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    color: #333;
+
+    i {
+        color: #007bff;
+        font-size: 28px;
+    }
+}
+
+.quiz-info {
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    margin: 15px 0;
+
+    .quiz-info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        i {
+            font-size: 24px;
+            color: #007bff;
+            width: 30px;
+            text-align: center;
+        }
+
+        p {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+            flex: 1;
+
+            strong {
+                color: #007bff;
+                margin-right: 10px;
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+// Custom styles cho ant-modal
+:global {
+    .ant-modal-content {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .ant-modal-header {
+        background-color: #f8f9fa;
+        padding: 20px 24px;
+        border-bottom: 1px solid #e9ecef;
+
+        .ant-modal-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+    }
+
+    .ant-modal-body {
+        padding: 24px;
+    }
+
+    .ant-modal-footer {
+        border-top: 1px solid #e9ecef;
+        padding: 20px 24px;
+
+        .ant-btn {
+            height: 45px;
+            padding: 0 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            i {
+                font-size: 18px;
+            }
+        }
+
+        .ant-btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+
+            &:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+        }
+
+        .ant-btn-default {
+            color: #6c757d;
+            border-color: #6c757d;
+
+            &:hover {
+                color: #5a6268;
+                border-color: #5a6268;
             }
         }
     }

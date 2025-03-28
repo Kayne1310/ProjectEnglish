@@ -80,6 +80,7 @@ const ListQuizz = () => {
   };
 
   useEffect(() => {
+    window.scroll(0, 0); // Scroll to top
     let timer;
 
     const fetchData = async () => {
@@ -92,12 +93,11 @@ const ListQuizz = () => {
         // Đảm bảo loading tối thiểu 2 giây
         timer = setTimeout(() => {
           setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
         setIsLoading(false); // Tắt loading nếu có lỗi
       }
-
     };
 
     if (isHomePage) {
@@ -109,7 +109,7 @@ const ListQuizz = () => {
       if (timer) clearTimeout(timer);
       AOS.refreshHard();
     };
-  }, []);
+  }, [location.pathname]); // Thêm location.pathname vào dependencies
 
   console.log("arrQuiz:", arrQuiz);
   console.log("isQuizletPage:", isQuizletPage);
@@ -132,16 +132,16 @@ const ListQuizz = () => {
         <>
           {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
           {!isQuizletPage && (
-            <section className="about_section layout_padding long_section"style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
               <div className="container">
                 <div className="row">
-                <div className="mt-10 text-third ml-1">
-                        <h1 className="text-3xl font-bold text-primary">Quizzet</h1>
-                        <p>
-                        Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân
-                        </p>
-                    </div>
-                  <div className="d-flex flex-wrap gap-3 mt-3 mb-3 w-100">
+                  <div className="mt-10 text-third ml-1">
+                    <h1 className="text-3xl font-bold text-primary" data-aos={isHomePage ? "zoom-in" : ""}>Quizzet</h1>
+                    <p>
+                      Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân
+                    </p>
+                  </div>
+                  <div className="d-flex flex-wrap gap-3 mt-3 mb-3 w-100" data-aos={isHomePage ? "fade-left" : ""}>
                     <button
                       className="btn btn-primary flex-grow-1"
                       onClick={handleReset}
@@ -208,7 +208,7 @@ const ListQuizz = () => {
                   </div>
                   {processedQuiz && processedQuiz.length > 0 &&
                     processedQuiz.map((quiz, index) => (
-                      <div key={`${index}-quiz`} className="col-sm-12 col-md-4 col-lg-3 my-3">
+                      <div key={`${index}-quiz`} className="col-sm-12 col-md-4 col-lg-3 my-3" data-aos={isHomePage ? "zoom-in" : ""}>
                         <div className="listquiz-card">
                           <div
                             className="listquiz-card-bg"

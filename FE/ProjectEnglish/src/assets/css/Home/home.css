@@ -148,7 +148,7 @@ body {
     margin-right: 30px;
   }
   .slider_section {
-    padding-top: 45px;
+    padding-top: 45px ;
     padding-bottom: 90px;
   }
 
@@ -528,4 +528,3 @@ body {
 .card-img-overlay .d-flex .flex-column .justify-content-end .bg-gradient{
   z-index: 9999;
 }
-

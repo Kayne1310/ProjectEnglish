@@ -12,12 +12,15 @@ import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { handleWordGeneration } from '../../helpers/wordGenerationHandler';
 import { prepareFlashcardData } from '../../helpers/flashcardHandler';
 import { updateStudySet, deleteStudySet } from '../../service/StudySetService';
+import { toast } from "react-toastify"; // Import toast
+import { speak, stopSpeak } from '../../service/geminiService';
 const { TextArea } = Input;
 
 
 
 
 const Flashcardcanh = () => {
+    const [playingId, setPlayingId] = useState(null);
     const location = useLocation();
     const flashcardCount = location.state?.flashcardCount;
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -26,11 +29,13 @@ const Flashcardcanh = () => {
     const { userInfor } = useContext(AuthContext);
     const [flashcards, setFlashcards] = useState([]);
     const { id } = useParams(); // Get studySet ID from URL
-    const [studySet, setStudySet] = useState(null);
+    const [studySet, setStudySet] = useState([]);
     const navigate = useNavigate();
     // const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState(null);
     const [PictureUrl, setPictureUrl] = useState(null);
+    // State loading khi gọi API
+    const [isLoading, setIsLoading] = useState(false);
     //ai generate word
     const [wordData, setWordData] = useState({
         id: '',
@@ -42,6 +47,7 @@ const Flashcardcanh = () => {
         note: '',
 
     });
+    const userId = userInfor?.userId || "";
     //edit study set
     const [editData, setEditData] = useState({
         id: "",
@@ -49,7 +55,7 @@ const Flashcardcanh = () => {
         title: "",
         language: "",
         desc: "",
-        Public: false,
+        public: false,
     });
     const [deleteType, setDeleteType] = useState(''); // 'flashcard' hoặc 'studyset'
     const fetchFlashcards = async () => {
@@ -58,16 +64,34 @@ const Flashcardcanh = () => {
 
             // Access the data property from response
 
-            console.log("data", data);
+            console.log("data flashcard", data);
             setFlashcards(data.listFlashcards);
             setStudySet(data.studySet);
             setUserName(data.username);
             setPictureUrl(data.pictureUrl);
+            console.log("data studyset", studySet);
+            console.log("data flashcard", flashcards);
+
         } catch (error) {
             console.error('Error fetching flashcards:', error);
         }
     };
-
+    const handleSpeak = async (text, id) => {
+        try {
+            // Nếu đang phát âm từ khác, dừng lại
+            if (playingId) {
+                stopSpeak();
+            }
+            
+            setPlayingId(id);
+            await speak(text);
+            setPlayingId(null);
+        } catch (error) {
+            console.error('Error playing audio:', error);
+            setPlayingId(null);
+            toast.error('Bạn đừng Spam nhé');
+        }
+    };
     useEffect(() => {
         window.scroll(0, 0);
 
@@ -89,6 +113,7 @@ const Flashcardcanh = () => {
             if (addWordModal) {
                 addWordModal.removeEventListener('hidden.bs.modal', handleResetForm);
             }
+            stopSpeak();
         };
     }, [id]);
 
@@ -115,25 +140,25 @@ const Flashcardcanh = () => {
         // Xử lý cập nhật studyset
         try {
             // Gọi API cập nhật ở đây
+            console.log("response edit study set", editData);
             const response = await updateStudySet(editData);
             if (response.returnCode == 1) {
-                alert("Cập nhật thành công");
+
+                toast.success("Sửa Study Set thành công"); // Hiển thị toast lỗi
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 1000);
                 setIsEditModalVisible(false);
                 fetchFlashcards();
             }
             else {
-                alert("Cập nhật thất bại");
+
+                toast.error("Cập nhật thất bại" + response.returnMessage);
             }
         } catch (error) {
             console.error('Error updating studyset:', error);
         }
     };
-
-
-
-
-    // State loading khi gọi API
-    const [isLoading, setIsLoading] = useState(false);
 
     // Hàm xử lý khi người dùng thay đổi input
     const handleInputChange = (e) => {
@@ -154,7 +179,11 @@ const Flashcardcanh = () => {
                 ...generatedData
             }));
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message); // Hiển thị toast lỗi
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+
         } finally {
             setIsLoading(false);
         }
@@ -192,7 +221,8 @@ const Flashcardcanh = () => {
     // Hàm xử lý khi submit form
     const handleSubmit = async () => {
         if (!wordData.title || !wordData.define) {
-            alert('Vui lòng nhập đầy đủ thông tin bắt buộc');
+
+            toast.error('Vui lòng nhập đầy đủ thông tin bắt buộc'); 
             return;
         }
 
@@ -218,38 +248,53 @@ const Flashcardcanh = () => {
                 const response = await updateFlashCardWithStudySet(updateData);
                 console.log('Updated flashcard:', response);
                 if (response.returnCode == 1) {
-                    alert("Update Sucessful");
+                    toast.success("Update Sucessful"); // Hiển thị toast lỗi
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 1000);
                     document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
                     fetchFlashcards();
                 }
                 else {
-                    alert("Update Failed");
+                    toast.success("Update Failed"); // Hiển thị toast lỗi
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 1000);
+
                 }
             }
             else {
+                try {
+                    const response = await createFlashCardWithStudySet(preparedData);
+                    if (response.returnCode == 1) {
+                        toast.success("Tạo từ mới thành công"); // Hiển thị toast lỗi
+                        setTimeout(() => {
+                            setIsLoading(false);
+                        }, 1000);
+                        document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
+                        // Refresh danh sách flashcard
+                        handleResetForm();
+                        fetchFlashcards();
+                    }
+                    else {
+                        toast.error(`Tạo từ mới thất bại ${response.returnMessage}`); // Hiển thị toast lỗi
+                        setTimeout(() => {
+                            setIsLoading(false);
+                        }, 1000);
+                    }
+                }
+                catch (error) {
+                    toast.error(error.message);
 
-                const response = await createFlashCardWithStudySet(preparedData);
-                console.log('Created flashcard:', response);
-                // Reset form
-                setWordData({
-                    title: '',
-                    define: '',
-                    typeOfWord: '',
-                    transcription: '',
-                    examples: '',
-                    note: ''
-                });
-                document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
+                    // Hiển thị toast lỗi
+                }
 
-                // Refresh danh sách flashcard
-                handleResetForm();
-                fetchFlashcards();
             }
 
 
         } catch (error) {
             console.error('Error creating flashcard:', error);
-            alert(isEditMode ? 'Có lỗi xảy ra khi cập nhật flashcard' : 'Có lỗi xảy ra khi tạo flashcard');
+            toast.error(isEditMode ? 'Có lỗi xảy ra khi cập nhật flashcard' : 'Có lỗi xảy ra khi tạo flashcard');
         } finally {
             setIsLoading(false);
         }
@@ -303,23 +348,26 @@ const Flashcardcanh = () => {
             if (deleteType === 'flashcard') {
                 const response = await deleteFlashCardWithStudySet(wordData.id);
                 if (response.returnCode == 1) {
-                    alert("Xóa từ thành công");
+
+                    toast.success("Xóa từ thành công");
                     fetchFlashcards();
                 } else {
-                    alert("Xóa từ thất bại");
+                    toast.error("Xóa từ thất bại");
                 }
             } else if (deleteType === 'studyset') {
                 const response = await deleteStudySet(studySet.id);
                 if (response.returnCode == 1) {
-                    alert("Xóa study set thành công");
-                    window.location.href = '/flashcard';
+
+                    toast.success("Xóa study set thành công");
+                        navigate('/flashcard');
+
                 } else {
-                    alert("Xóa study set thất bại");
+                    toast.error("Xóa study set thất bại");
                 }
             }
         } catch (error) {
             console.error('Error deleting:', error);
-            alert(`Có lỗi xảy ra khi xóa ${deleteType === 'flashcard' ? 'từ' : 'study set'}`);
+            toast.error(`Có lỗi xảy ra khi xóa ${deleteType === 'flashcard' ? 'từ' : 'study set'}`);
         }
     };
 
@@ -327,14 +375,15 @@ const Flashcardcanh = () => {
         <>
             <div className="flashcard-overview">
 
-                {/* Container Fluid */}
+
+            {/* Container Fluid */}
                 {studySet && (
                     <>
-                        <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
+                <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
                         <div className="d-flex justify-content-between align-items-center">
 
                             <h2 className="flashcardcanh-header-title fs-1" style={{ color: "rgb(33 135 213", }}>Flashcard: {studySet.title}</h2>
-                            {studySet.userId === userInfor.userId && (
+                            {studySet.userId === userId && (
                                 <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                                     <div className="d-flex gap-2 align-items-center" style={{ height: "36px" }}>
                                         <button className="btn btn-primary h-100 rounded"
@@ -361,44 +410,44 @@ const Flashcardcanh = () => {
                         <p className="fs-3 font-italic" style={{ color: "rgb(126 154 210)", }}>{studySet.desc}</p>
                         <p >
                             Ngôn ngữ :
-                            <img
-                                style={{
-                                    width: '30px',
-                                    height: '20px',
-                                    marginRight: '10px',
+                    <img
+                        style={{
+                            width: '30px',
+                            height: '20px',
+                            marginRight: '10px',
                                     verticalAlign: 'middle',
                                     marginLeft: '10px',
-                                }}
+                        }}
                                 src={studySet.imageCountry} />
 
 
-                        </p>
+                </p>
 
-                        <p className="flashcardcanh-creator">
+                <p className="flashcardcanh-creator">
                             Người tạo: {userName}
-                            <img
-                                className="flashcardcanh-avatar"
+                    <img
+                        className="flashcardcanh-avatar"
                                 src={PictureUrl}
-                                alt="Avatar người tạo"
-                            />
-                        </p>
-                        <div className="flashcardcanh-mt-3">
+                        alt="Avatar người tạo"
+                    />
+                </p>
+                <div className="flashcardcanh-mt-3">
                             <button className="flashcardcanh-btn-practice" onClick={handlePractice}>Luyện tập</button>
-                            <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
-                        </div>
+                    <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
+                </div>
                         <p className="flashcardcanh-mt-2 text-muted mt-3">
-                            Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
-                            chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
-                        </p>
+                    Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
+                    chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
+                </p>
                         <div className="flashcardcanh-stats-box w-100">
                             <div className="flashcardcanh-row flashcardcanh-mt-3 w-100 ">
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-learned fs-5 fw-bold">Tất cả <br />{flashcardCount}</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-new fs-5 fw-bold">Đã nhớ<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-review fs-5 fw-bold">Ôn tập<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-mastered fs-5 fw-bold">Ghi nhớ <br />{flashcardCount}</div>
-                            </div>
+                    </div>
 
-                        </div>
+            </div>
                     </>
                 )}
 
@@ -423,8 +472,8 @@ const Flashcardcanh = () => {
                                     <h1 className="flashcardcanh-title">
                                         {data.title}
                                         <span className="fs-5 ml-2" style={{ color: "rgb(9, 64, 103)" }}>   {data.transcription}  </span>
-                                        <span className="flashcardcanh-audio-icon fs-5  " >
 
+                                        <span className="flashcardcanh-audio-icon fs-5  " onClick={() => handleSpeak(data.title, data.id)}>
                                             <i className="bi bi-volume-up ml-2 fs-4 " ></i>
                                         </span>
                                     </h1>
@@ -444,7 +493,8 @@ const Flashcardcanh = () => {
                                                 <div key={idx}>
                                                     <p className="font-weight-bold fs-6 mb-0">
                                                         {idx + 1}. {example.en}
-                                                        <span className="flashcardcanh-audio-icon">
+
+                                                        <span className="flashcardcanh-audio-icon " onClick={() => handleSpeak(example.en, data.id)}>
                                                             <i className="bi bi-volume-up"></i>
                                                         </span>
                                                     </p>
@@ -467,13 +517,24 @@ const Flashcardcanh = () => {
 
                 {/* popup add word  edit*/}
 
+
+
                 <div className="modal fade" id="addWordModal" tabIndex="-1"
                     aria-labelledby="addWordModalLabel" aria-hidden="true"
-                    onHide={handleResetForm} >
-                    <div className="modal-dialog modal-lg modal-dialog-centered" style={{ width: "30%" }}>
+                    onHide={handleResetForm}>
+                    <div className="modal-dialog modal-dialog-centered"
+                        style={{
+                            maxWidth: '100%',
+                            width: '40%',
+                            minWidth: '450px',
+                            margin: '0.5rem auto'
+                        }}>
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="addWordModalLabel">Thêm từ mới</h5>
+                                <h5 className="modal-title" id="addWordModalLabel">
+                                    {isEditMode ? "Chỉnh sửa từ" : "Thêm từ mới"}
+                                </h5>
+
                                 <button
                                     type="button"
                                     className="btn-close"
@@ -484,10 +545,12 @@ const Flashcardcanh = () => {
                             </div>
 
                             <div className="modal-body">
-                                <div className="mb-3">
+
+                                <div className="container-fluid p-0">
                                     {/* Input từ mới và nút AI Generate */}
-                                    <div className="d-flex gap-3 align-items-end mb-3">
-                                        <div className="flex-grow-1">
+                                    <div className="row mb-3">
+                                        <div className="col-12 col-md-8 mb-2 mb-md-0">
+
                                             <div className="d-flex gap-2 align-items-center">
                                                 <p className="ms-2 mb-1">
                                                     Tên từ mới (nhập rồi bấm vào AI Generate)
@@ -506,20 +569,23 @@ const Flashcardcanh = () => {
                                                 onChange={handleInputChange}
                                             />
                                         </div>
-                                        <button
-                                            className="btn btn-primary d-flex align-items-center gap-2"
-                                            onClick={handleAIGenerate}
-                                            disabled={isLoading || !wordData.title}
-                                        >
-                                            {isLoading ? (
-                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                            ) : (
-                                                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em">
-                                                    <path d="M184 0c30.9 0 56 25.1 56 56V456c0 30.9-25.1 56-56 56c-28.9 0-52.7-21.9-55.7-50.1c-5.2 1.4-10.7 2.1-16.3 2.1c-35.3 0-64-28.7-64-64c0-7.4 1.3-14.6 3.6-21.2C21.4 367.4 0 338.2 0 304c0-31.9 18.7-59.5 45.8-72.3C37.1 220.8 32 207 32 192c0-30.7 21.6-56.3 50.4-62.6C80.8 123.9 80 118 80 112c0-29.9 20.6-55.1 48.3-62.1C131.3 21.9 155.1 0 184 0zM328 0c28.9 0 52.6 21.9 55.7 49.9c27.8 7 48.3 32.1 48.3 62.1c0 6-.8 11.9-2.4 17.4c28.8 6.2 50.4 31.9 50.4 62.6c0 15-5.1 28.8-13.8 39.7C493.3 244.5 512 272.1 512 304c0 34.2-21.4 63.4-51.6 74.8c2.3 6.6 3.6 13.8 3.6 21.2c0 35.3-28.7 64-64 64c-5.6 0-11.1-.7-16.3-2.1c-3 28.2-26.8 50.1-55.7 50.1c-30.9 0-56-25.1-56-56V56c0-30.9 25.1-56 56-56z"></path>
-                                                </svg>
-                                            )}
-                                            AI Generate
-                                        </button>
+                                        <div className="col-12 col-md-4 d-flex align-items-end">
+                                            <button
+                                                className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                                                onClick={handleAIGenerate}
+                                                disabled={isLoading || !wordData.title}
+                                            >
+                                                {isLoading ? (
+                                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                ) : (
+                                                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em">
+                                                        <path d="M184 0c30.9 0 56 25.1 56 56V456c0 30.9-25.1 56-56 56c-28.9 0-52.7-21.9-55.7-50.1c-5.2 1.4-10.7 2.1-16.3 2.1c-35.3 0-64-28.7-64-64c0-7.4 1.3-14.6 3.6-21.2C21.4 367.4 0 338.2 0 304c0-31.9 18.7-59.5 45.8-72.3C37.1 220.8 32 207 32 192c0-30.7 21.6-56.3 50.4-62.6C80.8 123.9 80 118 80 112c0-29.9 20.6-55.1 48.3-62.1C131.3 21.9 155.1 0 184 0zM328 0c28.9 0 52.6 21.9 55.7 49.9c27.8 7 48.3 32.1 48.3 62.1c0 6-.8 11.9-2.4 17.4c28.8 6.2 50.4 31.9 50.4 62.6c0 15-5.1 28.8-13.8 39.7C493.3 244.5 512 272.1 512 304c0 34.2-21.4 63.4-51.6 74.8c2.3 6.6 3.6 13.8 3.6 21.2c0 35.3-28.7 64-64 64c-5.6 0-11.1-.7-16.3-2.1c-3 28.2-26.8 50.1-55.7 50.1c-30.9 0-56-25.1-56-56V56c0-30.9 25.1-56 56-56z"></path>
+                                                    </svg>
+                                                )}
+                                                AI Generate
+                                            </button>
+                                        </div>
+
                                     </div>
 
                                     {/* Định nghĩa */}
@@ -527,7 +593,8 @@ const Flashcardcanh = () => {
                                         <p className="ms-2 mb-1">Định nghĩa</p>
                                         <input
                                             type="text"
-                                            name="definition"
+
+                                            name="define"
                                             className="form-control"
                                             placeholder="Định nghĩa (bắt buộc)"
                                             value={wordData.define}
@@ -538,8 +605,9 @@ const Flashcardcanh = () => {
                                     {/* Các trường không bắt buộc */}
                                     <div className="border rounded p-3">
                                         <p className="text-muted">Không yêu cầu phải điền</p>
-                                        <div className="d-flex gap-3 align-items-center mb-3">
-                                            <div className="flex-grow-1">
+                                        <div className="row mb-3">
+                                            <div className="col-12 col-md-6 mb-3 mb-md-0">
+
                                                 <p className="ms-2 mb-1">Loại từ</p>
                                                 <input
                                                     type="text"
@@ -550,11 +618,13 @@ const Flashcardcanh = () => {
                                                     onChange={handleInputChange}
                                                 />
                                             </div>
-                                            <div className="flex-grow-1">
+
+                                            <div className="col-12 col-md-6">
                                                 <p className="ms-2 mb-1">Phiên âm</p>
                                                 <input
                                                     type="text"
-                                                    name="phonetic"
+                                                    name="transcription"
+
                                                     className="form-control"
                                                     placeholder="Phiên âm"
                                                     value={wordData.transcription}
@@ -571,7 +641,9 @@ const Flashcardcanh = () => {
                                                 placeholder="Ví dụ (tối đa 10 câu)"
                                                 value={wordData.examples}
                                                 onChange={handleInputChange}
-                                                style={{ height: "150px" }}
+
+                                                style={{ height: "150px", maxHeight: "200px" }}
+
                                             />
                                         </div>
                                         <div className="mb-3">
@@ -583,7 +655,9 @@ const Flashcardcanh = () => {
                                                 placeholder="Ghi chú"
                                                 value={wordData.note}
                                                 onChange={handleInputChange}
-                                                style={{ height: "150px" }}
+
+                                                style={{ height: "150px", maxHeight: "200px" }}
+
                                             />
                                         </div>
                                     </div>
@@ -597,7 +671,7 @@ const Flashcardcanh = () => {
                                     data-bs-dismiss="modal"
                                     onClick={handleResetForm}
                                 >
-                                    Cancel
+                                    Hủy
                                 </button>
                                 <button
                                     type="button"
@@ -625,7 +699,8 @@ const Flashcardcanh = () => {
                         style={{ minWidth: "20rem", minHeight: "10rem" }}>
                         <Input
                             placeholder="Tên list từ"
-                            value={editData.title}
+
+                            value={studySet.title}
                             onChange={(e) => setEditData({ ...editData, title: e.target.value })}
                             className="w-100 m-2"
                         />
@@ -652,8 +727,9 @@ const Flashcardcanh = () => {
                         />
                         <div className="d-flex justify-content-left">
                             <Checkbox
-                                checked={editData.Public}
-                                onChange={(e) => setEditData({ ...editData, Public: e.target.checked })}
+
+                                checked={editData.public}
+                                onChange={(e) => setEditData({ ...editData, public: e.target.checked })}
                             >
                                 Công khai
                             </Checkbox>
@@ -682,8 +758,10 @@ const Flashcardcanh = () => {
                         <div className="d-flex justify-content-center mt-3 w-100">
                             <Button onClick={handleDeleteCancel} className="me-2 btn-secondary w-25">Hủy</Button>
                             <Button type="primary" onClick={handleDeleteSubmit} className="w-25 btn-danger">Xóa</Button>
-                        </div>
-                    </div>
+
+                </div>
+                </div> 
+
                 </Modal>
 
 

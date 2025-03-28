@@ -126,7 +126,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             }
 
             if (!string.IsNullOrEmpty(studySet.Desc))
+            {
+
                 updates.Add(updateBuilder.Set(x => x.Desc, studySet.Desc));
+            }
+            updates.Add(updateBuilder.Set(x => x.Public, studySet.Public));
+
 
             if (!updates.Any()) return 0; // Không có gì thay đổi -> Không cần update
 

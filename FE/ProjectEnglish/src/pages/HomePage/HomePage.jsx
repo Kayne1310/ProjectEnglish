@@ -144,7 +144,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Flashcard</h5>
                                     <p>Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
-                                    <Link href="">Read More</Link>
+                                    <Link to="/flashcard">Read More</Link>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +168,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Tài liệu</h5>
                                     <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
-                                    <Link href="">Read More</Link>
+                                    <Link to="/listdocument">Read More</Link>
                                 </div>
                             </div>
                         </div>
