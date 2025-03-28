@@ -19,7 +19,7 @@ const login = async (email, password) => {
             console.error("Error: response.data is undefined!");
             return null;
         }
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
         return { error: error.response?.data || error.message };
@@ -38,12 +38,11 @@ const logout = async () => {
         return null;
       }
       return response.data;
-
     } catch (error) {
-      console.error("Logout failed:", error.response?.data || error.message);
-      return { error: error.response?.data || error.message };
+        console.error("Logout failed:", error.response?.data || error.message);
+        return { error: error.response?.data || error.message };
     }
-  };
+};
 
 const register = async (username, email, password) => {
     try {
@@ -111,7 +110,7 @@ const googleLogin = async (accessToken) => {
         const apiResponse = await axios.post(
             `${API_URL}/Account/google-login`,
             userData,
-            { withCredentials: true } // Bắt buộc để cookie hoạt động
+            { withCredentials: false } // Bắt buộc để cookie hoạt động
         );
         return apiResponse.data;
     } catch (error) {
@@ -192,7 +191,6 @@ const resetPassword = async (email, token, newpassword) => {
     }
 
 };
-
 
 const getUserInfor = async () => {
     try {

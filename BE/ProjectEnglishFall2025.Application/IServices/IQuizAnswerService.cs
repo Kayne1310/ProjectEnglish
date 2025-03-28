@@ -18,6 +18,6 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionVM);
 
         // correct answers
-        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId);
+        Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId);
     }
 }

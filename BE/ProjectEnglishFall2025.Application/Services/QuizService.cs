@@ -385,94 +385,108 @@ namespace ProjectFall2025.Application.Services
              })).ToList();
         }
 
-        public async Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId)
-        {
-            if (request == null)
-                throw new ArgumentException("Request body is null.");
-            if (string.IsNullOrEmpty(request.QuizId))
-                throw new ArgumentException("QuizId is null or empty.");
+		public async Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId)
+		{
+			try
+			{
+				if (request == null)
+					throw new ArgumentException("Request body is null.");
+				if (string.IsNullOrEmpty(request.QuizId))
+					throw new ArgumentException("QuizId is null or empty.");
 
-            var quizQuestions = await GetQuestionsAndAnswersByQuizIdAsync(request.QuizId);
-            if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
+				var quizQuestions = await GetQuestionsAndAnswersByQuizIdAsync(request.QuizId);
+				if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
 
-            var response = new SubmitQuizResponse
-            {
-                QuizId = request.QuizId,
-                QuizTitle = quizQuestions.FirstOrDefault()?.QuizInforVM?.name ?? "No tital available",
-                QuizDescription = quizQuestions.FirstOrDefault()?.QuizInforVM?.description ?? "No description available",
-                CountTotal = quizQuestions.Count,
-                CountCorrect = 0
-            };
+				var response = new SubmitQuizResponse
+				{
+					QuizId = request.QuizId,
+					QuizTitle = quizQuestions.FirstOrDefault()?.QuizInforVM?.name ?? "No tital available",
+					QuizDescription = quizQuestions.FirstOrDefault()?.QuizInforVM?.description ?? "No description available",
+					CountTotal = quizQuestions.Count,
+					CountCorrect = 0
+				};
 
-            if (request.Answers == null || !request.Answers.Any())
-            {
-                return response;
-            }
+				if (request.Answers == null || !request.Answers.Any())
+				{
+					return response;
+				}
 
-            var userAnswersToSave = new List<QuizUserAnswer>();
+				var userAnswersToSave = new List<QuizUserAnswer>();
 
-            foreach (var userAnswer in request.Answers)
-            {
-                if (userAnswer == null || string.IsNullOrEmpty(userAnswer.QuestionId) || string.IsNullOrEmpty(userAnswer.UserAnswerId))
-                    continue;
+				foreach (var userAnswer in request.Answers)
+				{
+					if (userAnswer == null || string.IsNullOrEmpty(userAnswer.QuestionId) || string.IsNullOrEmpty(userAnswer.UserAnswerId))
+						continue;
 
-                var question = quizQuestions.FirstOrDefault(q => q.question_id == userAnswer.QuestionId);
-                if (question == null) continue;
+					var question = quizQuestions.FirstOrDefault(q => q.question_id == userAnswer.QuestionId);
+					if (question == null) continue;
 
-                // Lấy ID của đáp án đúng
-                var correctAnswerId = question.answers.FirstOrDefault(a => a.correct_answer)?.idAnswered;
-                if (correctAnswerId == null) continue;
+					var correctAnswerId = question.answers.FirstOrDefault(a => a.correct_answer)?.idAnswered;
+					if (correctAnswerId == null) continue;
 
-                // Lấy nae của đáp án người dùng chọn
-                var userAnswerDescription = question.answers.FirstOrDefault(a => a.idAnswered == userAnswer.UserAnswerId)?.description ?? "Unknown";
+					var userAnswerDescription = question.answers.FirstOrDefault(a => a.idAnswered == userAnswer.UserAnswerId)?.description ?? "Unknown";
+					bool isCorrect = userAnswer.UserAnswerId == correctAnswerId;
+					if (isCorrect) response.CountCorrect++;
 
-                // So sánh ID để xác định isCorrect
-                bool isCorrect = userAnswer.UserAnswerId == correctAnswerId;
-                if (isCorrect) response.CountCorrect++;
+					response.QuizData.Add(new QuizResult
+					{
+						QuestionId = userAnswer.QuestionId,
+						QuestionDescription = question.description,
+						IsCorrect = isCorrect,
+						UserAnswerId = userAnswer.UserAnswerId,
+						UserAnswerDescription = userAnswerDescription,
+						SystemAnswers = question.answers.Select(a => new AnswerDto
+						{
+							Id = a.idAnswered,
+							Description = a.description,
+							CorrectAnswer = a.correct_answer
+						}).ToList()
+					});
 
-                response.QuizData.Add(new QuizResult
-                {
-                    QuestionId = userAnswer.QuestionId,
-                    QuestionDescription = question.description,
-                    IsCorrect = isCorrect,
-                    UserAnswerId = userAnswer.UserAnswerId,
-                    UserAnswerDescription = userAnswerDescription,
-                    SystemAnswers = question.answers.Select(a => new AnswerDto // Trả về tất cả đáp án
-                    {
-                        Id = a.idAnswered,
-                        Description = a.description,
-                        CorrectAnswer = a.correct_answer
-                    }).ToList()
-                });
+					userAnswersToSave.Add(new QuizUserAnswer
+					{
+						quizUserAnswer_id = ObjectId.GenerateNewId(),
+						user_answers = new ObjectId( userAnswer.UserAnswerId),
+						createAt = DateTime.UtcNow,
+						updateAt = DateTime.UtcNow,
+						UserID = new ObjectId(userId),
+						quiz_id = new ObjectId(request.QuizId),
+						question_id = new ObjectId(userAnswer.QuestionId)
+					});
+				}
 
-                // Thêm vào bảng QuizUserAnswer
-                userAnswersToSave.Add(new QuizUserAnswer
-                {
-                    quizUserAnswer_id = ObjectId.GenerateNewId(),
-                    user_answers = new ObjectId(userAnswer.UserAnswerId), // Lưu ID đáp án người dùng chọn
-                    createAt = DateTime.UtcNow,
-                    updateAt = DateTime.UtcNow,
-                    UserID = new ObjectId(userId),
-                    quiz_id = new ObjectId(request.QuizId),
-                    question_id = new ObjectId(userAnswer.QuestionId)
-                });
-            }
+				var history = new History
+				{
+					history_id = ObjectId.GenerateNewId(),
+					total_questions = response.CountTotal.ToString(),
+					total_corrects = response.CountCorrect.ToString(),
+					createAt = DateTime.UtcNow,
+					updateAt = DateTime.UtcNow,
+					UserID = new ObjectId(userId),
+					quiz_id = new ObjectId(request.QuizId)
+				};
 
-            var history = new History
-            {
-                history_id = ObjectId.GenerateNewId(),
-                total_questions = response.CountTotal.ToString(),
-                total_corrects = response.CountCorrect.ToString(),
-                createAt = DateTime.UtcNow,
-                updateAt = DateTime.UtcNow,
-                UserID = new ObjectId(userId),
-                quiz_id = new ObjectId(request.QuizId)
-            };
+				await userAnswerRepository.InsertManyAsync(userAnswersToSave);
+				await historyRepository.InsertAsync(history);
 
-            await userAnswerRepository.InsertManyAsync(userAnswersToSave);
-            await historyRepository.InsertAsync(history);
-
-            return response;
-        }
-    }
+				return response;
+			}
+			catch (FormatException ex)
+			{
+				throw new ArgumentException($"Invalid ID format: {ex.Message}", ex);
+			}
+			catch (MongoException ex)
+			{
+				throw new Exception($"Database error: {ex.Message}", ex);
+			}
+			catch (ArgumentException ex)
+			{
+				throw; // Ném lại ArgumentException đã được định nghĩa
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"An unexpected error occurred: {ex.Message}", ex);
+			}
+		}
+	}
 }

@@ -33,7 +33,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
             }); // Lưu thông tin user vào context
-         
+
             toast.success("Login successfully!");
             setTimeout(() => {
                 setIsLoading(false);
@@ -127,6 +127,7 @@ export const handleLogout = async (
 
         if (!res || res.error || res.returnCode !== 1) {
             throw new Error(res?.returnMessage || "Logout failed");
+            
         } else {
             setUser(null); // Xóa user trong context/state
             setIsLoading(false);
@@ -209,6 +210,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
 
 }
+
 
 
 

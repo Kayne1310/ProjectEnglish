@@ -33,6 +33,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 			return res;
 		}
 
+
         public async Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null)
         {
             var connection = dbContext.GetCollectionQuizAnswer();
@@ -62,6 +63,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
 			return quiz;
 		}
+
 
         public async Task<int> updateQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
         {
@@ -112,9 +114,9 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                 res = await connection.DeleteOneAsync(filter);
             }
 
-
 			return (int)res.DeletedCount;
 		}
+
 
         // Delete question with answer
         public async Task<int> DeleteByQuestionIdAsync(ObjectId questionId, IClientSessionHandle session = null)
@@ -134,41 +136,40 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return (int)deleteResult.DeletedCount;
         }
 
+        public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
+        {
+            var db = dbContext.GetCollectionQuizAnswer();
 
-		public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId)
-		{
-			var db = dbContext.GetCollectionQuizAnswer();
-
-			var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
-			{
-				{ "from", "QuizQuestion" },
-				{ "let", new BsonDocument("questionId", "$question_id") },
-				{ "pipeline", new BsonArray
-					{
-						new BsonDocument("$match", new BsonDocument
-						{
-							{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
-						}),
-						new BsonDocument("$lookup", new BsonDocument
-						{
-							{ "from", "Quiz" },
-							{ "let", new BsonDocument("quizId", "$quiz_id") },
-							{ "pipeline", new BsonArray
-								{
-									new BsonDocument("$match", new BsonDocument
-									{
-										{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
-										{ "_id", new ObjectId(quizId) }
-									})
-								}
-							},
-							{ "as", "quiz_info" }
-						}),
-						new BsonDocument("$unwind", "$quiz_info")
-					}
-				},
-				{ "as", "question_info" }
-			});
+            var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
+            {
+                { "from", "QuizQuestion" },
+                { "let", new BsonDocument("questionId", "$question_id") },
+                { "pipeline", new BsonArray
+                    {
+                        new BsonDocument("$match", new BsonDocument
+                        {
+                            { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
+                        }),
+                        new BsonDocument("$lookup", new BsonDocument
+                        {
+                            { "from", "Quiz" },
+                            { "let", new BsonDocument("quizId", "$quiz_id") },
+                            { "pipeline", new BsonArray
+                                {
+                                    new BsonDocument("$match", new BsonDocument
+                                    {
+                                        { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
+                                        { "_id", new ObjectId(quizId.quiz_id) }
+                                    })
+                                }
+                            },
+                            { "as", "quiz_info" }
+                        }),
+                        new BsonDocument("$unwind", "$quiz_info")
+                    }
+                },
+                { "as", "question_info" }
+            });
 
 			var unwindQuestion = new BsonDocument("$unwind", "$question_info");
 

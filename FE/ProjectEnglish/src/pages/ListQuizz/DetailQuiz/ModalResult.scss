@@ -1,0 +1,64 @@
+.quiz-summary {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+
+    h4 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.questions-review {
+    .question-item {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+
+        &.correct {
+            border-left: 4px solid #28a745;
+        }
+
+        &.incorrect {
+            border-left: 4px solid #dc3545;
+        }
+
+        h5 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .answers-list {
+        margin: 1rem 0;
+        padding: 0.5rem 1rem;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .system-answers {
+        margin-top: 1rem;
+
+        ul {
+            list-style: none;
+            padding-left: 1rem;
+
+            li {
+                margin-bottom: 0.5rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+
+                &.correct-answer {
+                    background-color: rgba(40, 167, 69, 0.1);
+                    color: #28a745;
+                }
+            }
+        }
+    }
+}

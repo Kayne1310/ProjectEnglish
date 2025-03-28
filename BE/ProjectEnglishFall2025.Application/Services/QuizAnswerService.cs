@@ -156,7 +156,7 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)
+        public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
         {
             var bsonResults = await answerRepository.GetCorrectQuizAnswersAsync(quizId);
 

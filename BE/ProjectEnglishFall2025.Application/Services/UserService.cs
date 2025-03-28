@@ -73,7 +73,7 @@ namespace ProjectFall2025.Application.Services
 
                 //map user into userviewmodel
                 var userDTO = mapper.Map<User>(userViewModel);
-                userDTO.Picture = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"; // add picture default
+                userDTO.Picture = "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1742971409/USER/kc5y9fcj4temgsvkhe3t.jpg"; // add picture default
 
                 var res = await repository.addUser(userDTO);
                 return new ReturnData

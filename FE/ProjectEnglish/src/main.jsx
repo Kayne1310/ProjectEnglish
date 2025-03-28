@@ -35,7 +35,7 @@ import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
 import ViewChangePassword from './pages/ChangePassword/ViewChangePassword.jsx';
 import { Community } from './pages/Community/community.jsx';
 import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
-
+import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
 
 
 const router = createBrowserRouter([
@@ -60,16 +60,22 @@ const router = createBrowserRouter([
       },
       {
         path: "/listquizz",
-        element: <ListQuizz />,
+        element:
+          <PrivateRoute>
+            <ListQuizz />
+          </PrivateRoute>,
         children: [{
           path: "detailquiz/:quizId", element: <DetailQuizz />
-
         },
+        {
+          path: "detailquiz/:quizId/result",
+          element: <ResultQuizz />
+        }
         ],
       },
       {
         path: "/listdocument",
-        element: <ListDocument />
+        element: <ListDocument />,
       },
       {
         path: "/listdocument/detaildocument/:id",
@@ -118,7 +124,10 @@ const router = createBrowserRouter([
     ]
   },
 
-
+  {
+    path: "/resultquiz/:quizId",
+    element: <ResultQuizz />
+  },
   {
     path: "/resetpassword",
     element: <ResetPasswordPage />
