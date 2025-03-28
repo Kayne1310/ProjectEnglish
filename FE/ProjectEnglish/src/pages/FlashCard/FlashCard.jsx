@@ -416,6 +416,7 @@ const Flashcard = () => {
       setShowAIAnswerModal(true);
 
       let currentWord;
+
       // Xử lý currentWord dựa trên mode
       switch (mode) {
         case "flashcard":
@@ -424,15 +425,10 @@ const Flashcard = () => {
         case "quiz":
           currentWord = currentItem?.description;
           break;
-        case "listening":
-          currentWord = currentItemListent?.question;
-          break;
-        case "fillblank":
-          currentWord = currentItemFill?.question;
-          break;
         default:
           currentWord = "";
       }
+
 
       // Kiểm tra nếu không có currentWord thì throw error
       if (!currentWord) {
@@ -469,9 +465,7 @@ const Flashcard = () => {
         3. Phát âm: /ˈteɪbl/`;
       } else {
         // Prompt cho chế độ quiz
-        prompt = `Bạn là một giáo sư chuyên nghiệp. Hãy giúp tôi trả lời câu hỏi sau theo định dạng dưới đây (giới hạn 100 từ):
-
-        Giải thích về câu hỏi: "${currentWord}"
+        prompt = `Bạn là một giáo sư chuyên nghiệp. Hãy giúp tôi trả lời câu hỏi "${currentWord}" theo định dạng dưới đây (giới hạn 100 từ):
 
         1. Đáp án đúng:
         [Chọn đáp án chính xác từ các lựa chọn đã cho]
