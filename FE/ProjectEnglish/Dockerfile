@@ -1,23 +1,26 @@
-# Use Node.js as the base image
-FROM node:22 AS build
-WORKDIR /app
-
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copy the rest of the application code
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Use nginx as web server
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+   # 1. For build React app
+   FROM node:22 AS development
+   # Set working directory
+   WORKDIR /app
+   #
+   COPY package.json /app/package.json
+   COPY package-lock.json /app/package-lock.json
+   # Same as npm install
+   RUN npm ci
+   COPY . /app
+   ENV CI=true
+   ENV PORT=3000
+   CMD [ "npm", "dev" ]
+   FROM development AS build
+   RUN npm run build
+   # 2. For Nginx setup
+   FROM nginx:alpine
+   # Copy config nginx
+   COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+   WORKDIR /usr/share/nginx/html
+   # Remove default nginx static assets
+   RUN rm -rf ./*
+   # Copy static assets from builder stage
+   COPY --from=build /app/dist .
+   # Containers run nginx with global directives and daemon off
+   ENTRYPOINT ["nginx", "-g", "daemon off;"]

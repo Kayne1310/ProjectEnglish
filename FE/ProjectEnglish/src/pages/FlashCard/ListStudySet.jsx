@@ -1,12 +1,11 @@
 import { Justify } from "react-bootstrap-icons";
-import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId } from "../../service/flashcardService";
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
-import { toast } from "react-toastify";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 
 const { TextArea } = Input;
@@ -65,9 +64,10 @@ const FlashcardList = () => {
             setLanguage("");
             setIsPublic(false);
             setDescription("");
+
         }
-        catch (error) {
-            toast.error(`Tạo list từ thất bại: ${error}`);
+        catch(error){
+            console.error("Error creating study set:", error);
         }
     };
 
@@ -102,7 +102,7 @@ const FlashcardList = () => {
         try {
             timer = setTimeout(() => {
                 setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-            }, 1000);
+            }, 2000);
             fetchFlashcards();
             gellAllListStudybyUser();
         } catch (error) {
@@ -116,8 +116,6 @@ const FlashcardList = () => {
         const selectedLanguage = languages.find(lang => lang.id === activeLang);
         return data.studySet.imageCountry === selectedLanguage.imageCountry;
     });
-
-
 
     return (
 
@@ -211,7 +209,6 @@ const FlashcardList = () => {
                             </div>
                         </div>
                     )}
-
                     <h5 className="mt-4 mb-4 text-primary  ">Khám phá từ cộng đồng</h5>
 
                     <div className="d-flex flex-wrap align-items-center gap-3 py-3">
@@ -256,6 +253,7 @@ const FlashcardList = () => {
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
                                 placeholder="Chọn ngôn ngữ"
+
                             >
                                 <Option value="">Chọn ngôn ngữ</Option>
                                 <Option value="UK">Tiếng Anh-Mỹ</Option>
