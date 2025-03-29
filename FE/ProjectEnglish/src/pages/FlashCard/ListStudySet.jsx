@@ -1,12 +1,11 @@
 import { Justify } from "react-bootstrap-icons";
-import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId } from "../../service/flashcardService";
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
-import { toast } from "react-toastify";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 
 const { TextArea } = Input;
@@ -27,11 +26,11 @@ const FlashcardList = () => {
 
 
     const languages = [
-        { id: "all", label: "Tất cả", icon: true },
-        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English" },
-        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese" },
-        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese" },
-        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French" }
+        { id: "all", label: "Tất cả", icon: true, imageCountry: "all" },
+        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png" },
+        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg" },
+        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png" },
+        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png" }
     ];
 
 
@@ -50,25 +49,20 @@ const FlashcardList = () => {
         setDescription("");
     };
     const handleCreate = async () => {
-        try {
-            setIsModalVisible(false);
-            var res = await createStudySet(listName, language, isPublic, description);
-            if (res.returnCode == 1) {
-                toast.success("Tạo list từ thành công");
-                fetchFlashcards();
-                gellAllListStudybyUser();
-            }
-            else {
-                toast.error(`Tạo list từ thất bại: ${res.returnMessage}`);
-            }
-            setListName("");
-            setLanguage("Tiếng Anh-Mỹ");
-            setIsPublic(false);
-            setDescription("");
+        setIsModalVisible(false);
+        var res = await createStudySet(listName, language, isPublic, description);
+        if (res.returnCode == 1) {
+            alert("Tạo list từ thành công");
+            fetchFlashcards();
+            gellAllListStudybyUser();
         }
-        catch (error) {
-            toast.error(`Tạo list từ thất bại: ${error}`);
+        else {
+            alert(`Tạo list từ thất bại: ${res.returnMessage}`);
         }
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
 
     //fetch danh sách từ
@@ -98,7 +92,7 @@ const FlashcardList = () => {
         try {
             timer = setTimeout(() => {
                 setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-            }, 1000);
+            }, 2000);
             fetchFlashcards();
             gellAllListStudybyUser();
         } catch (error) {
@@ -107,6 +101,11 @@ const FlashcardList = () => {
         }
     }, []);
 
+    const filteredStudySet = studyset.filter(data => {
+        if (activeLang === "all") return true;
+        const selectedLanguage = languages.find(lang => lang.id === activeLang);
+        return data.studySet.imageCountry === selectedLanguage.imageCountry;
+    });
 
     return (
 
@@ -198,7 +197,6 @@ const FlashcardList = () => {
                             </div>
                         </div>
                     )}
-
                     <h5 className="mt-4 mb-4 text-primary  ">Khám phá từ cộng đồng</h5>
 
                     <div className="d-flex flex-wrap align-items-center gap-3 py-3">
@@ -242,7 +240,6 @@ const FlashcardList = () => {
                                 value={language}
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
-                                defaultValue="UK"
                             >
                                 <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
@@ -272,7 +269,7 @@ const FlashcardList = () => {
 
                     <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll"
                         style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflowY: isFlashcardPage ? "visible" : "scroll" }}>
-                        {studyset.map((data) => (
+                        {filteredStudySet.map((data) => (
                             <div className="col" key={data.studySet.id}>
                                 <Link to={`/ListFlashCard/${data.studySet.id}`}
                                     state={{

@@ -104,7 +104,7 @@ const ListDocument = () => {
                     <Spin size="large" />
                 </div>
             ) : (
-                <section className="about_section layout_padding" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+                <section className="slider_section layout_padding long_section " style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                     <div className="container">
                         <div className="mt-10 mb-5 text-third">
                             <h1 className="text-3xl font-bold">Tài liệu</h1>

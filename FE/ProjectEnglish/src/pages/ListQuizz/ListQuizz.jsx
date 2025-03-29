@@ -132,7 +132,7 @@ const ListQuizz = () => {
         <>
           {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
           {!isQuizletPage && (
-            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section className="slider_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
               <div className="container">
                 <div className="row">
                   <div className="mt-10 text-third ml-1">

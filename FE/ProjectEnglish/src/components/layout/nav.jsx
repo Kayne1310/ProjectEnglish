@@ -21,18 +21,18 @@ const Nav = () => {
     return (
         <>
             <div className="navigation">
-                <header className="header_section long_section px-0">
+                <header className="header_section long_section">
                     <nav className="navbar navbar-expand-lg custom_nav-container">
                         <a className="navbar-brand">
                             <span>
-                                <Link className="nav-link" to="/">
+                                <Link className="" to="/">
                                     Quizzet
                                 </Link>
                             </span>
                         </a>
                         <div className="d-none d-lg-flex mx-auto flex-column flex-lg-row align-items-center">
                             <ul className="navbar-nav">
-                                <li className="nav-item active">
+                                <li className="nav-item">
                                     <NavLink className="nav-link" to="/">
                                         Home
                                     </NavLink>
