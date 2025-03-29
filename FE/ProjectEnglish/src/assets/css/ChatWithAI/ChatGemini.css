@@ -424,7 +424,7 @@
         padding: 0;
     }
 
-    .chat-container {
+    .chat-containerwithAI {
         height: 100vh;
         border-radius: 0;
     }
@@ -469,7 +469,7 @@
         background: linear-gradient(135deg, #1a1c20 0%, #2c3e50 100%);
     }
 
-    .chat-container {
+    .chat-containerwithAI {
         background: rgba(23, 25, 35, 0.95);
     }
 

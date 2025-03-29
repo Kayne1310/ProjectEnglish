@@ -12,7 +12,7 @@ namespace ProjectFall2025.Domain.Do
     {
         [BsonId]
         public ObjectId quizUserAnswer_id { get; set; }
-        public string? user_answers { get; set; }
+        public ObjectId? user_answers { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
         public ObjectId UserID { get; set; }

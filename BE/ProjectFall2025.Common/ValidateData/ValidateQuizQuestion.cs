@@ -12,7 +12,7 @@ namespace ProjectFall2025.Common.ValidateData
     {
         public ValidateQuizQuestion()
         {
-            RuleFor(u => u.description).NotEmpty().WithMessage("desciption is not null");
+            RuleFor(u => u.description).NotEmpty().WithMessage("question is not null");
             RuleFor(u => u.image).NotEmpty().WithMessage("image is not null");
         }
     }

@@ -54,6 +54,11 @@ body {
 
 /* Title */
 .listquiz-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.listquiz-card-title-2 {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
@@ -169,13 +174,13 @@ body {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .wrapper {
-    margin: 3vh;
+    margin: 2vh;
     margin-top: 10vh;
   }
   .listquiz-card-content {
-    padding: 8px;
+    padding: 3px;
   }
 
   .listquiz-card-title {

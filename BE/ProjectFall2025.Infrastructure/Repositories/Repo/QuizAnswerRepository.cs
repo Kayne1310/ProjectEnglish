@@ -33,18 +33,20 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 			return res;
 		}
 
-		public async Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId)
-		{
-			var connection = dbContext.GetCollectionQuizAnswer();
 
-			var objectId = ObjectId.Parse(answerQuestionId.quizAnswer_id);
+        public async Task<QuizAnswer> findQuizAnswerById(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null)
+        {
+            var connection = dbContext.GetCollectionQuizAnswer();
+            var objectId = ObjectId.Parse(answerQuestionId.quizAnswer_id);
+            var filter = Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, objectId);
 
-			var filter = Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, objectId);
+            if (session != null)
+            {
+                return await connection.Find(session, filter).FirstOrDefaultAsync();
+            }
+            return await connection.Find(filter).FirstOrDefaultAsync();
+        }
 
-			var res = await connection.Find(filter).FirstOrDefaultAsync();
-
-			return res;
-		}
 
 		public async Task<QuizAnswer> createQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
 		{
@@ -62,154 +64,112 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 			return quiz;
 		}
 
-		public async Task<int> updateQuizAnswer(QuizAnswer quiz)
-		{
-			var updateAnswer = await dbContext.GetCollectionQuizAnswer()
-				.ReplaceOneAsync(f => f.quizAnswer_id == quiz.quizAnswer_id, quiz);
 
-			return (int)updateAnswer.ModifiedCount;
-		}
+        public async Task<int> updateQuizAnswer(QuizAnswer quiz, IClientSessionHandle session = null)
+        {
+            var connection = dbContext.GetCollectionQuizAnswer();
 
-		public async Task<int> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionId)
-		{
-			var connection = dbContext.GetCollectionQuizAnswer();
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<QuizAnswer>.Update
+                .Set(a => a.description, quiz.description)
+                .Set(a => a.correct_answer, quiz.correct_answer)
+                .Set(a => a.updateAt, DateTime.Now);
 
-			var objectId = ObjectId.Parse(answerQuestionId.quizAnswer_id);
+            // Thực hiện cập nhật trong MongoDB
+            UpdateResult updateResult;
+            if (session != null)
+            {
+                updateResult = await connection.UpdateOneAsync(
+                    session,
+                    Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, quiz.quizAnswer_id),
+                    updateDefinition
+                );
+            }
+            else
+            {
+                updateResult = await connection.UpdateOneAsync(
+                    Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, quiz.quizAnswer_id),
+                    updateDefinition
+                );
+            }
 
-			var filter = Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, objectId);
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
+        }
 
-			var res = await connection.DeleteOneAsync(filter);
+        // Delete answer
+        public async Task<int> deleteQuizAnswer(DeleteAnswerQuestionVM answerQuestionId, IClientSessionHandle session = null)
+        {
+            var connection = dbContext.GetCollectionQuizAnswer();
+            var objectId = ObjectId.Parse(answerQuestionId.quizAnswer_id);
+            var filter = Builders<QuizAnswer>.Filter.Eq(f => f.quizAnswer_id, objectId);
+
+            DeleteResult res;
+            if (session != null)
+            {
+                res = await connection.DeleteOneAsync(session, filter);
+            }
+            else
+            {
+                res = await connection.DeleteOneAsync(filter);
+            }
 
 			return (int)res.DeletedCount;
 		}
 
-		//public async Task<List<QuizAnswerDto>> GetCorrectQuizAnswersAsync(string quizId)
-		//{
-		//    var db = dbContext.GetCollectionQuizAnswer();
 
-		//    // Tạo pipeline $lookup để kết hợp dữ liệu từ bảng QuizQuestion
-		//    var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
-		//    {
-		//        {"from", "QuizQuestion"}, // Kết hợp với bảng QuizQuestion
-		//        {"let", new BsonDocument("questionId", "$question_id")}, // Biến local questionId lấy từ trường question_id của QuizAnswer
-		//        {"pipeline", new BsonArray
-		//            {
-		//                // Lọc để chỉ lấy những câu hỏi có _id trùng với question_id của QuizAnswer
-		//                new BsonDocument("$match", new BsonDocument
-		//                {
-		//                    {"$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" })}
-		//                }),
+        // Delete question with answer
+        public async Task<int> DeleteByQuestionIdAsync(ObjectId questionId, IClientSessionHandle session = null)
+        {
+            var connection = dbContext.GetCollectionQuizAnswer();
 
-		//                // Tiếp tục lookup từ QuizQuestion -> Quiz để lấy thông tin Quiz
-		//                new BsonDocument("$lookup", new BsonDocument
-		//                {
-		//                    {"from", "Quiz"}, // Kết hợp với bảng Quiz
-		//                    {"let", new BsonDocument("quizId", "$quiz_id")}, // Biến local quizId lấy từ trường quiz_id của QuizQuestion
-		//                    {"pipeline", new BsonArray
-		//                        {
-		//                            // Lọc để chỉ lấy quiz có _id trùng với quizId và có giá trị trùng với quizId truyền vào hàm
-		//                            new BsonDocument("$match", new BsonDocument
-		//                            {
-		//                                {"$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" })},
-		//                                {"_id", new ObjectId(quizId)} // Lọc theo quizId truyền vào
-		//                            })
-		//                        }
-		//                    },
-		//                    {"as", "quiz_info"} // Kết quả lookup sẽ được lưu vào mảng quiz_info
-		//                }),
+            var filter = Builders<QuizAnswer>.Filter.Eq(f => f.question_id,questionId);
+            DeleteResult deleteResult;
+            if (session != null)
+            {
+                deleteResult = await connection.DeleteManyAsync(session, filter);
+            }
+            else
+            {
+                deleteResult = await connection.DeleteManyAsync(filter);
+            }
+            return (int)deleteResult.DeletedCount;
+        }
 
-		//                // Giải nén quiz_info để dễ truy cập dữ liệu
-		//                new BsonDocument("$unwind", "$quiz_info")
-		//            }
-		//        },
-		//        {"as", "question_info"} // Kết quả lookup sẽ được lưu vào mảng question_info
-		//    });
+        public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(DeleteQuizVM quizId)
+        {
+            var db = dbContext.GetCollectionQuizAnswer();
 
-		//    // Giải nén question_info để dễ truy cập dữ liệu
-		//    var unwindQuestion = new BsonDocument("$unwind", "$question_info");
-
-		//    // Lọc để chỉ lấy những câu trả lời đúng (correct_answer = 1)
-		//    var matchCorrectAnswer = new BsonDocument("$match", new BsonDocument
-		//    {
-		//        {"correct_answer", true}
-		//    });
-
-		//    // Tạo pipeline để thực thi truy vấn
-		//    var pipeline = new[] { lookupQuestion, unwindQuestion, matchCorrectAnswer };
-
-		//    // Thực hiện truy vấn Aggregate trên MongoDB
-		//    var res = await db.Aggregate<BsonDocument>(pipeline).ToListAsync();
-
-		//    // Chuyển đổi kết quả từ BsonDocument sang danh sách QuizAnswerDto
-		//    var dtoRes = res.Select(bson => new QuizAnswerDto
-		//    {
-		//        quizAnswer_id = bson["_id"].ToString(), // ID của câu trả lời
-		//        description = bson["description"].AsString, // Nội dung câu trả lời
-		//        correctAnswer = bson["correct_answer"].AsBoolean, // Xác định câu trả lời đúng hay sai
-
-		//        // Danh sách thông tin câu hỏi liên quan
-		//        questionInfo = new List<QuizQuestionDto>
-		//        {
-		//            new QuizQuestionDto
-		//            {
-		//                question_id = bson["question_info"]["_id"].ToString(), // ID của câu hỏi
-		//                description = bson["question_info"]["description"].AsString, // Nội dung câu hỏi
-
-		//                // Danh sách thông tin quiz liên quan
-		//                quizInfo = new List<QuizDto>
-		//                {
-		//                    new QuizDto
-		//                    {
-		//                        quiz_id = bson["question_info"]["quiz_info"]["_id"].ToString(), // ID của quiz
-		//                        name = bson["question_info"]["quiz_info"]["name"].AsString, // Tên quiz
-		//                        description = bson["question_info"]["quiz_info"]["description"].AsString, // Mô tả quiz
-		//                        imageQuiz = bson["question_info"]["quiz_info"]["image"].AsString, // Ảnh của quiz
-		//                        difficutly = bson["question_info"]["quiz_info"]["difficutly"].AsString,// Độ khó của quiz
-		//                        countryName = bson["question_info"]["quiz_info"]["countryName"].AsString, // Tên quốc gia
-		//                        countryImg = bson["question_info"]["quiz_info"]["countryImg"].AsString // Ảnh quốc gia
-		//                    }
-		//                }
-		//            }
-		//        }
-		//    }).ToList();
-
-		//    return dtoRes; // Trả về danh sách kết quả
-		//}
-
-		public async Task<List<BsonDocument>> GetCorrectQuizAnswersAsync(string quizId)
-		{
-			var db = dbContext.GetCollectionQuizAnswer();
-
-			var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
-			{
-				{ "from", "QuizQuestion" },
-				{ "let", new BsonDocument("questionId", "$question_id") },
-				{ "pipeline", new BsonArray
-					{
-						new BsonDocument("$match", new BsonDocument
-						{
-							{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
-						}),
-						new BsonDocument("$lookup", new BsonDocument
-						{
-							{ "from", "Quiz" },
-							{ "let", new BsonDocument("quizId", "$quiz_id") },
-							{ "pipeline", new BsonArray
-								{
-									new BsonDocument("$match", new BsonDocument
-									{
-										{ "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
-										{ "_id", new ObjectId(quizId) }
-									})
-								}
-							},
-							{ "as", "quiz_info" }
-						}),
-						new BsonDocument("$unwind", "$quiz_info")
-					}
-				},
-				{ "as", "question_info" }
-			});
+            var lookupQuestion = new BsonDocument("$lookup", new BsonDocument
+            {
+                { "from", "QuizQuestion" },
+                { "let", new BsonDocument("questionId", "$question_id") },
+                { "pipeline", new BsonArray
+                    {
+                        new BsonDocument("$match", new BsonDocument
+                        {
+                            { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$questionId" }) }
+                        }),
+                        new BsonDocument("$lookup", new BsonDocument
+                        {
+                            { "from", "Quiz" },
+                            { "let", new BsonDocument("quizId", "$quiz_id") },
+                            { "pipeline", new BsonArray
+                                {
+                                    new BsonDocument("$match", new BsonDocument
+                                    {
+                                        { "$expr", new BsonDocument("$eq", new BsonArray { "$_id", "$$quizId" }) },
+                                        { "_id", new ObjectId(quizId.quiz_id) }
+                                    })
+                                }
+                            },
+                            { "as", "quiz_info" }
+                        }),
+                        new BsonDocument("$unwind", "$quiz_info")
+                    }
+                },
+                { "as", "question_info" }
+            });
 
 			var unwindQuestion = new BsonDocument("$unwind", "$question_info");
 

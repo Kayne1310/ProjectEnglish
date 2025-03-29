@@ -15,7 +15,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string name { get; set; }
         public string? description { get; set; }
         public IFormFile image { get; set; }
-        public string? difficutly { get; set; }
+        public string? difficulty { get; set; }
         public string countryName { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string? name { get; set; }
         public string? description { get; set; }
         public IFormFile image { get; set; }
-        public string? difficutly { get; set; }
+        public string? difficulty { get; set; }
         public string countryName { get; set; }
     }
 
@@ -40,8 +40,8 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string quiz_id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public string imageQuiz { get; set; }
-        public string difficutly { get; set; }
+        public string image { get; set; }
+        public string difficulty { get; set; }
         public string countryName { get; set; }
         public string countryImg { get; set; }
 

@@ -84,6 +84,7 @@ const ChatGemini = () => {
 
     // Auto scroll khi có tin nhắn mới
     useEffect(() => {
+        window.scroll(0, 0);
         if (messages.length > 0) {
             scrollToBottom();
         }
@@ -258,22 +259,22 @@ const ChatGemini = () => {
         try {
             // Include learning context in the prompt
             const contextPrompt = `
-[Learning Context]
-Level: ${learningContext?.level || 'beginner'}
-Recent Topics: ${learningContext?.topics?.slice(-3).join(', ') || 'None'}
-Vocabulary Focus: ${learningContext?.vocabulary?.slice(-5).join(', ') || 'None'}
-Recent Mistakes: ${learningContext?.mistakes?.slice(-3).join(', ') || 'None'}
+                [Learning Context]
+                Level: ${learningContext?.level || 'beginner'}
+                Recent Topics: ${learningContext?.topics?.slice(-3).join(', ') || 'None'}
+                Vocabulary Focus: ${learningContext?.vocabulary?.slice(-5).join(', ') || 'None'}
+                Recent Mistakes: ${learningContext?.mistakes?.slice(-3).join(', ') || 'None'}
 
-User Message: ${inputMessage}
+                User Message: ${inputMessage}
 
-Instructions:
-1. Respond in clear, natural English
-2. If you spot any mistakes, provide gentle corrections
-3. Use vocabulary appropriate for ${learningContext?.level || 'beginner'} level
-4. Include pronunciation help for new words (in IPA)
-5. Mark new vocabulary with asterisks $word$  
-6. End with a follow-up question to maintain conversation
-`;
+                Instructions:
+                1. Respond in clear, natural English
+                2. If you spot any mistakes, provide gentle corrections
+                3. Use vocabulary appropriate for ${learningContext?.level || 'beginner'} level
+                4. Include pronunciation help for new words (in IPA)
+                5. Mark new vocabulary with asterisks $word$  
+                6. End with a follow-up question to maintain conversation
+                `;
 
             const response = await generatedataWithGemini(contextPrompt);
             if (response?.candidates?.[0]?.content?.parts?.[0]?.text) {

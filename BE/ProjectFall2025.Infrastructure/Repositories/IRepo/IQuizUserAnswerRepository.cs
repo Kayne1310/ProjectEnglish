@@ -15,5 +15,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         Task<QuizUserAnswer> addQuizUserAnswer(QuizUserAnswer quizUserAnswer);
         Task<int> updateQuizUserAnswer(QuizUserAnswer quizUserAnswer);
         Task<int> deleteQuizUserAnswer(deleteQuizUserAnswerVM quizUserAnswer);
+        Task InsertManyAsync(List<QuizUserAnswer> userAnswers);
     }
 }

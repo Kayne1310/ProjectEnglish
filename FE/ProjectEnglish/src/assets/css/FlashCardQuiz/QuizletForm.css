@@ -129,7 +129,7 @@
 .correct {
     border-color: #4CAF50 !important;
     /* Màu xanh */
-    border-style: dashed;
+    /* border-style: dashed; */
     /* Viền nét đứt */
     animation: correctEffect 0.3s ease-in-out;
 }

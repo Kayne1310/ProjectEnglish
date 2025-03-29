@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 
@@ -95,7 +96,7 @@ namespace ProjectEnglishFall2025.Controllers
         {
             try
             {
-                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(quizId);
+                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(new DeleteQuizVM { quiz_id = quizId});
                 return Ok(results);
             }
             catch (Exception ex)

@@ -1,95 +1,62 @@
 import React, { useState } from "react";
-// import Lightbox from "react-awesome-lightbox";
-// import "react-awesome-lightbox/build/style.css";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-const Questions = ({ question, questionIndex }) => {
+const Questions = ({ question, questionIndex, userAnswers, handleAnswerSelect }) => {
   if (!question) return <p>Không có câu hỏi.</p>;
 
-  // Hàm để cắt ngắn text nếu quá dài
-  const truncateText = (text, maxLength) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
-  };
-  
-
-  // Quản lý trạng thái hiển thị toàn bộ hoặc rút gọn text
-  const [showFullText, setShowFullText] = useState({});
-  // Quản lý trạng thái câu trả lời được chọn
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  const toggleFullText = (ansId) => {
-    setShowFullText((prev) => ({
-      ...prev,
-      [ansId]: !prev[ansId],
-    }));
-  };
-
-  const handleSelectAnswer = (ansId) => {
-    setSelectedAnswer(ansId); // Chọn đáp án
-    // Có thể thêm logic xử lý khác, như gửi dữ liệu lên server hoặc kiểm tra đáp án
-  };
   const [open, setOpen] = useState(false);
+  const MAX_TEXT_LENGTH = 40; // Maximum length before truncating
+
+  const shouldTruncate = (text) => text.length > MAX_TEXT_LENGTH;
+  const truncateText = (text) => {
+    return text.length > MAX_TEXT_LENGTH
+      ? `${text.substring(0, MAX_TEXT_LENGTH)}...`
+      : text;
+  };
 
   return (
     <div className="question-container">
-      {/* Hiển thị image trong Questions */}
-      <div className="q-image">
-           {/* Ảnh - Khi click vào sẽ mở Lightbox */}
-           <img
-          src={question.image}
-          alt="Question"
-          style={{ cursor: "pointer", maxWidth: "200px" }}
-          onClick={() => setOpen(true)}
-        />
-
-        {/* Lightbox hiển thị khi open = true */}
-        <Lightbox
-          open={open}
-          close={() => setOpen(false)}
-          slides={[{ src: question.image }]} // Phải truyền ảnh vào mảng slides
-        />
-      </div>
+      {question.image && (
+        <div className="q-image">
+          <img
+            src={question.image}
+            alt="Question"
+            onClick={() => setOpen(true)}
+          />
+          <Lightbox
+            open={open}
+            close={() => setOpen(false)}
+            slides={[{ src: question.image }]}
+          />
+        </div>
+      )}
 
       <div className="question">
         <strong>Câu {questionIndex + 1}:</strong> {question.description}
       </div>
+
       <div className="answer">
         <div className="answer-options">
-          {question.answer.map((ans, idx) => {
-            const ansId = ans.idAnswered || idx;
-            const maxLength = 40; // Độ dài tối đa trước khi cắt
-            const displayText = showFullText[ansId]
-              ? ans.descriptionAnswered
-              : truncateText(ans.descriptionAnswered, maxLength);
+          {question.answers.map((ans, idx) => {
+            const isSelected = userAnswers[question.question_id] === ans.idAnswered;
 
             return (
-              <div key={ansId} className="answer-option-wrapper">
-                <button
-                  className={`answer-option ${showFullText[ansId] ? "expanded" : ""} ${selectedAnswer === ansId ? "selected" : ""
-                    }`}
-                  onClick={() => handleSelectAnswer(ansId)} // Chọn đáp án
-                >
-                  <span className="answer-number">{idx + 1}</span>
-                  <span className="answer-option-text-container">
-                    <span className="answer-option-text">
-                      {displayText}
-                    </span>
-                    {ans.descriptionAnswered.length > maxLength && (
-                      <span
-                        className="expand-toggle"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Ngăn sự kiện click lan ra button
-                          toggleFullText(ansId);
-                        }}
-                      >
-                        {showFullText[ansId] ? " (Ẩn)" : " (Xem thêm)"}
-                      </span>
-                    )}
+              <button
+                key={ans.idAnswered || idx}
+                className={`answer-option ${isSelected ? "selected" : ""}`}
+                onClick={() => handleAnswerSelect(question.question_id, ans.idAnswered)}
+              >
+                <span className="answer-number">{idx + 1}</span>
+                <div className="answer-option-text-container">
+                  <span
+                    className="answer-option-text"
+                    data-full-text={shouldTruncate(ans.description) ? ans.description : null}
+                  >
+                    {truncateText(ans.description)}
                   </span>
-                </button>
-              </div>
+                </div>
+              </button>
             );
           })}
         </div>

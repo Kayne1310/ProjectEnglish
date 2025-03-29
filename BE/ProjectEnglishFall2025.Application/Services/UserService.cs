@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
+using ProjectFall2025.Common.ImgCountry;
 
 namespace ProjectFall2025.Application.Services
 {
@@ -30,7 +31,7 @@ namespace ProjectFall2025.Application.Services
 
 
         public UserService(IUserRepository repository, IMapper mapper,
-            IValidator<UserViewModel> validator, IAcountRepository acountRepository,ICloudinaryService cloudinaryService)
+            IValidator<UserViewModel> validator, IAcountRepository acountRepository, ICloudinaryService cloudinaryService)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -72,7 +73,7 @@ namespace ProjectFall2025.Application.Services
 
                 //map user into userviewmodel
                 var userDTO = mapper.Map<User>(userViewModel);
-                userDTO.Picture = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"; // add picture default
+                userDTO.Picture = "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1742971409/USER/kc5y9fcj4temgsvkhe3t.jpg"; // add picture default
 
                 var res = await repository.addUser(userDTO);
                 return new ReturnData
@@ -89,7 +90,7 @@ namespace ProjectFall2025.Application.Services
 
         }
 
-        public async Task<ReturnData> ChangePassword(ChangePasswordRequest changePassword)
+        public async Task<ReturnData> ChangePassword(ChangePasswordResponse changePassword)
         {
             //has old password and checklogin pass
             var checklogin = await acountRepository.AccountLogin(new AccountLoginRequestData
@@ -114,7 +115,7 @@ namespace ProjectFall2025.Application.Services
                 return new ReturnData
                 {
                     ReturnCode = -1,
-                    ReturnMessage = "NewPassword and ReNewPassword are not the same ",
+                    ReturnMessage = "NewPassword and ReNewPassword are not the same",
                 };
 
             }
@@ -181,14 +182,13 @@ namespace ProjectFall2025.Application.Services
             try
             {
 
-            var acb = ObjectId.Parse(id);
-             var userExit = await repository.findUserById(acb);
+                var acb = ObjectId.Parse(id);
+                var userExit = await repository.findUserById(acb);
                 //maping
-            if(userExit == null)
-            {
-      
-                return new UserVM();
-            }
+                if (userExit == null)
+                {
+                    return new UserVM();
+                }
                 //mapping
                 var datamap = mapper.Map<UserVM>(userExit);
                 datamap.UserID = id;
@@ -358,12 +358,11 @@ namespace ProjectFall2025.Application.Services
         }
 
         //upload anh luu vao cloudinary
-
         public async Task<string> UploadProfilePictureAsync(string userId, IFormFile file)
         {
             try
             {
-                var imageUrl = await cloudinaryService.UploadImageAsync(file, "users");                                                                                                                        
+                var imageUrl = await cloudinaryService.UploadImageAsync(file, "users");
 
                 // Lấy thông tin user từ DB
                 var user = await repository.findUserById(ObjectId.Parse(userId));
@@ -380,15 +379,56 @@ namespace ProjectFall2025.Application.Services
                 return imageUrl;
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return ex.Message;
             }
-      
         }
-            // Upload ảnh lên Cloudinary
+
+        public async Task<ReturnData> UpdateUser(UpdateUserVM userVM)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userVM.UserID))
+                {
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "UserID is required."
+                    };
+                }
+
+                // Tạo object chứa các trường cần cập nhật
+                var updateData = new User
+                {
+                    UserID = ObjectId.Parse(userVM.UserID),
+                    UserName = userVM.UserName,
+                    Address = userVM.Address,
+                    Age = userVM.Age,
+                    Phone = userVM.Phone,
+                    Gender = userVM.Gender,
+                    updateAt = DateTime.Now
+                };
 
 
+                // Nếu có ảnh mới, upload lên Cloudinary và cập nhật image
+                if (userVM.Picture != null && userVM.Picture.Length > 0)
+                {
+                    updateData.Picture = await cloudinaryService.UploadImageAsync(userVM.Picture, "USER");
+                }
+
+                // Gửi dữ liệu cập nhật xuống Repository
+                var update = await repository.UpdateUser(updateData);
+
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return update > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update user successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update user failed! Database error." };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
-
-
 }

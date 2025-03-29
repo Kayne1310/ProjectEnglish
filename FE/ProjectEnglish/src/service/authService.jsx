@@ -1,7 +1,8 @@
-
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Cấu hình mặc định để gửi cookie
+axios.defaults.withCredentials = true;
 
 const login = async (email, password) => {
     try {
@@ -17,7 +18,7 @@ const login = async (email, password) => {
             console.error("Error: response.data is undefined!");
             return null;
         }
-        return response.data; // Trả về `response.data` thay vì `response`
+        return response.data;
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
         return { error: error.response?.data || error.message };
@@ -27,16 +28,20 @@ const login = async (email, password) => {
 
 const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
-          withCredentials: true,
-        });
-       
-        return response.data;
+      const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
+        withCredentials: true,
+      });
+      console.log("Full Logout Response:", response);
+      if (!response || !response.data) {
+        console.error("Error: response.data is undefined!");
+        return null;
+      }
+      return response.data;
     } catch (error) {
-        throw error;
+        console.error("Logout failed:", error.response?.data || error.message);
+        return { error: error.response?.data || error.message };
     }
 };
-
 
 const register = async (username, email, password) => {
     try {
@@ -87,7 +92,10 @@ const googleLogin = async (accessToken) => {
         // Gọi API Google để lấy thông tin user
         const { data } = await axios.get(
             `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-            { headers: { Authorization: `Bearer ${accessToken}` } }
+            { 
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: false // Explicitly set to false for Google API request
+            }
         );
 
         const userData = {
@@ -100,12 +108,11 @@ const googleLogin = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-
         const apiResponse = await axios.post(
             `${API_URL}/Account/google-login`,
             userData,
-            { withCredentials: true } // Bắt buộc để cookie hoạt động
-          );
+            { withCredentials: true } // Set to true for our backend request
+        );
         return apiResponse.data;
     } catch (error) {
         console.error("Google Login failed:", error.response?.data || error.message);
@@ -168,13 +175,13 @@ const facebookRegister = async (accessToken) => {
 
 const resetPassword = async (email, token, newpassword) => {
 
-    try {   
-    const response = await axios.post(`${API_URL}/Account/reset-password`,
-        {
-            email: email,
-            token: token,
-            newpassword: newpassword
-        });
+    try {
+        const response = await axios.post(`${API_URL}/Account/reset-password`,
+            {
+                email: email,
+                token: token,
+                newpassword: newpassword
+            });
 
         console.log(response);
         return response.data;
@@ -186,16 +193,13 @@ const resetPassword = async (email, token, newpassword) => {
 
 };
 
-
-//
-const getUserInfor= async()=>{
-
-    try{
-            const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
-            return response.data;
+const getUserInfor = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/User/getUser`, { withCredentials: true });
+        return response.data;
     }
-    catch(error){
-            return error;
+    catch (error) {
+        return error;
     }
 };
 

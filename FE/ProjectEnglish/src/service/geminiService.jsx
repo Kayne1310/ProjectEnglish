@@ -26,10 +26,10 @@ export const generateContentWithGemini = async (prompt) => {
 export const generatedataWithGemini = async (prompt, learningContext = null) => {
     try {
         let enhancedPrompt = '';
-        
+
         if (learningContext) {
             const { level, topics, recentMistakes, strengths } = learningContext;
-            
+
             enhancedPrompt = `
 As an English language tutor, consider the following context:
 Student's Level: ${level || 'Beginner'}
@@ -38,9 +38,9 @@ Common Mistakes: ${recentMistakes?.join(', ') || 'None recorded'}
 Strengths: ${strengths?.join(', ') || 'Still learning'}
 
 Current conversation:
-${learningContext.messages?.slice(-5).map(m => 
-    `${m.role === 'user' ? 'Student' : 'Tutor'}: ${m.content}`
-).join('\n')}
+${learningContext.messages?.slice(-5).map(m =>
+                `${m.role === 'user' ? 'Student' : 'Tutor'}: ${m.content}`
+            ).join('\n')}
 
 Student's message: ${prompt}
 

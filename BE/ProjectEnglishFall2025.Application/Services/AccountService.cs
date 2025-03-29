@@ -18,7 +18,7 @@ namespace ProjectFall2025.Application.Services
         private readonly IMapper mapper;
         private readonly IUserRepository userRepository;
 
-        public AccountService(IAcountRepository acountRepository,IMapper mapper,IUserRepository userRepository)
+        public AccountService(IAcountRepository acountRepository, IMapper mapper, IUserRepository userRepository)
         {
             this.acountRepository = acountRepository;
             this.mapper = mapper;
@@ -69,13 +69,13 @@ namespace ProjectFall2025.Application.Services
             var user = await userRepository.FindUserByFacebookId(facebookId);
             if (user == null)
             {
-                returnData.ReturnCode= -1;
-                returnData.ReturnMessage ="User chua duoc dang ki";
+                returnData.ReturnCode = -1;
+                returnData.ReturnMessage = "User chua duoc dang ki";
                 return returnData;
             }
             returnData.ReturnCode = 1;
             returnData.ReturnMessage = "User dang ki thanh cong";
-            returnData.user=user;
+            returnData.user = user;
             return returnData;
         }
 
@@ -89,7 +89,7 @@ namespace ProjectFall2025.Application.Services
                 returnData.ReturnCode = -1;
                 returnData.ReturnMessage = "User chua duoc dang ki";
                 return returnData;
-               
+
             }
             returnData.ReturnCode = 1;
             returnData.ReturnMessage = "User dang ki thanh cong";
@@ -98,24 +98,25 @@ namespace ProjectFall2025.Application.Services
         }
 
         public async Task<int> Account_UpdateRefeshToken(Account_UpdateRefeshTokenRequestData requestData)
-        {       var user=await acountRepository.getUserById(requestData.UserId);
-            if(user == null)
+        {
+            var user = await acountRepository.getUserById(requestData.UserId);
+            if (user == null)
             {
                 return -1;
             }
 
-             user.Refeshtoken=requestData.RefeshToken;
-             user.Exprired = requestData.Exprired;
+            user.Refeshtoken = requestData.RefeshToken;
+            user.Exprired = requestData.Exprired;
 
             //map user to Account RefreshToken
 
-            var acRef=mapper.Map<Account_UpdateRefeshTokenRequestData>(user);
+            var acRef = mapper.Map<Account_UpdateRefeshTokenRequestData>(user);
 
-            var update=await acountRepository.Account_UpdateRefeshToken(acRef);
+            var update = await acountRepository.Account_UpdateRefeshToken(acRef);
 
             return 1;
 
-         
+
         }
 
         public Task<ReturnData> UpdateTokenReset()

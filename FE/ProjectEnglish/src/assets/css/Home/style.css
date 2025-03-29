@@ -36,6 +36,10 @@ body {
   margin-right: 110px;
   padding-left: 15px;
   padding-right: 15px;
+
+  max-width: 1300px;
+  margin: auto;
+  max-width: 1300px;
 }
 
 .heading_container {
@@ -59,7 +63,7 @@ body {
 
 /*header section*/
 .hero_area {
-  min-height: 100vh;
+  min-height: 30vh;
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -203,7 +207,7 @@ a:focus {
 
 .quote_btn-container a {
   color: #151515;
-  margin-right: 25px;
+ 
   text-transform: uppercase;
 }
 

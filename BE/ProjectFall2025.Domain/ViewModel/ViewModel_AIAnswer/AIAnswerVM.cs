@@ -17,7 +17,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_AIAnswer
     {
         public string aiAnswer_id { get; set; }
         public string responseAI { get; set; }
-        public string question_id { get; set; }
+        //public string question_id { get; set; }
     }
 
     public class deleteAIAnswerVM
