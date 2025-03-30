@@ -64,7 +64,9 @@ const GoogleRegister = async (accessToken) => {
         // Gọi API Google để lấy thông tin user
         const { data } = await axios.get(
             `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-            { headers: { Authorization: `Bearer ${accessToken}` } }
+            { headers: { Authorization: `Bearer ${accessToken}` } ,
+            withCredentials: false // Explicitly set to false for Google API request
+        }
         );
 
         const userData = {
@@ -77,7 +79,7 @@ const GoogleRegister = async (accessToken) => {
         console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
-        const apiResponse = await axios.post(`${API_URL}/User/GoogleRegister`, userData);
+        const apiResponse = await axios.post(`${API_URL}/User/GoogleRegister`, userData, { withCredentials: true });
 
         return apiResponse.data;
     } catch (error) {
