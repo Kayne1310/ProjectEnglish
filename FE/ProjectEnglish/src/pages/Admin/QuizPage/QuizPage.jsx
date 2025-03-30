@@ -8,6 +8,7 @@ import {
   Button,
   Modal,
   Alert,
+  Pagination,
 } from "react-bootstrap";
 import { getAllQuiz } from "../../../service/QuestionWithAnswersService";
 import { createQuiz, updateQuiz, deleteQuizWithQuestionsAndAnswers } from "../../../service/QuizletService";
@@ -20,6 +21,12 @@ const QuizPage = () => {
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(7);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [sortBy, setSortBy] = useState('name');
+  const [sortAscending, setSortAscending] = useState(true);
   const [newQuiz, setNewQuiz] = useState({
     name: "",
     description: "",
@@ -60,18 +67,39 @@ const QuizPage = () => {
     }
   };
 
-  // Gọi API để lấy danh sách quiz khi component mount
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await getAllQuiz();
-        setQuizzes(data);
+        const response = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        setQuizzes(response.items);
+        setTotalItems(response.totalItems);
+        setTotalPages(response.totalPages);
       } catch (error) {
-        setQuizzes([]); // Đặt mảng rỗng nếu có lỗi
+        console.error("Error fetching quizzes:", error);
+        setError("Failed to fetch quizzes: " + error.message);
       }
     };
+
     fetchQuizzes();
-  }, []);
+  }, [currentPage, pageSize, sortBy, sortAscending]);
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortAscending(!sortAscending);
+    } else {
+      setSortBy(field);
+      setSortAscending(true);
+    }
+  };
+
+  const SortIcon = ({ field }) => {
+    if (sortBy !== field) return <span className="ms-1">↕</span>;
+    return sortAscending ? <span className="ms-1">↑</span> : <span className="ms-1">↓</span>;
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   // Lọc quiz dựa trên search term, xử lý lỗi toLowerCase
   const filteredQuizzes = quizzes.filter((quiz) =>
@@ -210,11 +238,26 @@ const QuizPage = () => {
                 <Table striped responsive>
                   <thead>
                     <tr>
-                      <th>Quiz</th>
+                      <th 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('name')}
+                      >
+                        Quiz <SortIcon field="name" />
+                      </th>
                       <th>Description</th>
-                      <th>Country Name</th>
+                      <th 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('countryName')}
+                      >
+                        Country Name <SortIcon field="countryName" />
+                      </th>
                       <th>Image</th>
-                      <th>Difficulty</th>
+                      <th 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleSort('difficulty')}
+                      >
+                        Difficulty <SortIcon field="difficulty" />
+                      </th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -247,6 +290,39 @@ const QuizPage = () => {
                     ))}
                   </tbody>
                 </Table>
+
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                  <div>
+                    Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
+                  </div>
+                  <Pagination>
+                    <Pagination.First 
+                      onClick={() => handlePageChange(1)} 
+                      disabled={currentPage === 1}
+                    />
+                    <Pagination.Prev 
+                      onClick={() => handlePageChange(currentPage - 1)} 
+                      disabled={currentPage === 1}
+                    />
+                    {[...Array(totalPages)].map((_, index) => (
+                      <Pagination.Item
+                        key={index + 1}
+                        active={currentPage === index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </Pagination.Item>
+                    ))}
+                    <Pagination.Next 
+                      onClick={() => handlePageChange(currentPage + 1)} 
+                      disabled={currentPage === totalPages}
+                    />
+                    <Pagination.Last 
+                      onClick={() => handlePageChange(totalPages)} 
+                      disabled={currentPage === totalPages}
+                    />
+                  </Pagination>
+                </div>
               </Card.Body>
             </Card>
           </Col>

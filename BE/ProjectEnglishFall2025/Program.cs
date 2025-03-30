@@ -123,10 +123,10 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             builder.Services.AddScoped<IStudySetService, StudySetService>();
             builder.Services.AddScoped<IFlashCardService, FlashCardService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             //UOK
             builder.Services.AddScoped<IUnitofWork, UnitofWork>();
-
 
             // Repository
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -143,8 +143,8 @@ namespace ProjectEnglishFall2025
             builder.Services.AddScoped<IStudiSetRepository, StudiSetRepository>();
             builder.Services.AddScoped<IFlashCardRepository, FlashCardRepository>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-          
 
             //res validator
             builder.Services.AddFluentValidationAutoValidation();

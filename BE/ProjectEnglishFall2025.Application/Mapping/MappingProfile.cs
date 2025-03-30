@@ -102,6 +102,13 @@ namespace ProjectFall2025.Application.Mapping
                 .ReverseMap()
                 .ForMember(a => a.question_id, b => b.MapFrom(src => ObjectId.Parse(src.question_id)));
 
+            CreateMap<QuizQuestion, QuizQuestionViewModel>()
+                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => src.question_id.ToString()))
+                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
+                .ReverseMap()
+                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)))
+                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)));
+
             // history
             CreateMap<History, createHistoryVM>()
                 .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
@@ -163,9 +170,9 @@ namespace ProjectFall2025.Application.Mapping
             CreateMap<StudySet, DeleteStudySetVM>().ReverseMap();
 
             //FlashCard
-            CreateMap<Flashcard,CreateFlashcardVM>().ReverseMap();  
-            CreateMap<Flashcard,UpdateFlashcardVM>().ReverseMap();  
-            CreateMap<Flashcard,DeleteFlashcardVM>().ReverseMap();
+            CreateMap<Flashcard, CreateFlashcardVM>().ReverseMap();
+            CreateMap<Flashcard, UpdateFlashcardVM>().ReverseMap();
+            CreateMap<Flashcard, DeleteFlashcardVM>().ReverseMap();
 
 
         }

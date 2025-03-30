@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using System;
@@ -14,7 +15,8 @@ namespace ProjectFall2025.Application.IServices
     public interface IUserService
     {
         Task<ReturnData> addUserService(UserViewModel userViewModel);
-        Task<List<UserVM>> getAllUser();
+        //Task<List<UserVM>> getAllUser();
+        Task<PaginatedResponse<User>> GetAllUsersAsync(PaginationRequest request);
         Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model);
         Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);
         Task<ReturnData> ChangePassword(ChangePasswordResponse changePassword);

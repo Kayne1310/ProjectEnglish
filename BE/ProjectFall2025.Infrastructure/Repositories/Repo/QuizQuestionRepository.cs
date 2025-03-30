@@ -64,6 +64,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             // Tạo đối tượng update chỉ chứa các trường cần cập nhật
             var updateDefinition = Builders<QuizQuestion>.Update
+                .Set(q => q.quiz_id, quizQuestion.quiz_id)
                 .Set(q => q.description, quizQuestion.description)
                 .Set(q => q.updateAt, DateTime.Now);
 

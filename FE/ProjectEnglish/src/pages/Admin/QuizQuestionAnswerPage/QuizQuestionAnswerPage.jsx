@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-  Container,
   Row,
   Col,
   Card,
@@ -16,11 +15,32 @@ import {
   updateQuizQuestionWithAnswers,
   deleteQuizQuestionWithAnswers,
 } from "../../../service/QuestionWithAnswersService";
+import PropTypes from "prop-types";
+import Pagination from "../../../components/Pagination/Pagination";
 
 const QuizQuestionAnswerPage = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedQuizId, setSelectedQuizId] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [quizSearchTerm, setQuizSearchTerm] = useState("");
+  const [questionSearchTerm, setQuestionSearchTerm] = useState("");
+
+  // Pagination state cho ALL QUIZZES
+  const [quizCurrentPage, setQuizCurrentPage] = useState(1);
+  const [quizPageSize] = useState(7);
+  const [quizSortBy, setQuizSortBy] = useState("name");
+  const [quizSortAscending, setQuizSortAscending] = useState(true);
+  const [quizTotalPages, setQuizTotalPages] = useState(0);
+  const [quizTotalItems, setQuizTotalItems] = useState(0);
+
+  // Pagination state cho QUIZ QUESTIONS
+  const [questionCurrentPage, setQuestionCurrentPage] = useState(1);
+  const [questionPageSize] = useState(7);
+  const [questionSortBy, setQuestionSortBy] = useState("description");
+  const [questionSortAscending, setQuestionSortAscending] = useState(true);
+  const [questionTotalPages, setQuestionTotalPages] = useState(0);
+  const [questionTotalItems, setQuestionTotalItems] = useState(0);
+
   const [selectedQuestion, setSelectedQuestion] = useState({
     description: "",
     quiz_id: "",
@@ -51,33 +71,71 @@ const QuizQuestionAnswerPage = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const quizList = await getAllQuiz();
-        console.log("Raw API Response from getAllQuiz:", quizList);
-        setQuizzes(Array.isArray(quizList) ? quizList : quizList.data || []);
+        const response = await getAllQuiz(quizCurrentPage, quizPageSize, quizSortBy, quizSortAscending);
+        console.log("Raw API Response from getAllQuiz:", response);
+        if (response && response.items) {
+          setQuizzes(response.items);
+          setQuizTotalItems(response.totalItems);
+          setQuizTotalPages(response.totalPages);
+          console.log("Current page:", quizCurrentPage);
+          console.log("Page size:", quizPageSize);
+          console.log("Total items:", response.totalItems);
+          console.log("Total pages:", response.totalPages);
+        } else {
+          setQuizzes([]);
+          setQuizTotalItems(0);
+          setQuizTotalPages(0);
+        }
       } catch (error) {
         console.error("Error fetching quizzes:", error);
+        setQuizzes([]);
+        setQuizTotalItems(0);
+        setQuizTotalPages(0);
       }
     };
     fetchQuizzes();
-  }, []);
+  }, [quizCurrentPage, quizPageSize, quizSortBy, quizSortAscending]);
 
   useEffect(() => {
     if (selectedQuizId) {
       const fetchQuestions = async () => {
         try {
-          const questionList = await getQuestionsByQuizId(selectedQuizId);
-          console.log("Questions Data for Quiz ID", selectedQuizId, ":", questionList);
-          setQuestions(questionList || []); // Đảm bảo luôn set mảng, tránh undefined
+          const response = await getQuestionsByQuizId(
+            selectedQuizId,
+            questionCurrentPage,
+            questionPageSize,
+            questionSortBy,
+            questionSortAscending
+          );
+          console.log("Questions response:", response);
+
+          if (response && response.items) {
+            setQuestions(response.items);
+            setQuestionTotalItems(response.totalItems);
+            setQuestionTotalPages(response.totalPages);
+            console.log("Current page:", response.currentPage);
+            console.log("Page size:", response.pageSize);
+            console.log("Total items:", response.totalItems);
+            console.log("Total pages:", response.totalPages);
+          } else {
+            setQuestions([]);
+            setQuestionTotalItems(0);
+            setQuestionTotalPages(0);
+          }
         } catch (error) {
           console.error("Error fetching questions for Quiz ID", selectedQuizId, ":", error);
-          setQuestions([]); // Đặt về mảng rỗng nếu có lỗi
+          setQuestions([]);
+          setQuestionTotalItems(0);
+          setQuestionTotalPages(0);
         }
       };
       fetchQuestions();
     } else {
       setQuestions([]);
+      setQuestionTotalItems(0);
+      setQuestionTotalPages(0);
     }
-  }, [selectedQuizId]);
+  }, [selectedQuizId, questionCurrentPage, questionPageSize, questionSortBy, questionSortAscending]);
 
   const handleQuizClick = (quizId) => {
     console.log("Attempting to select Quiz ID:", quizId);
@@ -149,92 +207,185 @@ const QuizQuestionAnswerPage = () => {
     }
   };
 
+  // Lọc quizzes dựa trên search term
+  const filteredQuizzes = quizzes.filter((quiz) =>
+    quiz?.name?.toLowerCase().includes(quizSearchTerm.toLowerCase() || "")
+  );
+
+  // Lọc questions dựa trên search term
+  const filteredQuestions = questions.filter(q =>
+    q.description?.toLowerCase().includes(questionSearchTerm.toLowerCase() || "")
+  );
+
+  const handleQuizPageChange = (pageNumber) => {
+    setQuizCurrentPage(pageNumber);
+  };
+
+  const handleQuizSort = (field) => {
+    if (quizSortBy === field) {
+      setQuizSortAscending(!quizSortAscending);
+    } else {
+      setQuizSortBy(field);
+      setQuizSortAscending(true);
+    }
+  };
+
+  const handleQuestionPageChange = (pageNumber) => {
+    setQuestionCurrentPage(pageNumber);
+  };
+
+  const handleQuestionSort = (field) => {
+    if (questionSortBy === field) {
+      setQuestionSortAscending(!questionSortAscending);
+    } else {
+      setQuestionSortBy(field);
+      setQuestionSortAscending(true);
+    }
+  };
+
+  const SortIcon = ({ field }) => {
+    if (questionSortBy !== field) return <span className="ms-1">↕</span>;
+    return questionSortAscending ? <span className="ms-1">↑</span> : <span className="ms-1">↓</span>;
+  };
+
+  SortIcon.propTypes = {
+    field: PropTypes.string.isRequired
+  };
+
+
+
   return (
     <div className="main-panel">
       <div className="content-wrapper">
-        <Row>
+        <Row className="h-100">
           <Col lg={4} className="grid-margin stretch-card">
-            <Card>
-              <Card.Body>
-                <h4 className="card-title fw-bold fs-2">ALL QUIZZES</h4>
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>Quiz Name</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {quizzes.length > 0 ? (
-                      quizzes.map((quiz) => (
-                        <tr key={quiz.quiz_id}>
-                          <td
-                            style={{ cursor: "pointer", fontSize: 15 }}
-                            onClick={() => handleQuizClick(quiz.quiz_id)}
-                          >
-                            {quiz.name}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
+            <Card className="h-100">
+              <Card.Body className="d-flex flex-column">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h4 className="card-title fw-bold fs-2">ALL QUIZZES</h4>
+                  <div className="d-flex align-items-center gap-2">
+                    <Form.Control
+                      type="text"
+                      placeholder="Search quizzes..."
+                      value={quizSearchTerm}
+                      onChange={(e) => setQuizSearchTerm(e.target.value)}
+                      style={{ maxWidth: "200px" }}
+                    />
+                  </div>
+                </div>
+                <div className="flex-grow-1" style={{ overflowY: "auto" }}>
+                  <Table striped responsive>
+                    <thead>
                       <tr>
-                        <td>No quizzes available</td>
+                        <th
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleQuizSort('name')}
+                        >
+                          Quiz Name <SortIcon field="name" />
+                        </th>
                       </tr>
+                    </thead>
+                    <tbody>
+                      {filteredQuizzes.length > 0 ? (
+                        filteredQuizzes.map((quiz) => (
+                          <tr key={quiz.quiz_id}>
+                            <td
+                              style={{
+                                cursor: "pointer",
+                                fontSize: 15,
+                                height: "35px",
+                                lineHeight: "35px",
+                                verticalAlign: "middle"
+                              }}
+                              onClick={() => handleQuizClick(quiz.quiz_id)}
+                            >
+                              {quiz.name}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td style={{ height: "35px", lineHeight: "35px" }}>No quizzes available</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                  {/* Thêm container chung cho cả hai phần pagination */}
+                  <div className="pagination-container" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    padding: '0 1rem'
+                  }}>
+                    {/* Pagination cho ALL QUIZZES */}
+                    {quizTotalPages > 1 && (
+                      <div className="quiz-pagination" style={{ flex: 1 }}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div className="text-muted" style={{ fontSize: "0.875rem" }}>
+                            Showing {((quizCurrentPage - 1) * quizPageSize) + 1} to {Math.min(quizCurrentPage * quizPageSize, quizTotalItems)} of {quizTotalItems} entries
+                          </div>
+                          <Pagination
+                            currentPage={quizCurrentPage}
+                            totalPages={quizTotalPages}
+                            onPageChange={handleQuizPageChange}
+                            maxVisiblePages={3}
+                          />
+                        </div>
+                      </div>
                     )}
-                  </tbody>
-                </Table>
+                  </div>
+                </div>
               </Card.Body>
             </Card>
           </Col>
 
           <Col lg={8} className="grid-margin stretch-card">
-            <Card>
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center">
+            <Card className="h-100">
+              <Card.Body className="d-flex flex-column">
+                <div className="d-flex justify-content-between align-items-center mb-3">
                   <h4 className="card-title fw-bold fs-2">QUIZ QUESTIONS</h4>
-                  <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-                    Create
-                  </Button>
+                  <div className="d-flex align-items-center gap-2">
+                    <Form.Control
+                      type="text"
+                      placeholder="Search questions..."
+                      value={questionSearchTerm}
+                      onChange={(e) => setQuestionSearchTerm(e.target.value)}
+                      style={{ maxWidth: "200px" }}
+                    />
+                    <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+                      Create
+                    </Button>
+                  </div>
                 </div>
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>Question</th>
-                      <th>Image</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {questions.length > 0 ? (
-                      questions.map((q, index) => (
-                        <tr key={q.question_id || index}>
-                          <td
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setSelectedQuestion({
-                                ...q,
-                                answers: q.answers || [
-                                  { description: "", correct_answer: false },
-                                  { description: "", correct_answer: false },
-                                  { description: "", correct_answer: false },
-                                  { description: "", correct_answer: false },
-                                ],
-                              });
-                              setShowDetailModal(true);
-                            }}
-                          >
-                            {q.description}
-                          </td>
-                          <td>
-                            {q.image && <img src={q.image} alt="question" width="50" />}
-                          </td>
-                          <td>
-                            <i
-                              className="bi bi-pencil-square text-warning me-3 fs-4"
-                              style={{ cursor: "pointer" }}
+                <div className="flex-grow-1" style={{ overflowY: "auto" }}>
+                  <Table striped responsive>
+                    <thead>
+                      <tr>
+                        <th
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleQuestionSort('description')}
+                        >
+                          Description <SortIcon field="description" />
+                        </th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredQuestions.length > 0 ? (
+                        filteredQuestions.map((q, index) => (
+                          <tr key={q.question_id || index}>
+                            <td
+                              style={{
+                                cursor: "pointer",
+                                height: "30px",
+                                lineHeight: "30px",
+                                verticalAlign: "middle",
+                              }}
                               onClick={() => {
                                 setSelectedQuestion({
                                   ...q,
-                                  question_id: q.question_id,
                                   answers: q.answers || [
                                     { description: "", correct_answer: false },
                                     { description: "", correct_answer: false },
@@ -242,34 +393,81 @@ const QuizQuestionAnswerPage = () => {
                                     { description: "", correct_answer: false },
                                   ],
                                 });
-                                setShowEditModal(true);
+                                setShowDetailModal(true);
                               }}
-                            />
-                            <i
-                              className="bi bi-trash text-danger fs-4"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSelectedQuestion({
-                                  ...q,
-                                  question_id: q.question_id,
-                                });
-                                setShowDeleteModal(true);
-                              }}
-                            />
+                            >
+                              {q.description}
+                            </td>
+                            <td style={{ height: "50px", verticalAlign: "middle" }}>
+                              {q.image && <img src={q.image} alt="question" width="50" height="40" style={{ objectFit: "cover" }} />}
+                            </td>
+                            <td style={{ height: "50px", verticalAlign: "middle" }}>
+                              <i
+                                className="bi bi-pencil-square text-warning me-3 fs-4"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setSelectedQuestion({
+                                    ...q,
+                                    answers: q.answers || [
+                                      { description: "", correct_answer: false },
+                                      { description: "", correct_answer: false },
+                                      { description: "", correct_answer: false },
+                                      { description: "", correct_answer: false },
+                                    ],
+                                  });
+                                  setShowEditModal(true);
+                                }}
+                              />
+                              <i
+                                className="bi bi-trash text-danger fs-4"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setSelectedQuestion({
+                                    ...q,
+                                    question_id: q.question_id,
+                                  });
+                                  setShowDeleteModal(true);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3" style={{ height: "35px", lineHeight: "35px" }}>
+                            {selectedQuizId
+                              ? "No questions available for this quiz."
+                              : "Please select a quiz to view questions."}
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="3">
-                          {selectedQuizId
-                            ? "No questions available for this quiz."
-                            : "Please select a quiz to view questions."}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
+                      )}
+                    </tbody>
+                  </Table>
+                  {/* Thêm container chung cho cả hai phần pagination */}
+                  {filteredQuestions.length > 0 && (
+                    <div className="pagination-container" style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: '1rem',
+                      padding: '0 1rem'
+                    }}>
+                      <div className="question-pagination" style={{ flex: 1 }}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div className="text-muted" style={{ fontSize: "0.875rem" }}>
+                            Showing {((questionCurrentPage - 1) * questionPageSize) + 1} to {Math.min(questionCurrentPage * questionPageSize, questionTotalItems)} of {questionTotalItems} entries
+                          </div>
+                          <Pagination
+                            currentPage={questionCurrentPage}
+                            totalPages={questionTotalPages}
+                            onPageChange={handleQuestionPageChange}
+                            maxVisiblePages={3}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </Card.Body>
             </Card>
           </Col>

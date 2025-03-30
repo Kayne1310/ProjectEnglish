@@ -13,15 +13,20 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
 {
     public interface IQuizRepository
     {
-        Task<List<Quiz>> GetAllQuizs();
+        //Task<List<Quiz>> GetAllQuizs();
+        Task<int> GetQuizCountAsync();
+        Task<List<Quiz>> GetAllQuizsAsync(int skip, int pageSize, string sortBy, bool sortAscending);
         Task<Quiz> GetQuizById(DeleteQuizVM quiz, IClientSessionHandle session = null);
         Task<Quiz> AddQuiz(Quiz quiz);
         Task<int> UpdateQuiz(Quiz quiz);
         Task<int> DeleteQuiz(DeleteQuizVM quiz, IClientSessionHandle session = null);
-
         Task<List<BsonDocument>> getCountQuestionbyQuiz();
-
-        Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId);
+        Task<(int totalItems, List<BsonDocument> questions)> GetQuestionsByQuizIdAsync(
+        ObjectId quizId,
+        int skip,
+        int limit,
+        string sortBy,
+        bool sortAscending);
 
     }
 }

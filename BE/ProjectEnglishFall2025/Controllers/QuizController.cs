@@ -7,6 +7,7 @@ using ProjectEnglishFall2025.Filter;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Domain.ViewModel.ViewModel_SubmitQuiz;
@@ -28,13 +29,40 @@ namespace ProjectEnglishFall2025.Controllers
             this.mapper = mapper;
         }
 
+        //[HttpGet("get_all_quiz")]
+        //public async Task<IActionResult> GetAllQuizs()
+        //{
+        //    try
+        //    {
+        //        var getAllQuizs = await quizService.GetAllQuizs();
+        //        return Ok(getAllQuizs);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
         [HttpGet("get_all_quiz")]
-        public async Task<IActionResult> GetAllQuizs()
+        //[Authorize("Admin")]
+        public async Task<ActionResult> GetAllUser(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? sortBy = "name",
+        [FromQuery] bool sortAscending = true)
         {
             try
             {
-                var getAllQuizs = await quizService.GetAllQuizs();
-                return Ok(getAllQuizs);
+                var request = new PaginationRequest
+                {
+                    Page = Math.Max(1, page),
+                    PageSize = Math.Max(1, Math.Min(pageSize, 100)),
+                    SortBy = sortBy,
+                    SortAscending = sortAscending
+                };
+
+                var response = await quizService.GetAllQuizsAsync(request);
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -114,11 +142,25 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet("GetQuestionByQuizId/{quizId}")]
-        public async Task<ActionResult> GetQuestionByQuizId([FromRoute] string quizId)
+        public async Task<ActionResult> GetQuestionByQuizId(
+                [FromRoute] string quizId,
+                [FromQuery] int page = 1,
+                [FromQuery] int pageSize = 3,
+                [FromQuery] string? sortBy = "description",
+                [FromQuery] bool sortAscending = true)
         {
             try
             {
-                var res = await quizService.GetQuestionsAndAnswersByQuizIdAsync(quizId);
+                var request = new PaginationRequest
+                {
+                    QuizId = quizId,
+                    Page = Math.Max(1, page),
+                    PageSize = Math.Max(1, Math.Min(pageSize, 100)),
+                    SortBy = sortBy,
+                    SortAscending = sortAscending
+                };
+
+                var res = await quizService.GetQuestionsAndAnswersByQuizIdAsync(request);
                 return Ok(res);
             }
             catch (Exception e)
@@ -143,7 +185,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("submit")]
-        [Authorize("User")]
+        //[Authorize("User")]
         public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizRequest request)
         {
             try

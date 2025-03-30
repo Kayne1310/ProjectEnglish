@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using ProjectFall2025.Application.Services;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -46,22 +47,48 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
 
+        //[HttpGet("Get_All_User")]
+        //[Authorize("Admin")]
+        //public async Task<ActionResult> getAllUser()
+        //{
+
+        //    try
+        //    {
+        //        var res = await userService.getAllUser();
+        //        return Ok(res);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
         [HttpGet("Get_All_User")]
         [Authorize("Admin")]
-        public async Task<ActionResult> getAllUser()
+        public async Task<ActionResult> GetAllUser(
+                [FromQuery] int page = 1,
+                [FromQuery] int pageSize = 10,
+                [FromQuery] string? sortBy = "UserName",
+                [FromQuery] bool sortAscending = true)
         {
-
             try
             {
-                var res = await userService.getAllUser();
-                return Ok(res);
+                var request = new PaginationRequest
+                {
+                    Page = Math.Max(1, page),
+                    PageSize = Math.Max(1, Math.Min(pageSize, 100)),
+                    SortBy = sortBy,
+                    SortAscending = sortAscending
+                };
+
+                var response = await userService.GetAllUsersAsync(request);
+                return Ok(response);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
-
 
 
         [HttpPost("GoogleRegister")]
