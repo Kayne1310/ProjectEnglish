@@ -68,7 +68,10 @@ const router = createBrowserRouter([
         },
         {
           path: "detailquiz/:quizId/result",
-          element: <ResultQuizz />
+          element:
+            (<PrivateRoute>
+              <ResultQuizz />
+            </PrivateRoute>)
         }
         ],
       },

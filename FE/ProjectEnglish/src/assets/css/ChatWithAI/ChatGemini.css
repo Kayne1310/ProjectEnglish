@@ -425,6 +425,7 @@
     }
 
     .chat-containerwithAI {
+        margin-top: 80px;
         height: 100vh;
         border-radius: 0;
     }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../components/layout/context/authContext';
 import { updateUser } from '../../service/ProfileService';
+import { toast } from 'react-toastify';
+import "../../assets/css/Profile/edit-profile.css"
 
 const ViewProfile = () => {
   const { userInfor, setUser } = useContext(AuthContext);
@@ -82,13 +84,14 @@ const ViewProfile = () => {
   
         setUser(updatedUser);
         setPreviewImage(previewImage);
-        alert(response.returnMessage);
+        toast.success(response.returnMessage);
       } else {
-        alert(response.returnMessage);
+        toast.error(response.returnMessage);
       }
     } catch (error) {
       console.error('Error in handleUpdate:', error);
-      alert('Đã xảy ra lỗi khi cập nhật thông tin.');
+      toast.error('Đã xảy ra lỗi khi cập nhật thông tin.');
+ 
     } finally {
       setIsLoading(false);
     }
@@ -219,7 +222,7 @@ const ViewProfile = () => {
                     onClick={handleUpdate}
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Đang cập nhật...' : 'Update'}
+                    {isLoading ? 'Loading...' : 'Update'}
                   </button>
                 </div>
               </div>

@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver.Linq;
+using MongoDB.Bson;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -75,7 +76,7 @@ namespace ProjectEnglishFall2025.Controllers
                 {
                     Exprired = refreshtokenExprired,
                     RefeshToken = refreshtoken,
-                    UserId = user.UserID,
+                    UserId =ObjectId.Parse(user.UserID) ,
 
                 };
 
@@ -103,7 +104,7 @@ namespace ProjectEnglishFall2025.Controllers
                 var userSession = new UserSession
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(newtoken),
-                    UserId = user.UserID,
+                    UserId = ObjectId.Parse(user.UserID),
                     isSueAt = DateTime.UtcNow, // Set issue date to current time
                     expriresAt = refreshtokenExprired,
                     isRevoked = "false",
@@ -213,7 +214,7 @@ namespace ProjectEnglishFall2025.Controllers
             {
                 Exprired = refreshtokenExprired,
                 RefeshToken = refreshtoken,
-                UserId = validAcount.user.UserID,
+                UserId = ObjectId.Parse(validAcount.user.UserID),
 
             };
 
@@ -236,7 +237,7 @@ namespace ProjectEnglishFall2025.Controllers
             {
 
                 token = new JwtSecurityTokenHandler().WriteToken(newToken),
-                UserId = validAcount.user.UserID,
+                UserId =ObjectId.Parse(validAcount.user.UserID) ,
                 isSueAt = DateTime.UtcNow, // Set issue date to current time
                 expriresAt = refreshtokenExprired,
                 isRevoked = "false",
@@ -285,7 +286,7 @@ namespace ProjectEnglishFall2025.Controllers
                 {
                     Exprired = refreshtokenExprired,
                     RefeshToken = refreshtoken,
-                    UserId = validAccount.user.UserID,
+                    UserId = ObjectId.Parse(validAccount.user.UserID),
 
                 };
                 await acountService.Account_UpdateRefeshToken(req);
@@ -317,7 +318,7 @@ namespace ProjectEnglishFall2025.Controllers
                 {
 
                     token = new JwtSecurityTokenHandler().WriteToken(newToken),
-                    UserId = validAccount.user.UserID,
+                    UserId =ObjectId.Parse(validAccount.user.UserID),
                     isSueAt = DateTime.UtcNow, // Set issue date to current time
                     expriresAt = refreshtokenExprired,
                     isRevoked = "false",
