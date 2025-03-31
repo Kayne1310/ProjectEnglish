@@ -1,3 +1,4 @@
+
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -15,13 +16,9 @@ import QuizletForm from './pages/FlashCard/Quizz.jsx';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import ViewProfile from './pages/Profile/ViewProfile..jsx';
-
 import PrivateRoute from './pages/privateroute.jsx';
 import DetailQuizz from './pages/ListQuizz/DetailQuiz/DetailQuizz.jsx';
-
 import Flashcard from './pages/FlashCard/FlashCard.jsx';
-import ListDocument from './pages/Document/ListDocument.jsx';
-import DocumentItem from './pages/Document/documentItem.jsx';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import AppAdmin from './AppAdmin.jsx';
@@ -30,14 +27,17 @@ import UserlistPage from './pages/Admin/UserlistPage/UserlistPage.jsx';
 import ChartPage from './pages/Admin/ChartPage/ChartPage.jsx';
 import QuizPage from './pages/Admin/QuizPage/QuizPage.jsx';
 import QuizQuestionAnswerPage from './pages/Admin/QuizQuestionAnswerPage/QuizQuestionAnswerPage.jsx';
-
+import ListDocument from './pages/Document/ListDocument.jsx';
+import DocumentItem from './pages/Document/documentItem.jsx';
 import LoginAdminPage from './pages/LoginAndRes/Admin/LoginAdminPage.jsx';
-
 import Flashcardcanh from './pages/FlashCard/ListFlashCard.jsx';
 import FlashcardList from './pages/FlashCard/ListStudySet.jsx';
-
+import ViewChangePassword from './pages/ChangePassword/ViewChangePassword.jsx';
 import { Community } from './pages/Community/community.jsx';
+import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
 import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
+import AdminAuthWrapper from './pages/LoginAndRes/Admin/AdminAuthWrapper.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -62,9 +62,7 @@ const router = createBrowserRouter([
       {
         path: "/listquizz",
         element:
-          <PrivateRoute>
-            <ListQuizz />
-          </PrivateRoute>,
+          <ListQuizz /> ,
         children: [{
           path: "detailquiz/:quizId", element: <DetailQuizz />
         },
@@ -108,8 +106,18 @@ const router = createBrowserRouter([
         element: <FlashcardList />
       },
       {
+
+        path: "/changepassword",
+        element: <ViewChangePassword />
+      },
+      {
         path: "/community",
         element: <Community />
+
+      },
+      {
+        path: "/chatwithai",
+        element: <ChatGemini />
       }
 
     ]
@@ -146,7 +154,11 @@ const router = createBrowserRouter([
   // ADMIN
   {
     path: "/Admin",
-    element: <AppAdmin />,
+    element: (
+      <AdminAuthWrapper>
+        <AppAdmin />
+      </AdminAuthWrapper>
+    ),
     children: [
       {
         index: true,

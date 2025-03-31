@@ -9,6 +9,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { getDataQuiz } from "../../service/quizService";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
 import AOS from "aos";
+import { calculateDaysAgo } from "../../helpers/DateHepler";
 
 
 
@@ -39,7 +40,7 @@ const ListQuizz = () => {
 
   // Hàm lọc kết hợp
   const filterQuizzes = (search, category) => {
-    let filtered = [...arrQuiz];
+    let filtered = [...(arrQuiz || [])];
 
     // Lọc theo từ khóa tìm kiếm
     if (search) {
@@ -114,11 +115,14 @@ const ListQuizz = () => {
   console.log("arrQuiz:", arrQuiz);
   console.log("isQuizletPage:", isQuizletPage);
 
+
   // Xử lý danh sách quiz trước khi render
-  const processedQuiz = filteredQuizzes.map(quiz => ({
+  const processedQuiz = (filteredQuizzes || []).map(quiz => ({
     ...quiz,
     image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : b1
   }));
+
+
 
   return (
     <>
@@ -132,10 +136,14 @@ const ListQuizz = () => {
         <>
           {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
           {!isQuizletPage && (
-            <section className="slider_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section
+              className={`slider_section long_section ${!isHomePage ? 'layout_padding' : 'mb-5'}`}
+              style={{ backgroundColor: '#f9fafa' }}
+              data-aos={isHomePage ? "fade-up" : ""}
+            >
               <div className="container">
                 <div className="row">
-                  <div className="mt-10 text-third ml-1">
+                  <div className="">
                     <h1 className="text-3xl font-bold text-primary" data-aos={isHomePage ? "zoom-in" : ""}>Quizzet</h1>
                     <p>
                       Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân
@@ -232,7 +240,7 @@ const ListQuizz = () => {
                                 <img className="listquiz-avatar" src="https://res.cloudinary.com/dvm1fjo7a/image/upload/v1742227443/image%20admin/mxdem7htk5n7hvcf5edf.jpg" alt="avatar" />
                                 <div className="listquiz-user-info">
                                   <h6>admin</h6>
-                                  <span>now</span>
+                                  <span>{calculateDaysAgo(quiz.createAt)}</span>
                                 </div>
                               </div>
                               <Link

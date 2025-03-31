@@ -80,6 +80,7 @@ const Community = () => {
     };
 
     useEffect(() => {
+        window.scroll(0, 0);
         getInitialMessages();
 
         // Thiết lập kết nối SignalR
@@ -304,7 +305,7 @@ const Community = () => {
                                                             style={{ width: "40px", height: "40px" }}>
                                                             <img
                                                                 alt=""
-                                                                className="w-100 ms-1 h-100 object-fit-cover border border-2 border-primary rounded-circle"
+                                                                className="w-100 ms-1 h-100 object-fit-cover  border-2 border-primary rounded-circle"
                                                                 src={msg.picture || "null"}
                                                             />
                                                         </div>

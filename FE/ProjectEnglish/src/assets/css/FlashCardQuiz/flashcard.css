@@ -338,6 +338,9 @@
     width: 95%;
 
   }
+  .layout_padding{
+   margin-top: 20px !important;
+  }
   .custom-footer-button {
     height: 45px;
     padding: 5px 10px;
@@ -460,6 +463,120 @@
 
 .key-pressed {
   animation: keyPress 0.2s ease;
+}
+
+
+/* AI Answer Modal */
+.ai-answer-content {
+  padding: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.modal-title {
+  color: #4B49AC;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+}
+
+/* AI Answer Modal Styles */
+.ai-answer-modal .modal-content {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-answer-modal .modal-header {
+  background: linear-gradient(135deg, #2193b0, #6dd5ed);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  padding: 1rem 1.5rem;
+  border: none;
+}
+
+.ai-answer-modal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.ai-answer-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.ai-answer-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2c3e50;
+}
+
+.ai-answer-content p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.ai-answer-modal .modal-footer {
+  border-top: 1px solid #eee;
+  padding: 1rem 1.5rem;
+}
+
+.ai-answer-modal .btn-secondary {
+  background: #6c757d;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.ai-answer-modal .btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .ai-answer-modal .modal-content {
+    background: #2c3e50;
+  }
+
+  .ai-answer-modal .modal-header {
+    background: linear-gradient(135deg, #1a1c20, #2c3e50);
+  }
+
+  .ai-answer-content {
+    color: #e2e8f0;
+  }
+
+  .ai-answer-modal .modal-footer {
+    border-top-color: #3a3f45;
+  }
+
+  .ai-answer-modal .btn-secondary {
+    background: #4a4e52;
+  }
+
+  .ai-answer-modal .btn-secondary:hover {
+    background: #3a3d40;
+  }
 }
 
 

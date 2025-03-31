@@ -1,0 +1,86 @@
+﻿
+
+networks:
+  project-network:
+    driver: bridge
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-english-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb1
+      - mongodb2
+      - mongodb3
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      -  MongoDbConfiguration__ConnectionString=mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=rs0
+      - Redis__ConnectionString=project-english-redis:6379,abortConnect=false
+    restart: always
+    networks:
+      - project-network
+
+  mongodb1:
+    image: mongo:7.0
+    container_name: mongodb1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all","--port", "27017"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data1:/data/db
+    networks:
+      - project-network
+
+  mongodb2:
+    image: mongo:7.0
+    container_name: mongodb2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
+    ports:
+      - "27018:27018"
+    volumes:
+      - mongodb_data2:/data/db
+    networks:
+      - project-network
+
+  mongodb3:
+    image: mongo:7.0
+    container_name: mongodb3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
+    ports:
+      - "27019:27019"
+    volumes:
+      - mongodb_data3:/data/db
+    networks:
+      - project-network
+
+  redis:
+    image: redis:latest
+    container_name: project-english-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - project-network
+
+  frontend:
+    build:
+      context: ../FE/ProjectEnglish
+      dockerfile: Dockerfile
+    container_name: project-english-fe
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - project-network
+
+volumes:
+  mongodb_data1:
+  mongodb_data2:
+  mongodb_data3:

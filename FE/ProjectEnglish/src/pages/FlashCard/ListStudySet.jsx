@@ -7,6 +7,7 @@ import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
+import { toast } from 'react-toastify';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -44,20 +45,30 @@ const FlashcardList = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
         setListName("");
-        setLanguage("Tiếng Anh-Mỹ");
+        setLanguage("");
         setIsPublic(false);
         setDescription("");
     };
     const handleCreate = async () => {
-        setIsModalVisible(false);
-        var res = await createStudySet(listName, language, isPublic, description);
-        if (res.returnCode == 1) {
-            alert("Tạo list từ thành công");
-            fetchFlashcards();
-            gellAllListStudybyUser();
+        try {
+            setIsModalVisible(false);
+            var res = await createStudySet(listName, language, isPublic, description);
+            if (res.returnCode == 1) {
+                toast.success("Tạo list từ thành công");
+                fetchFlashcards();
+                gellAllListStudybyUser();
+            }
+            else {
+                toast.error(`Tạo list từ thất bại: ${res.returnMessage}`);
+            }
+            setListName("");
+            setLanguage("");
+            setIsPublic(false);
+            setDescription("");
+
         }
-        else {
-            alert(`Tạo list từ thất bại: ${res.returnMessage}`);
+        catch(error){
+            console.error("Error creating study set:", error);
         }
         setListName("");
         setLanguage("Tiếng Anh-Mỹ");
@@ -79,10 +90,14 @@ const FlashcardList = () => {
     const gellAllListStudybyUser = async () => {
         try {
             const studySetUserId = await getALlStudySetServiceByUserId();
-            setStudySetByUserID(studySetUserId.listStudySetWithCount);
+            // Kiểm tra studySetUserId trước khi set state
+            if (studySetUserId && studySetUserId.listStudySetWithCount) {
+                setStudySetByUserID(studySetUserId.listStudySetWithCount);
+                console.log("studysetuserid", studySetUserId.listStudySetWithCount);
+            }
         }
         catch (error) {
-
+            console.error("Error fetching study sets:", error);
         }
     }
 
@@ -116,10 +131,10 @@ const FlashcardList = () => {
                 <Spin size="large" />
             </div>
         ) : (
-            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section className={`about_section long_section ${!isHomePage ? 'layout_padding' : 'mb-5'}`} style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
-                    <div className="mt-10 mb-5 text-third ml-1">
+                    <div className="">
                         <h1 className="text-3xl font-bold text-primary">Flashcard</h1>
                         <p>
                             Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.
@@ -143,6 +158,8 @@ const FlashcardList = () => {
                                         </div>
                                     </Link>
                                 </div>
+
+
 
                                 {/* Render danh sách từ */}
                                 {studySetByUserID.map((list) => (
@@ -210,7 +227,7 @@ const FlashcardList = () => {
                                 onClick={() => setActiveLang(id)}
                             >
                                 {icon ? (
-                                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" className="me-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="me-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="none" d="M0 0h24v24H0z"></path>
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path>
                                     </svg>
@@ -224,7 +241,7 @@ const FlashcardList = () => {
                     {/* Popup Tạo List */}
                     <Modal
                         title="Tạo list từ"
-                        visible={isModalVisible}
+                        open={isModalVisible}
                         onCancel={handleCancel}
                         footer={null}
                         centered // Căn giữa modal theo cả chiều ngang & dọc
@@ -240,7 +257,9 @@ const FlashcardList = () => {
                                 value={language}
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
+                                placeholder="Chọn ngôn ngữ"
                             >
+                                <Option value="">Chọn ngôn ngữ</Option>
                                 <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
                                 <Option value="Japan">Tiếng Nhật</Option>
@@ -320,5 +339,6 @@ const FlashcardList = () => {
         </>
     );
 };
+
 
 export default FlashcardList;

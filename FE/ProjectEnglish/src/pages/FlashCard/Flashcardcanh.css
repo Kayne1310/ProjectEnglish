@@ -289,8 +289,8 @@
     
     /* Thông tin ngôn ngữ */
     .flashcard-overview p img {
-      width: 20px !important;
-      height: 15px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
     }
     
@@ -301,8 +301,8 @@
     }
     
     .flashcardcanh-avatar {
-      width: 25px !important;
-      height: 25px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
     }
     
@@ -532,3 +532,29 @@
       padding: 0.5rem !important;
     }
   }
+
+
+  /* Spinner size control - apply for all screen sizes */
+.spinner-border-sm {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-width: 0.15em !important;
+  font-size: 8px !important;
+  vertical-align: middle !important;
+}
+
+/* AI Generate button with spinner */
+.btn-primary.w-100 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 38px !important;
+  font-size: 14px !important;
+}
+
+/* Ensure spinner stays small in button */
+.btn-primary.w-100 .spinner-border-sm {
+  margin-right: 4px !important;
+  margin-top: -2px !important;
+}

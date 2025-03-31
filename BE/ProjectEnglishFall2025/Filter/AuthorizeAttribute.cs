@@ -75,7 +75,7 @@ namespace ProjectEnglishFall2025.Filter
         private void DenyAccess(AuthorizationFilterContext context, string message)
         {
             context.HttpContext.Response.ContentType = "application/json";
-            context.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+            context.HttpContext.Response.StatusCode = 200;
             context.Result = new JsonResult(new
             {
                 ReturnCode = System.Net.HttpStatusCode.Unauthorized,

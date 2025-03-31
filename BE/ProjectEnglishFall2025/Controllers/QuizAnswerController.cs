@@ -96,7 +96,7 @@ namespace ProjectEnglishFall2025.Controllers
         {
             try
             {
-                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(new DeleteQuizVM { quiz_id=quizId});
+                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(new DeleteQuizVM { quiz_id = quizId});
                 return Ok(results);
             }
             catch (Exception ex)

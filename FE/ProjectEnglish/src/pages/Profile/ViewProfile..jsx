@@ -1,43 +1,102 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../components/layout/context/authContext';
+import { updateUser } from '../../service/ProfileService';
 
 const ViewProfile = () => {
-  const {userInfor}=useContext(AuthContext);
+  const { userInfor, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [userData, setUserData] = useState({
+    userId: userInfor.userId || '',
     userName: userInfor.userName || '',
     email: userInfor.email || '',
-    picture: userInfor.picture || '',
+    picture: userInfor.picture || null,
+    address: userInfor.address || '',
+    age: userInfor.age || '',
+    phone: userInfor.phone || '',
+    gender: userInfor.gender || '',
   });
-console.log(userInfor);
-  useEffect(() => {
+  const [previewImage, setPreviewImage] = useState(userInfor?.picture || '');
 
-  if(userInfor){
-      try {
-        setUserData({
-          ...userData,
-          userName: userInfor.userName || '',
-          email: userInfor.email || '',
-          picture: userInfor.picture || ''
-        });
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-      }
+  useEffect(() => {
+    if (userInfor) {
+      setUserData({
+        userId: userInfor.userId || '',
+        userName: userInfor.userName || '',
+        email: userInfor.email || '',
+        picture: userInfor.picture || null,
+        address: userInfor.address || '',
+        age: userInfor.age || '',
+        phone: userInfor.phone || '',
+        gender: userInfor.gender || '',
+      });
+      setPreviewImage(userInfor.picture || '');
     }
-  }, []);
+  }, [userInfor]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setUserData({
-      ...userData,
-      [id]: value
-    });
+    setUserData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
-  const handleUpdate = () => {
-    // Cập nhật thông tin người dùng (có thể gọi API ở đây)
-    console.log('Updated User Data:', userData);
-    alert('Profile updated successfully!');
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+        setUserData((prev) => ({ ...prev, picture: file }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
+  const handleUpdate = async () => {
+    try {
+      setIsLoading(true);
+      const updatedData = {
+        UserID: userData.userId,
+        UserName: userData.userName,
+        Address: userData.address,
+        Age: userData.age,
+        Phone: userData.phone,
+        Gender: userData.gender,
+        Picture: userData.picture,
+      };
+
+      const response = await updateUser(updatedData);
+
+      if (response.returnCode === 1) {
+        const updatedUser = {
+          ...userInfor,
+          userName: userData.userName,
+          address: userData.address,
+          age: userData.age,
+          phone: userData.phone,
+          gender: userData.gender,
+          picture: previewImage,
+        };
+  
+        setUser(updatedUser);
+        setPreviewImage(previewImage);
+        alert(response.returnMessage);
+      } else {
+        alert(response.returnMessage);
+      }
+    } catch (error) {
+      console.error('Error in handleUpdate:', error);
+      alert('Đã xảy ra lỗi khi cập nhật thông tin.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!userInfor) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="editprofile-body " style={{marginTop:'100px'}}>
@@ -48,8 +107,22 @@ console.log(userInfor);
             <div className="card h-100">
               <div className="card-body text-center">
                 <div className="editprofile-user-profile">
-                  <div className="editprofile-user-avatar mb-3">
-                    <img src={userData.picture} className="rounded-circle img-fluid" alt="User Avatar" />
+                  <div className="editprofile-user-avatar mb-3 position-relative">
+                    <label htmlFor="picture" style={{ cursor: 'pointer' }}>
+                      <img
+                        src={previewImage || '/default-avatar.png'}
+                        className="rounded-circle img-fluid"
+                        alt="User Avatar"
+                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                      />
+                    </label>
+                    <input
+                      type="file"
+                      id="picture"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      hidden
+                    />
                   </div>
                   <h5 className="editprofile-user-name">{userData.userName}</h5>
                   <h6 className="editprofile-user-email text-muted">{userData.email}</h6>
@@ -72,6 +145,7 @@ console.log(userInfor);
                       id="userName"
                       value={userData.userName}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
                   <div className="col-md-6">
@@ -81,62 +155,72 @@ console.log(userInfor);
                       className="form-control"
                       id="email"
                       value={userData.email}
-                      onChange={handleInputChange}
+                      readOnly
                     />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="address" className="form-label">Address</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="address"
+                      value={userData.address}
+                      onChange={handleInputChange}
+                      placeholder="Enter Address"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="age" className="form-label">Age</label>
+                    <select
+                      className="form-control"
+                      id="age"
+                      value={userData.age}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select Age</option>
+                      {Array.from({ length: 100 }, (_, i) => i + 1).map((age) => (
+                        <option key={age} value={age}>
+                          {age}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="phone" className="form-label">Phone</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="phone"
+                      value={userData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Enter Phone"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="gender" className="form-label">Gender</label>
+                    <select
+                      className="form-control"
+                      id="gender"
+                      value={userData.gender}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                 </div>
-
-                <h6 className="mt-4 mb-3 text-primary">Address</h6>
-                <div className="row g-3">
-                  <div className="col-md-6">
-                    <label htmlFor="street" className="form-label">Street</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="street"
-                      value={userData.street}
-                      onChange={handleInputChange}
-                      placeholder="Enter Street"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label htmlFor="city" className="form-label">City</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="city"
-                      value={userData.city}
-                      onChange={handleInputChange}
-                      placeholder="Enter City"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label htmlFor="state" className="form-label">State</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="state"
-                      value={userData.state}
-                      onChange={handleInputChange}
-                      placeholder="Enter State"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label htmlFor="zip" className="form-label">Zip Code</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="zip"
-                      value={userData.zip}
-                      onChange={handleInputChange}
-                      placeholder="Zip Code"
-                    />
-                  </div>
-                </div>
-
                 <div className="d-flex justify-content-end mt-4">
                   <button type="button" className="btn btn-secondary me-2">Cancel</button>
-                  <button type="button" className="btn btn-primary" onClick={handleUpdate}>Update</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-primary" 
+                    onClick={handleUpdate}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Đang cập nhật...' : 'Update'}
+                  </button>
                 </div>
               </div>
             </div>

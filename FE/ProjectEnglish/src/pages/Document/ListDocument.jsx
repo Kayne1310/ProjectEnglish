@@ -104,16 +104,16 @@ const ListDocument = () => {
                     <Spin size="large" />
                 </div>
             ) : (
-                <section className="slider_section layout_padding long_section " style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+                <section className={`slider_section long_section ${!isHomePage ? 'layout_padding' : ''}`} data-aos={isHomePage ? "fade-up" : ""}>
                     <div className="container">
-                        <div className="mt-10 mb-5 text-third">
-                            <h1 className="text-3xl font-bold">Tài liệu</h1>
+                        <div className="">
+                            <h1 className="text-3xl font-bold text-primary">Tài liệu</h1>
                             <p>
                                 Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất.
                             </p>
                             <p>
                                 Nếu bạn có tài liệu cần đưa lên web? bấm vào nút dưới để
-                                <a className="underline text-primary" href="mailto:khanhdjkl@gmail.com" style={{ textDecoration: "none" }}> gửi tài liệu</a>
+                                <a className="underline text-primary mr-1" href="mailto:khanhdjkl@gmail.com" style={{ textDecoration: "none" }}> gửi tài liệu</a>
                                 cho mình nhá
                             </p>
                         </div>

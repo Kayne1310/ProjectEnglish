@@ -26,9 +26,15 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 userName: response.user.userName,
                 email: response.user.email,
                 picture: response.user.picture,
+                address: response.user.address,
+                age: response.user.age,
+                phone: response.user.phone,
+                gender: response.user.gender,
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
+                role: response.user.role,
             }); // Lưu thông tin user vào context
+
             toast.success("Login successfully!");
             setTimeout(() => {
                 setIsLoading(false);
@@ -74,11 +80,15 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
                 userName: response.user.userName,
                 email: response.user.email,
                 picture: response.user.picture,
+                address: response.user.address,
+                age: response.user.age,
+                phone: response.user.phone,
+                gender: response.user.gender,
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
+                role: response.user.role,
             }); // Lưu thông tin user vào context
-         
-            toast.success("Login successfully!");
+
             setTimeout(() => {
                 setIsLoading(false);
                 if (response.user.role === "Admin") {
@@ -108,10 +118,8 @@ export const handleLogout = async (
     setIsLoading,
     setError,
     setUser,
-    navigate
 ) => {
     setError("");
-
     setIsLoading(true);
 
     try {
@@ -122,18 +130,40 @@ export const handleLogout = async (
         if (!res || res.error || res.returnCode !== 1) {
             throw new Error(res?.returnMessage || "Logout failed");
             
-
         } else {
             setUser(null); // Xóa user trong context/state
             setIsLoading(false);
-            navigate("/");
-            toast.success("Logout successfully!"); // Toast thành công
-
+            window.location.href="/" // load sau khi điêu hướng
         }
     } catch (error) {
-        // setError(`Logout failed. ${error.message}`);
-        toast.error(`Logout failed: ${res?.returnMessage}`); // Toast lỗi
+        setError(`Logout failed. ${error.message}`);
+        setIsLoading(false);
+    }
+};
 
+export const handleLogoutAdmin = async (
+    setIsLoading,
+    setError,
+    setUser,
+) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+        const res = await authService.logout();
+
+        console.log("Logout Response:", res);
+
+        if (!res || res.error || res.returnCode !== 1) {
+            throw new Error(res?.returnMessage || "Logout failed");
+            
+        } else {
+            setUser(null); // Xóa user trong context/state
+            setIsLoading(false);
+            window.location.href="/loginadmin" // load sau khi điêu hướng
+        }
+    } catch (error) {
+        setError(`Logout failed. ${error.message}`);
         setIsLoading(false);
     }
 };
@@ -221,6 +251,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
+        console.log("google login succesul data",apiResponse);
         // console.log("Context Response:", userInfo.email);
         // console.log("Context Response:", userInfo.userId);
         // console.log("Context Response:", userInfo.name);
@@ -236,7 +267,20 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
         }
 
         else if (apiResponse.returnCode == 1) {
-            localStorage.setItem("isLoggedIn", "true");
+           
+            setUser({
+                userName: apiResponse.user.userName,
+                email: apiResponse.user.email,
+                picture: apiResponse.user.picture,
+                address: apiResponse.user.address,
+                age: apiResponse.user.age,
+                phone: apiResponse.user.phone,
+                gender: apiResponse.user.gender,
+                facebookId: apiResponse.user.facebookId,
+                googleId: apiResponse.user.googleId,
+                role: apiResponse.user.role,
+            }); // Lưu thông tin user vào context
+
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/");

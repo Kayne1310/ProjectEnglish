@@ -1,21 +1,25 @@
 import "../../assets/css/Home/nav.css";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import React, { useState, useContext } from "react";
+import { Link, NavLink } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
 import avatar from "../../assets/image/default-avatar.png";
 import Dropdown from "react-bootstrap/Dropdown";
-import { FaUser, FaCogs, FaSignOutAlt, FaHome, FaBook, FaQuestionCircle, FaFileAlt, FaUsers } from "react-icons/fa";
+import { FaUser, FaCogs, FaSignOutAlt, FaHome, FaBook, FaQuestionCircle, FaFileAlt, FaUsers, FaAirFreshener, FaFirefox } from "react-icons/fa";
 import { handleLogout } from "../../helpers/authHandlers";
 import { AuthContext } from "./context/authContext";
 
 const Nav = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const { userInfor, setUser } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const { userInfor, setUser } = useContext(AuthContext); // Lấy user từ context
+    const toggleMenu = () => setIsOpen(!isOpen);
+    // Kiểm tra trạng thái đăng nhập từ userInfor
     const isLoggedIn = !!userInfor?.userName;
 
+    useEffect(() => {
+        // Không cần set lại user ở đây vì đã có trong context
+    }, [userInfor]);
     const onLogout = async () => {
-        await handleLogout(setIsLoading, setError, setUser, navigate);
+        await handleLogout(setIsLoading, setError, setUser);
     };
 
     return (
@@ -23,13 +27,13 @@ const Nav = () => {
             <div className="navigation">
                 <header className="header_section long_section">
                     <nav className="navbar navbar-expand-lg custom_nav-container">
-                        <a className="navbar-brand">
+                        <div className="navbar-brand">
                             <span>
                                 <Link className="" to="/">
                                     Quizzet
                                 </Link>
                             </span>
-                        </a>
+                        </div>
                         <div className="d-none d-lg-flex mx-auto flex-column flex-lg-row align-items-center">
                             <ul className="navbar-nav">
                                 <li className="nav-item">
@@ -51,6 +55,9 @@ const Nav = () => {
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/community">Community</NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/chatwithai">Chat with AI</NavLink>
+                                </li>
                             </ul>
                         </div>
                         <div className="quote_btn-container">
@@ -65,9 +72,15 @@ const Nav = () => {
                                         />
                                     </Dropdown.Toggle>
                                 ) : (
-                                    <Dropdown.Toggle className="custom-dropdown" bsPrefix="custom-toggle">
-                                        LOGIN
-                                    </Dropdown.Toggle>
+                                    <Dropdown.Toggle as={Link} to="/loginuser" className="premium-login-btn" bsPrefix="custom-toggle">
+                                    <span  className="btn-content">
+                                        <span className="btn-icon">
+                                            <i className="bi bi-person-circle mr-1 ml-2"></i>
+                                        </span>
+                                        <span  className="btn-text">Sign in</span>
+                                    </span>
+                                    <span className="btn-shine"></span>
+                                </Dropdown.Toggle>
                                 )}
 
                                 <Dropdown.Menu className="custom-dropdown-menu">
@@ -99,8 +112,13 @@ const Nav = () => {
                                             <hr className="border-gray-200 my-2 mx-1" />
                                             {/* Các mục menu */}
                                             <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">
-                                                <i className="far fa-user-circle mr-2"></i> View profile
+                                                <FaUser className="mr-2" /> Profile
                                             </Dropdown.Item>
+                                            <Dropdown.Item as={Link} to="/changepassword" className="custom-dropdown-item">
+                                                <FaCogs className="mr-2" /> Change Password
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+
                                             <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
                                                 <i className="fas fa-cog mr-2"></i> Settings
                                             </Dropdown.Item>
@@ -116,19 +134,10 @@ const Nav = () => {
                                                 English
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={onLogout} className="custom-dropdown-item">
-                                                <i className="fas fa-sign-out-alt mr-2"></i> Logout
+                                                <FaSignOutAlt className="mr-2" /> Logout
                                             </Dropdown.Item>
                                         </>
-                                    ) : (
-                                        <>
-                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">
-                                                User Login
-                                            </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">
-                                                Admin Login
-                                            </Dropdown.Item>
-                                        </>
-                                    )}
+                                    ) : null}
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -158,6 +167,10 @@ const Nav = () => {
                 <NavLink to="/community" className="mobile-nav-item">
                     <FaUsers />
                     <span>Community</span>
+                </NavLink>
+                <NavLink to="/chatwithai" className="mobile-nav-item">
+                    <FaFirefox />
+                    <span>Chat with AI</span>
                 </NavLink>
             </div>
         </>

@@ -151,10 +151,10 @@ body {
   .blog_section .heading_container{
     padding: 0 !important;
   }
-  /* .layout_padding{
-    padding: 0 !important;
- 
-  } */
+  .blog_section .box .detail-box .btn-box{
+    text-align: center !important;
+  }
+  
   .blog_section .container{
     padding: 0 !important;
   }
@@ -472,6 +472,7 @@ body {
 .layout_padding {
   padding: 90px 0;
 }
+
 
 .layout_padding2 {
   padding: 45px 0;
@@ -808,7 +809,8 @@ body {
 /* info_section */
 
 .info_section {
-  background-color: #191e1f;
+
+  background-color: #2157bd !important;
   color: #ffffff;
   padding-top: 45px;
   padding-bottom: 45px;

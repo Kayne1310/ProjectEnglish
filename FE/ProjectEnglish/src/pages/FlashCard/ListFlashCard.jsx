@@ -2,8 +2,8 @@
 import './Flashcardcanh.css'; // Import file CSS
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 // import b2 from "../../assets/image/b2.jpg";
-import covn from '../../assets/image/covn.jpg'
-import { useContext, useEffect, useRef, useState } from 'react';
+// import covn from '../../assets/image/covn.jpg'
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { createFlashCardWithStudySet, deleteFlashCardWithStudySet, getListFlashCardByStudySetId, updateFlashCardWithStudySet } from '../../service/flashcardService';
 import { calculateDaysAgo } from '../../helpers/DateHepler';
@@ -14,6 +14,7 @@ import { prepareFlashcardData } from '../../helpers/flashcardHandler';
 import { updateStudySet, deleteStudySet } from '../../service/StudySetService';
 import { toast } from "react-toastify"; // Import toast
 import { speak, stopSpeak } from '../../service/geminiService';
+import { Option } from 'react-bootstrap-icons';
 const { TextArea } = Input;
 
 
@@ -82,7 +83,7 @@ const Flashcardcanh = () => {
             if (playingId) {
                 stopSpeak();
             }
-            
+
             setPlayingId(id);
             await speak(text);
             setPlayingId(null);
@@ -212,7 +213,8 @@ const Flashcardcanh = () => {
                     question: card.title,
                     answer: card.define,
                     examples: card.exampleVM,
-                    transcription: card.transcription
+                    transcription: card.transcription,
+                    description: card.define
                 }))
             }
         });
@@ -222,7 +224,7 @@ const Flashcardcanh = () => {
     const handleSubmit = async () => {
         if (!wordData.title || !wordData.define) {
 
-            toast.error('Vui lòng nhập đầy đủ thông tin bắt buộc'); 
+            toast.error('Vui lòng nhập đầy đủ thông tin bắt buộc');
             return;
         }
 
@@ -359,7 +361,8 @@ const Flashcardcanh = () => {
                 if (response.returnCode == 1) {
 
                     toast.success("Xóa study set thành công");
-                        navigate('/flashcard');
+                    navigate('/flashcard');
+
 
                 } else {
                     toast.error("Xóa study set thất bại");
@@ -374,12 +377,9 @@ const Flashcardcanh = () => {
     return (
         <>
             <div className="flashcard-overview">
-
-
-            {/* Container Fluid */}
                 {studySet && (
                     <>
-                <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
+                        <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
                         <div className="d-flex justify-content-between align-items-center">
 
                             <h2 className="flashcardcanh-header-title fs-1" style={{ color: "rgb(33 135 213", }}>Flashcard: {studySet.title}</h2>
@@ -410,44 +410,44 @@ const Flashcardcanh = () => {
                         <p className="fs-3 font-italic" style={{ color: "rgb(126 154 210)", }}>{studySet.desc}</p>
                         <p >
                             Ngôn ngữ :
-                    <img
-                        style={{
-                            width: '30px',
-                            height: '20px',
-                            marginRight: '10px',
+                            <img
+                                style={{
+                                    width: '30px',
+                                    height: '20px',
+                                    marginRight: '10px',
                                     verticalAlign: 'middle',
                                     marginLeft: '10px',
-                        }}
+                                }}
                                 src={studySet.imageCountry} />
 
 
-                </p>
+                        </p>
 
-                <p className="flashcardcanh-creator">
+                        <p className="flashcardcanh-creator">
                             Người tạo: {userName}
-                    <img
-                        className="flashcardcanh-avatar"
+                            <img
+                                className="flashcardcanh-avatar"
                                 src={PictureUrl}
-                        alt="Avatar người tạo"
-                    />
-                </p>
-                <div className="flashcardcanh-mt-3">
+                                alt="Avatar người tạo"
+                            />
+                        </p>
+                        <div className="flashcardcanh-mt-3">
                             <button className="flashcardcanh-btn-practice" onClick={handlePractice}>Luyện tập</button>
-                    <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
-                </div>
+                            <button className="flashcardcanh-btn-practice">Luyện tập theo khoa học (beta)</button>
+                        </div>
                         <p className="flashcardcanh-mt-2 text-muted mt-3">
-                    Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
-                    chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
-                </p>
+                            Dựa trên nghiên cứu về đường cong lãng quên của Hermann Ebbinghaus,
+                            chúng tôi khuyến khích bạn ôn lại 5-7 lần tại các khoảng thời gian khác nhau để ghi nhớ lâu dài.
+                        </p>
                         <div className="flashcardcanh-stats-box w-100">
                             <div className="flashcardcanh-row flashcardcanh-mt-3 w-100 ">
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-learned fs-5 fw-bold">Tất cả <br />{flashcardCount}</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-new fs-5 fw-bold">Đã nhớ<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-review fs-5 fw-bold">Ôn tập<br />0</div>
                                 <div className="col-3 border flashcardcanh-stat-item flashcardcanh-mastered fs-5 fw-bold">Ghi nhớ <br />{flashcardCount}</div>
-                    </div>
+                            </div>
 
-            </div>
+                        </div>
                     </>
                 )}
 
@@ -456,15 +456,15 @@ const Flashcardcanh = () => {
                     <div className="row">
                         {flashcards && flashcards.map((data, index) => (
                             <div key={data.id} className="col-md-6 ">
-                                <div className="flashcardcanh-container col-md-6 mb-4">
-                                    {studySet.userId === userInfor.userId && (
+                                <div className="flashcardcanh-container  mb-4">
+                                    {studySet.userId === userInfor?.userId && (
                                         <div className="d-flex justify-content-end gap-5">
-                                            <i class="fas fa-edit fs-4 text-primary cursor-pointer mt-1"
+                                            <i className="fas fa-edit fs-4 text-primary cursor-pointer mt-1"
                                                 onClick={() => handleEditFlashCard(data)}
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#addWordModal"
                                             ></i>
-                                            <i class="bi bi-trash fs-4 text-danger cursor-pointer "
+                                            <i className="bi bi-trash fs-4 text-danger cursor-pointer "
                                                 onClick={() => handleDeleteFlashCard(data)}
                                             ></i>
                                         </div>
@@ -550,7 +550,6 @@ const Flashcardcanh = () => {
                                     {/* Input từ mới và nút AI Generate */}
                                     <div className="row mb-3">
                                         <div className="col-12 col-md-8 mb-2 mb-md-0">
-
                                             <div className="d-flex gap-2 align-items-center">
                                                 <p className="ms-2 mb-1">
                                                     Tên từ mới (nhập rồi bấm vào AI Generate)
@@ -585,7 +584,6 @@ const Flashcardcanh = () => {
                                                 AI Generate
                                             </button>
                                         </div>
-
                                     </div>
 
                                     {/* Định nghĩa */}
@@ -758,22 +756,14 @@ const Flashcardcanh = () => {
                         <div className="d-flex justify-content-center mt-3 w-100">
                             <Button onClick={handleDeleteCancel} className="me-2 btn-secondary w-25">Hủy</Button>
                             <Button type="primary" onClick={handleDeleteSubmit} className="w-25 btn-danger">Xóa</Button>
-
-                </div>
-                </div> 
-
+                        </div>
+                    </div>
                 </Modal>
-
-
             </div>
-
             {/* </div> */}
         </>
     );
 };
-
-
-
 
 
 export default Flashcardcanh;

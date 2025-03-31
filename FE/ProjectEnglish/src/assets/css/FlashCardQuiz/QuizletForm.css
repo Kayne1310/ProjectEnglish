@@ -335,6 +335,11 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    .quizlet-option.w-100.h-100.d-flex.align-items-center.justify-content-center {
+        width: 200px !important;
+        height: 100% !important;
+    }
+
     .quizlet-container {
         padding: 1rem !important;
     }
@@ -412,52 +417,52 @@
 /* Thêm vào QuizletForm.css */
 @media (max-width: 768px) {
     .quizlet-container {
-      margin-top: 10px !important;
-      max-height: none !important;
-      height: auto !important;
+        margin-top: 10px !important;
+        max-height: none !important;
+        height: auto !important;
     }
-  
+
     /* Điều chỉnh content section */
     .flex-grow-1.d-flex.flex-column.flex-md-row {
-      flex-direction: column !important;
-      gap: 1rem !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
     }
-  
+
     /* Điều chỉnh question section */
     .question-section {
-      min-height: 80px !important;
-      padding: 0.75rem !important;
+        min-height: 80px !important;
+        padding: 0.75rem !important;
     }
-  
+
     /* Điều chỉnh image section */
-    .image-section > div {
-      width: 150px !important;
-      height: 150px !important;
-      min-width: 150px !important;
-      margin: 0 auto;
+    .image-section>div {
+        width: 150px !important;
+        height: 150px !important;
+        min-width: 150px !important;
+        margin: 0 auto;
     }
-  
+
     /* Điều chỉnh options grid */
     .options-grid {
-      height: auto !important;
-      margin-bottom: 1rem !important;
+        height: auto !important;
+        margin-bottom: 1rem !important;
     }
-  
+
     .options-grid .col {
-      height: 48px !important;
+        height: 48px !important;
     }
-  
+
     .quizlet-option {
-      padding: 8px !important;
-      font-size: 14px !important;
+        padding: 8px !important;
+        font-size: 14px !important;
     }
-  
+
     /* Điều chỉnh skip button */
     .skip-button {
-      margin-top: 0.5rem !important;
-      padding: 4px 8px !important;
+        margin-top: 0.5rem !important;
+        padding: 4px 8px !important;
     }
-  }
+}
 
 
 
@@ -468,60 +473,60 @@
     overflow: hidden;
     transition: all 0.3s ease;
     margin-top: 1rem;
-  }
-  
-  .navigation-btn {
+}
+
+.navigation-btn {
     flex: 1;
     position: relative;
     transition: all 0.3s ease;
     border-right: 1px solid #e2e8f0;
     min-height: 80px;
-  }
-  
-  .navigation-btn:last-child {
+}
+
+.navigation-btn:last-child {
     border-right: none;
-  }
-  
-  .navigation-btn:not([style*="cursor: not-allowed"]) {
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]) {
     cursor: pointer;
-  }
-  
-  .navigation-btn:not([style*="cursor: not-allowed"]):hover {
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):hover {
     background: linear-gradient(145deg, #f8fafc, #f1f5f9);
-  }
-  
-  .navigation-btn:not([style*="cursor: not-allowed"]):active {
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):active {
     background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
     transform: translateY(1px);
-  }
-  
-  .navigation-btn i {
+}
+
+.navigation-btn i {
     font-size: 1.25rem;
     color: #64748b;
     transition: all 0.3s ease;
-  }
-  
-  .navigation-btn p {
+}
+
+.navigation-btn p {
     color: #64748b;
     font-weight: 500;
     font-size: 0.875rem;
     transition: all 0.3s ease;
-  }
-  
-  .navigation-btn:not([style*="cursor: not-allowed"]):hover i,
-  .navigation-btn:not([style*="cursor: not-allowed"]):hover p {
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):hover i,
+.navigation-btn:not([style*="cursor: not-allowed"]):hover p {
     color: #3b82f6;
     transform: scale(1.05);
-  }
-  
-  /* Disabled state */
-  .navigation-btn[style*="cursor: not-allowed"] {
+}
+
+/* Disabled state */
+.navigation-btn[style*="cursor: not-allowed"] {
     opacity: 0.5;
     background: #f8fafc;
-  }
-  
-  /* Ripple effect */
-  .navigation-btn::after {
+}
+
+/* Ripple effect */
+.navigation-btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -533,27 +538,102 @@
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;
     transition: all 0.5s ease;
-  }
-  
-  .navigation-btn:not([style*="cursor: not-allowed"]):active::after {
+}
+
+.navigation-btn:not([style*="cursor: not-allowed"]):active::after {
     transform: translate(-50%, -50%) scale(2);
     opacity: 1;
     transition: 0s;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
+}
+
+/* Responsive */
+@media (max-width: 768px) {
     .navigation-btn {
-      min-height: 60px;
+        min-height: 60px;
     }
-  
+
     .navigation-btn i {
-      font-size: 1rem;
+        font-size: 1rem;
     }
-  
+
     .navigation-btn p {
-      font-size: 0.75rem;
+        font-size: 0.75rem;
     }
-  }
+}
 
+.quizlet-option-text-container {
+    position: relative;
+    flex: 1;
+    overflow: visible; /* Changed to visible to show tooltip */
+}
 
+.quizlet-option-text {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+/* Tooltip container */
+.quizlet-option-text[data-full-text] {
+    position: relative;
+}
+
+/* Tooltip styles */
+.quizlet-option-text[data-full-text]::after {
+    content: attr(data-full-text);
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 10px);
+    background: rgba(33, 37, 41, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: normal;
+    z-index: 1000;
+    max-width: 300px;
+    min-width: 100px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    word-wrap: break-word;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Arrow for tooltip */
+.quizlet-option-text[data-full-text]::before {
+    content: '';
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 2px);
+    border: 8px solid transparent;
+    border-top-color: rgba(33, 37, 41, 0.95);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+/* Show tooltip on hover */
+.quizlet-option-text[data-full-text]:hover::after,
+.quizlet-option-text[data-full-text]:hover::before {
+    visibility: visible;
+    opacity: 1;
+    bottom: calc(100% + 15px); /* Slide up animation */
+}
+
+/* Mobile responsive tooltip */
+@media (max-width: 768px) {
+    .quizlet-option-text[data-full-text]::after {
+        max-width: 200px;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}

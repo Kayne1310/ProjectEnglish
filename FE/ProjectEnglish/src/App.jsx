@@ -6,12 +6,9 @@ import "./assets/css/Home/bootstrap.css";
 // import "./assets/css/Home/style.css";
 // import "./assets/css/Home/responsive.css";
 // import "./assets/css/Home/style.scss";
-import { use, useContext } from "react";
-import { useEffect } from "react";
-import authService from "./service/authService";
+import {  useContext } from "react";
 import { Spin } from 'antd';
 import { AuthContext } from "./components/layout/context/authContext";
-
 import "./assets/css/LoginCss/admin.css";
 
 
@@ -21,7 +18,6 @@ const App = () => {
 
   return (
     <>
-
       {isAppLoading ? (
         // Hiển thị spinner khi đang load
         <div className="loading-container" style={{

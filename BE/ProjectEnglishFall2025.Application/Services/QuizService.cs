@@ -339,7 +339,9 @@ namespace ProjectFall2025.Application.Services
                     image = q["image"].ToString(),
                     description = q["description"].ToString(),
                     difficulty = q["" +
-                    "difficulty"].ToString()
+                    "difficulty"].ToString(),
+                    createAt= q["createAt"].ToString(),
+
                 }).ToList();
 
                 return res;
