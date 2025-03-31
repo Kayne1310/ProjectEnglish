@@ -27,10 +27,11 @@ const Flashcardcanh = () => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const { userInfor } = useContext(AuthContext);
+    const { userInfor, isAppLoading } = useContext(AuthContext);
     const [flashcards, setFlashcards] = useState([]);
     const { id } = useParams(); // Get studySet ID from URL
     const [studySet, setStudySet] = useState([]);
+    const [isUserLoaded, setIsUserLoaded] = useState(false);
     const navigate = useNavigate();
     // const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState(null);
@@ -48,7 +49,7 @@ const Flashcardcanh = () => {
         note: '',
 
     });
-    const userId = userInfor?.userId || "";
+  
     //edit study set
     const [editData, setEditData] = useState({
         id: "",
@@ -94,8 +95,15 @@ const Flashcardcanh = () => {
         }
     };
     useEffect(() => {
-        window.scroll(0, 0);
+        if (!isAppLoading && userInfor) {
+            setIsUserLoaded(true);
+            console.log("userInfor", userInfor);
+        }
+    }, [userInfor, isAppLoading]);
 
+    useEffect(() => {
+        window.scroll(0, 0);
+       
         const modals = document.querySelectorAll('.modal');
         modals.forEach(modal => {
             new bootstrap.Modal(modal);
@@ -117,6 +125,7 @@ const Flashcardcanh = () => {
             stopSpeak();
         };
     }, [id]);
+    const userId = userInfor?.userId || "";
 
 
     // Thêm hàm xử lý
@@ -379,29 +388,29 @@ const Flashcardcanh = () => {
             <div className="flashcard-overview">
                 {studySet && (
                     <>
-                        <a href="#" className="flashcardcanh-btn-back text-decoration-none">Quay lại</a>
-                        <div className="d-flex justify-content-between align-items-center">
-
-                            <h2 className="flashcardcanh-header-title fs-1" style={{ color: "rgb(33 135 213", }}>Flashcard: {studySet.title}</h2>
+                       
+                        <div className="d-flex justify-content-between align-items-center flex-wrap">
+                            <h2 className="flashcardcanh-header-title fs-1 w-100" style={{ color: "rgb(33 135 213)" }}>
+                                Flashcard: {studySet.title}
+                            </h2>
                             {studySet.userId === userId && (
-                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-                                    <div className="d-flex gap-2 align-items-center" style={{ height: "36px" }}>
-                                        <button className="btn btn-primary h-100 rounded"
+                                <div className="d-flex flex-column flex-md-row justify-content-center justify-content-md-end align-items-center w-100 mt-3 mt-md-0">
+                                    <div className="d-flex gap-2 mb-3 mb-md-0 justify-content-between">
+                                        <button className="btn btn-primary rounded"
                                             onClick={handleEditClick}>
                                             <i className="bi bi-pencil"></i>
                                         </button>
-                                        <button className="btn btn-primary h-100 rounded" data-bs-toggle="modal" data-bs-target="#addWordModal">
+                                        <button className="btn btn-primary rounded" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#addWordModal">
                                             <i className="bi bi-plus-lg"></i>
                                         </button>
-                                        <button className="btn btn-primary d-flex align-items-center gap-1 rounded" style={{ minWidth: "5rem", maxHeight: "3rem" }}>
-                                            <i className="bi bi-grid"></i> Thêm nhiều
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button className="btn btn-danger d-flex align-items-center gap-1"
+                                    <div className="ms-md-3">
+                                        <button className="btn btn-danger d-flex align-items-center  gap-1"
                                             onClick={handleDeleteStudySet}>
                                             <i className="bi bi-trash"></i> Xóa
                                         </button>
+                                    </div>
                                     </div>
                                 </div>
                             )}
@@ -411,6 +420,7 @@ const Flashcardcanh = () => {
                         <p >
                             Ngôn ngữ :
                             <img
+                                className='flashcardcanh-flag-img'
                                 style={{
                                     width: '30px',
                                     height: '20px',

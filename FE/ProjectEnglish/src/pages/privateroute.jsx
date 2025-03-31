@@ -26,6 +26,7 @@ const PrivateRoute = (props) => {
         <>
             {/* <Navigate to="/loginuser" replace /> */}
             <Result
+                className="text-center mt-5"
                 status="403"
                 title="403"
                 subTitle="Bạn cần đăng nhập để truy cập trang này."

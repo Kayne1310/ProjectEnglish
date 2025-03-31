@@ -3,6 +3,7 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Common.Security;
 using ProjectFall2025.Domain.Do;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
+using ProjectFall2025.Domain.ViewModel.ViewModel_User;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace ProjectFall2025.Application.Services
 
                 returnData.ReturnCode = 1;
                 returnData.ReturnMessage = "Đăng nhập thành công!";
-                returnData.user = user;
+                returnData.user = mapper.Map<UserVM>(user);
                 return returnData;
             }
             catch (Exception ex)
@@ -75,7 +76,7 @@ namespace ProjectFall2025.Application.Services
             }
             returnData.ReturnCode = 1;
             returnData.ReturnMessage = "User dang ki thanh cong";
-            returnData.user = user;
+            returnData.user = mapper.Map<UserVM>(user);
             return returnData;
         }
 
@@ -93,7 +94,7 @@ namespace ProjectFall2025.Application.Services
             }
             returnData.ReturnCode = 1;
             returnData.ReturnMessage = "User dang ki thanh cong";
-            returnData.user = user;
+            returnData.user = mapper.Map<UserVM>(user);
             return returnData;
         }
 

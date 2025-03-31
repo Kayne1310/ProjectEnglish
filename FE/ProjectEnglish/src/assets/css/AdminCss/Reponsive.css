@@ -118,3 +118,61 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
 
+
+  .custom-modal {
+    max-width: 90%;
+    margin: 1.75rem auto;
+}
+
+.answer-cell {
+    max-width: 300px;
+}
+
+.answer-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    padding: 5px 0;
+}
+
+.answer-text:hover {
+    white-space: normal;
+    word-wrap: break-word;
+    background: white;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .custom-modal {
+        max-width: 95%;
+    }
+
+    .answer-cell {
+        max-width: 200px;
+    }
+
+    .answer-text {
+        max-width: 200px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .answer-cell {
+        max-width: 150px;
+    }
+
+    .answer-text {
+        max-width: 150px;
+        font-size: 13px;
+    }
+
+    .badge {
+        font-size: 12px;
+    }
+}

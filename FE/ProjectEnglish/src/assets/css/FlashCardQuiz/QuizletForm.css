@@ -564,7 +564,8 @@
 .quizlet-option-text-container {
     position: relative;
     flex: 1;
-    overflow: visible; /* Changed to visible to show tooltip */
+    overflow: visible;
+    /* Changed to visible to show tooltip */
 }
 
 .quizlet-option-text {
@@ -626,7 +627,8 @@
 .quizlet-option-text[data-full-text]:hover::before {
     visibility: visible;
     opacity: 1;
-    bottom: calc(100% + 15px); /* Slide up animation */
+    bottom: calc(100% + 15px);
+    /* Slide up animation */
 }
 
 /* Mobile responsive tooltip */

@@ -33,6 +33,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
                 role: response.user.role,
+                userId: response.user.userID,
             }); // Lưu thông tin user vào context
 
             toast.success("Login successfully!");
@@ -87,6 +88,7 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
                 role: response.user.role,
+                userId: response.user.userID,
             }); // Lưu thông tin user vào context
 
             setTimeout(() => {
@@ -279,6 +281,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
                 facebookId: apiResponse.user.facebookId,
                 googleId: apiResponse.user.googleId,
                 role: apiResponse.user.role,
+                userId: apiResponse.user.userID,
             }); // Lưu thông tin user vào context
 
             setTimeout(() => {

@@ -59,3 +59,13 @@
     border: 0;
     margin-bottom: 1rem;
 }
+@media (max-width: 768px) {
+    .editprofile-container {
+        padding: 10px;
+    }
+
+    .editprofile-user-avatar img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+}
