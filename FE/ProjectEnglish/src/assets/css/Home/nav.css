@@ -365,6 +365,7 @@
   background: rgba(0, 123, 255, 0.25) !important;
   transform: translate(-50%, -50%) scale(0) !important;
   /* Thêm translate để căn giữa */
+  /* border: 2px solid #007bff !important; */
   border-radius: 50% !important;
   transition: transform 0.3s ease !important;
 }

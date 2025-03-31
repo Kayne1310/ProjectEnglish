@@ -639,3 +639,33 @@
         padding: 6px 10px;
     }
 }
+
+/* Custom styles for mode buttons */
+.custom-mode-btn {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-mode-btn:hover {
+    background: #f8f9fd;
+    border-color: #b0b8c5;
+}
+
+.custom-mode-btn.active {
+    background: #4255ff;
+    color: white;
+    border-color: #4255ff;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .custom-mode-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}

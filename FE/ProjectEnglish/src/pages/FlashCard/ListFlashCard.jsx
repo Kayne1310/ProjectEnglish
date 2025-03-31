@@ -707,7 +707,6 @@ const Flashcardcanh = () => {
                         style={{ minWidth: "20rem", minHeight: "10rem" }}>
                         <Input
                             placeholder="Tên list từ"
-
                             value={studySet.title}
                             onChange={(e) => setEditData({ ...editData, title: e.target.value })}
                             className="w-100 m-2"
