@@ -22,7 +22,7 @@ const QuizPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(7);
+  const [pageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [sortBy, setSortBy] = useState('name');
@@ -46,24 +46,49 @@ const QuizPage = () => {
   const handleDeleteQuiz = async () => {
     try {
       if (!selectedQuiz?.quiz_id) {
-        setError("Quiz ID is missing!");
+        setError("Không tìm thấy ID của Quiz cần xóa!");
         return;
       }
 
-      // Gọi API để xóa quiz cùng với các câu hỏi và đáp án
+      // Gọi API để xóa quiz
       await deleteQuizWithQuestionsAndAnswers(selectedQuiz.quiz_id);
 
+      // Tính toán lại currentPage sau khi xóa
+      const newTotalItems = totalItems - 1;
+      const newTotalPages = Math.ceil(newTotalItems / pageSize);
+      
+      // Nếu xóa item cuối cùng của trang hiện tại và không phải trang đầu tiên
+      if (quizzes.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      } else if (currentPage > newTotalPages) {
+        setCurrentPage(newTotalPages);
+      }
+
       // Cập nhật danh sách quiz sau khi xóa
-      const updatedQuizList = await getAllQuiz();
-      setQuizzes(updatedQuizList || []);
+      const updatedQuizList = await getAllQuiz(
+        currentPage > newTotalPages ? newTotalPages : currentPage, 
+        pageSize, 
+        sortBy, 
+        sortAscending
+      );
+
+      if (updatedQuizList && updatedQuizList.items) {
+        setQuizzes(updatedQuizList.items);
+        setTotalItems(updatedQuizList.totalItems);
+        setTotalPages(updatedQuizList.totalPages);
+      }
 
       // Đóng modal và reset state
       setShowDeleteModal(false);
       setSelectedQuiz(null);
       setError(null);
+
+      // Hiển thị thông báo thành công
+      alert("Xóa Quiz thành công!");
     } catch (error) {
-      console.error("Failed to delete quiz:", error);
-      setError("Failed to delete quiz: " + (error.response?.data?.message || error.message));
+      console.error("Lỗi khi xóa quiz:", error);
+      setError("Không thể xóa Quiz: " + (error.response?.data?.message || error.message));
+      setShowDeleteModal(false);
     }
   };
 
@@ -102,9 +127,9 @@ const QuizPage = () => {
   };
 
   // Lọc quiz dựa trên search term, xử lý lỗi toLowerCase
-  const filteredQuizzes = quizzes.filter((quiz) =>
+  const filteredQuizzes = Array.isArray(quizzes) ? quizzes.filter((quiz) =>
     quiz?.name?.toLowerCase().includes(searchTerm.toLowerCase() || "")
-  );
+  ) : [];
 
   // Xử lý thay đổi file ảnh (chung cho cả create và edit)
   const handleImageChange = (e) => {
@@ -120,36 +145,77 @@ const QuizPage = () => {
     }
   };
 
+  // Thêm hàm xử lý xóa preview
+  const handleRemovePreview = () => {
+    setImagePreview(null);
+    // Reset file input trong form tạo mới hoặc chỉnh sửa
+    if (showCreateModal) {
+      setNewQuiz({ ...newQuiz, image: null });
+    } else if (showEditModal) {
+      setEditQuiz({ ...editQuiz, image: null });
+    }
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Xử lý submit form tạo quiz
   const handleCreateQuiz = async (e) => {
+    if (isSubmitting) return;
+
     e.preventDefault();
+
+    // Validation đầy đủ
     if (!newQuiz.name.trim()) {
-      setError("Quiz name is required!");
+      setError("Vui lòng nhập tên Quiz!");
       return;
     }
     if (!newQuiz.description.trim()) {
-      setError("Description is required!");
+      setError("Vui lòng nhập mô tả Quiz!");
       return;
     }
+    if (!newQuiz.countryName) {
+      setError("Vui lòng chọn quốc gia!");
+      return;
+    }
+    if (!newQuiz.difficulty) {
+      setError("Vui lòng chọn độ khó!");
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
+
       const response = await createQuiz(newQuiz);
       if (response && !response.error) {
-        setQuizzes([...quizzes, response]); // Thêm quiz mới vào danh sách
-        setShowCreateModal(false); // Đóng modal
-        setNewQuiz({ name: "", description: "", countryName: "", difficulty: "", image: null }); // Reset form
-        setImagePreview(null); // Reset preview
-        setError(null); // Xóa lỗi
-        alert("Create Quiz Successful");
+        // Cập nhật danh sách quiz sau khi tạo
+        const updatedQuizList = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        if (updatedQuizList && updatedQuizList.items) {
+          setQuizzes(updatedQuizList.items);
+          setTotalItems(updatedQuizList.totalItems);
+          setTotalPages(updatedQuizList.totalPages);
+        }
 
-        // Cập nhật danh sách quiz sau khi create
-        const updatedQuizList = await getAllQuiz();
-        setQuizzes(updatedQuizList || []);
+        // Reset form và đóng modal
+        setShowCreateModal(false);
+        setNewQuiz({
+          name: "",
+          description: "",
+          countryName: "",
+          difficulty: "",
+          image: null
+        });
+        setImagePreview(null);
+        setError(null);
+
+        // Hiển thị thông báo thành công
+        alert("Tạo Quiz thành công!");
       } else {
-        setError("Failed to create quiz. Please try again.");
+        setError("Không thể tạo Quiz. Vui lòng thử lại!");
       }
     } catch (error) {
-      console.error("Failed to create quiz:", error);
-      setError("An error occurred while creating the quiz.");
+      console.error("Lỗi khi tạo quiz:", error);
+      setError("Đã xảy ra lỗi khi tạo Quiz: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -170,45 +236,65 @@ const QuizPage = () => {
   // Xử lý submit form Edit (cập nhật quiz)
   const handleUpdateQuiz = async (e) => {
     e.preventDefault();
+
+    // Validation đầy đủ
     if (!editQuiz.name.trim()) {
-      setError("Quiz name is required!");
+      setError("Vui lòng nhập tên Quiz!");
       return;
     }
     if (!editQuiz.description.trim()) {
-      setError("Description is required!");
+      setError("Vui lòng nhập mô tả Quiz!");
       return;
     }
+    if (!editQuiz.countryName) {
+      setError("Vui lòng chọn quốc gia!");
+      return;
+    }
+    if (!editQuiz.difficulty) {
+      setError("Vui lòng chọn độ khó!");
+      return;
+    }
+
     try {
       const quizData = {
-        quiz_id: selectedQuiz.quiz_id, // Lấy quiz_id từ quiz được chọn
+        quiz_id: selectedQuiz.quiz_id,
         name: editQuiz.name,
         description: editQuiz.description,
         image: editQuiz.image,
         difficulty: editQuiz.difficulty,
         countryName: editQuiz.countryName,
       };
-      const response = await updateQuiz(quizData); // Gọi updateQuiz với quizData
+
+      const response = await updateQuiz(quizData);
       if (response && !response.error) {
-        // Cập nhật danh sách quizzes
-        setQuizzes(quizzes.map((quiz) =>
-          quiz.quiz_id === response.quiz_id ? response : quiz
-        ));
-        setShowEditModal(false); // Đóng modal
-        setEditQuiz({ name: "", description: "", countryName: "", difficulty: "", image: null }); // Reset form
-        setImagePreview(null); // Reset preview
-        setError(null); // Xóa lỗi
-        console.log("check res: ", response)
-        alert("Update quiz successful");
-        
-        // Cập nhật danh sách quiz sau khi create
-        const updatedQuizList = await getAllQuiz();
-        setQuizzes(updatedQuizList || []);
+        // Cập nhật danh sách quiz sau khi edit
+        const updatedQuizList = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        if (updatedQuizList && updatedQuizList.items) {
+          setQuizzes(updatedQuizList.items);
+          setTotalItems(updatedQuizList.totalItems);
+          setTotalPages(updatedQuizList.totalPages);
+        }
+
+        // Reset form và đóng modal
+        setShowEditModal(false);
+        setEditQuiz({
+          name: "",
+          description: "",
+          countryName: "",
+          difficulty: "",
+          image: null
+        });
+        setImagePreview(null);
+        setError(null);
+
+        // Hiển thị thông báo thành công
+        alert("Cập nhật Quiz thành công!");
       } else {
-        setError("Failed to update quiz. Please try again.");
+        setError("Không thể cập nhật Quiz. Vui lòng thử lại!");
       }
     } catch (error) {
-      console.error("Failed to update quiz:", error);
-      setError("An error occurred while updating the quiz.");
+      console.error("Lỗi khi cập nhật quiz:", error);
+      setError("Đã xảy ra lỗi khi cập nhật Quiz: " + (error.response?.data?.message || error.message));
     }
   };
 
@@ -238,21 +324,21 @@ const QuizPage = () => {
                 <Table striped responsive>
                   <thead>
                     <tr>
-                      <th 
+                      <th
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleSort('name')}
                       >
                         Quiz <SortIcon field="name" />
                       </th>
                       <th>Description</th>
-                      <th 
+                      <th
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleSort('countryName')}
                       >
                         Country Name <SortIcon field="countryName" />
                       </th>
                       <th>Image</th>
-                      <th 
+                      <th
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleSort('difficulty')}
                       >
@@ -296,12 +382,12 @@ const QuizPage = () => {
                     Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
                   </div>
                   <Pagination>
-                    <Pagination.First 
-                      onClick={() => handlePageChange(1)} 
+                    <Pagination.First
+                      onClick={() => handlePageChange(1)}
                       disabled={currentPage === 1}
                     />
-                    <Pagination.Prev 
-                      onClick={() => handlePageChange(currentPage - 1)} 
+                    <Pagination.Prev
+                      onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
                     />
                     {[...Array(totalPages)].map((_, index) => (
@@ -313,12 +399,12 @@ const QuizPage = () => {
                         {index + 1}
                       </Pagination.Item>
                     ))}
-                    <Pagination.Next 
-                      onClick={() => handlePageChange(currentPage + 1)} 
+                    <Pagination.Next
+                      onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
                     />
-                    <Pagination.Last 
-                      onClick={() => handlePageChange(totalPages)} 
+                    <Pagination.Last
+                      onClick={() => handlePageChange(totalPages)}
                       disabled={currentPage === totalPages}
                     />
                   </Pagination>
@@ -331,7 +417,7 @@ const QuizPage = () => {
         {/* Create Modal */}
         <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Create Quiz</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Create New Quiz</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleCreateQuiz}>
@@ -339,7 +425,7 @@ const QuizPage = () => {
                 <Form.Label>Quiz Name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter quiz name"
+                  placeholder="Enter Quiz Name"
                   value={newQuiz.name}
                   onChange={(e) => setNewQuiz({ ...newQuiz, name: e.target.value })}
                   required
@@ -349,44 +435,34 @@ const QuizPage = () => {
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter your description"
+                  placeholder="Enter Description Quiz"
                   value={newQuiz.description}
                   onChange={(e) => setNewQuiz({ ...newQuiz, description: e.target.value })}
                   required
                 />
               </Form.Group>
               <Form.Group className="mb-2">
-                <Form.Label>Country Name</Form.Label>
+                <Form.Label>Language</Form.Label>
                 <Form.Select
                   value={newQuiz.countryName}
                   onChange={(e) => setNewQuiz({ ...newQuiz, countryName: e.target.value })}
+                  style={{ height: "46px" }}
                   required
                 >
-                  <option value="">Select Country</option>
-                  <option value="Vietnam">Vietnam</option>
-                  <option value="Korea">Korea</option>
-                  <option value="China">China</option>
-                  <option value="Japan">Japan</option>
-                  <option value="UK">UK</option>
+                  <option value="">Select Language</option>
+                  <option value="Vietnam">Vietnamese</option>
+                  <option value="Korea">Korean</option>
+                  <option value="China">Chinese</option>
+                  <option value="Japan">Japanese</option>
+                  <option value="UK">English</option>
                 </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Image Quiz</Form.Label>
-                <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="mt-2"
-                    style={{ maxWidth: "100%", height: "auto" }}
-                  />
-                )}
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Difficulty</Form.Label>
                 <Form.Select
                   value={newQuiz.difficulty}
                   onChange={(e) => setNewQuiz({ ...newQuiz, difficulty: e.target.value })}
+                  style={{ height: "46px" }}
                   required
                 >
                   <option value="">Select Difficulty</option>
@@ -395,12 +471,102 @@ const QuizPage = () => {
                   <option value="Hard">Hard</option>
                 </Form.Select>
               </Form.Group>
-              <Modal.Footer className="d-flex justify-content-end gap-2">
+              <Form.Group className="mb-2">
+                <Form.Label style={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  color: "#4B49AC",
+                  marginBottom: "8px"
+                }}>
+                  Quiz Image
+                </Form.Label>
+                <div style={{
+                  border: "2px dashed #dee2e6",
+                  borderRadius: "8px",
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  position: "relative",
+                  minHeight: "46px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    required
+                    style={{
+                      opacity: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      cursor: "pointer",
+                      zIndex: 2
+                    }}
+                  />
+                  <div style={{
+                    textAlign: "center",
+                    color: "#6c757d",
+                    pointerEvents: "none"
+                  }}>
+                    <i className="bi bi-cloud-upload fs-4"></i>
+                    <p style={{ margin: "0", fontSize: "14px" }}>Click to upload or drag and drop</p>
+                    <p style={{ margin: "0", fontSize: "12px" }}>SVG, PNG, JPG (max. 800x400px)</p>
+                  </div>
+                </div>
+
+                {imagePreview && (
+                  <div style={{
+                    marginTop: "10px",
+                    padding: "10px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "6px",
+                    border: "1px solid #dee2e6"
+                  }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                        onClick={handleRemovePreview}
+                      />
+                      <div>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "14px",
+                          color: "#198754",
+                          fontWeight: "500"
+                        }}>
+                          <i className="bi bi-check-circle me-1"></i>
+                          Image uploaded successfully
+                        </p>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "12px",
+                          color: "#6c757d"
+                        }}>
+                          Click image to remove
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Form.Group>
+              <Modal.Footer className="d-flex justify-content-end gap-2 pr-0">
                 <Button variant="light" onClick={() => setShowCreateModal(false)}>
                   Cancel
                 </Button>
-                <Button variant="primary" type="submit">
-                  Submit
+                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating..." : "Create"}
                 </Button>
               </Modal.Footer>
             </Form>
@@ -410,7 +576,7 @@ const QuizPage = () => {
         {/* Edit Modal */}
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Quiz</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Edit Quiz</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleUpdateQuiz}>
@@ -418,7 +584,7 @@ const QuizPage = () => {
                 <Form.Label>Quiz Name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter quiz name"
+                  placeholder="Enter Quiz Name"
                   value={editQuiz.name}
                   onChange={(e) => setEditQuiz({ ...editQuiz, name: e.target.value })}
                   required
@@ -428,48 +594,34 @@ const QuizPage = () => {
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter your description"
+                  placeholder="Enter Description Quiz"
                   value={editQuiz.description}
                   onChange={(e) => setEditQuiz({ ...editQuiz, description: e.target.value })}
                   required
                 />
               </Form.Group>
               <Form.Group className="mb-2">
-                <Form.Label>Country Name</Form.Label>
+                <Form.Label>Language</Form.Label>
                 <Form.Select
                   value={editQuiz.countryName}
                   onChange={(e) => setEditQuiz({ ...editQuiz, countryName: e.target.value })}
+                  style={{ height: "46px" }}
                   required
                 >
-                  <option value="">Select Country</option>
-                  <option value="Vietnam">Vietnam</option>
-                  <option value="Korea">Korea</option>
-                  <option value="China">China</option>
-                  <option value="Japan">Japan</option>
-                  <option value="UK">UK</option>
+                  <option value="">Select Language</option>
+                  <option value="Vietnam">Vietnamese</option>
+                  <option value="Korea">Korean</option>
+                  <option value="China">Chinese</option>
+                  <option value="Japan">Japanese</option>
+                  <option value="UK">English</option>
                 </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Image Quiz</Form.Label>
-                <Form.Control
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="mt-2"
-                    style={{ maxWidth: "100%", height: "auto" }}
-                  />
-                )}
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Difficulty</Form.Label>
                 <Form.Select
                   value={editQuiz.difficulty}
                   onChange={(e) => setEditQuiz({ ...editQuiz, difficulty: e.target.value })}
+                  style={{ height: "46px" }}
                   required
                 >
                   <option value="">Select Difficulty</option>
@@ -478,12 +630,101 @@ const QuizPage = () => {
                   <option value="Hard">Hard</option>
                 </Form.Select>
               </Form.Group>
-              <Modal.Footer className="d-flex justify-content-end gap-2">
+              <Form.Group className="mb-2">
+                <Form.Label style={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  color: "#4B49AC",
+                  marginBottom: "8px"
+                }}>
+                  Quiz Image
+                </Form.Label>
+                <div style={{
+                  border: "2px dashed #dee2e6",
+                  borderRadius: "8px",
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  position: "relative",
+                  minHeight: "46px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{
+                      opacity: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      cursor: "pointer",
+                      zIndex: 2
+                    }}
+                  />
+                  <div style={{
+                    textAlign: "center",
+                    color: "#6c757d",
+                    pointerEvents: "none"
+                  }}>
+                    <i className="bi bi-cloud-upload fs-4"></i>
+                    <p style={{ margin: "0", fontSize: "14px" }}>Click to upload or drag and drop</p>
+                    <p style={{ margin: "0", fontSize: "12px" }}>SVG, PNG, JPG (max. 800x400px)</p>
+                  </div>
+                </div>
+
+                {imagePreview && (
+                  <div style={{
+                    marginTop: "10px",
+                    padding: "10px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "6px",
+                    border: "1px solid #dee2e6"
+                  }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                        onClick={handleRemovePreview}
+                      />
+                      <div>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "14px",
+                          color: "#198754",
+                          fontWeight: "500"
+                        }}>
+                          <i className="bi bi-check-circle me-1"></i>
+                          Image uploaded successfully
+                        </p>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "12px",
+                          color: "#6c757d"
+                        }}>
+                          Click image to remove
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Form.Group>
+              <Modal.Footer className="d-flex justify-content-end gap-2 pr-0">
                 <Button variant="light" onClick={() => setShowEditModal(false)}>
                   Cancel
                 </Button>
                 <Button variant="primary" type="submit">
-                  Save Changes
+                  Save changes
                 </Button>
               </Modal.Footer>
             </Form>
@@ -493,16 +734,17 @@ const QuizPage = () => {
         {/* Delete Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Deletion</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Confirm Quiz deletion</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Do you want to delete this Quiz?</p>
+            <h4>Are you sure you want to delete Quiz: "<b>{selectedQuiz?.name}</b>"?</h4>
+            <h5 className="text-danger"><b><i class="bi bi-exclamation-triangle"></i> Warning:</b> This action will permanently delete the <b><em>Quiz and all associated questions!</em></b></h5>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="light" onClick={() => setShowDeleteModal(false)}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleDeleteQuiz}>
+            <Button variant="danger" onClick={handleDeleteQuiz}>
               Delete
             </Button>
           </Modal.Footer>

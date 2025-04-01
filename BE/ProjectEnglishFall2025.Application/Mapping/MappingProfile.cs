@@ -125,6 +125,15 @@ namespace ProjectFall2025.Application.Mapping
                 .ReverseMap()
                 .ForMember(a => a.history_id, b => b.MapFrom(src => ObjectId.Parse(src.history_id)));
 
+            CreateMap<History, HistoryDTO>()
+                .ForMember(a => a.history_id, b => b.MapFrom(src => src.history_id.ToString()))
+                .ForMember(a => a.UserID, b => b.MapFrom(src => src.UserID.ToString()))
+                .ForMember(a => a.quiz_id, b => b.MapFrom(src => src.quiz_id.ToString()))
+                .ReverseMap()
+                .ForMember(a => a.history_id, b => b.MapFrom(src => ObjectId.Parse(src.history_id)))
+                .ForMember(a => a.UserID, b => b.MapFrom(src => ObjectId.Parse(src.UserID)))
+                .ForMember(a => a.quiz_id, b => b.MapFrom(src => ObjectId.Parse(src.quiz_id)));
+
             // quiz user answer
             CreateMap<QuizUserAnswer, createQuizUserAnswerVM>()
                 .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.UserID.ToString()))

@@ -26,11 +26,28 @@ namespace ProjectFall2025.Application.Services
             this.validator = validator;
         }
 
-        public async Task<List<History>> getAllHistory()
-        {
-            var gettAll = await historyRepository.getAllHistory();
 
-            return gettAll;
+
+        public async Task<List<HistoryDTO>> getAllHistory()
+        {
+
+            try
+            {
+                var getAll = await historyRepository.getAllHistory();
+                var list = new List<HistoryDTO>();
+
+                foreach (var item in getAll)
+                {
+                    //map do to dto
+                    var dto = mapper.Map<HistoryDTO>(item);
+                    list.Add(dto);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<History> getHistoryById(deleteHistoryVM history)

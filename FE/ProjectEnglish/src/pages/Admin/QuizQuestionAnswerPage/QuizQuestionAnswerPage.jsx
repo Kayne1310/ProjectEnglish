@@ -27,7 +27,7 @@ const QuizQuestionAnswerPage = () => {
 
   // Pagination state cho ALL QUIZZES
   const [quizCurrentPage, setQuizCurrentPage] = useState(1);
-  const [quizPageSize] = useState(7);
+  const [quizPageSize] = useState(5);
   const [quizSortBy, setQuizSortBy] = useState("name");
   const [quizSortAscending, setQuizSortAscending] = useState(true);
   const [quizTotalPages, setQuizTotalPages] = useState(0);
@@ -35,7 +35,7 @@ const QuizQuestionAnswerPage = () => {
 
   // Pagination state cho QUIZ QUESTIONS
   const [questionCurrentPage, setQuestionCurrentPage] = useState(1);
-  const [questionPageSize] = useState(7);
+  const [questionPageSize] = useState(5);
   const [questionSortBy, setQuestionSortBy] = useState("description");
   const [questionSortAscending, setQuestionSortAscending] = useState(true);
   const [questionTotalPages, setQuestionTotalPages] = useState(0);
@@ -67,6 +67,166 @@ const QuizQuestionAnswerPage = () => {
       { description: "", correct_answer: false },
     ],
   });
+
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleInputChange = (e, index = null) => {
+    const { name, value, files } = e.target;
+    
+    if (name === "image") {
+      const file = files[0];
+      if (file) {
+        // Kiểm tra kích thước file (giới hạn 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert("Kích thước ảnh không được vượt quá 5MB!");
+          return;
+        }
+
+        // Kiểm tra định dạng file
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!validTypes.includes(file.type)) {
+          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+          return;
+        }
+
+        // Tạo URL preview cho ảnh
+        const previewUrl = URL.createObjectURL(file);
+        setImagePreview(previewUrl);
+        setQuizData({ ...quizData, image: file });
+      }
+    } else if (index !== null) {
+      // Xử lý cho answers
+      const newAnswers = [...quizData.answers];
+      if (name === "description") {
+        newAnswers[index].description = value;
+      } else if (name === "correct_answer") {
+        newAnswers[index].correct_answer = value === "true";
+      }
+      setQuizData({ ...quizData, answers: newAnswers });
+    } else {
+      // Xử lý cho các trường input khác
+      setQuizData({ ...quizData, [name]: value });
+    }
+  };
+
+  const handleCorrectAnswerChange = (selectedIndex) => {
+    setQuizData((prevData) => ({
+      ...prevData,
+      answers: prevData.answers.map((answer, index) => ({
+        ...answer,
+        correct_answer: index === selectedIndex,
+      })),
+    }));
+  };
+
+  // Thêm state để theo dõi trạng thái loading
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      const result = await createQuizQuestionWithAnswers(quizData);
+      if (result && result.returnCode === 1) {
+        alert("Quiz created successfully!");
+        setShowCreateModal(false);
+        // Reset form data và xóa preview
+        setImagePreview(null);
+        setQuizData({
+          description: "",
+          quiz_id: "",
+          image: null,
+          answers: [
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+            { description: "", correct_answer: false },
+          ],
+        });
+
+        // Cập nhật lại danh sách câu hỏi
+        if (selectedQuizId) {
+          try {
+            const response = await getQuestionsByQuizId(
+              selectedQuizId,
+              questionCurrentPage,
+              questionPageSize,
+              questionSortBy,
+              questionSortAscending
+            );
+
+            if (response && response.items) {
+              setQuestions(response.items);
+              setQuestionTotalItems(response.totalItems || 0);
+              setQuestionTotalPages(response.totalPages || 0);
+            } else {
+              setQuestions([]);
+              setQuestionTotalItems(0);
+              setQuestionTotalPages(0);
+            }
+          } catch (error) {
+            console.error("Error fetching updated questions:", error);
+            setQuestions([]);
+            setQuestionTotalItems(0);
+            setQuestionTotalPages(0);
+          }
+        }
+      } else {
+        alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Lọc quizzes dựa trên search term
+  const filteredQuizzes = quizzes.filter((quiz) =>
+    quiz?.name?.toLowerCase().includes(quizSearchTerm.toLowerCase() || "")
+  );
+
+  // Lọc questions dựa trên search term
+  const filteredQuestions = questions.filter(q =>
+    q.description?.toLowerCase().includes(questionSearchTerm.toLowerCase() || "")
+  );
+
+  const handleQuizPageChange = (pageNumber) => {
+    setQuizCurrentPage(pageNumber);
+  };
+
+  const handleQuizSort = (field) => {
+    if (quizSortBy === field) {
+      setQuizSortAscending(!quizSortAscending);
+    } else {
+      setQuizSortBy(field);
+      setQuizSortAscending(true);
+    }
+  };
+
+  const handleQuestionPageChange = (pageNumber) => {
+    setQuestionCurrentPage(pageNumber);
+  };
+
+  const handleQuestionSort = (field) => {
+    if (questionSortBy === field) {
+      setQuestionSortAscending(!questionSortAscending);
+    } else {
+      setQuestionSortBy(field);
+      setQuestionSortAscending(true);
+    }
+  };
+
+  const SortIcon = ({ field }) => {
+    if (questionSortBy !== field) return <span className="ms-1">↕</span>;
+    return questionSortAscending ? <span className="ms-1">↑</span> : <span className="ms-1">↓</span>;
+  };
+
+  SortIcon.propTypes = {
+    field: PropTypes.string.isRequired
+  };
 
   useEffect(() => {
     const fetchQuizzes = async () => {
@@ -142,127 +302,40 @@ const QuizQuestionAnswerPage = () => {
     setSelectedQuizId(quizId)
   };
 
-  const handleInputChange = (e, index = null) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setQuizData({ ...quizData, image: files[0] });
-    } else if (index !== null) {
-      const newAnswers = [...quizData.answers];
-      if (name === "description") newAnswers[index].description = value;
-      else if (name === "correct_answer") newAnswers[index].correct_answer = value === "true";
-      setQuizData({ ...quizData, answers: newAnswers });
-    } else {
-      setQuizData({ ...quizData, [name]: value });
-    }
-  };
-
-  const handleCorrectAnswerChange = (selectedIndex) => {
-    setQuizData((prevData) => ({
-      ...prevData,
-      answers: prevData.answers.map((answer, index) => ({
-        ...answer,
-        correct_answer: index === selectedIndex,
-      })),
-    }));
-  };
-
-  // Thêm state để theo dõi trạng thái loading
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async () => {
-    // Nếu đang submit thì không cho thực hiện tiếp
-    if (isSubmitting) return;
-
-    try {
-      // Bật trạng thái loading
-      setIsSubmitting(true);
-
-      const result = await createQuizQuestionWithAnswers(quizData);
-      if (result && result.returnCode === 1) {
-        alert("Quiz created successfully!");
-        setShowCreateModal(false);
-        setQuizData({
-          description: "",
-          quiz_id: "",
-          image: null,
-          answers: [
-            { description: "", correct_answer: false },
-            { description: "", correct_answer: false },
-            { description: "", correct_answer: false },
-            { description: "", correct_answer: false },
-          ],
-        });
-        if (selectedQuizId) {
-          const updatedQuestions = await getQuestionsByQuizId(selectedQuizId);
-          setQuestions(updatedQuestions || []);
-        }
-      } else {
-        alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
+  useEffect(() => {
+    return () => {
+      // Cleanup URL khi component unmount hoặc imagePreview thay đổi
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
       }
-    } catch (error) {
-      alert("An error occurred: " + error.message);
-    } finally {
-      // Tắt trạng thái loading dù thành công hay thất bại
-      setIsSubmitting(false);
-    }
+    };
+  }, [imagePreview]);
+
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
+    setImagePreview(null);
+    setQuizData({
+      description: "",
+      quiz_id: "",
+      image: null,
+      answers: [
+        { description: "", correct_answer: false },
+        { description: "", correct_answer: false },
+        { description: "", correct_answer: false },
+        { description: "", correct_answer: false },
+      ],
+    });
   };
-
-  // Lọc quizzes dựa trên search term
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz?.name?.toLowerCase().includes(quizSearchTerm.toLowerCase() || "")
-  );
-
-  // Lọc questions dựa trên search term
-  const filteredQuestions = questions.filter(q =>
-    q.description?.toLowerCase().includes(questionSearchTerm.toLowerCase() || "")
-  );
-
-  const handleQuizPageChange = (pageNumber) => {
-    setQuizCurrentPage(pageNumber);
-  };
-
-  const handleQuizSort = (field) => {
-    if (quizSortBy === field) {
-      setQuizSortAscending(!quizSortAscending);
-    } else {
-      setQuizSortBy(field);
-      setQuizSortAscending(true);
-    }
-  };
-
-  const handleQuestionPageChange = (pageNumber) => {
-    setQuestionCurrentPage(pageNumber);
-  };
-
-  const handleQuestionSort = (field) => {
-    if (questionSortBy === field) {
-      setQuestionSortAscending(!questionSortAscending);
-    } else {
-      setQuestionSortBy(field);
-      setQuestionSortAscending(true);
-    }
-  };
-
-  const SortIcon = ({ field }) => {
-    if (questionSortBy !== field) return <span className="ms-1">↕</span>;
-    return questionSortAscending ? <span className="ms-1">↑</span> : <span className="ms-1">↓</span>;
-  };
-
-  SortIcon.propTypes = {
-    field: PropTypes.string.isRequired
-  };
-
-
 
   return (
     <div className="main-panel">
       <div className="content-wrapper">
         <Row className="h-100">
-          <Col lg={4} className="grid-margin stretch-card">
+          <Col lg={5} className="grid-margin stretch-card">
             <Card className="h-100">
               <Card.Body className="d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h4 className="card-title fw-bold fs-2">ALL QUIZZES</h4>
+                  <h4 className="card-title fw-bold fs-2">All QUIZ</h4>
                   <div className="d-flex align-items-center gap-2">
                     <Form.Control
                       type="text"
@@ -319,7 +392,7 @@ const QuizQuestionAnswerPage = () => {
                     padding: '0 1rem'
                   }}>
                     {/* Pagination cho ALL QUIZZES */}
-                    {quizTotalPages > 1 && (
+                    {quizTotalPages > 0 && (
                       <div className="quiz-pagination" style={{ flex: 1 }}>
                         <div className="d-flex justify-content-between align-items-center">
                           <div className="text-muted" style={{ fontSize: "0.875rem" }}>
@@ -340,11 +413,11 @@ const QuizQuestionAnswerPage = () => {
             </Card>
           </Col>
 
-          <Col lg={8} className="grid-margin stretch-card">
+          <Col lg={7} className="grid-margin stretch-card">
             <Card className="h-100">
               <Card.Body className="d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h4 className="card-title fw-bold fs-2">QUIZ QUESTIONS</h4>
+                  <h4 className="card-title fw-bold fs-2">QUESTIONS</h4>
                   <div className="d-flex align-items-center gap-2">
                     <Form.Control
                       type="text"
@@ -366,7 +439,7 @@ const QuizQuestionAnswerPage = () => {
                           style={{ cursor: 'pointer' }}
                           onClick={() => handleQuestionSort('description')}
                         >
-                          Description <SortIcon field="description" />
+                          Question Name <SortIcon field="description" />
                         </th>
                         <th>Image</th>
                         <th>Actions</th>
@@ -474,17 +547,18 @@ const QuizQuestionAnswerPage = () => {
         </Row>
 
         {/* Create Modal */}
-        <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)} dialogClassName="custom-modal">
+        <Modal show={showCreateModal} onHide={handleCloseCreateModal} dialogClassName="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Create Quiz Question</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Create Question & Answers</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group className="mb-3">
-                <Form.Label>Quiz</Form.Label>
+                <Form.Label>Quiz Name</Form.Label>
                 <Form.Select
                   name="quiz_id"
                   value={quizData.quiz_id}
+                  style={{ height: "46px" }}
                   onChange={handleInputChange}
                 >
                   <option value="">Select a quiz</option>
@@ -496,22 +570,13 @@ const QuizQuestionAnswerPage = () => {
                 </Form.Select>
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Question</Form.Label>
+                <Form.Label>Question Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="description"
                   value={quizData.description}
                   onChange={handleInputChange}
                   placeholder="Enter your question"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  onChange={handleInputChange}
-                  accept="image/*"
                 />
               </Form.Group>
               <Row>
@@ -539,10 +604,129 @@ const QuizQuestionAnswerPage = () => {
                   </Col>
                 ))}
               </Row>
+              <Form.Group className="mb-3">
+                <Form.Label style={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  color: "#4B49AC",
+                  marginBottom: "8px"
+                }}>
+                  Question Image
+                </Form.Label>
+                <div style={{
+                  border: "2px dashed #dee2e6",
+                  borderRadius: "8px",
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  position: "relative",
+                  minHeight: "46px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Kiểm tra kích thước file (giới hạn 5MB)
+                        if (file.size > 5 * 1024 * 1024) {
+                          alert("Kích thước ảnh không được vượt quá 5MB!");
+                          return;
+                        }
+
+                        // Kiểm tra định dạng file
+                        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!validTypes.includes(file.type)) {
+                          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          return;
+                        }
+
+                        // Tạo URL preview cho ảnh
+                        const previewUrl = URL.createObjectURL(file);
+                        setImagePreview(previewUrl);
+                        setQuizData({ ...quizData, image: file });
+                      }
+                    }}
+                    style={{
+                      opacity: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      cursor: "pointer",
+                      zIndex: 2
+                    }}
+                  />
+                  <div style={{
+                    textAlign: "center",
+                    color: "#6c757d",
+                    pointerEvents: "none"
+                  }}>
+                    <i className="bi bi-cloud-upload fs-4"></i>
+                    <p style={{ margin: "0", fontSize: "14px" }}>Click to upload or drag and drop</p>
+                    <p style={{ margin: "0", fontSize: "12px" }}>SVG, PNG, JPG (max. 800x400px)</p>
+                  </div>
+                </div>
+
+                {(imagePreview || (quizData?.image && typeof quizData.image === "string")) && (
+                  <div style={{
+                    marginTop: "10px",
+                    padding: "10px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "6px",
+                    border: "1px solid #dee2e6"
+                  }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <img
+                        src={imagePreview || quizData.image}
+                        alt="Preview"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                        onClick={() => {
+                          setImagePreview(null);
+                          setQuizData({ ...quizData, image: null });
+                        }}
+                      />
+                      <div>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "14px",
+                          color: "#198754",
+                          fontWeight: "500"
+                        }}>
+                          <i className="bi bi-check-circle me-1"></i>
+                          Image uploaded successfully
+                        </p>
+                        <button 
+                          type="button"
+                          className="btn btn-link p-0"
+                          style={{
+                            fontSize: "12px",
+                            color: "#6c757d",
+                            textDecoration: "none",
+                            cursor: "default"
+                          }}
+                        >
+                          Click image to remove preview
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Form.Group>
             </Form>
           </Modal.Body>
           <Modal.Footer className="d-flex justify-content-end gap-2">
-            <Button variant="light" onClick={() => setShowCreateModal(false)}>
+            <Button variant="light" onClick={handleCloseCreateModal}>
               Cancel
             </Button>
             <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
@@ -554,14 +738,15 @@ const QuizQuestionAnswerPage = () => {
         {/* Edit Modal */}
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)} dialogClassName="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Edit Quiz Question</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Edit Question & Answers</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group className="mb-3">
-                <Form.Label>Quiz</Form.Label>
+                <Form.Label>Quiz Name</Form.Label>
                 <Form.Select
                   name="quiz_id"
+                  style={{ height: "46px" }}
                   value={selectedQuestion?.quiz_id || ""}
                   onChange={(e) => setSelectedQuestion({ ...selectedQuestion, quiz_id: e.target.value })}
                 >
@@ -574,7 +759,7 @@ const QuizQuestionAnswerPage = () => {
                 </Form.Select>
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Question</Form.Label>
+                <Form.Label>Question Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="description"
@@ -582,20 +767,6 @@ const QuizQuestionAnswerPage = () => {
                   onChange={(e) => setSelectedQuestion({ ...selectedQuestion, description: e.target.value })}
                   placeholder="Enter your question"
                 />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  onChange={(e) => setSelectedQuestion({ ...selectedQuestion, image: e.target.files[0] })}
-                  accept="image/*"
-                />
-                {selectedQuestion?.image && typeof selectedQuestion.image === "string" && (
-                  <div className="d-flex justify-content-center mt-2">
-                    <img src={selectedQuestion.image} alt="Current question image" width="100" />
-                  </div>
-                )}
               </Form.Group>
               <Row>
                 {selectedQuestion?.answers?.map((answer, index) => (
@@ -630,6 +801,125 @@ const QuizQuestionAnswerPage = () => {
                   </Col>
                 ))}
               </Row>
+              <Form.Group className="mb-3">
+                <Form.Label style={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  color: "#4B49AC",
+                  marginBottom: "8px"
+                }}>
+                  Question Image
+                </Form.Label>
+                <div style={{
+                  border: "2px dashed #dee2e6",
+                  borderRadius: "8px",
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  position: "relative",
+                  minHeight: "46px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        // Kiểm tra kích thước file (giới hạn 5MB)
+                        if (file.size > 5 * 1024 * 1024) {
+                          alert("Kích thước ảnh không được vượt quá 5MB!");
+                          return;
+                        }
+
+                        // Kiểm tra định dạng file
+                        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!validTypes.includes(file.type)) {
+                          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          return;
+                        }
+
+                        // Tạo URL preview cho ảnh
+                        const previewUrl = URL.createObjectURL(file);
+                        setImagePreview(previewUrl);
+                        setSelectedQuestion({ ...selectedQuestion, image: file });
+                      }
+                    }}
+                    style={{
+                      opacity: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      cursor: "pointer",
+                      zIndex: 2
+                    }}
+                  />
+                  <div style={{
+                    textAlign: "center",
+                    color: "#6c757d",
+                    pointerEvents: "none"
+                  }}>
+                    <i className="bi bi-cloud-upload fs-4"></i>
+                    <p style={{ margin: "0", fontSize: "14px" }}>Click to upload or drag and drop</p>
+                    <p style={{ margin: "0", fontSize: "12px" }}>SVG, PNG, JPG (max. 800x400px)</p>
+                  </div>
+                </div>
+
+                {(imagePreview || (selectedQuestion?.image && typeof selectedQuestion.image === "string")) && (
+                  <div style={{
+                    marginTop: "10px",
+                    padding: "10px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "6px",
+                    border: "1px solid #dee2e6"
+                  }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <img
+                        src={imagePreview || selectedQuestion.image}
+                        alt="Preview"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                        onClick={() => {
+                          setImagePreview(null);
+                          setSelectedQuestion({ ...selectedQuestion, image: null });
+                        }}
+                      />
+                      <div>
+                        <p style={{
+                          margin: "0",
+                          fontSize: "14px",
+                          color: "#198754",
+                          fontWeight: "500"
+                        }}>
+                          <i className="bi bi-check-circle me-1"></i>
+                          Image uploaded successfully
+                        </p>
+                        <button 
+                          type="button"
+                          className="btn btn-link p-0"
+                          style={{
+                            fontSize: "12px",
+                            color: "#6c757d",
+                            textDecoration: "none",
+                            cursor: "default"
+                          }}
+                        >
+                          Click image to remove preview
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Form.Group>
             </Form>
           </Modal.Body>
           <Modal.Footer className="d-flex justify-content-end gap-2">
@@ -638,6 +928,7 @@ const QuizQuestionAnswerPage = () => {
             </Button>
             <Button
               variant="primary"
+              disabled={isSubmitting}
               onClick={async () => {
                 try {
                   if (!selectedQuestion.question_id) {
@@ -648,9 +939,34 @@ const QuizQuestionAnswerPage = () => {
                   if (result && result.returnCode === 1) {
                     alert("Quiz updated successfully!");
                     setShowEditModal(false);
+                    setImagePreview(null);
+                    
+                    // Sửa phần này để lấy danh sách câu hỏi sau khi cập nhật
                     if (selectedQuizId) {
-                      const updatedQuestions = await getQuestionsByQuizId(selectedQuizId);
-                      setQuestions(updatedQuestions || []);
+                      try {
+                        const response = await getQuestionsByQuizId(
+                          selectedQuizId,
+                          questionCurrentPage,
+                          questionPageSize,
+                          questionSortBy,
+                          questionSortAscending
+                        );
+
+                        if (response && response.items) {
+                          setQuestions(response.items);
+                          setQuestionTotalItems(response.totalItems || 0);
+                          setQuestionTotalPages(response.totalPages || 0);
+                        } else {
+                          setQuestions([]);
+                          setQuestionTotalItems(0);
+                          setQuestionTotalPages(0);
+                        }
+                      } catch (error) {
+                        console.error("Error fetching updated questions:", error);
+                        setQuestions([]);
+                        setQuestionTotalItems(0);
+                        setQuestionTotalPages(0);
+                      }
                     }
                   } else {
                     alert("Failed to update quiz: " + (result?.error || result?.ReturnMessage || "Unknown error"));
@@ -660,7 +976,7 @@ const QuizQuestionAnswerPage = () => {
                 }
               }}
             >
-              Save Changes
+              {isSubmitting ? "Updating..." : "Save Changes"}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -668,10 +984,11 @@ const QuizQuestionAnswerPage = () => {
         {/* Delete Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} dialogClassName="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Deletion</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>Confirm Deletion</Modal.Title>
           </Modal.Header>
-          <Modal.Body className="text-center">
-            <p>Do you want to delete this Question?</p>
+          <Modal.Body>
+          <h4>Are you sure you want to delete Question: "<b>{selectedQuestion?.description}</b>"?</h4>
+          <h5 className="text-danger"><b><i class="bi bi-exclamation-triangle"></i> Warning:</b> This action will permanently delete the <b><em>Question and all associated answers!</em></b></h5>
           </Modal.Body>
           <Modal.Footer className="d-flex justify-content-end gap-2">
             <Button variant="light" onClick={() => setShowDeleteModal(false)}>
@@ -685,15 +1002,53 @@ const QuizQuestionAnswerPage = () => {
                     alert("Question ID is missing!");
                     return;
                   }
-                  await deleteQuizQuestionWithAnswers(selectedQuestion.question_id);
-                  setShowDeleteModal(false);
-                  // xử lý load UI khi xóa question bằng cách gọi lại id quiz để lấy lại danh sách câu hỏi mới nhất
-                  if (selectedQuizId) {
-                    const updatedQuestions = await getQuestionsByQuizId(selectedQuizId);
-                    setQuestions(updatedQuestions || []);
+
+                  const result = await deleteQuizQuestionWithAnswers(selectedQuestion.question_id);
+                  if (result && result.returnCode === 1) {
+                    alert("Question deleted successfully!");
+                    setShowDeleteModal(false);
+
+                    // Cập nhật lại danh sách câu hỏi sau khi xóa
+                    if (selectedQuizId) {
+                      try {
+                        const newTotalItems = questionTotalItems - 1;
+                        const newTotalPages = Math.ceil(newTotalItems / questionPageSize);
+                        
+                        if (questionCurrentPage > newTotalPages && newTotalPages > 0) {
+                          setQuestionCurrentPage(newTotalPages);
+                        } else if (newTotalPages === 0) {
+                          setQuestionCurrentPage(1);
+                        }
+
+                        const response = await getQuestionsByQuizId(
+                          selectedQuizId,
+                          questionCurrentPage > newTotalPages ? newTotalPages || 1 : questionCurrentPage,
+                          questionPageSize,
+                          questionSortBy,
+                          questionSortAscending
+                        );
+
+                        if (response && response.items) {
+                          setQuestions(response.items);
+                          setQuestionTotalItems(response.totalItems || 0);
+                          setQuestionTotalPages(response.totalPages || 0);
+                        } else {
+                          setQuestions([]);
+                          setQuestionTotalItems(0);
+                          setQuestionTotalPages(0);
+                        }
+                      } catch (error) {
+                        console.error("Error fetching updated questions after delete:", error);
+                        setQuestions([]);
+                        setQuestionTotalItems(0);
+                        setQuestionTotalPages(0);
+                      }
+                    }
+                  } else {
+                    alert("Failed to delete question: " + (result?.error || result?.ReturnMessage || "Unknown error"));
                   }
                 } catch (error) {
-                  alert("Failed to delete question: " + error.message);
+                  alert("Error deleting question: " + error.message);
                 }
               }}
             >
@@ -705,7 +1060,7 @@ const QuizQuestionAnswerPage = () => {
         {/* Detail Modal */}
         <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} dialogClassName="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>View Answers</Modal.Title>
+            <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>View Answers</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Table striped>

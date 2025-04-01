@@ -515,7 +515,7 @@ namespace ProjectFall2025.Application.Services
                         quizUserAnswer_id = ObjectId.GenerateNewId(),
                         user_answers = new ObjectId(userAnswer.UserAnswerId),
                         createAt = DateTime.UtcNow,
-                        updateAt = DateTime.UtcNow,
+                        //updateAt = DateTime.UtcNow,
                         UserID = new ObjectId(userId),
                         quiz_id = new ObjectId(request.QuizId),
                         question_id = new ObjectId(userAnswer.QuestionId)
@@ -528,7 +528,7 @@ namespace ProjectFall2025.Application.Services
                     total_questions = response.CountTotal.ToString(),
                     total_corrects = response.CountCorrect.ToString(),
                     createAt = DateTime.UtcNow,
-                    updateAt = DateTime.UtcNow,
+                    //updateAt = DateTime.UtcNow,
                     UserID = new ObjectId(userId),
                     quiz_id = new ObjectId(request.QuizId)
                 };
