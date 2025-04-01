@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import { handleFacebookLogin, handleGoogleLogin, handleLogin } from "../../../helpers/authHandlers";
 import { useGoogleLogin } from "@react-oauth/google";
 import AuthForm from "./AuthForm";
-import {AuthContext} from "../../../components/layout/context/authContext";
+import { AuthContext } from "../../../components/layout/context/authContext";
 import { useNavigate } from "react-router-dom";
 
 
@@ -13,18 +13,18 @@ const Login = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const { setUser } = useContext(AuthContext); // Lấy setUser từ AuthContext
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleLogin( email, password, setError, setIsLoading, setUser,navigate);
+        handleLogin(email, password, setError, setIsLoading, setUser, navigate);
     };
     // const userInfo=useContext(userContext);
     // console.log(userInfo);
 
     const HandleGoogleLogin = useGoogleLogin({
         onSuccess: async (response) => {
-            await handleGoogleLogin(response, setError, setIsLoading,setUser,navigate);
+            await handleGoogleLogin(response, setError, setIsLoading, setUser, navigate);
             console.log("Google login success", response);
         },
         onError: (error) => {
@@ -33,7 +33,7 @@ const Login = () => {
         },
     });
     const HandleFacebookLogin = async ({ data }) => {
-      await handleFacebookLogin(data, setError, setIsLoading,setUser,navigate);
+        await handleFacebookLogin(data, setError, setIsLoading, setUser, navigate);
     };
     return (
         <AuthForm
@@ -50,7 +50,7 @@ const Login = () => {
             toggleLink="/registeruser"
             toggleLinkText="Sign Up"
             showSignUp={false}
-            facebookLogin={HandleFacebookLogin }
+            facebookLogin={HandleFacebookLogin}
         />
     );
 };

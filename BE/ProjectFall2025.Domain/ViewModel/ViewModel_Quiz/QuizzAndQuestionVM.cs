@@ -14,8 +14,10 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_Quiz
         public string? name { get; set; }
         public string? description { get; set; }
         public string? image { get; set; }
-        public string? difficutly { get; set; }
+        public string? difficulty { get; set; }
         public int countQuestion { get; set; }
+       
+        public string? createAt { get; set; }
 
 
     }

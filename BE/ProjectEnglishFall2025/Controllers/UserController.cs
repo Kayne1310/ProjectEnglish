@@ -12,6 +12,8 @@ using ProjectFall2025.Domain.ViewModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
+using ProjectFall2025.Application.Services;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 
 namespace ProjectEnglishFall2025.Controllers
 {
@@ -33,8 +35,6 @@ namespace ProjectEnglishFall2025.Controllers
             {
 
                 var res = await userService.addUserService(user);
-
-
                 return Ok(res);
             }
 
@@ -46,8 +46,8 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
 
-        [HttpGet]
-        [Authorize("User")]
+        [HttpGet("Get_All_User")]
+        [Authorize("Admin")]
         public async Task<ActionResult> getAllUser()
         {
 
@@ -101,11 +101,21 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("ChangePassword")]
+        [Authorize("User")]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             try
             {
-                var res = await userService.ChangePassword(request);
+                var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var user = await userService.getUserById(userId);
+
+                var res = await userService.ChangePassword(new ChangePasswordResponse
+                {
+                    Email = user.Email,
+                    newPassword = request.newPassword,
+                    oldPassword = request.oldPassword,
+                    reNewPassword = request.reNewPassword
+                });
                 return Ok(res);
             }
             catch (Exception ex)
@@ -115,19 +125,18 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet("getUser")]
-        [Authorize("User")]
+        [Authorize("User","Admin")]
         public async Task<ActionResult> getUser()
         {
             try
             {
 
                 var userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-                var role = User.FindFirst(ClaimTypes.Role)?.Value;
                 var user = await userService.getUserById(userId);
-                user.UserID.ToString();
-                return Ok(new LoginResponseData
+
+                return Ok(new getUserDAtaResponseData
                 {
-                    ReturnCode = -1,
+                    ReturnCode = 1,
                     ReturnMessage = "data user",
                     user = user,
 
@@ -139,6 +148,20 @@ namespace ProjectEnglishFall2025.Controllers
             }
 
 
+        }
+
+        [HttpPut("update_user")]
+        public async Task<IActionResult> UpdateUsers([FromForm] UpdateUserVM userVM)
+        {
+            try
+            {
+                var updateUsers = await userService.UpdateUser(userVM);
+                return Ok(updateUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

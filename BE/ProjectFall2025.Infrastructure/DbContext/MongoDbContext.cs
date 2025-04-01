@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.Do.FlashCard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,13 @@ namespace ProjectFall2025.Infrastructure.DbContext
             if (string.IsNullOrEmpty(settings.Value.DatabaseName))
                 throw new ArgumentException("Database name cannot be null or empty.", nameof(settings.Value.DatabaseName));
 
+
             var client = new MongoClient(settings.Value.ConnectionString);
             _database = client.GetDatabase(settings.Value.DatabaseName);
         }
 
+        // Thuộc tính để truy cập IMongoDatabase
+        public IMongoDatabase Database => _database;
 
         public IMongoCollection<User> GetCollectionUser()
         {
@@ -73,6 +77,18 @@ namespace ProjectFall2025.Infrastructure.DbContext
         public IMongoCollection<AIAnswer> GetCollectionAIAnswer()
         {
             return _database.GetCollection<AIAnswer>("AIAnswer");
+        }
+        public IMongoCollection<StudySet> GetCollectionStudySet()
+        {
+            return _database.GetCollection<StudySet>("StudySet");
+        }
+        public IMongoCollection<Flashcard> GetCollectionFlashcard()
+        {
+            return _database.GetCollection<Flashcard>("Flashcard");
+        }
+        public IMongoCollection<ChatMessage> GetCollectionChatMessage()
+        {
+            return _database.GetCollection<ChatMessage>("ChatMessage");
         }
 
     }

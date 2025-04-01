@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 
@@ -12,12 +13,10 @@ namespace ProjectEnglishFall2025.Controllers
     public class QuizAnswerController : ControllerBase
     {
         private readonly IQuizAnswerService quizAnswerService;
-        private readonly IQuizAnswerRepository quizAnswerRepository;
 
-        public QuizAnswerController(IQuizAnswerService quizAnswerService, IQuizAnswerRepository quizAnswerRepository1)
+        public QuizAnswerController(IQuizAnswerService quizAnswerService)
         {
             this.quizAnswerService = quizAnswerService;
-            this.quizAnswerRepository = quizAnswerRepository1;
         }
 
         [HttpGet("get_all_quizAnswer")]
@@ -95,9 +94,16 @@ namespace ProjectEnglishFall2025.Controllers
         [HttpGet("correct-answers")]
         public async Task<IActionResult> GetCorrectQuizAnswers(string quizId)
         {
-            var results = await quizAnswerRepository.GetCorrectQuizAnswersAsync(quizId);
-            return Ok(results);
-        }
+            try
+            {
+                var results = await quizAnswerService.GetCorrectQuizAnswersAsync(new DeleteQuizVM { quiz_id = quizId});
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
+        }
     }
 }

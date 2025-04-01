@@ -22,8 +22,8 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_UserQuiz
         public int is_finish { get; set; }
         public string time_start { get; set; }
         public string time_end { get; set; }
-        public string quiz_id { get; set; }
-        public string UserID { get; set; }
+        //public string quiz_id { get; set; }
+        //public string UserID { get; set; }
     }
 
     public class DeleteUserQuizVM

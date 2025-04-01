@@ -85,5 +85,14 @@ namespace ProjectEnglishFall2025.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost("UserExam")]
+        public async Task<ActionResult> UserExamQuiz(ExamQuizAnswerByUserVM exam)
+        {
+
+            return Ok(exam);
+
+
+        }
     }
 }

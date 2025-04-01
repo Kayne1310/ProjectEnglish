@@ -1,0 +1,133 @@
+
+.modal-content {
+    border-radius: 10px; /* Bo góc modal */
+    border: none; /* Loại bỏ viền */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng */
+}
+
+/* Tiêu đề modal */
+.modal-header {
+    background-color: #4B49AC; /* Màu nền tiêu đề */
+    color: white; /* Màu chữ trắng */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Định dạng input */
+.form-control {
+    border-radius: 5px; /* Bo góc input */
+    border: 1px solid #ccc; /* Viền nhẹ */
+    padding: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng khi focus vào input */
+.form-control:focus {
+    border-color: #4B49AC;
+    box-shadow: 0px 0px 5px rgba(75, 73, 172, 0.5);
+}
+
+/* Label */
+.form-label {
+    font-weight: bold;
+    color: #4B49AC;
+}
+
+/* Nút Submit */
+.btn-primary {
+    background-color: #4B49AC;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover cho nút Submit */
+.btn-primary:hover {
+    background-color: #3A378C;
+}
+
+/* Nút Cancel */
+.btn-light {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+/* Hover cho nút Cancel */
+.btn-light:hover {
+    background-color: #e3e3e3;
+}
+
+/* Custom file input */
+input[type="file"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+/* Điều chỉnh modal footer */
+.modal-footer {
+    justify-content: space-between; /* Dãn nút Submit và Cancel đều hai bên */
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+/* Giữ nội dung modal không bị kéo giãn */
+.modal-body {
+    padding: 20px;
+}
+
+/* Hiệu ứng mở modal */
+.modal.fade .modal-dialog {
+    transform: translateY(-50px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+.action-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.action-icon:hover {
+    opacity: 0.7;
+}
+
+.file-upload-info {
+    height: 38px; /* Đảm bảo chiều cao đồng bộ với button */
+}
+
+.file-upload-browse {
+    border-radius: 0 5px 5px 0; /* Bo góc phải */
+    padding: 8px 15px; /* Tăng padding cho đẹp */
+}
+
+.file-upload-info {
+    height: 38px; /* Đảm bảo chiều cao đồng bộ với button */
+}
+
+.file-upload-browse {
+    border-radius: 0 5px 5px 0; /* Bo góc phải */
+    padding: 8px 15px; /* Tăng padding cho đẹp */
+}
+
+#imgQuiz {
+    display: flex;
+    align-items: center;
+}
+
+h4{
+    color: #4B49AC !important;
+}
+
+.badge-uniform {
+    min-width: 50px; /* Điều chỉnh giá trị này theo ý thích */
+    min-height: 20px;
+    display: inline-block; /* Đảm bảo badge không bị co lại */
+    text-align: center; /* Căn giữa nội dung */
+}
+

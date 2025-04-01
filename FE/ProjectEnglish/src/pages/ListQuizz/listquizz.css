@@ -1,0 +1,225 @@
+body {
+  /* background: #161616; */
+}
+
+.lead {
+  color: #000000;
+}
+
+.wrapper {
+  margin: 10vh;
+  margin-top: 15vh;
+}
+
+/* Card wrapper */
+.listquiz-card {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  /* Tăng chiều cao */
+  border-radius: 20px;
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  background-color: white;
+}
+
+/* Background Image */
+.listquiz-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Khi hover vào card, chỉ ảnh nền zoom */
+.listquiz-card:hover .listquiz-card-bg {
+  transform: scale(1.1);
+}
+
+/* Nội dung chính + Footer */
+.listquiz-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  /* Làm tối nền */
+  color: white;
+}
+
+/* Title */
+.listquiz-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.listquiz-card-title-2 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.listquiz-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Avatar */
+.listquiz-footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.listquiz-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* User Info */
+.listquiz-user-info h6 {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.listquiz-user-info span {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* Nút Read More */
+.listquiz-btn-primary {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background-color: blue;
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.listquiz-btn-primary:hover {
+  background-color: darkblue;
+  color: inherit;
+}
+
+@media (max-width: 900px) {
+  .wrapper {
+    margin: 5vh;
+    margin-top: 10vh;
+    /* Giảm khoảng cách */
+  }
+
+  .listquiz-footer-left{
+    margin-left: 20px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5px;
+    /* Tạo khoảng cách giữa các cột */
+  }
+
+  .col-sm-12 {
+    margin-bottom: 5px;
+    /* Tạo khoảng cách dọc giữa các hàng */
+  }
+
+  .listquiz-card {
+    margin-bottom: 10px;
+    /* Khoảng cách giữa các card */
+  }
+
+  .listquiz-card-content {
+    padding: 10px;
+  }
+
+  .listquiz-card-title {
+    font-size: 12px;
+    /* Giảm font size */
+  }
+
+  .listquiz-card-footer {
+    /* Xếp dọc footer */
+    align-items: center;
+    gap: 5px;
+  }
+
+  .listquiz-avatar {
+    width: 25px;
+    height: 25px;
+  }
+
+  .listquiz-user-info h6 {
+    font-size: 16px !important;
+  }
+
+  .listquiz-user-info span {
+    font-size: 12px !important;
+  }
+
+  .listquiz-btn-primary {
+    font-size: 18px !important;
+    padding: 5px 8px;
+    background-color: #2187d5;
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .wrapper {
+    margin: 2vh;
+    margin-top: 10vh;
+  }
+  .listquiz-card-content {
+    padding: 3px;
+  }
+
+  .listquiz-card-title {
+    font-size: 20px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .listquiz-card-title-2 {
+    font-size: 14px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .listquiz-card-footer {
+    gap: 3px;
+  }
+
+  .listquiz-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .listquiz-user-info h6 {
+    font-size: 9px;
+  }
+
+  .listquiz-user-info span {
+    font-size: 7px;
+  }
+
+  .listquiz-btn-primary {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
+}

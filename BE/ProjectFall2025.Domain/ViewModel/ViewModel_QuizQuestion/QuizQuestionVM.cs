@@ -13,6 +13,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
     {
         public string? description { get; set; }
         public IFormFile image { get; set; }
+        //public string image { get; set; }
         public string quiz_id { get; set; }
     }
 
@@ -21,7 +22,7 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
         public string question_id { get; set; }
         public string? description { get; set; }
         public IFormFile image { get; set; }
-        public string quiz_id { get; set; }
+        //public string quiz_id { get; set; }
     }
 
     public class DeleteQuizQuestionVM

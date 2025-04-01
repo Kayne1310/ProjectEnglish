@@ -57,13 +57,25 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return add;
 
         }
-        public async Task<int> updateUserQuiz(UserQuiz userQuizVM)
+        public async Task<int> updateUserQuiz(UserQuiz userQuiz)
         {
-            var update = await context.GetCollectionUserQuiz()
-                .ReplaceOneAsync(i => i.userQuiz_id == userQuizVM.userQuiz_id, userQuizVM);
+            // Tạo đối tượng update chỉ chứa các trường cần cập nhật
+            var updateDefinition = Builders<UserQuiz>.Update
+                .Set(q => q.is_finish, userQuiz.is_finish)
+                .Set(q => q.time_start, userQuiz.time_start)
+                .Set(q => q.time_end, userQuiz.time_end)
+                .Set(q => q.updateAt, DateTime.Now)
+                //.Set(q => q.quiz_id, userQuiz.quiz_id)
+                .Set(q => q.UserID, userQuiz.UserID);
 
-            return (int)update.ModifiedCount;
+            // Thực hiện cập nhật trong MongoDB
+            var updateResult = await context.GetCollectionUserQuiz()
+                .UpdateOneAsync(q => q.userQuiz_id == userQuiz.userQuiz_id, updateDefinition);
+
+            // Trả về số lượng bản ghi đã cập nhật
+            return (int)updateResult.ModifiedCount;
         }
+
 
         public async Task<int> deleteUserQuiz(DeleteUserQuizVM userQuizVM)
         {

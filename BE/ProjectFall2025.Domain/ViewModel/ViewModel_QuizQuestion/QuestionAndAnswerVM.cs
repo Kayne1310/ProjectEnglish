@@ -16,14 +16,14 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
         public string? image { get; set; }
         public string quiz_id { get; set; }
         public QuizInforVM QuizInforVM { get; set; }
-        public List<AnswerVM> answer { get; set; }
+        public List<AnswerVM> answers { get; set; }
     }
 
     public class AnswerVM
     {
         public string idAnswered { get; set; }
-        public string descriptionAnswered { get; set; }
-        public bool isCorrect { get; set; }
+        public string description { get; set; }
+        public bool correct_answer { get; set; }
     }
 
     public class QuizInforVM
@@ -31,6 +31,6 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion
         public string name { get; set; }
         public string? description { get; set; }
         public string image { get; set; }
-        public string? difficutly { get; set; }
+        public string? difficulty { get; set; }
     }
 }

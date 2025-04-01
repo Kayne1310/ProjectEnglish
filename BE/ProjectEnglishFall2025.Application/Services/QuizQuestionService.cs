@@ -2,11 +2,15 @@
 using CloudinaryDotNet;
 using FluentValidation;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using ProjectFall2025.Application.IServices;
+using ProjectFall2025.Application.UnitOfWork;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_QuizAnswer;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
+using ProjectFall2025.Infrastructure.Repositories.Repo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,16 +22,22 @@ namespace ProjectFall2025.Application.Services
 {
     public class QuizQuestionService : IQuizQuestionService
     {
+        private readonly IValidator<QuizQuestion> validatorQuestion;
+        private readonly IValidator<QuizAnswer> validatorAnswer;
         private readonly IQuizQuestionRepository quizQuestionRepository;
+        private readonly IQuizAnswerRepository quizAnswerRepository;
         private readonly IMapper mapper;
-        private readonly IValidator<QuizQuestion> validator;
         private readonly ICloudinaryService cloudinary;
+        private readonly IUnitofWork _unitOfWork;
 
-        public QuizQuestionService(IQuizQuestionRepository quizQuestionRepository, IMapper mapper, IValidator<QuizQuestion> validator, ICloudinaryService cloudinary)
+        public QuizQuestionService(IUnitofWork unitOfWork, IQuizQuestionRepository quizQuestionRepository, IQuizAnswerRepository quizAnswerRepository, IMapper mapper, IValidator<QuizQuestion> validatorQuestion, IValidator<QuizAnswer> validatorAnswer, ICloudinaryService cloudinary)
         {
+            this._unitOfWork = unitOfWork;
             this.quizQuestionRepository = quizQuestionRepository;
+            this.quizAnswerRepository = quizAnswerRepository;
             this.mapper = mapper;
-            this.validator = validator;
+            this.validatorQuestion = validatorQuestion;
+            this.validatorAnswer = validatorAnswer;
             this.cloudinary = cloudinary;
         }
         public async Task<List<QuizQuestion>> getAllQuizQuestion()
@@ -68,7 +78,8 @@ namespace ProjectFall2025.Application.Services
                     createAt = DateTime.Now,
                 };
 
-                var validate = await validator.ValidateAsync(data);
+                var validate = await validatorQuestion.ValidateAsync(data);
+
                 if (!validate.IsValid)
                 {
                     var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
@@ -98,65 +109,44 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-                var data = new DeleteQuizQuestionVM
+                // Kiểm tra nếu question_id không hợp lệ
+                if (string.IsNullOrEmpty(quizQuestion.question_id))
                 {
-                    question_id = quizQuestion.question_id,           
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "Question ID is required."
+                    };
+                }
+
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new QuizQuestion
+                {
+                    question_id = ObjectId.Parse(quizQuestion.question_id), // ID để xác định document
+                    description = quizQuestion.description,
+                    updateAt = DateTime.Now
                 };
 
-                var existingQuizQuestion = await quizQuestionRepository.getQuizQuestionById(data);
-                if(existingQuizQuestion == null)
+                // Nếu có ảnh mới, upload lên Cloudinary và cập nhật image
+                if (quizQuestion.image != null && quizQuestion.image.Length > 0)
                 {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! question_id is not found"
-                    };
-                }
-                else
-                {
-                    string image = await cloudinary.UploadImageAsync(quizQuestion.image, "QUIZ QUESTION");
-
-                    existingQuizQuestion.description = quizQuestion.description;
-                    existingQuizQuestion.image = image;
+                    updateData.image = await cloudinary.UploadImageAsync(quizQuestion.image, "QUIZ QUESTION");
                 }
 
+                // Gửi dữ liệu cập nhật xuống Repository
+                var update = await quizQuestionRepository.updateQuizQuestion(updateData);
 
-                var validate = await validator.ValidateAsync(existingQuizQuestion);
-                if (!validate.IsValid)
-                {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
-                    };
-                }
-                else
-                {
-                    var update = await quizQuestionRepository.updateQuizQuestion(existingQuizQuestion);
-                    if (update <= 0)
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
-                        };
-                    }
-                    else
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update successful!"
-                        };
-                    }
-                }
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return update > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public Task<ReturnData> deleteQuizQuestion(DeleteQuizQuestionVM quizQuestion)
         {
@@ -183,6 +173,312 @@ namespace ProjectFall2025.Application.Services
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+
+        }
+
+
+
+        public async Task<ReturnData> Handle(CreateQuizQuestionWithAnswersCommand request)
+        {
+            await _unitOfWork.StartTransactionAsync();
+
+            try
+            {
+                var session = _unitOfWork.GetSession();
+
+                // Upload image và tạo QuizQuestion
+                string image = await cloudinary.UploadImageAsync(request.QuizQuestion.image, "QUIZ QUESTION");
+
+                var quizQuestion = new QuizQuestion
+                {
+                    description = request.QuizQuestion.description,
+                    image = image,
+                    quiz_id = ObjectId.Parse(request.QuizQuestion.quiz_id),
+                    createAt = DateTime.Now,
+                };
+
+                // Validate QuizQuestion
+                var questionValidation = await validatorQuestion.ValidateAsync(quizQuestion);
+                if (!questionValidation.IsValid)
+                {
+                    var errors = questionValidation.Errors.Select(e => e.ErrorMessage).ToList();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = string.Join(", ", errors) };
+                }
+
+                var createdQuestion = await quizQuestionRepository.createQuizQuestion(quizQuestion, session);
+
+
+                // Kiểm tra danh sách QuizAnswers
+                if (request.QuizAnswers == null || !request.QuizAnswers.Any())
+                {
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "No QuizAnswers provided." };
+                }
+
+                // Giả định yêu cầu 4 câu trả lời
+                if (request.QuizAnswers.Count != 4)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Exactly 4 answers are required." };
+                }
+
+                // Tạo danh sách QuizAnswers
+                var quizAnswers = request.QuizAnswers.Select(a => new QuizAnswer
+                {
+                    description = a.description,
+                    correct_answer = a.correct_answer,
+                    question_id = createdQuestion.question_id,
+                    createAt = DateTime.Now,
+                }).ToList();
+
+                // Kiểm tra logic correct_answer
+                int trueCount = quizAnswers.Count(a => a.correct_answer == true);
+                if (trueCount == 0) // Tất cả false
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be false." };
+                }
+                if (trueCount == 4) // Tất cả true
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be true." };
+                }
+                if (trueCount != 1) // Không có duy nhất 1 true
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Exactly one answer must be true." };
+                }
+
+                // Validate từng QuizAnswer
+                foreach (var answer in quizAnswers)
+                {
+                    var answerValidation = await validatorAnswer.ValidateAsync(answer);
+                    if (!answerValidation.IsValid)
+                    {
+                        var errors = answerValidation.Errors.Select(e => e.ErrorMessage).ToList();
+                        return new ReturnData { ReturnCode = -1, ReturnMessage = string.Join(", ", errors) };
+                    }
+                }
+
+                // Thêm QuizAnswers vào database
+                foreach (var answer in quizAnswers)
+                {
+                    await quizAnswerRepository.createQuizAnswer(answer, session);
+                }
+
+                // Commit giao dịch
+                await _unitOfWork.CommitTransactionAsync();
+                return new ReturnData { ReturnCode = 1, ReturnMessage = "Created Question and Answers successfully!" };
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.AbortTransactionAsync();
+                return new ReturnData { ReturnCode = -1, ReturnMessage = $"Error: {ex.Message}" };
+            }
+            finally
+            {
+                _unitOfWork.DisposeTransaction();
+            }
+        }
+
+
+        public async Task<ReturnData> HandleUpdate(UpdateQuizQuestionWithAnswerCommand request)
+        {
+            await _unitOfWork.StartTransactionAsync();
+
+            try
+            {
+                var session = _unitOfWork.GetSession();
+
+                // Tạo DeleteQuizQuestionVM để tìm QuizQuestion
+                var findQuestionById = new DeleteQuizQuestionVM { question_id = request.QuizQuestion.question_id };
+
+                // Tìm QuizQuestion cần cập nhật
+                var existingQuestion = await quizQuestionRepository.getQuizQuestionById(findQuestionById, session);
+                if (existingQuestion == null)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Question not found." };
+                }
+
+                // Cập nhật image nếu có
+                string image = existingQuestion.image;
+                if (request.QuizQuestion.image != null && request.QuizQuestion.image.Length > 0)
+                {
+                    image = await cloudinary.UploadImageAsync(request.QuizQuestion.image, "QUIZ QUESTION");
+                }
+
+                // Cập nhật thông tin QuizQuestion
+                var updatedQuestion = new QuizQuestion
+                {
+                    question_id = ObjectId.Parse(request.QuizQuestion.question_id),
+                    description = request.QuizQuestion.description ?? existingQuestion.description,
+                    image = image,
+                    quiz_id = existingQuestion.quiz_id, // Giữ nguyên quiz_id
+                    createAt = existingQuestion.createAt, // Giữ nguyên createAt
+                    updateAt = DateTime.Now
+                };
+
+                // Validate QuizQuestion
+                var questionValidation = await validatorQuestion.ValidateAsync(updatedQuestion);
+                if (!questionValidation.IsValid)
+                {
+                    var errors = questionValidation.Errors.Select(e => e.ErrorMessage).ToList();
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = string.Join(", ", errors) };
+                }
+
+                // Cập nhật QuizQuestion
+                await quizQuestionRepository.updateQuizQuestion(updatedQuestion, session);
+
+                // Kiểm tra danh sách QuizAnswers
+                if (request.QuizAnswers == null || !request.QuizAnswers.Any())
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "No QuizAnswers provided." };
+                }
+
+                // Giả định yêu cầu 4 câu trả lời
+                if (request.QuizAnswers.Count != 4)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Exactly 4 answers are required." };
+                }
+
+                // Tạo danh sách QuizAnswers để cập nhật
+                var quizAnswers = new List<QuizAnswer>();
+                foreach (var a in request.QuizAnswers)
+                {
+                    var quizAnswer = new QuizAnswer
+                    {
+                        quizAnswer_id = string.IsNullOrEmpty(a.quizAnswer_id) ? ObjectId.GenerateNewId() : ObjectId.Parse(a.quizAnswer_id),
+                        description = a.description,
+                        correct_answer = a.correct_answer ?? false, // Gán mặc định nếu null
+                        question_id = updatedQuestion.question_id,
+                        updateAt = DateTime.Now
+                    };
+
+                    // Nếu là answer hiện có, lấy createAt từ database
+                    if (!string.IsNullOrEmpty(a.quizAnswer_id))
+                    {
+                        var existingAnswer = await quizAnswerRepository.findQuizAnswerById(
+                            new DeleteAnswerQuestionVM { quizAnswer_id = a.quizAnswer_id },
+                            session
+                        );
+                        quizAnswer.createAt = existingAnswer?.createAt ?? DateTime.Now;
+                    }
+                    else
+                    {
+                        quizAnswer.createAt = DateTime.Now;
+                    }
+
+                    quizAnswers.Add(quizAnswer);
+                }
+
+                // Kiểm tra logic correct_answer
+                int trueCount = quizAnswers.Count(a => a.correct_answer == true);
+                if (trueCount == 0)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be false." };
+                }
+                if (trueCount == 4)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be true." };
+                }
+                if (trueCount != 1)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Exactly one answer must be true." };
+                }
+
+                // Validate từng QuizAnswer
+                foreach (var answer in quizAnswers)
+                {
+                    var answerValidation = await validatorAnswer.ValidateAsync(answer);
+                    if (!answerValidation.IsValid)
+                    {
+                        var errors = answerValidation.Errors.Select(e => e.ErrorMessage).ToList();
+                        await _unitOfWork.AbortTransactionAsync();
+                        return new ReturnData { ReturnCode = -1, ReturnMessage = string.Join(", ", errors) };
+                    }
+                }
+
+                // Xóa các answer cũ và thêm các answer mới
+                foreach (var existingAnswer in await quizAnswerRepository.getAllQuizAnswer()) // Giả sử có phương thức này
+                {
+                    if (existingAnswer.question_id == updatedQuestion.question_id)
+                    {
+                        await quizAnswerRepository.deleteQuizAnswer(
+                            new DeleteAnswerQuestionVM { quizAnswer_id = existingAnswer.quizAnswer_id.ToString() },
+                            session
+                        );
+                    }
+                }
+
+                foreach (var answer in quizAnswers)
+                {
+                    await quizAnswerRepository.createQuizAnswer(answer, session);
+                }
+
+                // Commit giao dịch
+                await _unitOfWork.CommitTransactionAsync();
+                return new ReturnData { ReturnCode = 1, ReturnMessage = "Updated Question and Answers successfully!" };
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.AbortTransactionAsync();
+                return new ReturnData { ReturnCode = -1, ReturnMessage = $"Error: {ex.Message}" };
+            }
+            finally
+            {
+                _unitOfWork.DisposeTransaction();
+            }
+        }
+
+        public async Task<ReturnData> HandleDelete(DeleteQuizQuestionVM request)
+        {
+            await _unitOfWork.StartTransactionAsync();
+
+            try
+            {
+                var session = _unitOfWork.GetSession();
+
+                // Tạo DeleteQuizQuestionVM để kiểm tra và xóa QuizQuestion
+                var findQuestionbyID = new DeleteQuizQuestionVM { question_id = request.question_id };
+
+                // Kiểm tra xem QuizQuestion có tồn tại không
+                var existingQuestion = await quizQuestionRepository.getQuizQuestionById(findQuestionbyID, session);
+                if (existingQuestion == null)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Question not found." };
+                }
+
+                // Xóa tất cả QuizAnswers liên quan đến question_id
+                var answersDeleted = await quizAnswerRepository.DeleteByQuestionIdAsync(existingQuestion.question_id, session);
+
+                // Xóa QuizQuestion
+                var questionDeleted = await quizQuestionRepository.deleteQuizQuestion(findQuestionbyID, session);
+                if (questionDeleted == 0)
+                {
+                    await _unitOfWork.AbortTransactionAsync();
+                    return new ReturnData { ReturnCode = -1, ReturnMessage = "Failed to delete QuizQuestion." };
+                }
+
+                // Commit giao dịch
+                await _unitOfWork.CommitTransactionAsync();
+                return new ReturnData { ReturnCode = 1, ReturnMessage = "Deleted Question and Answers successfully!" };
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.AbortTransactionAsync();
+                return new ReturnData { ReturnCode = -1, ReturnMessage = $"Error: {ex.Message}" };
+            }
+            finally
+            {
+                _unitOfWork.DisposeTransaction();
             }
         }
     }

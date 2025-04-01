@@ -90,65 +90,39 @@ namespace ProjectFall2025.Application.Services
         {
             try
             {
-                var data = new deleteAIAnswerVM
+                // Kiểm tra nếu aiAnswer_id không hợp lệ
+                if (string.IsNullOrEmpty(aIAnswer.aiAnswer_id))
                 {
-                    aiAnswer_id = aIAnswer.aiAnswer_id,
+                    return new ReturnData
+                    {
+                        ReturnCode = -1,
+                        ReturnMessage = "AI Answer ID is required."
+                    };
+                }
+
+                // Tạo object chỉ chứa các trường cần cập nhật
+                var updateData = new AIAnswer
+                {
+                    aiAnswer_id = ObjectId.Parse(aIAnswer.aiAnswer_id),
+                    responseAI = aIAnswer.responseAI,
+                    generatedAt = DateTime.Now,
+                    //question_id = ObjectId.Parse(aIAnswer.question_id)
                 };
 
-                var existingIAAnswer = await aIAnswerRepository.getIdAIAnswer(data);
-                if (existingIAAnswer == null)
-                {
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = "Update failed! aiAnswer_id is not found"
-                    };
-                }
-                else
-                {
-                    existingIAAnswer.responseAI = aIAnswer.responseAI;
-                    existingIAAnswer.generatedAt = DateTime.Now;
-                    existingIAAnswer.question_id = ObjectId.Parse(aIAnswer.question_id);
-                }
+                // Gửi dữ liệu cập nhật xuống Repository
+                var updateResult = await aIAnswerRepository.updateAIAnswer(updateData);
 
-                var validate = await validator.ValidateAsync(existingIAAnswer);
-                if (!validate.IsValid)
-                {
-                    var errorMess = validate.Errors.Select(e => e.ErrorMessage).ToList();
-                    return new ReturnData
-                    {
-                        ReturnCode = -1,
-                        ReturnMessage = string.Join(", ", errorMess)
-                    };
-                }
-                else
-                {
-                    var update = await aIAnswerRepository.updateAIAnswer(existingIAAnswer);
-                    if (update <= 0)
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = -1,
-                            ReturnMessage = "Update failed! database error"
-                        };
-                    }
-                    else
-                    {
-                        return new ReturnData
-                        {
-                            ReturnCode = 1,
-                            ReturnMessage = "Update successful!"
-                        };
-
-
-                    }
-                }
+                // Kiểm tra kết quả cập nhật và trả về thông báo
+                return updateResult > 0
+                    ? new ReturnData { ReturnCode = 1, ReturnMessage = "Update successful!" }
+                    : new ReturnData { ReturnCode = -1, ReturnMessage = "Update failed! Database error." };
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<ReturnData> deleteAIAnswer(deleteAIAnswerVM aIAnswer)
         {

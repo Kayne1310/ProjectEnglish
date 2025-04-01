@@ -1,8 +1,65 @@
 
 import authService from "../service/authService";
-
+import { toast } from "react-toastify"; // Import toast
 // Sử dụng hook navigate để chuyển hướng trang
 export const handleLogin = async (email, password, setError, setIsLoading, setUser, navigate) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+        const response = await authService.login(email, password);
+
+    
+
+        if (!response || !response.user) {
+            const errorMessage ="Login failed. User data is missing.";
+            // setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+            console.error("Missing user data:", response);
+        } else {
+   
+
+            setUser({
+                userName: response.user.userName,
+                email: response.user.email,
+                picture: response.user.picture,
+                address: response.user.address,
+                age: response.user.age,
+                phone: response.user.phone,
+                gender: response.user.gender,
+                facebookId: response.user.facebookId,
+                googleId: response.user.googleId,
+                role: response.user.role,
+                userId: response.user.userID,
+            }); // Lưu thông tin user vào context
+
+            toast.success("Login successfully!");
+            setTimeout(() => {
+                setIsLoading(false);
+                if (response.user.role === "User") {
+                    navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                } else {
+                    setError("Login failed. Invalid role!");
+                }
+            }, 1000);
+            return;
+        }
+    } catch (err) {
+        setError(`Login failed. ${err.message}`);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }
+
+    setTimeout(() => {
+        setIsLoading(false);
+    }, 1000);
+};
+
+export const handleLoginAdmin = async (email, password, setError, setIsLoading, setUser, navigate) => {
     setError("");
     setIsLoading(true);
 
@@ -20,24 +77,34 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
         } else {
             console.log("User Data:", response.user);
 
-            localStorage.setItem("isLoggedIn", "true");
-
             setUser({
                 userName: response.user.userName,
                 email: response.user.email,
                 picture: response.user.picture,
+                address: response.user.address,
+                age: response.user.age,
+                phone: response.user.phone,
+                gender: response.user.gender,
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
+                role: response.user.role,
+                userId: response.user.userID,
             }); // Lưu thông tin user vào context
 
             setTimeout(() => {
                 setIsLoading(false);
-                navigate("/") // Chuyển hướng sau khi đăng nhập thành công
+                if (response.user.role === "Admin") {
+                    navigate("/Admin")
+                } else {
+                    setError("Login failed. Invalid role!");
+                }
             }, 1000);
             return;
         }
     } catch (err) {
-        setError(`Login failed. ${err.message}`);
+        const errorMessage = `Login failed. ${err.message}`;
+        // setError(errorMessage);// Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -49,20 +116,57 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
 };
 
 
-export const handleLogout = async (setIsLoading, setError,navigate) => {
+export const handleLogout = async (
+    setIsLoading,
+    setError,
+    setUser,
+) => {
     setError("");
-    try {
-        // Gọi API logout (nếu cần)
-        setIsLoading(true);
-        var res=    await authService.logout(); // Bạn có thể gọi API logout ở đây nếu cần
-        // Xóa thông tin khỏi localStorage
-        if(res.returnCode==1){
-            localStorage.removeItem("isLoggedIn");
-            window.location.href="/";// Chuyển hướng về trang đăng nhập
-        }       
+    setIsLoading(true);
 
+    try {
+        const res = await authService.logout();
+
+        console.log("Logout Response:", res);
+
+        if (!res || res.error || res.returnCode !== 1) {
+            throw new Error(res?.returnMessage || "Logout failed");
+            
+        } else {
+            setUser(null); // Xóa user trong context/state
+            setIsLoading(false);
+            window.location.href="/" // load sau khi điêu hướng
+        }
     } catch (error) {
         setError(`Logout failed. ${error.message}`);
+        setIsLoading(false);
+    }
+};
+
+export const handleLogoutAdmin = async (
+    setIsLoading,
+    setError,
+    setUser,
+) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+        const res = await authService.logout();
+
+        console.log("Logout Response:", res);
+
+        if (!res || res.error || res.returnCode !== 1) {
+            throw new Error(res?.returnMessage || "Logout failed");
+            
+        } else {
+            setUser(null); // Xóa user trong context/state
+            setIsLoading(false);
+            window.location.href="/loginadmin" // load sau khi điêu hướng
+        }
+    } catch (error) {
+        setError(`Logout failed. ${error.message}`);
+        setIsLoading(false);
     }
 };
 
@@ -74,12 +178,13 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
     setIsLoading(true);
     setIsRegisterSuccess(false);
 
-    console.log("Registering user:", { name, email, password });
+
     try {
         const response = await authService.register(name, email, password);
-        console.log("API Response:", response);
+ 
         if (response.returnCode == -1) {
-            setError(`Register failed. ${response.returnMessage}`);
+            // setError(`Register failed. ${response.returnMessage}`);
+            toast.error(`Register failed. ${response.returnMessage}`); // hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
@@ -91,9 +196,11 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
             }, 1000); // Hide loader after 2 seconds
+            toast.success("Register successfully!"); // Hiển thị toast thành công
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        // setError(`Register failed. ${err.message}`);
+        toast.error(`Register failed. ${err.message}`); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
 
@@ -107,8 +214,10 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     setIsRegisterSuccess(false);
 
     try {
-        const apiResponse = await authService.GoogleRegister(response.access_token,userInfor);
+        const apiResponse = await authService.GoogleRegister(response.access_token);
+
         console.log("API Response:", apiResponse);
+
 
 
         if (apiResponse.returnCode == -1) {
@@ -136,6 +245,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
 
 
 
+
 export const handleGoogleLogin = async (response, setError, setIsLoading, setUser, navigate) => {
     setError("");
     setIsLoading(true);
@@ -143,29 +253,50 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
+        console.log("google login succesul data",apiResponse);
         // console.log("Context Response:", userInfo.email);
         // console.log("Context Response:", userInfo.userId);
         // console.log("Context Response:", userInfo.name);
         // console.log("Context Response:", userInfo.picture);
         // console.log("API Response:", apiResponse);
         if (apiResponse.returnCode == -1) {
-            setError(`Register failed. ${apiResponse.returnMessage}`);
+            const errorMessage = `Register failed. ${apiResponse.returnMessage}`
+            setError(errorMessage); // Cập nhật trạng thái lỗi
+            toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
         }
 
         else if (apiResponse.returnCode == 1) {
-            localStorage.setItem("isLoggedIn", "true");
+           
+            setUser({
+                userName: apiResponse.user.userName,
+                email: apiResponse.user.email,
+                picture: apiResponse.user.picture,
+                address: apiResponse.user.address,
+                age: apiResponse.user.age,
+                phone: apiResponse.user.phone,
+                gender: apiResponse.user.gender,
+                facebookId: apiResponse.user.facebookId,
+                googleId: apiResponse.user.googleId,
+                role: apiResponse.user.role,
+                userId: apiResponse.user.userID,
+            }); // Lưu thông tin user vào context
+
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/");
-
+                const successMessage = "Đăng nhập bằng Google thành công!";
+                setError(""); // Reset lỗi (hoặc không cần nếu không hiển thị trên form)
+                toast.success(successMessage); // Hiển thị toast thành công
 
             }, 1000); // Hide loader after 1 seconds
         }
     } catch (err) {
-        setError(`Register failed. ${err.message}`);
+        const errorMessage = `Register failed. ${err.message}`;
+        setError(errorMessage); // Cập nhật trạng thái lỗi
+        toast.error(errorMessage); // Hiển thị toast lỗi
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
@@ -181,7 +312,7 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
 
     try {
         const apiResponse = await authService.facebookRegister(response.accessToken);
-        console.log("API Response:", apiResponse);
+
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.data.returnMessage}`);
             setTimeout(() => {
@@ -214,7 +345,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
     try {
 
         const apiResponse = await authService.facebookLogin(data.accessToken);
-        console.log("API Response:", apiResponse);
+
 
         if (apiResponse.data.returnCode == -1) {
             setError(`Register failed. ${apiResponse.returnMessage}`);
@@ -249,7 +380,7 @@ export const handleResetPassword = async (password, email, token, setError, setI
     setIsSuccess(false);
     try {
         const response = await authService.resetPassword(email, token, password);
-        console.log("API Response:", response);
+      
         if (response.returnCode == -1) {
             setError(`Reset password failed. ${response.returnMessage}`);
             setTimeout(() => {
@@ -274,7 +405,7 @@ export const handleForgotPassword = async (email, setError, setIsLoading, setIsS
     setIsSuccess(false);
     try {
         const response = await authService.forgotpassword(email);
-        console.log("API Response:", response);
+    
         if (response.returnCode == -1) {
             setError(`Forgot password failed. ${response.returnMessage}`);
             setTimeout(() => {

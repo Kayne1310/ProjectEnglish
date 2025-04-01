@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MongoDB.Bson;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.Do.FlashCard;
+using ProjectFall2025.Domain.ViewModel.FlashCard;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Account;
 using ProjectFall2025.Domain.ViewModel.ViewModel_AIAnswer;
 using ProjectFall2025.Domain.ViewModel.ViewModel_History;
@@ -56,10 +58,8 @@ namespace ProjectFall2025.Application.Mapping
 
             CreateMap<QuizAnswer, UpdateAnswerQuestionVM>()
                 .ForMember(dest => dest.quizAnswer_id, opt => opt.MapFrom(src => src.quizAnswer_id.ToString()))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => src.question_id.ToString()))
                 .ReverseMap()  // Tạo mapping ngược lại từ UpdateAnswerQuestionVM sang QuizAnswer
-                .ForMember(dest => dest.quizAnswer_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quizAnswer_id)))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)));
+                .ForMember(dest => dest.quizAnswer_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quizAnswer_id)));
 
             CreateMap<QuizAnswer, DeleteAnswerQuestionVM>()
                 .ForMember(a => a.quizAnswer_id, b => b.MapFrom(src => src.quizAnswer_id.ToString()))
@@ -77,12 +77,8 @@ namespace ProjectFall2025.Application.Mapping
 
             CreateMap<UserQuiz, UpdateUserQuizVM>()
                 .ForMember(dest => dest.userQuiz_id, opt => opt.MapFrom(src => src.userQuiz_id.ToString()))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
-                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.UserID.ToString()))
                 .ReverseMap()
-                .ForMember(dest => dest.userQuiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.userQuiz_id)))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)))
-                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => ObjectId.Parse(src.UserID)));
+                .ForMember(dest => dest.userQuiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.userQuiz_id)));
 
             CreateMap<UserQuiz, DeleteUserQuizVM>()
                 .ForMember(a => a.userQuiz_id, b => b.MapFrom(src => src.userQuiz_id.ToString()))
@@ -98,10 +94,8 @@ namespace ProjectFall2025.Application.Mapping
 
             CreateMap<QuizQuestion, UpdateQuizQuestionVM>()
                 .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => src.question_id.ToString()))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
                 .ReverseMap()
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)));
+                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)));
 
             CreateMap<QuizQuestion, DeleteQuizQuestionVM>()
                 .ForMember(a => a.question_id, b => b.MapFrom(src => src.question_id.ToString()))
@@ -116,12 +110,8 @@ namespace ProjectFall2025.Application.Mapping
 
             CreateMap<History, updateHistoryVM>()
                 .ForMember(dest => dest.history_id, opt => opt.MapFrom(src => src.history_id.ToString()))
-                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.UserID.ToString()))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
                 .ReverseMap()
-                .ForMember(dest => dest.history_id, opt => opt.MapFrom(src => ObjectId.Parse(src.history_id)))
-                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => ObjectId.Parse(src.UserID)))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)));
+                .ForMember(dest => dest.history_id, opt => opt.MapFrom(src => ObjectId.Parse(src.history_id)));
 
             CreateMap<History, deleteHistoryVM>()
                 .ForMember(a => a.history_id, b => b.MapFrom(src => src.history_id.ToString()))
@@ -141,13 +131,9 @@ namespace ProjectFall2025.Application.Mapping
             CreateMap<QuizUserAnswer, updateQuizUserAnswerVM>()
                 .ForMember(dest => dest.quizUserAnswer_id, opt => opt.MapFrom(src => src.quizUserAnswer_id.ToString()))
                 .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.UserID.ToString()))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => src.quiz_id.ToString()))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => src.question_id.ToString()))
                 .ReverseMap()
                 .ForMember(dest => dest.quizUserAnswer_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quizUserAnswer_id)))
-                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => ObjectId.Parse(src.UserID)))
-                .ForMember(dest => dest.quiz_id, opt => opt.MapFrom(src => ObjectId.Parse(src.quiz_id)))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)));
+                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => ObjectId.Parse(src.UserID)));
 
             CreateMap<QuizUserAnswer, deleteQuizUserAnswerVM>()
                 .ForMember(a => a.quizUserAnswer_id, b => b.MapFrom(src => src.quizUserAnswer_id.ToString()))
@@ -162,15 +148,25 @@ namespace ProjectFall2025.Application.Mapping
 
             CreateMap<AIAnswer, updateAIAnswerVM>()
                 .ForMember(dest => dest.aiAnswer_id, opt => opt.MapFrom(src => src.aiAnswer_id.ToString()))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => src.question_id.ToString()))
                 .ReverseMap()
-                .ForMember(dest => dest.aiAnswer_id, opt => opt.MapFrom(src => ObjectId.Parse(src.aiAnswer_id)))
-                .ForMember(dest => dest.question_id, opt => opt.MapFrom(src => ObjectId.Parse(src.question_id)));
+                .ForMember(dest => dest.aiAnswer_id, opt => opt.MapFrom(src => ObjectId.Parse(src.aiAnswer_id)));
 
             CreateMap<AIAnswer, deleteAIAnswerVM>()
                 .ForMember(a => a.aiAnswer_id, b => b.MapFrom(src => src.aiAnswer_id.ToString()))
                 .ReverseMap()
                 .ForMember(a => a.aiAnswer_id, b => b.MapFrom(src => ObjectId.Parse(src.aiAnswer_id)));
+
+
+            //StudySet
+            CreateMap<StudySet, CreateStudySetVM>().ReverseMap();
+            CreateMap<StudySet, EditStudySetVM>().ReverseMap();
+            CreateMap<StudySet, DeleteStudySetVM>().ReverseMap();
+
+            //FlashCard
+            CreateMap<Flashcard,CreateFlashcardVM>().ReverseMap();  
+            CreateMap<Flashcard,UpdateFlashcardVM>().ReverseMap();  
+            CreateMap<Flashcard,DeleteFlashcardVM>().ReverseMap();
+
 
         }
     }
