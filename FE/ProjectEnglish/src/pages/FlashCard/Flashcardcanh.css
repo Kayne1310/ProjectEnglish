@@ -598,7 +598,7 @@
 
   /* Style cho từng button */
   .btn-primary {
-    min-width: 105px !important;
+    /* min-width: 105px !important; */
     height: 45px;
     border-radius: 10px !important;
     transition: all 0.3s ease;

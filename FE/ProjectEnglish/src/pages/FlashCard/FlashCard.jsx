@@ -15,6 +15,17 @@ import incorrectSound from "../../assets/sound/wrong-47985.mp3";
 import { speak, stopSpeak } from '../../service/geminiService';
 import { generateContentWithGemini } from '../../service/geminiService';
 
+// Thêm hằng số cho độ dài tối đa
+const MAX_TEXT_LENGTH = 40;
+
+// Thêm helper functions
+const shouldTruncate = (text) => text.length > MAX_TEXT_LENGTH;
+const truncateText = (text) => {
+  return text.length > MAX_TEXT_LENGTH
+    ? `${text.substring(0, MAX_TEXT_LENGTH)}...`
+    : text;
+};
+
 const Flashcard = () => {
   const { quizId } = useParams(); // Lấy quizId từ URL
   const [mode, setMode] = useState("flashcard"); // Quản lý chế độ: flashcard hoặc quiz
@@ -158,7 +169,7 @@ const Flashcard = () => {
         // Gọi API cho Flashcard
         if (location.state?.flashcards) {
           setFlashcards(location.state.flashcards);
-          console.log("data flashcard",flashcards);
+          console.log("data flashcard", flashcards);
 
           setQuestions(location.state.flashcards);
 
@@ -694,9 +705,14 @@ const Flashcard = () => {
                                         index + 1
                                       )}
                                     </span>
-                                    <span className="quizlet-option-text px-2 text-truncate">
-                                      {ans.description}
-                                    </span>
+                                    <div className="quizlet-option-text-container">
+                                      <span
+                                        className="quizlet-option-text px-2"
+                                        data-full-text={shouldTruncate(ans.description) ? ans.description : null}
+                                      >
+                                        {truncateText(ans.description)}
+                                      </span>
+                                    </div>
                                   </button>
                                 </div>
                               ))

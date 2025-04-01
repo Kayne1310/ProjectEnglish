@@ -338,6 +338,9 @@
     width: 95%;
 
   }
+  .layout_padding{
+   margin-top: 20px !important;
+  }
   .custom-footer-button {
     height: 45px;
     padding: 5px 10px;

@@ -130,7 +130,7 @@ const HomePage = () => {
             {/* <!-- end about section -->
 
             <!-- blog section --> */}
-            <section className="blog_section layout_padding long_section">
+            <section className="blog_section layout_padding long_section mb-5" >
                 <div className="container">
                     <div className="heading_container">
                         <h2>welcome Quizzet</h2>
@@ -144,7 +144,8 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Flashcard</h5>
                                     <p>Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
-                                    <Link to="/flashcard">Read More</Link>
+                                    <div className="btn-box "> <Link to="/flashcard">Read More</Link></div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -156,7 +157,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Quiz</h5>
                                     <p>Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân</p>
-                                    <Link to="/listquizz">Read More</Link>
+                                    <div className="btn-box "> <Link to="/listquizz">Read More</Link></div>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +169,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Tài liệu</h5>
                                     <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
-                                    <Link to="/listdocument">Read More</Link>
+                                    <div className="btn-box "><Link to="/listdocument">Read More</Link></div> 
                                 </div>
                             </div>
                         </div>
@@ -184,7 +185,6 @@ const HomePage = () => {
             {/* <!-- Contact Section --> */}
             <ContactUs />
             
-            <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
 
             {/* <!-- Info Section --> */}
 

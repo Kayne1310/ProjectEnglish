@@ -63,7 +63,7 @@ const Nav = () => {
                         <div className="quote_btn-container">
                             <Dropdown>
                                 {isLoggedIn ? (
-                                    <Dropdown.Toggle className="custom-avatar-dropdown" bsPrefix="custom-toggle">
+                                    <Dropdown.Toggle className="custom-avatar-dropdown  " bsPrefix="custom-toggle" >
                                         <img
                                             src={userInfor.picture || avatar}
                                             alt="User Avatar"
@@ -73,14 +73,14 @@ const Nav = () => {
                                     </Dropdown.Toggle>
                                 ) : (
                                     <Dropdown.Toggle as={Link} to="/loginuser" className="premium-login-btn" bsPrefix="custom-toggle">
-                                    <span  className="btn-content">
-                                        <span className="btn-icon">
-                                            <i className="bi bi-person-circle mr-1 ml-2"></i>
+                                        <span className="btn-content">
+                                            <span className="btn-icon">
+                                                <i className="bi bi-person-circle mr-1 ml-2"></i>
+                                            </span>
+                                            <span className="btn-text">Sign in</span>
                                         </span>
-                                        <span  className="btn-text">Sign in</span>
-                                    </span>
-                                    <span className="btn-shine"></span>
-                                </Dropdown.Toggle>
+                                        <span className="btn-shine"></span>
+                                    </Dropdown.Toggle>
                                 )}
 
                                 <Dropdown.Menu className="custom-dropdown-menu">
@@ -137,16 +137,7 @@ const Nav = () => {
                                                 <FaSignOutAlt className="mr-2" /> Logout
                                             </Dropdown.Item>
                                         </>
-                                    ) : (
-                                        <>
-                                            <Dropdown.Item as={Link} to="/loginuser" className="custom-dropdown-item">
-                                                User Login
-                                            </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to="/loginadmin" className="custom-dropdown-item">
-                                                Admin Login
-                                            </Dropdown.Item>
-                                        </>
-                                    )}
+                                    ) : null}
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>

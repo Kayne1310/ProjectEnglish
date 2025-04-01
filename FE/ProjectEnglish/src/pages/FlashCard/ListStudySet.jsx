@@ -6,8 +6,8 @@ import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId }
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
-import { toast } from "react-toastify";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
+import { toast } from 'react-toastify';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -70,6 +70,10 @@ const FlashcardList = () => {
         catch(error){
             console.error("Error creating study set:", error);
         }
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
 
     //fetch danh sách từ
@@ -127,10 +131,10 @@ const FlashcardList = () => {
                 <Spin size="large" />
             </div>
         ) : (
-            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section className={`about_section long_section ${!isHomePage ? 'layout_padding' : 'mb-5'}`} style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
-                    <div className="mt-10 mb-5 text-third ml-1">
+                    <div className="">
                         <h1 className="text-3xl font-bold text-primary">Flashcard</h1>
                         <p>
                             Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.
@@ -254,7 +258,6 @@ const FlashcardList = () => {
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
                                 placeholder="Chọn ngôn ngữ"
-
                             >
                                 <Option value="">Chọn ngôn ngữ</Option>
                                 <Option value="UK">Tiếng Anh-Mỹ</Option>

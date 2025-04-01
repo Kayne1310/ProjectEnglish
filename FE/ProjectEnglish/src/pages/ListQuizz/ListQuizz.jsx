@@ -116,13 +116,13 @@ const ListQuizz = () => {
   console.log("isQuizletPage:", isQuizletPage);
 
 
-    // Xử lý danh sách quiz trước khi render
-    const processedQuiz = (filteredQuizzes || []).map(quiz => ({
-      ...quiz,
-      image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : b1
-    }));
-  
- 
+  // Xử lý danh sách quiz trước khi render
+  const processedQuiz = (filteredQuizzes || []).map(quiz => ({
+    ...quiz,
+    image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : b1
+  }));
+
+
 
   return (
     <>
@@ -136,10 +136,14 @@ const ListQuizz = () => {
         <>
           {/* Nếu không phải trang QuizletForm thì hiển thị ListQuizz */}
           {!isQuizletPage && (
-            <section className="slider_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section
+              className={`slider_section long_section ${!isHomePage ? 'layout_padding' : 'mb-5'}`}
+              style={{ backgroundColor: '#f9fafa' }}
+              data-aos={isHomePage ? "fade-up" : ""}
+            >
               <div className="container">
                 <div className="row">
-                  <div className="mt-10 text-third ml-1">
+                  <div className="">
                     <h1 className="text-3xl font-bold text-primary" data-aos={isHomePage ? "zoom-in" : ""}>Quizzet</h1>
                     <p>
                       Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân
