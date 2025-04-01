@@ -130,7 +130,7 @@ export const speak = (text, voiceType = "UK English Male") => {
 
             responsiveVoice.speak(text, voiceType, {
                 pitch: 1,
-                rate: 1.2,
+                rate: 1.05,
                 volume: 1,
                 onend: () => resolve(),
                 onerror: (error) => reject(error)

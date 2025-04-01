@@ -195,6 +195,29 @@
   border-color: #007bff;
 }
 
+
+
+@media (max-width: 768px) {
+  .custom-mode-btn.btn-primary {
+    background-color: #007bff;
+    color: black;
+    border-color: #007bff;
+  }
+  .definition-section p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+
+  .definition-section p:hover {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+}
+
 .custom-mode-btn.btn-outline-secondary {
   background-color: transparent;
   color: black;
@@ -464,6 +487,28 @@
 .key-pressed {
   animation: keyPress 0.2s ease;
 }
+@media (max-width: 768px) {
+/* keyboard */
+.custom-keyboard-key {
+  display: inline-flex;
+
+  min-width: 35px;
+  width: 50px !important;
+  height: 30px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}  
+ .d-flex.gap-2.align-items-center {
+  align-items: start !important;
+  justify-content: start !important;
+}
 
 
 /* AI Answer Modal */
@@ -580,4 +625,4 @@
 }
 
 
-
+}
