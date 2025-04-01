@@ -21,7 +21,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       -  MongoDbConfiguration__ConnectionString=mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=rs0
-      - Redis__ConnectionString=project-english-redis:6379,abortConnect=false
+      - Redis__ConnectionString=redis-master:6379,abortConnect=false
     restart: always
     networks:
       - project-network
