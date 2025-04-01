@@ -16,7 +16,8 @@ services:
       - mongodb1
       - mongodb2
       - mongodb3
-      - redis
+      - redis-master
+      - redis-replica
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       -  MongoDbConfiguration__ConnectionString=mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=rs0
