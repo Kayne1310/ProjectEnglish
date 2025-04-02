@@ -23,23 +23,25 @@ const DetailQuizz = () => {
   const [isShowAnswer, setIsShowAnswer] = useState(false);
   const [completionTime, setCompletionTime] = useState(0);
   const [showConfirmModal, setShowConfirmModal] = useState(true); // State cho modal xác nhận
-  const [quizInfo, setQuizInfo] = useState(null); // State lưu thông tin quiz
-
+  const [quizInforVM, setQuizInfo] = useState(null); // State lưu thông tin quiz
+  console.log("check quizInforVM", quizInforVM);
   useEffect(() => {
     const fetchQuestions = async () => {
       let timer;
       try {
         setLoading(true);
         const res = await getQuestionbyQuizId(quizId);
-        // Giả sử API trả về dữ liệu trong res.data
-        setQuestions(res.data || []);
+        console.log("API response:", res); // Thêm log để kiểm tra response
+        
+        // Cập nhật để sử dụng đúng cấu trúc response
+        setQuestions(res.data.items || []); // Lưu toàn bộ mảng items
 
-        // Lưu thông tin quiz để hiển thị trong modal
-        if (res.data && res.data.length > 0) {
+        // Cập nhật thông tin quiz từ item đầu tiên nếu có
+        if (res.data.items && res.data.items.length > 0) {
           setQuizInfo({
-            name: res.data[0]?.quizInforVM?.name || "N/A",
-            totalQuestions: res.data.length,
-            difficulty: res.data[0]?.quizInforVM?.difficulty || "Trung bình" // Thêm độ khó nếu API trả về
+            name: res.data.items[0]?.quizInforVM?.name || "N/A",
+            totalQuestions: res.data.items.length,
+            difficulty: res.data.items[0]?.quizInforVM?.difficulty || "Trung bình"
           });
         }
 
@@ -47,6 +49,9 @@ const DetailQuizz = () => {
         timer = setTimeout(() => {
           setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
         }, 2000);
+
+        console.log("Questions after set:", questions);
+        console.log("Processed Quiz:", processedQuiz);
       } catch (err) {
         console.error("Lỗi khi lấy câu hỏi:", err);
         setError("Có lỗi xảy ra khi tải câu hỏi.");
@@ -58,37 +63,20 @@ const DetailQuizz = () => {
     if (quizId) fetchQuestions();
   }, [quizId]);
 
-  // Xử lý dữ liệu nhận từ API, tương tự như QuizletForm
+  // Sửa processedQuiz - đang tìm questions.items nhưng questions đã là mảng items 
   const processedQuiz = (questions || []).map((quiz) => ({
     ...quiz,
-    image:
-      quiz.image && quiz.image !== "null" && quiz.image !== ""
-        ? quiz.image
-        : testImage,
-    description:
-      quiz.description && quiz.description !== "null" && quiz.description !== ""
-        ? quiz.description
-        : "Nội dung mặc định",
-    answer:
-      quiz.answers && quiz.answers.length > 0
-        ? quiz.answers.map((ans) => ({
-          ...ans,
-          description:
-            ans.description &&
-              ans.description !== "null" &&
-              ans.description !== ""
-              ? ans.description
-              : "Câu trả lời không hợp lệ",
-        }))
-        : [
-          {
-            idAnswered: "default",
-            descriptionAnswered: "Không có câu trả lời",
-            isCorrect: false,
-          },
-        ],
+    question_id: quiz.question_id,
+    image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : testImage,
+    description: quiz.description && quiz.description !== "null" && quiz.description !== "" ? quiz.description : "Nội dung mặc định",
+    answers: (quiz.answers || []).map((ans) => ({
+      idAnswered: ans.idAnswered,
+      description: ans.description && ans.description !== "null" && ans.description !== "" ? ans.description : "Câu trả lời không hợp lệ",
+      isCorrect: ans.correct_answer // Đổi từ isCorrect thành correct_answer
+    }))
   }));
 
+  console.log("check processedQuiz", processedQuiz);
   // Điều hướng giữa các câu hỏi
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -216,15 +204,15 @@ const DetailQuizz = () => {
         <div className="quiz-info">
           <div className="quiz-info-item">
             <i className="fas fa-file-alt"></i>
-            <p><strong>Tên bài kiểm tra:</strong> {quizInfo?.name}</p>
+            <p><strong>Tên bài kiểm tra:</strong> {quizInforVM?.name}</p>
           </div>
           <div className="quiz-info-item">
             <i className="fas fa-list-ol"></i>
-            <p><strong>Số lượng câu hỏi:</strong> {quizInfo?.totalQuestions} câu</p>
+            <p><strong>Số lượng câu hỏi:</strong> {quizInforVM?.totalQuestions} câu</p>
           </div>
           <div className="quiz-info-item">
             <i className="fas fa-signal"></i>
-            <p><strong>Độ khó:</strong> {quizInfo?.difficulty}</p>
+            <p><strong>Độ khó:</strong> {quizInforVM?.difficulty}</p>
           </div>
         </div>
       </Modal>
@@ -237,7 +225,7 @@ const DetailQuizz = () => {
             <>
               <div className="left-content">
                 <div className="title">
-                  Quiz: {processedQuiz.length > 0 ? processedQuiz[0].quizInforVM.name : quizId}
+                  Quiz: {processedQuiz.length > 0 && processedQuiz[0].quizInforVM ? processedQuiz[0].quizInforVM.name : quizId}
                 </div>
 
              

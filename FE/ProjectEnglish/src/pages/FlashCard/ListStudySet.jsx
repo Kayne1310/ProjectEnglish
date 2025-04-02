@@ -1,13 +1,13 @@
 import { Justify } from "react-bootstrap-icons";
-import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import "../../assets/css/FlashCardQuiz/StudyContainer.css";
 import { getAllFlashCard, getALlStudySetService, getALlStudySetServiceByUserId } from "../../service/flashcardService";
 import { Modal, Input, Select, Checkbox, Button } from "antd";
 import { calculateDaysAgo } from "../../helpers/DateHepler";
 import { createStudySet } from "../../service/StudySetService";
-import { toast } from "react-toastify";
 import { Spin } from 'antd'; // Thêm Spin từ antd để hiển thị loading
+import { toast } from 'react-toastify';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -27,11 +27,11 @@ const FlashcardList = () => {
 
 
     const languages = [
-        { id: "all", label: "Tất cả", icon: true },
-        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English" },
-        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese" },
-        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese" },
-        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French" }
+        { id: "all", label: "Tất cả", icon: true, imageCountry: "all" },
+        { id: "english", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png", alt: "English", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305084/COUNTRY/e17iowqr2ipaqe0aympq.png" },
+        { id: "chinese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg", alt: "Chinese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305215/COUNTRY/zduntbvenfyewpkondef.jpg" },
+        { id: "japanese", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png", alt: "Japanese", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740305058/COUNTRY/wtbrfljoh73gffepv3jc.png" },
+        { id: "french", src: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png", alt: "French", imageCountry: "https://res.cloudinary.com/dvm1fjo7a/image/upload/v1740303925/COUNTRY/l5jaiobfznxhb7poxc8i.png" }
     ];
 
 
@@ -45,7 +45,7 @@ const FlashcardList = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
         setListName("");
-        setLanguage("Tiếng Anh-Mỹ");
+        setLanguage("");
         setIsPublic(false);
         setDescription("");
     };
@@ -62,13 +62,18 @@ const FlashcardList = () => {
                 toast.error(`Tạo list từ thất bại: ${res.returnMessage}`);
             }
             setListName("");
-            setLanguage("Tiếng Anh-Mỹ");
+            setLanguage("");
             setIsPublic(false);
             setDescription("");
+
         }
-        catch (error) {
-            toast.error(`Tạo list từ thất bại: ${error}`);
+        catch(error){
+            console.error("Error creating study set:", error);
         }
+        setListName("");
+        setLanguage("Tiếng Anh-Mỹ");
+        setIsPublic(false);
+        setDescription("");
     };
 
     //fetch danh sách từ
@@ -85,10 +90,14 @@ const FlashcardList = () => {
     const gellAllListStudybyUser = async () => {
         try {
             const studySetUserId = await getALlStudySetServiceByUserId();
-            setStudySetByUserID(studySetUserId.listStudySetWithCount);
+            // Kiểm tra studySetUserId trước khi set state
+            if (studySetUserId && studySetUserId.listStudySetWithCount) {
+                setStudySetByUserID(studySetUserId.listStudySetWithCount);
+                console.log("studysetuserid", studySetUserId.listStudySetWithCount);
+            }
         }
         catch (error) {
-
+            console.error("Error fetching study sets:", error);
         }
     }
 
@@ -98,7 +107,7 @@ const FlashcardList = () => {
         try {
             timer = setTimeout(() => {
                 setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-            }, 1000);
+            }, 2000);
             fetchFlashcards();
             gellAllListStudybyUser();
         } catch (error) {
@@ -107,6 +116,11 @@ const FlashcardList = () => {
         }
     }, []);
 
+    const filteredStudySet = studyset.filter(data => {
+        if (activeLang === "all") return true;
+        const selectedLanguage = languages.find(lang => lang.id === activeLang);
+        return data.studySet.imageCountry === selectedLanguage.imageCountry;
+    });
 
     return (
 
@@ -117,10 +131,10 @@ const FlashcardList = () => {
                 <Spin size="large" />
             </div>
         ) : (
-            <section className="about_section layout_padding long_section" style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
+            <section className={`about_section long_section ${!isHomePage ? 'layout_padding' : 'mb-5'}`} style={{ backgroundColor: '#f9fafa' }} data-aos={isHomePage ? "fade-up" : ""}>
                 <div className="container">
 
-                    <div className="mt-10 mb-5 text-third ml-1">
+                    <div className="">
                         <h1 className="text-3xl font-bold text-primary">Flashcard</h1>
                         <p>
                             Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.
@@ -144,6 +158,8 @@ const FlashcardList = () => {
                                         </div>
                                     </Link>
                                 </div>
+
+
 
                                 {/* Render danh sách từ */}
                                 {studySetByUserID.map((list) => (
@@ -198,7 +214,6 @@ const FlashcardList = () => {
                             </div>
                         </div>
                     )}
-
                     <h5 className="mt-4 mb-4 text-primary  ">Khám phá từ cộng đồng</h5>
 
                     <div className="d-flex flex-wrap align-items-center gap-3 py-3">
@@ -212,7 +227,7 @@ const FlashcardList = () => {
                                 onClick={() => setActiveLang(id)}
                             >
                                 {icon ? (
-                                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" className="me-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" className="me-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="none" d="M0 0h24v24H0z"></path>
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path>
                                     </svg>
@@ -226,7 +241,7 @@ const FlashcardList = () => {
                     {/* Popup Tạo List */}
                     <Modal
                         title="Tạo list từ"
-                        visible={isModalVisible}
+                        open={isModalVisible}
                         onCancel={handleCancel}
                         footer={null}
                         centered // Căn giữa modal theo cả chiều ngang & dọc
@@ -242,8 +257,9 @@ const FlashcardList = () => {
                                 value={language}
                                 className="w-100 mt-2"
                                 onChange={(value) => setLanguage(value)}
-                                defaultValue="UK"
+                                placeholder="Chọn ngôn ngữ"
                             >
+                                <Option value="">Chọn ngôn ngữ</Option>
                                 <Option value="UK">Tiếng Anh-Mỹ</Option>
                                 <Option value="Vietnam">Tiếng Việt</Option>
                                 <Option value="Japan">Tiếng Nhật</Option>
@@ -272,7 +288,7 @@ const FlashcardList = () => {
 
                     <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 custom-scroll"
                         style={{ maxHeight: isFlashcardPage ? undefined : "350px", overflowY: isFlashcardPage ? "visible" : "scroll" }}>
-                        {studyset.map((data) => (
+                        {filteredStudySet.map((data) => (
                             <div className="col" key={data.studySet.id}>
                                 <Link to={`/ListFlashCard/${data.studySet.id}`}
                                     state={{
@@ -323,5 +339,6 @@ const FlashcardList = () => {
         </>
     );
 };
+
 
 export default FlashcardList;

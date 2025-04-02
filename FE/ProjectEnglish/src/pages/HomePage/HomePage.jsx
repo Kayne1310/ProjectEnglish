@@ -25,11 +25,11 @@ const HomePage = () => {
     return (
         <>
         
-         <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
+         <div className="w-100" style={{ height: '60px', backgroundColor: '#f9fafa' }}></div>
             <div className="hero_area">
                 {/* <!-- slider section --> */}
-                <section className="slider_section long_section">
-                   
+                <section className="slider_section long_section" style={{ height: '600px' }}>
+                   <div className="container2">
                     <div id="customCarousel" className="carousel slide" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             <div className="carousel-item active">
@@ -86,26 +86,26 @@ const HomePage = () => {
                             <span className="carousel-control-next-icon" aria-hidden="true"></span>
                         </a>
                     </div>
-                  
+                   </div>
                 </section>
 
                 {/* <!-- end slider section --> */}
             </div>
 
-            <div className="w-100" style={{ height: '50px', backgroundColor: '#f9fafa' }}></div>
+            {/* <div className="w-100" style={{ height: '50px', backgroundColor: '#f9fafa' }}></div> */}
 
 
 
 
-            <section className="about_section layout_padding long_section">
-                <div className="container">
+            <section className="slider_section long_section">
+                <div className="container2 " style={{ height: '500px' }}>
                     <div className="row">
-                        <div className="col-md-6" data-aos="zoom-in">
+                        <div className="col-md-6 mt-5" data-aos="zoom-in">
                             <div className="img-box">
                                 <img src={About} />
                             </div>
                         </div>
-                        <div className="col-md-6" data-aos="fade-up">
+                        <div className="col-md-6 mt-5" data-aos="fade-up">
                             <div className="detail-box">
                                 <div className="heading_container">
                                     <h2>
@@ -116,9 +116,9 @@ const HomePage = () => {
                                     We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether you're a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community.
 
                                     Start your journey to mastering English today!</p>
-                                <a href="">
+                                {/* <a href="">
                                     Read More
-                                </a>
+                                </a> */}
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@ const HomePage = () => {
             {/* <!-- end about section -->
 
             <!-- blog section --> */}
-            <section className="blog_section layout_padding">
+            <section className="blog_section layout_padding long_section mb-5" >
                 <div className="container">
                     <div className="heading_container">
                         <h2>welcome Quizzet</h2>
@@ -144,7 +144,8 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Flashcard</h5>
                                     <p>Flashcard là một trong những cách tốt nhất để ghi nhớ những kiến thức quan trọng.</p>
-                                    <Link to="/flashcard">Read More</Link>
+                                    <div className="btn-box "> <Link to="/flashcard">Read More</Link></div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -156,7 +157,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Quiz</h5>
                                     <p>Tổng hợp những bài quiz để bạn kiểm tra thử kiến thức của bản thân</p>
-                                    <Link to="/listquizz">Read More</Link>
+                                    <div className="btn-box "> <Link to="/listquizz">Read More</Link></div>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +169,7 @@ const HomePage = () => {
                                 <div className="detail-box">
                                     <h5>Tài liệu</h5>
                                     <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
-                                    <Link to="/listdocument">Read More</Link>
+                                    <div className="btn-box "><Link to="/listdocument">Read More</Link></div> 
                                 </div>
                             </div>
                         </div>
@@ -184,7 +185,6 @@ const HomePage = () => {
             {/* <!-- Contact Section --> */}
             <ContactUs />
             
-            <div className="w-100" style={{ height: '100px', backgroundColor: '#f9fafa' }}></div>
 
             {/* <!-- Info Section --> */}
 

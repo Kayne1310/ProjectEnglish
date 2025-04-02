@@ -84,6 +84,7 @@ const ChatGemini = () => {
 
     // Auto scroll khi có tin nhắn mới
     useEffect(() => {
+        window.scroll(0, 0);
         if (messages.length > 0) {
             scrollToBottom();
         }

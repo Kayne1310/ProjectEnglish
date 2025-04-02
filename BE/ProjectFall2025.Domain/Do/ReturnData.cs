@@ -16,7 +16,7 @@ namespace ProjectFall2025.Domain.Do
 
         public class LoginResponseData : ReturnData
         {
-            public User user { get; set; }
+            public UserVM user { get; set; }
             public string token { get; set; }
         }
 

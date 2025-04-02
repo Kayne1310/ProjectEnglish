@@ -288,10 +288,17 @@
     }
     
     /* Thông tin ngôn ngữ */
-    .flashcard-overview p img {
-      width: 20px !important;
-      height: 15px !important;
+    .flashcardcanh-avatar {
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
+    }
+    .flashcardcanh-flag-img{
+        width: 30px !important;
+        height: 20px !important;
+        margin-right: 10px !important;
+        vertical-align: middle !important;
+        margin-left: 10px !important;
     }
     
     /* Người tạo */
@@ -301,8 +308,8 @@
     }
     
     .flashcardcanh-avatar {
-      width: 25px !important;
-      height: 25px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin-left: 5px !important;
     }
     
@@ -532,3 +539,126 @@
       padding: 0.5rem !important;
     }
   }
+
+
+  /* Spinner size control - apply for all screen sizes */
+.spinner-border-sm {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-width: 0.15em !important;
+  font-size: 8px !important;
+  vertical-align: middle !important;
+}
+
+/* AI Generate button with spinner */
+.btn-primary.w-100 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 38px !important;
+  font-size: 14px !important;
+}
+
+/* Ensure spinner stays small in button */
+.btn-primary.w-100 .spinner-border-sm {
+  margin-right: 4px !important;
+  margin-top: -2px !important;
+}
+
+
+
+@media (max-width: 768px) {
+  /* Container chính */
+  .flashcardcanh-header-title {
+    font-size: 1.75rem !important;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    color: rgb(33 135 213) !important;
+    font-weight: 600;
+  }
+
+  /* Container cho buttons */
+  .d-flex.flex-column.flex-md-row {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.5rem;
+  }
+
+  /* Style cho button edit và add */
+  .d-flex.gap-2.align-items-center {
+    width: 100%;
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
+
+  /* Style cho từng button */
+  .btn-primary {
+    /* min-width: 105px !important; */
+    height: 45px;
+    border-radius: 10px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  .btn-primary i {
+    font-size: 1.2rem;
+  }
+
+  /* Style cho button delete */
+  .btn-danger {
+    width: 100%;
+    max-width: 200px;
+    height: 45px;
+    border-radius: 10px !important;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(220,53,69,0.2);
+  }
+
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220,53,69,0.3);
+  }
+
+  .btn-danger i {
+    font-size: 1.2rem;
+    margin-right: 8px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 576px) {
+  .flashcardcanh-header-title {
+    font-size: 1.5rem !important;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-primary, .btn-danger {
+    height: 40px;
+  }
+
+  .btn-primary {
+    min-width: 40px;
+  }
+
+  .btn-danger {
+    max-width: 180px;
+  }
+
+  .btn i {
+    font-size: 1.1rem;
+  }
+}
+
+

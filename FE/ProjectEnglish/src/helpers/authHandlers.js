@@ -32,6 +32,8 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 gender: response.user.gender,
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
+                role: response.user.role,
+                userId: response.user.userID,
             }); // Lưu thông tin user vào context
 
             toast.success("Login successfully!");
@@ -85,6 +87,8 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
                 gender: response.user.gender,
                 facebookId: response.user.facebookId,
                 googleId: response.user.googleId,
+                role: response.user.role,
+                userId: response.user.userID,
             }); // Lưu thông tin user vào context
 
             setTimeout(() => {
@@ -132,6 +136,33 @@ export const handleLogout = async (
             setUser(null); // Xóa user trong context/state
             setIsLoading(false);
             window.location.href="/" // load sau khi điêu hướng
+        }
+    } catch (error) {
+        setError(`Logout failed. ${error.message}`);
+        setIsLoading(false);
+    }
+};
+
+export const handleLogoutAdmin = async (
+    setIsLoading,
+    setError,
+    setUser,
+) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+        const res = await authService.logout();
+
+        console.log("Logout Response:", res);
+
+        if (!res || res.error || res.returnCode !== 1) {
+            throw new Error(res?.returnMessage || "Logout failed");
+            
+        } else {
+            setUser(null); // Xóa user trong context/state
+            setIsLoading(false);
+            window.location.href="/loginadmin" // load sau khi điêu hướng
         }
     } catch (error) {
         setError(`Logout failed. ${error.message}`);
@@ -222,6 +253,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
+        console.log("google login succesul data",apiResponse);
         // console.log("Context Response:", userInfo.email);
         // console.log("Context Response:", userInfo.userId);
         // console.log("Context Response:", userInfo.name);
@@ -237,7 +269,21 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
         }
 
         else if (apiResponse.returnCode == 1) {
-            localStorage.setItem("isLoggedIn", "true");
+           
+            setUser({
+                userName: apiResponse.user.userName,
+                email: apiResponse.user.email,
+                picture: apiResponse.user.picture,
+                address: apiResponse.user.address,
+                age: apiResponse.user.age,
+                phone: apiResponse.user.phone,
+                gender: apiResponse.user.gender,
+                facebookId: apiResponse.user.facebookId,
+                googleId: apiResponse.user.googleId,
+                role: apiResponse.user.role,
+                userId: apiResponse.user.userID,
+            }); // Lưu thông tin user vào context
+
             setTimeout(() => {
                 setIsLoading(false);
                 navigate("/");

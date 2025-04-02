@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
+import "../../../assets/css/AdminCss/Reponsive.css";
+
 import {
   Row,
   Col,
@@ -1063,7 +1066,7 @@ const QuizQuestionAnswerPage = () => {
             <Modal.Title style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}>View Answers</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Table striped>
+            <Table striped responsive>
               <thead>
                 <tr>
                   <th>Answer</th>
@@ -1073,11 +1076,13 @@ const QuizQuestionAnswerPage = () => {
               <tbody>
                 {selectedQuestion?.answers?.map((answer, index) => (
                   <tr key={index}>
-                    <td>{answer.description}</td>
+                    <td className="answer-cell">
+                      <div className="answer-text">
+                        {answer.description}
+                      </div>
+                    </td>
                     <td>
-                      <span
-                        className={`badge ${answer.correct_answer ? "bg-success" : "bg-danger"} badge-uniform`}
-                      >
+                      <span className={`badge ${answer.correct_answer ? "bg-success" : "bg-danger"} badge-uniform`}>
                         {answer.correct_answer ? "True" : "False"}
                       </span>
                     </td>

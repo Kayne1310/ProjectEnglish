@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { Line, Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { getAllUser } from '../../../service/UserListService';
 import { getAllHistory, getQuizById } from '../../../service/historyService';
+import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
+import "../../../assets/css/AdminCss/Reponsive.css" // Import CSS file
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -15,8 +17,13 @@ const ChartPage = () => {
 
   const [quizStats, setQuizStats] = useState({
     labels: [],
-    data: []
+    data: [],
+    quarterInfo: '',
+    hasData: true,
+    error: null
   });
+  console.log("check quizStats", quizStats);
+  const [sortedQuizzes, setSortedQuizzes] = useState([]);
 
   useEffect(() => {
     const fetchUserStats = async () => {
@@ -69,84 +76,157 @@ const ChartPage = () => {
         const response = await getAllHistory();
         console.log("Raw API response:", response);
 
-        // 2. Đếm số lượng user unique cho mỗi quiz
+        // Kiểm tra nếu response rỗng hoặc không hợp lệ
+        if (!response || Object.keys(response).length === 0) {
+          setQuizStats({
+            labels: [],
+            data: [],
+            quarterInfo: getCurrentQuarterInfo(),
+            hasData: false,
+            errorMessage: "Không tìm thấy dữ liệu lịch sử làm quiz nào."
+          });
+          console.log("Không có dữ liệu lịch sử làm quiz");
+          return;
+        }
+
+        // 2. Lọc lịch sử trong quý hiện tại
+        const currentDate = new Date();
+        const currentQuarter = Math.floor(currentDate.getMonth() / 3);
+        const startMonth = currentQuarter * 3;
+        const endMonth = startMonth + 2;
+        
+        const startDate = new Date(currentDate.getFullYear(), startMonth, 1);
+        const endDate = new Date(currentDate.getFullYear(), endMonth + 1, 0);
+        
+        // 3. Đếm số lượng user unique cho mỗi quiz trong quý
         const quizUserCount = {};
+        let validHistoryCount = 0;
         
         Object.values(response).forEach(history => {
-          if (history.quiz_id) {
+          // Cập nhật để kiểm tra đúng cấu trúc API history mới
+          const createdAtValue = history.createAt || history.createdAt;
+          if (!createdAtValue) {
+            console.log("History missing creation date:", history);
+            return;
+          }
+
+          const historyDate = new Date(createdAtValue);
+          
+          // Kiểm tra xem ngày có hợp lệ không
+          if (isNaN(historyDate.getTime())) {
+            console.log("Invalid date in history:", createdAtValue);
+            return;
+          }
+          
+          // Chỉ tính các history trong quý hiện tại
+          if (historyDate >= startDate && historyDate <= endDate && history.quiz_id) {
+            validHistoryCount++;
             if (!quizUserCount[history.quiz_id]) {
               quizUserCount[history.quiz_id] = {
                 userSet: new Set(),
                 count: 0
               };
             }
-            quizUserCount[history.quiz_id].userSet.add(history.userId);
+            // Sử dụng userID thay vì userId để phù hợp với API
+            quizUserCount[history.quiz_id].userSet.add(history.userID);
             quizUserCount[history.quiz_id].count = quizUserCount[history.quiz_id].userSet.size;
           }
         });
 
-        // 3. Chuyển đổi thành mảng và sắp xếp
-        const sortedQuizData = await Promise.all(
-          Object.entries(quizUserCount)
-            .map(async ([quizId, data]) => {
-              try {
-                // Loại bỏ các ký tự đặc biệt và khoảng trắng từ quizId
-                const cleanQuizId = quizId.trim().replace(/['"]/g, '');
-                console.log("Clean Quiz ID:", cleanQuizId); // Kiểm tra ID sau khi clean
+        console.log(`Tìm thấy ${validHistoryCount} lịch sử hợp lệ trong quý hiện tại`);
 
-                // Gọi API với ID đã được clean
-                const quizResponse = await getQuizById(cleanQuizId);
-                console.log("Quiz Response:", quizResponse);
+        // Kiểm tra nếu không có quiz nào được làm trong quý
+        if (Object.keys(quizUserCount).length === 0) {
+          setQuizStats({
+            labels: [],
+            data: [],
+            quarterInfo: `Q${currentQuarter + 1} (${startMonth + 1}-${endMonth + 1}/${currentDate.getFullYear()})`,
+            hasData: false,
+            errorMessage: "Không có quiz nào được làm trong quý hiện tại."
+          });
+          console.log("Không có quiz nào được làm trong quý hiện tại");
+          return;
+        }
 
-                const quizName = quizResponse?.data?.name || 
-                                quizResponse?.name || 
-                                `Quiz ${cleanQuizId.substring(0, 6)}...`;
-                
-                return {
-                  quizId: cleanQuizId,
-                  quizName,
-                  count: data.count
-                };
-              } catch (error) {
-                console.error(`Error fetching quiz ${quizId}:`, error);
-                // Log thêm thông tin về error
-                console.log("Error details:", {
-                  quizId,
-                  errorMessage: error.message,
-                  errorResponse: error.response
-                });
-                
-                return {
-                  quizId,
-                  quizName: `Quiz ${quizId.substring(0, 6)}...`,
-                  count: data.count
-                };
-              }
-            })
-        );
+        // 4. Chuyển đổi thành mảng và sắp xếp
+        const quizPromises = Object.entries(quizUserCount).map(async ([quizId, data]) => {
+          try {
+            const cleanQuizId = quizId.trim().replace(/['"]/g, '');
+            console.log("Đang lấy thông tin cho Quiz ID:", cleanQuizId);
 
+            const quizResponse = await getQuizById(cleanQuizId);
+            console.log("Quiz Response:", quizResponse);
 
-        // 4. Sắp xếp theo số lượng và lấy top 5
-        const top5Quizzes = sortedQuizData
-          .sort((a, b) => b.count - a.count)
-          .slice(0, 5);
-
-        console.log("Top 5 quizzes:", top5Quizzes);
-
-        // 5. Cập nhật state
-        setQuizStats({
-          labels: top5Quizzes.map(quiz => quiz.quizName),
-          data: top5Quizzes.map(quiz => quiz.count)
+            // Sử dụng cấu trúc response mới theo format bạn đã cung cấp
+            const quizName = quizResponse?.name || 
+                             `Quiz ${cleanQuizId.substring(0, 6)}...`;
+            
+            return {
+              quizId: cleanQuizId,
+              quizName,
+              count: data.count,
+              difficulty: quizResponse?.difficulty || 'N/A',
+              countryName: quizResponse?.countryName || 'N/A'
+            };
+          } catch (error) {
+            console.error(`Lỗi khi lấy thông tin quiz ${quizId}:`, error);
+            
+            return {
+              quizId,
+              quizName: `Quiz ${quizId.substring(0, 6)}...`,
+              count: data.count,
+              errorFetching: true
+            };
+          }
         });
 
+        // Sử dụng Promise.allSettled thay vì Promise.all để tránh việc một promise bị từ chối làm hỏng tất cả
+        const quizResults = await Promise.allSettled(quizPromises);
+        
+        const sortedQuizData = quizResults
+          .filter(result => result.status === 'fulfilled')
+          .map(result => result.value)
+          .filter(quiz => quiz); // Lọc ra các giá trị null hoặc undefined
+        
+        console.log("Dữ liệu quiz đã xử lý:", sortedQuizData);
+        
+        // 5. Sắp xếp theo số lượng
+        const sortedQuizzes = sortedQuizData.sort((a, b) => b.count - a.count);
+
+        // 6. Cập nhật state với tất cả quiz
+        setQuizStats({
+          labels: sortedQuizzes.map(quiz => quiz.quizName),
+          data: sortedQuizzes.map(quiz => quiz.count),
+          quarterInfo: `Q${currentQuarter + 1} (${startMonth + 1}-${endMonth + 1}/${currentDate.getFullYear()})`,
+          hasData: sortedQuizzes.length > 0,
+          errorFetchingQuizNames: sortedQuizData.some(quiz => quiz.errorFetching)
+        });
+
+        setSortedQuizzes(sortedQuizzes);
+
       } catch (error) {
-        console.error('Error fetching quiz statistics:', error);
+        console.error('Lỗi khi lấy thống kê quiz:', error);
+        setQuizStats(prev => ({
+          ...prev, 
+          hasData: false, 
+          error: error.message,
+          errorMessage: "Đã xảy ra lỗi khi tải dữ liệu thống kê. Vui lòng thử lại sau."
+        }));
       }
+    };
+
+    // Hàm để lấy thông tin quý hiện tại
+    const getCurrentQuarterInfo = () => {
+      const currentDate = new Date();
+      const currentQuarter = Math.floor(currentDate.getMonth() / 3);
+      const startMonth = currentQuarter * 3;
+      const endMonth = startMonth + 2;
+      return `Q${currentQuarter + 1} (${startMonth + 1}-${endMonth + 1}/${currentDate.getFullYear()})`;
     };
 
     fetchQuizStats();
   }, []);
-
+  
   const lineData = {
     labels: userStats.labels,
     datasets: [
@@ -186,6 +266,18 @@ const ChartPage = () => {
         beginAtZero: true,
         ticks: {
           stepSize: 1
+        },
+        title: {
+          display: true,
+          text: 'Số lượng người đăng kí'
+        },
+        grid: {
+          display: false
+        }
+      },
+      x: {
+        grid: {
+          display: false
         }
       }
     }
@@ -195,23 +287,25 @@ const ChartPage = () => {
     labels: quizStats.labels,
     datasets: [
       {
-        label: 'Số lượng người làm bài',
+        label: 'Số lượng người dùng',
         data: quizStats.data,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
-          'rgba(153, 102, 255, 0.8)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)'
-        ],
-        borderWidth: 1
+        backgroundColor: quizStats.data.map((_, idx) => {
+          const colors = [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(199, 199, 199, 0.8)',
+            'rgba(83, 102, 255, 0.8)',
+            'rgba(78, 121, 112, 0.8)',
+            'rgba(255, 99, 255, 0.8)'
+          ];
+          return colors[idx % colors.length];
+        }),
+        borderColor: 'transparent',
+        borderWidth: 0
       }
     ]
   };
@@ -224,12 +318,23 @@ const ChartPage = () => {
       },
       title: {
         display: true,
-        text: 'Top 5 Quiz được làm nhiều nhất trong 1 tháng'
+        text: `Thống kê số người dùng làm Quiz trong ${quizStats.quarterInfo || 'quý hiện tại'}`
       },
       tooltip: {
         callbacks: {
           label: function(context) {
-            return `Số lượng làm bài: ${context.parsed.y}`;
+            const quiz = sortedQuizzes?.[context.dataIndex];
+            let tooltipText = `Số người dùng: ${context.parsed.y}`;
+            
+            if (quiz?.difficulty && quiz.difficulty !== 'N/A') {
+              tooltipText += ` | Độ khó: ${quiz.difficulty}`;
+            }
+            
+            if (quiz?.countryName && quiz.countryName !== 'N/A') {
+              tooltipText += ` | Quốc gia: ${quiz.countryName}`;
+            }
+            
+            return tooltipText;
           }
         }
       }
@@ -239,12 +344,40 @@ const ChartPage = () => {
         beginAtZero: true,
         ticks: {
           stepSize: 1
+        },
+        title: {
+          display: true,
+          text: 'Số người dùng khác nhau'
+        },
+        grid: {
+          display: false
         }
       },
       x: {
         ticks: {
           maxRotation: 45,
           minRotation: 45
+        },
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
+
+  // Thêm options cho responsive
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          boxWidth: 10,
+          padding: 10,
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12
+          }
         }
       }
     }
@@ -257,6 +390,7 @@ const ChartPage = () => {
           <Col lg={6} className="grid-margin stretch-card">
             <Card>
               <Card.Body>
+
                 <Card.Title>Thống kê đăng ký theo tháng</Card.Title>
                 {userStats.data.length > 0 && (
                   <>
@@ -271,25 +405,74 @@ const ChartPage = () => {
                     </div>
                   </>
                 )}
+
+                {/* <Card.Title>Line Chart</Card.Title>
+                <div style={{ height: '300px' }}>
+                  <Line data={lineData} options={chartOptions} />
+                </div> */}
+
               </Card.Body>
             </Card>
           </Col>
           <Col lg={6} className="grid-margin stretch-card">
             <Card>
               <Card.Body>
+
                 <Card.Title>Thống kê lượt làm Quiz</Card.Title>
-                {quizStats.data.length > 0 ? (
+                {quizStats.hasData ? (
                   <>
                     <Bar data={barData} options={barOptions} />
                     <div className="mt-3">
                       <p className="text-success">
-                        Quiz được làm nhiều nhất: {quizStats.labels[0]} ({quizStats.data[0]} lượt)
+                        Quiz được nhiều người dùng làm nhất: {quizStats.labels[0]} ({quizStats.data[0]} người dùng)
                       </p>
+                      <p>
+                        <i>*Ghi chú: Biểu đồ hiển thị số lượng người dùng khác nhau đã tham gia mỗi quiz trong {quizStats.quarterInfo || 'quý hiện tại'}</i>
+                      </p>
+                      {quizStats.errorFetchingQuizNames && (
+                        <p className="text-warning">
+                          <i>*Lưu ý: Một số tên quiz có thể không chính xác do gặp lỗi khi truy xuất thông tin.</i>
+                        </p>
+                      )}
                     </div>
                   </>
+                ) : quizStats.error ? (
+                  <div className="text-center p-4">
+                    <p className="text-danger">Đã xảy ra lỗi khi tải dữ liệu: {quizStats.error}</p>
+                    <p>Vui lòng kiểm tra kết nối mạng và thử lại sau.</p>
+                  </div>
                 ) : (
-                  <p>Đang tải dữ liệu...</p>
+                  <div className="text-center p-4">
+                    <p className="mb-3">{quizStats.errorMessage || 'Không có dữ liệu quiz nào trong ' + (quizStats.quarterInfo || 'quý hiện tại')}</p>
+                    <p>Có thể chưa có người dùng tham gia quiz nào trong khoảng thời gian này.</p>
+                    <div className="mt-4 p-3 bg-light rounded">
+                      <p className="font-weight-bold">Gợi ý:</p>
+                      <ul className="text-left">
+                        <li>Tạo thêm các quiz hấp dẫn để thu hút người dùng tham gia</li>
+                        <li>Quảng bá các quiz hiện có đến nhiều người dùng hơn</li>
+                        <li>Có thể xem xét mở rộng phạm vi thời gian (ví dụ: 6 tháng, 1 năm) để có thêm dữ liệu</li>
+                      </ul>
+                    </div>
+                  </div>
                 )}
+
+                {/* <Card.Title>Bar Chart</Card.Title>
+                <div style={{ height: '300px' }}>
+                  <Bar data={barData} options={chartOptions} />
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} className="grid-margin stretch-card">
+            <Card>
+              <Card.Body>
+                <Card.Title>Doughnut Chart</Card.Title>
+                <div style={{ height: '300px' }}>
+                  <Doughnut data={doughnutData} options={chartOptions} />
+                </div> */}
+
               </Card.Body>
             </Card>
           </Col>

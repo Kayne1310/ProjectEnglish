@@ -152,7 +152,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpGet("getUser")]
-        [Authorize("User")]
+        [Authorize("User","Admin")]
         public async Task<ActionResult> getUser()
         {
             try

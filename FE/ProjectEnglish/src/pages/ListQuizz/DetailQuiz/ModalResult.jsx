@@ -10,6 +10,7 @@ const ModalResult = (props) => {
 
   if (!dataModalResult) return null;
 
+  
   return (
     <Modal
       show={show}

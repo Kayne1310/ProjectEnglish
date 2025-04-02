@@ -115,7 +115,7 @@
                 }
 
                 .result-image {
-                    width: 100%;
+                    width: 200px;
                     max-width: 500px;
                     margin: 20px auto;
                     text-align: center;
@@ -542,6 +542,21 @@
             }
         }
     }
+
+    .result-image {
+        width: 100px !important;
+        max-width: 100px !important;
+        margin: 20px auto;
+        text-align: center;
+
+        img {
+            max-width: 100%;
+            height: 100px !important;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
 }
 
 // AI Explanation Modal Styles
@@ -705,6 +720,8 @@
             }
         }
     }
+
+    
 }
 
 // Customize Ant Design Modal
@@ -734,4 +751,115 @@
     width: 3rem;
     height: 3rem;
     border-width: 0.25rem;
+}
+
+/* Questions Sidebar Responsive */
+@media (max-width: 768px) {
+    .questions-sidebar {
+        width: 33%; /* Chiếm toàn bộ màn hình */
+        height: 100vh;
+        margin-top: 56px; /* Điều chỉnh theo header của bạn */
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-header {
+        padding: 15px !important;
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .questions-list {
+        padding: 0 !important;
+        height: calc(100vh - 120px) !important; /* Điều chỉnh theo header */
+        
+        .question-item {
+            padding: 15px !important;
+            border-bottom: 1px solid #eee;
+            
+            &:active {
+                background-color: #f0f0f0;
+            }
+
+            .question-number {
+                font-size: 16px !important;
+            }
+
+            .question-status i {
+                font-size: 18px !important;
+            }
+        }
+    }
+
+    .sidebar-toggle {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        right: -10px !important;
+        bottom: 50% !important;
+        top: auto !important;
+        transform: none !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #007bff !important;
+        border: none !important;
+
+        i {
+            color: white !important;
+            font-size: 20px !important;
+        }
+
+        &:not(.open) {
+            
+        }
+    }
+
+    /* Animation cho sidebar */
+    .questions-sidebar {
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.open {
+            transform: translateX(0);
+        }
+    }
+
+    /* Điều chỉnh main content */
+    .result-main-content {
+        &.with-sidebar {
+            margin-right: 0 !important;
+        }
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+    .questions-sidebar {
+        margin-top: 50px; /* Điều chỉnh cho màn hình nhỏ hơn */
+    }
+
+    .questions-list .question-item {
+        padding: 12px !important;
+
+        .question-number {
+            font-size: 14px !important;
+        }
+    }
+
+    .sidebar-toggle {
+        width: 35px !important;
+        height: 35px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+
+        i {
+            font-size: 18px !important;
+        }
+    }
 }

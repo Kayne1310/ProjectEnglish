@@ -36,6 +36,7 @@ import ViewChangePassword from './pages/ChangePassword/ViewChangePassword.jsx';
 import { Community } from './pages/Community/community.jsx';
 import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
 import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
+import AdminAuthWrapper from './pages/LoginAndRes/Admin/AdminAuthWrapper.jsx';
 
 
 const router = createBrowserRouter([
@@ -61,15 +62,16 @@ const router = createBrowserRouter([
       {
         path: "/listquizz",
         element:
-          <PrivateRoute>
-            <ListQuizz />
-          </PrivateRoute>,
+          <ListQuizz /> ,
         children: [{
           path: "detailquiz/:quizId", element: <DetailQuizz />
         },
         {
           path: "detailquiz/:quizId/result",
-          element: <ResultQuizz />
+          element:
+            (<PrivateRoute>
+              <ResultQuizz />
+            </PrivateRoute>)
         }
         ],
       },
@@ -155,7 +157,11 @@ const router = createBrowserRouter([
   // ADMIN
   {
     path: "/Admin",
-    element: <AppAdmin />,
+    element: (
+      <AdminAuthWrapper>
+        <AppAdmin />
+      </AdminAuthWrapper>
+    ),
     children: [
       {
         index: true,
