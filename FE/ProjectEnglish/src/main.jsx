@@ -37,6 +37,7 @@ import { Community } from './pages/Community/community.jsx';
 import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
 import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
 import AdminAuthWrapper from './pages/LoginAndRes/Admin/AdminAuthWrapper.jsx';
+import Faqpage from './pages/FAQ/FAQ.jsx';
 
 
 const router = createBrowserRouter([
@@ -121,6 +122,10 @@ const router = createBrowserRouter([
       {
         path: "/chatwithai",
         element: <ChatGemini />
+      },
+      {
+        path: "/faq",
+        element: <Faqpage />
       }
 
     ]

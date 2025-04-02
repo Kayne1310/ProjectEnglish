@@ -58,6 +58,9 @@ const Nav = () => {
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/chatwithai">Chat with AI</NavLink>
                                 </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/faq">FAQ</NavLink>
+                                </li>
                             </ul>
                         </div>
                         <div className="quote_btn-container">
