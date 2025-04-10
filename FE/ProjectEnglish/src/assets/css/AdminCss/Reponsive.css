@@ -136,16 +136,6 @@
     padding: 5px 0;
 }
 
-.answer-text:hover {
-    white-space: normal;
-    word-wrap: break-word;
-    background: white;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 4px;
-    padding: 8px;
-}
 
 @media (max-width: 768px) {
     .custom-modal {

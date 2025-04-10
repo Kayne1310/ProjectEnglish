@@ -85,9 +85,7 @@ const AuthForm = ({
                             </div>
                         )}
                         {!isLoading && error && <p style={{ color: "red" }}>{error}</p>}
-                        {isRegisterSuccess && showSignUp && (
-                            <p style={{ color: "green" }}>Register success. Please login</p>
-                        )}
+
                         <p className="toggle-text">
                             {toggleText}{" "}
                             <Link to={toggleLink} style={{ color: "#13d420", textDecoration: "none" }}>

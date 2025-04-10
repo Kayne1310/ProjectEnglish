@@ -10,7 +10,7 @@ namespace ProjectFall2025.Application.IServices
 {
     public interface IHistoryService
     {
-        Task<List<History>> getAllHistory();
+        Task<List<HistoryDTO>> getAllHistory();
         Task<History> getHistoryById(deleteHistoryVM history);
         Task<ReturnData> addHistory(createHistoryVM history);
         Task<ReturnData> updateHistory(updateHistoryVM history);

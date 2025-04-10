@@ -39,6 +39,16 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #eee;
             position: relative;
+            
+            .quiz-title-text {
+                display: inline-block;
+                max-width: 600px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: bottom;
+                cursor: pointer;
+            }
 
             &::after {
                 content: '';
@@ -66,6 +76,14 @@
                 border-radius: 10px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
                 text-align: center;
+                
+                .question-text {
+                    display: inline-block;
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
             }
 
             .q-image {
@@ -137,9 +155,10 @@
 
                             .answer-option-text {
                                 display: block;
-                                white-space: nowrap;
+                                max-width: 100%;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
+                                white-space: nowrap;
                             }
 
                             &:hover {
@@ -477,6 +496,7 @@
     background-color: #f8f9fa;
     border-radius: 12px;
     margin: 15px 0;
+    margin-bottom: 20px;
 
     .quiz-info-item {
         display: flex;
@@ -508,11 +528,25 @@
             font-size: 18px;
             color: #333;
             flex: 1;
-
+            
             strong {
                 color: #007bff;
                 margin-right: 10px;
                 font-size: 18px;
+            }
+            
+            &.quiz-name {
+                display: flex;
+                align-items: center;
+                
+                .quiz-name-text {
+                    display: inline-block;
+                    max-width: 200px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    vertical-align: bottom;
+                }
             }
         }
     }

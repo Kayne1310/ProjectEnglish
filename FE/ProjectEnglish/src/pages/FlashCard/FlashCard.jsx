@@ -273,7 +273,7 @@ const Flashcard = () => {
   };
 
   // Xử lý dữ liệu cho Quiz (tương tự QuizletForm)
-  const processedQuiz = (questions || []).map((quiz) => ({
+  const processedQuiz = Array.isArray(questions) ? questions.map((quiz) => ({
     ...quiz,
     image: quiz.image && quiz.image !== "null" && quiz.image !== "" ? quiz.image : "/default-image.jpg",
     description:
@@ -290,7 +290,7 @@ const Flashcard = () => {
               : "Câu trả lời không hợp lệ",
         }))
         : [{ idAnswered: "default", description: "Không có câu trả lời", isCorrect: false }],
-  }));
+  })) : [];
 
   const currentItem = mode === "flashcard" ? flashcards[currentQuestionIndex] : processedQuiz[currentQuestionIndex];
 

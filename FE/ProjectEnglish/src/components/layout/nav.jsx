@@ -87,7 +87,7 @@ const Nav = () => {
                                     {isLoggedIn ? (
                                         <>
                                             {/* Phần hiển thị tên và email */}
-                                            <div className="custom-user-info p-3 flex items-center justify-center text-center">
+                                            <div className="custom-user-info flex items-center justify-center text-center">
                                                 <div className="flex items-center gap-2 ">
                                                     {/* Avatar */}
                                                     <div className=" p-2 w-12 flex justify-center">
@@ -109,22 +109,24 @@ const Nav = () => {
                                                 </div>
                                             </div>
 
-                                            <hr className="border-gray-200 my-2 mx-1" />
+                                            <Dropdown.Divider />
                                             {/* Các mục menu */}
                                             <Dropdown.Item as={Link} to="/viewprofile" className="custom-dropdown-item">
                                                 <FaUser className="mr-2" /> Profile
                                             </Dropdown.Item>
+
                                             <Dropdown.Item as={Link} to="/changepassword" className="custom-dropdown-item">
                                                 <FaCogs className="mr-2" /> Change Password
                                             </Dropdown.Item>
-                                            <Dropdown.Divider />
 
                                             <Dropdown.Item as={Link} to="/settings" className="custom-dropdown-item">
                                                 <i className="fas fa-cog mr-2"></i> Settings
                                             </Dropdown.Item>
+
                                             <Dropdown.Item as={Link} to="/memes" className="custom-dropdown-item">
-                                                <i className="far fa-image mr-2"></i> Memes
+                                                <i className="far fa-image mr-2"></i> Themes
                                             </Dropdown.Item>
+
                                             <Dropdown.Item className="custom-dropdown-item">
                                                 <img
                                                     src="https://cf.quizizz.com/img/flag_icons/us.png"
@@ -133,6 +135,9 @@ const Nav = () => {
                                                 />
                                                 English
                                             </Dropdown.Item>
+
+                                            <Dropdown.Divider />
+
                                             <Dropdown.Item onClick={onLogout} className="custom-dropdown-item">
                                                 <FaSignOutAlt className="mr-2" /> Logout
                                             </Dropdown.Item>

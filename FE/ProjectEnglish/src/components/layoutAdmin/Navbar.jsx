@@ -55,10 +55,6 @@ const AdminNavbar = ({ toggleSidebar }) => {
           <ul className="navbar-nav navbar-nav-right">
             {/* Thông báo - Thêm responsive classes */}
             <li className="nav-item dropdown d-none d-lg-block">
-              <Link className="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-                <i className="icon-bell mx-0"></i>
-                <span className="count"></span>
-              </Link>
               <div className="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                 <p className="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
                 <Link className="dropdown-item preview-item">
@@ -107,7 +103,7 @@ const AdminNavbar = ({ toggleSidebar }) => {
                 style={{ cursor: 'pointer' }}
               >
                 <img 
-                  src="https://phanmemmkt.vn/wp-content/uploads/2024/09/avt-Facebook-hai-huoc.jpg" 
+                  src="https://res.cloudinary.com/dvm1fjo7a/image/upload/v1743537434/image%20admin/kryrvd4dwdvvmz7fqv93.jpg" 
                   alt="profile" 
                   className="img-fluid rounded-circle"
                 />

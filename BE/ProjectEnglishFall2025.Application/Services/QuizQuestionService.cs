@@ -124,7 +124,8 @@ namespace ProjectFall2025.Application.Services
                 {
                     question_id = ObjectId.Parse(quizQuestion.question_id), // ID để xác định document
                     description = quizQuestion.description,
-                    updateAt = DateTime.Now
+                    updateAt = DateTime.Now,
+                    quiz_id = ObjectId.Parse(quizQuestion.quiz_id)
                 };
 
                 // Nếu có ảnh mới, upload lên Cloudinary và cập nhật image
@@ -314,7 +315,8 @@ namespace ProjectFall2025.Application.Services
                     question_id = ObjectId.Parse(request.QuizQuestion.question_id),
                     description = request.QuizQuestion.description ?? existingQuestion.description,
                     image = image,
-                    quiz_id = existingQuestion.quiz_id, // Giữ nguyên quiz_id
+                    //quiz_id = existingQuestion.quiz_id, // Giữ nguyên quiz_id
+                    quiz_id = ObjectId.Parse(request.QuizQuestion.quiz_id),
                     createAt = existingQuestion.createAt, // Giữ nguyên createAt
                     updateAt = DateTime.Now
                 };
