@@ -185,7 +185,7 @@ namespace ProjectEnglishFall2025.Controllers
         }
 
         [HttpPost("submit")]
-        //[Authorize("User")]
+        [Authorize("User","Admin")]
         public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizRequest request)
         {
             try

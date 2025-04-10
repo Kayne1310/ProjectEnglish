@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import "./question.scss";
 
 const Questions = ({ question, questionIndex, userAnswers, handleAnswerSelect }) => {
   if (!question) return <p>Không có câu hỏi.</p>;
 
   const [open, setOpen] = useState(false);
-  const MAX_TEXT_LENGTH = 40; // Maximum length before truncating
+  const MAX_TEXT_LENGTH = 50; // Maximum length before truncating
 
   const shouldTruncate = (text) => text.length > MAX_TEXT_LENGTH;
   const truncateText = (text) => {
@@ -32,9 +33,17 @@ const Questions = ({ question, questionIndex, userAnswers, handleAnswerSelect })
         </div>
       )}
 
-      <div className="question">
-        <strong>Câu {questionIndex + 1}:</strong> {question.description}
-      </div>
+<div className="question">
+  <strong>Câu {questionIndex + 1}:</strong>
+  <div className="question-text-container">
+    <span
+      className="question-text"
+      title={question.description} // Thêm title để hiển thị tooltip mặc định
+    >
+      {question.description}
+    </span>
+  </div>
+</div>
 
       <div className="answer">
         <div className="answer-options">

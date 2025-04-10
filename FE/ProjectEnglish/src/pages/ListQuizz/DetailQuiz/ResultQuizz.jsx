@@ -164,7 +164,7 @@ const ResultQuizz = () => {
                                             id={`question-${question.question_id}`}
                                             className="result-question-container"
                                         >
-                                            <div className="result-question">
+                                            <div className="result-question" title={question.description}>
                                                 <strong>Câu {questionIndex + 1}:</strong> {question.description}
                                             </div>
                                             <div className="d-flex justify-content-start mt-2">
@@ -214,7 +214,7 @@ const ResultQuizz = () => {
 
                                                         // Nếu là đáp án người dùng chọn
                                                         if (isUserAnswer) {
-                                                            className = currentQuestionResult?.isCorrect ? 'correct' : 'incorrect';
+                                                                className = currentQuestionResult?.isCorrect ? 'correct' : 'incorrect' ;    
                                                         }
                                                         // Nếu là đáp án đúng từ systemAnswers
                                                         if (isCorrectAnswer) {
@@ -235,7 +235,7 @@ const ResultQuizz = () => {
                                                                                 index + 1
                                                                         )}
                                                                     </span>
-                                                                    <span className="result-answer-text">{answer.description}</span>
+                                                                    <span className="result-answer-text" title={answer.description}>{answer.description}</span>
                                                                 </div>
                                                             </div>
                                                         );

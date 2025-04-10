@@ -116,6 +116,10 @@
                     font-size: 18px;
                     margin-bottom: 20px;
                     color: #333;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 4;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
 
                     strong {
                         color: #007bff;
@@ -171,6 +175,10 @@
 
                                     .result-answer-text {
                                         color: #28a745;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 1 !important;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
                                     }
                                 }
 
@@ -185,6 +193,10 @@
 
                                     .result-answer-text {
                                         color: #dc3545;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 1 !important;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
                                     }
                                 }
 
@@ -229,9 +241,10 @@
                                     font-size: 16px;
                                     color: #495057;
                                     overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    white-space: nowrap;
                                     max-width: 100%;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 1 !important;
+                                    -webkit-box-orient: vertical;
                                 }
                             }
                         }

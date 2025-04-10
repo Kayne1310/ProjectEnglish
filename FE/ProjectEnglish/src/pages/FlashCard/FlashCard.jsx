@@ -592,8 +592,8 @@ const Flashcard = () => {
                             >
                               <i className={`bi ${isPlaying ? 'bi-volume-up-fill' : 'bi-volume-up'}`}></i>
                             </button>
-                            <div className="content fw-bold">{flashcards[currentQuestionIndex]?.question}
-                              <div className="transcription fs-5 mt-2 fw-normal font-italic ">{flashcards[currentQuestionIndex]?.transcription}</div>
+                            <div className="content fw-bold " title={flashcards[currentQuestionIndex]?.question}>{flashcards[currentQuestionIndex]?.question}
+                              <div className="transcription fs-5 mt-2 fw-normal font-italic  " title={flashcards[currentQuestionIndex]?.transcription}>{flashcards[currentQuestionIndex]?.transcription}</div>
                             </div>
                           </div>
 
