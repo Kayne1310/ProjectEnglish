@@ -22,9 +22,7 @@ const Footer = () => {
             </div>
 
             <div className="info_top">
-                <div className="row d-flex  justify-content-center">
-                  
-        
+                <div className="row d-flex  justify-content-center ">
                     <div className="col-md-4  ">
                         <div className="info_form">
                             <form action="">

@@ -644,8 +644,8 @@
 .custom-mode-btn {
     padding: 8px 16px;
     border: 1px solid #e0e0e0;
-    background: #fff;
-    color: #333;
+    background: #ba3d3d;
+    color: black;
     transition: all 0.3s ease;
     cursor: pointer;
     font-size: 14px;

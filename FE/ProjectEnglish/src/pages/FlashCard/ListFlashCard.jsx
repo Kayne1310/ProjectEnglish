@@ -490,7 +490,7 @@ const Flashcardcanh = () => {
                                     <p className="flashcardcanh-subtitle f">( {data.typeOfWord} )</p>
 
                                     <span className="flashcardcanh-definition font-weight-bold">Định nghĩa : </span>
-                                    <span>{data.define}</span>
+                                    <span className="flashcardcanh-definition-text text-truncate-hover">{data.define}</span>
 
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                         <p className="flashcardcanh-source font-weight-bold mb-0">Ví dụ:</p>
@@ -707,7 +707,7 @@ const Flashcardcanh = () => {
                         style={{ minWidth: "20rem", minHeight: "10rem" }}>
                         <Input
                             placeholder="Tên list từ"
-                            value={studySet.title}
+                            value={editData.title}
                             onChange={(e) => setEditData({ ...editData, title: e.target.value })}
                             className="w-100 m-2"
                         />

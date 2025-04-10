@@ -532,15 +532,15 @@ const Flashcard = () => {
   // JSX cho phần hiển thị phím tắt
   const KeyboardShortcuts = () => (
     <Card className="bg-white p-3 rounded-3">
-      <div className="d-flex align-items-center gap-2 mb-2">
+      <div className="d-flex  gap-2 mb-2">
         <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === 'ArrowRight' ? 'key-pressed' : ''}`}>→</kbd>
         <span className="text-secondary">Tiến tới</span>
       </div>
-      <div className="d-flex align-items-center gap-2 mb-2">
+      <div className="d-flex  gap-2 mb-2">
         <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === 'ArrowLeft' ? 'key-pressed' : ''}`}>←</kbd>
         <span className="text-secondary">Lùi lại</span>
       </div>
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex  gap-2">
         <kbd className={`custom-keyboard-key px-2 py-1 bg-light text-black rounded shadow-sm border ${pressedKey === ' ' ? 'key-pressed' : ''}`}>Space</kbd>
         <span className="text-secondary">Lật thẻ</span>
       </div>
@@ -954,7 +954,7 @@ const Flashcard = () => {
                   {/* Phát âm giọng UK, US - Chỉ hiển thị khi mode là flashcard */}
                   {mode === "flashcard" && (
                     <div className="custom-audio-section mb-3">
-                      <div className="d-flex align-items-center gap-2">
+                      <div className="d-flex  gap-2">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path d="M10.5 3.75a.75.75 0 0 0-1.264-.546L5.203 7H2.667a.75.75 0 0 0-.7.48A6.985 6.985 0 0 0 1.5 10c0 .887.165 1.737.468 2.52.111.29.39.48.7.48h2.535l4.033 3.796a.75.75 0 0 0 1.264-.546V3.75ZM16.45 5.05a.75.75 0 0 0-1.06 1.061 5.5 5.5 0 0 1 0 7.778.75.75 0 0 0 1.06 1.06 7 7 0 0 0 0-9.899Z" />
                           <path d="M14.329 7.172a.75.75 0 0 0-1.061 1.06 2.5 2.5 0 0 1 0 3.536.75.75 0 0 0 1.06 1.06 4 4 0 0 0 0-5.656Z" />
