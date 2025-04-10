@@ -1,4 +1,3 @@
-
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -37,6 +36,7 @@ import { Community } from './pages/Community/community.jsx';
 import ChatGemini from './pages/ChatWithAI/chatwithai.jsx';
 import ResultQuizz from './pages/ListQuizz/DetailQuiz/ResultQuizz.jsx';
 import AdminAuthWrapper from './pages/LoginAndRes/Admin/AdminAuthWrapper.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 
 const router = createBrowserRouter([
@@ -187,7 +187,10 @@ const router = createBrowserRouter([
     ]
   },
 
-
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 
 
