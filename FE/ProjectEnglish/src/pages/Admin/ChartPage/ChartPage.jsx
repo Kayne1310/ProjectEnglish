@@ -278,6 +278,16 @@ const ChartPage = () => {
       x: {
         grid: {
           display: false
+        },
+        ticks: {
+
+          callback: function(value, index) {
+            const label = this.getLabelForValue(value);
+            if (label.length > 15) {
+              return label.substring(0, 15) + '...';
+            }
+            return label;
+          }
         }
       }
     }
@@ -356,6 +366,16 @@ const ChartPage = () => {
       x: {
         grid: {
           display: false
+        },
+        ticks: {
+
+          callback: function(value, index) {
+            const label = this.getLabelForValue(value);
+            if (label.length > 15) {
+              return label.substring(0, 15) + '...';
+            }
+            return label;
+          }
         }
       }
     }
@@ -386,7 +406,6 @@ const ChartPage = () => {
           <Col lg={6} className="grid-margin stretch-card">
             <Card>
               <Card.Body>
-
                 <Card.Title>Thống kê đăng ký theo tháng</Card.Title>
                 {userStats.data.length > 0 && (
                   <>
@@ -413,14 +432,25 @@ const ChartPage = () => {
           <Col lg={6} className="grid-margin stretch-card">
             <Card>
               <Card.Body>
-
                 <Card.Title>Thống kê lượt làm Quiz</Card.Title>
                 {quizStats.hasData ? (
                   <>
                     <Bar data={barData} options={barOptions} />
                     <div className="mt-3">
                       <p className="text-success">
-                        Quiz được nhiều người dùng làm nhất: {quizStats.labels[0]} ({quizStats.data[0]} người dùng)
+                        Quiz được nhiều người dùng làm nhất: <span 
+                          style={{
+                            maxWidth: "200px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "inline-block",
+                            verticalAlign: "bottom"
+                          }}
+                          title={quizStats.labels[0]}
+                        >
+                          {quizStats.labels[0]}
+                        </span> ({quizStats.data[0]} người dùng)
                       </p>
                       <p>
                         <i className='text-danger'>*Ghi chú: Biểu đồ hiển thị số lượng người dùng khác nhau đã tham gia mỗi quiz trong {quizStats.quarterInfo || 'quý hiện tại'}</i>
@@ -451,23 +481,6 @@ const ChartPage = () => {
                     </div>
                   </div>
                 )}
-
-                {/* <Card.Title>Bar Chart</Card.Title>
-                <div style={{ height: '300px' }}>
-                  <Bar data={barData} options={chartOptions} />
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} className="grid-margin stretch-card">
-            <Card>
-              <Card.Body>
-                <Card.Title>Doughnut Chart</Card.Title>
-                <div style={{ height: '300px' }}>
-                  <Doughnut data={doughnutData} options={chartOptions} />
-                </div> */}
 
               </Card.Body>
             </Card>

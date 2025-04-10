@@ -107,7 +107,7 @@ const ListDocument = () => {
                 <section className={`slider_section long_section ${!isHomePage ? 'layout_padding' : ''}`} data-aos={isHomePage ? "fade-up" : ""}>
                     <div className="container">
                         <div className="">
-                            <h1 className="text-3xl font-bold text-primary">Document</h1>
+                            <h1 className="text-3xl font-bold text-primary">Tài liệu</h1>
                             <p>
                                 Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất.
                             </p>

@@ -6,7 +6,7 @@ import RightContent from "./RightContentQuiz/RightContent";
 import ModalResult from "./ModalResult";
 import "./DetailQuizz.scss"; // File chứa style cho cả DetailQuizz và Questions
 import testImage from "../../../assets/image/b1.jpg";
-import { Modal } from 'antd'; // Thêm Modal từ antd để hiển thị modal xác nhận
+import { Modal, Tooltip } from 'antd'; // Thêm Modal và Tooltip từ antd
 
 const DetailQuizz = () => {
   const navigate = useNavigate();
@@ -204,7 +204,9 @@ const DetailQuizz = () => {
         <div className="quiz-info">
           <div className="quiz-info-item">
             <i className="fas fa-file-alt"></i>
-            <p><strong>Tên bài kiểm tra:</strong> {quizInforVM?.name}</p>
+            <Tooltip title={quizInforVM?.name} placement="top">
+              <p className="quiz-name"><strong>Bài kiểm tra:</strong> <span className="quiz-name-text">{quizInforVM?.name}</span></p>
+            </Tooltip>
           </div>
           <div className="quiz-info-item">
             <i className="fas fa-list-ol"></i>
@@ -225,7 +227,11 @@ const DetailQuizz = () => {
             <>
               <div className="left-content">
                 <div className="title">
-                  Quiz: {processedQuiz.length > 0 && processedQuiz[0].quizInforVM ? processedQuiz[0].quizInforVM.name : quizId}
+                  <Tooltip title={processedQuiz.length > 0 && processedQuiz[0].quizInforVM ? processedQuiz[0].quizInforVM.name : quizId} placement="top">
+                    <span className="quiz-title-text">
+                      Quiz: {processedQuiz.length > 0 && processedQuiz[0].quizInforVM ? processedQuiz[0].quizInforVM.name : quizId}
+                    </span>
+                  </Tooltip>
                 </div>
 
              
