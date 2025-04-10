@@ -57,6 +57,11 @@ body {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
 }
 .listquiz-card-title-2 {
   font-size: 14px;
@@ -148,6 +153,11 @@ body {
 
   .listquiz-card-title {
     font-size: 12px;
+  
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     /* Giảm font size */
   }
 
@@ -189,9 +199,14 @@ body {
 
   .listquiz-card-title {
     font-size: 20px !important;
-    display: flex;
-    justify-content: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+ 
   }
   .listquiz-card-title-2 {
     font-size: 14px !important;

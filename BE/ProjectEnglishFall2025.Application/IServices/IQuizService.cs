@@ -9,19 +9,21 @@ using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using Microsoft.AspNetCore.Http;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Domain.ViewModel.ViewModel_SubmitQuiz;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 
 namespace ProjectFall2025.Application.IServices
 {
     public interface IQuizService
     {
-        Task<List<QuizDto>> GetAllQuizs();
+        //Task<List<QuizDto>> GetAllQuizs();
+        Task<PaginatedResponse<QuizDto>> GetAllQuizsAsync(PaginationRequest request);
         Task<Quiz> GetIdQuiz(DeleteQuizVM quiz);
         Task<ReturnData> AddQuiz(CreateQuizVM quiz);
         Task<ReturnData> UpdateQuiz(UpdateQuizVM quiz);
         Task<ReturnData> DeleteQuiz(DeleteQuizVM quiz);
         Task<ReturnData> HandleDelete(DeleteQuizVM request); // Xóa quiz và các question và answer liên quan
         Task<List<QuizzAndQuestionVM> > getCountQuestionInQuiz();
-        Task<List<QuestionAndAnswerVM> > GetQuestionsAndAnswersByQuizIdAsync(string id);
+        Task<PaginatedResponse<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(PaginationRequest request);
         Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId);
     }
 }

@@ -295,7 +295,7 @@ const FlashcardList = () => {
                                         flashcardCount: data.flashcardCount,
                                     }}
                                     className="d-block w-100 bg-white rounded shadow-sm p-3 border text-decoration-none transition-all custom-link custom-scroll">
-                                    <h5 className="fw-bold text-truncate" >{data.studySet.title}</h5>
+                                    <h5 className="fw-bold text-truncate " title={data.studySet.title}>{data.studySet.title}</h5>
                                     <h6 className="d-flex align-items-center">
                                         <svg className="mr-1" stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                             <rect width="336" height="336" x="128" y="128" fill="none" strokeLinejoin="round" strokeWidth="32" rx="57" ry="57"></rect>

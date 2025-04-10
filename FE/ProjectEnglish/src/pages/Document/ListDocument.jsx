@@ -203,10 +203,11 @@ const ListDocument = () => {
                                                 src="https://lh3.googleusercontent.com/a/ACg8ocKCC7S34GPA39ZSn9vC5VtbTqXGjwKtttuidg8_-SZQn605TO8=s96-c"
                                                 alt="Avatar"
                                             />
+
                                         </div>
                                         <div className="card-body card-body-fixed" style={{ overflowY: "hidden" }}>
-                                            <h4 className="card-title">{quiz.name}</h4>
-                                            <p className="card-text">{quiz.description}</p>
+                                            <h4 className="card-title" title={quiz.name}>{quiz.name}</h4>
+                                            <p className="card-text" title={quiz.description}>{quiz.description}</p>
                                             <p className="card-text view">
                                                 <i className="fas fa-eye"></i>
                                                 View

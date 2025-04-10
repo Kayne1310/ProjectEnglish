@@ -10,8 +10,9 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
 {
     public interface IUserRepository
     {
-
-        Task<List<User>> getAllUser();
+        //Task<List<User>> getAllUser();
+        Task<int> GetUserCountAsync();
+        Task<List<User>> GetAllUsersAsync(int skip, int pageSize, string sortBy, bool sortAscending);
         Task<User> addUser(User user);
         Task<User> findUserByUsername(string username);
         Task<User> FindUserByFacebookId(string facebookId);

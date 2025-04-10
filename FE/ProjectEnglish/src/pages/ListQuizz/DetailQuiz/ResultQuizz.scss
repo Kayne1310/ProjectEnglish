@@ -34,11 +34,19 @@
                 font-size: 24px;
                 color: #333;
                 margin-bottom: 10px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
             }
 
             p {
                 color: #666;
                 margin: 5px 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
             }
         }
 
@@ -108,9 +116,21 @@
                     font-size: 18px;
                     margin-bottom: 20px;
                     color: #333;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 4;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
 
                     strong {
                         color: #007bff;
+                    }
+                    
+                    span {
+      
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                 }
 
@@ -155,6 +175,10 @@
 
                                     .result-answer-text {
                                         color: #28a745;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 1 !important;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
                                     }
                                 }
 
@@ -169,6 +193,10 @@
 
                                     .result-answer-text {
                                         color: #dc3545;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 1 !important;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
                                     }
                                 }
 
@@ -184,6 +212,7 @@
                                     font-size: 14px;
                                     font-weight: 600;
                                     color: #666;
+                                    flex-shrink: 0;
 
                                     i {
                                         font-size: 1.5rem;
@@ -211,6 +240,11 @@
                                     flex: 1;
                                     font-size: 16px;
                                     color: #495057;
+                                    overflow: hidden;
+                                    max-width: 100%;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 1 !important;
+                                    -webkit-box-orient: vertical;
                                 }
                             }
                         }
@@ -380,11 +414,22 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
             .close-icon {
                 cursor: pointer;
                 font-size: 18px;
                 color: #666;
+            }
+
+            span {
+                display: inline-block;
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
     }

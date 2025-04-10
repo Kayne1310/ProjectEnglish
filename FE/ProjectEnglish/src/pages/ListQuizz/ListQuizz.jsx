@@ -227,7 +227,7 @@ const ListQuizz = () => {
                             }}
                           ></div>
                           <div className="listquiz-card-content">
-                            <h4 className="listquiz-card-title">
+                            <h4 className="listquiz-card-title" title={quiz.name}>
                               {/* <i className="bi bi-book me-2"></i> */}
                               {quiz.name}
                             </h4>

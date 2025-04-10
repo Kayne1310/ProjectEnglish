@@ -21,6 +21,33 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             this.dbContext = dbContext;
         }
 
+
+        //public async Task<List<User>> getAllUser()
+        //{
+        //    var userCollection = dbContext.GetCollectionUser();
+        //    return await userCollection.Find(_ => true).ToListAsync();
+        //}
+
+        public async Task<int> GetUserCountAsync()
+        {
+            var usercollection = dbContext.GetCollectionUser();
+            return (int)await usercollection.CountDocumentsAsync(FilterDefinition<User>.Empty);
+        }
+
+        public async Task<List<User>> GetAllUsersAsync(int skip, int pageSize, string sortBy, bool sortAscending)
+        {
+            var usercollection = dbContext.GetCollectionUser();
+            var sortDefinition = sortAscending
+                ? Builders<User>.Sort.Ascending(sortBy)
+                : Builders<User>.Sort.Descending(sortBy);
+
+            return await usercollection.Find(FilterDefinition<User>.Empty)
+                .Sort(sortDefinition)
+                .Skip(skip)
+                .Limit(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<User> addUser(User user)
         {
             var userCollection = dbContext.GetCollectionUser();
@@ -68,18 +95,10 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
         }
 
-        public async Task<List<User>> getAllUser()
-        {
-            var userCollection = dbContext.GetCollectionUser();
-            return await userCollection.Find(_ => true).ToListAsync();
-        }
-
         public async Task<int> UpdateTokenResetPassword(User user)
         {
             var update = Builders<User>.Update.Set(x => x.ResetPasswordToken, user.ResetPasswordToken)
                                               .Set(x => x.ResetTokenExpiry, DateTime.Now.AddMinutes(15));
-
-
 
             var res = await dbContext.GetCollectionUser().UpdateManyAsync(e => e.Email == user.Email, update);
 
@@ -89,10 +108,6 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
         public async Task<int> UpdateUser(User user)
         {
-            //var updateuser = await dbContext.GetCollectionUser().ReplaceOneAsync(x => x.UserID == user.UserID, user);
-
-            //return (int)updateuser.ModifiedCount;
-
             var updateDefinition = Builders<User>.Update
                 .Set(a => a.UserName, user.UserName)
                 .Set(a => a.Address, user.Address)

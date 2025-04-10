@@ -10,11 +10,13 @@ using ProjectFall2025.Application.IServices;
 using ProjectFall2025.Application.UnitOfWork;
 using ProjectFall2025.Common.ImgCountry;
 using ProjectFall2025.Domain.Do;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 using ProjectFall2025.Domain.ViewModel.ViewModel_Quiz;
 using ProjectFall2025.Domain.ViewModel.ViewModel_QuizQuestion;
 using ProjectFall2025.Domain.ViewModel.ViewModel_SubmitQuiz;
 using ProjectFall2025.Infrastructure.Repositories.IRepo;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
+using System.Linq;
 
 
 namespace ProjectFall2025.Application.Services
@@ -59,25 +61,55 @@ namespace ProjectFall2025.Application.Services
             this.validatorAnswer = validatorAnswer;
         }
 
-        public async Task<List<QuizDto>> GetAllQuizs()
-        {
-            try
-            {
-                var getAll = await quizRepository.GetAllQuizs();
-                var list = new List<QuizDto>();
+        //public async Task<List<QuizDto>> GetAllQuizs()
+        //{
+        //    try
+        //    {
+        //        var getAll = await quizRepository.GetAllQuizs();
+        //        var list = new List<QuizDto>();
 
-                foreach (var item in getAll)
-                {
-                    //map do to dto
-                    var dto = mapper.Map<QuizDto>(item);
-                    list.Add(dto);
-                }
-                return list;
-            }
-            catch (Exception ex)
+        //        foreach (var item in getAll)
+        //        {
+        //            //map do to dto
+        //            var dto = mapper.Map<QuizDto>(item);
+        //            list.Add(dto);
+        //        }
+        //        return list;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
+
+        public async Task<PaginatedResponse<QuizDto>> GetAllQuizsAsync(PaginationRequest request)
+        {
+            var totalItems = await quizRepository.GetQuizCountAsync();
+            var skip = (request.Page - 1) * request.PageSize;
+
+            // Validate SortBy field
+            var validSortFields = new[] { "name", "countryName", "difficulty" }; // Các field cho phép sort
+            var sortBy = validSortFields.Contains(request.SortBy) ? request.SortBy : "name";
+
+            var quizs = await quizRepository.GetAllQuizsAsync(
+                skip,
+                request.PageSize,
+                sortBy,
+                request.SortAscending
+            );
+
+            var quizDtos = quizs.Select(q => mapper.Map<QuizDto>(q)).ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+
+            return new PaginatedResponse<QuizDto>
             {
-                throw new Exception(ex.Message);
-            }
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                CurrentPage = request.Page,
+                PageSize = request.PageSize,
+                Items = quizDtos
+            };
         }
 
         public async Task<Quiz> GetIdQuiz(DeleteQuizVM quiz)
@@ -353,142 +385,177 @@ namespace ProjectFall2025.Application.Services
             }
         }
 
-        public async Task<List<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(string id)
+        public async Task<PaginatedResponse<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(PaginationRequest request)
         {
-            ObjectId Quizid = ObjectId.Parse(id);
-            var data = await quizRepository.GetQuestionByQuizId(Quizid);
-            return data
-             .Where(doc => doc.Contains("QuestionInfor") && doc["QuestionInfor"].BsonType == BsonType.Array)
-             .SelectMany(doc => doc["QuestionInfor"].AsBsonArray.Select(q => new QuestionAndAnswerVM
-             {
-                 question_id = q["_id"].ToString(),
-                 description = q["description"].ToString(),
-                 image = q["image"].ToString(),
-                 quiz_id = doc["_id"].ToString(),
+            try
+            {
+                ObjectId quizId = ObjectId.Parse(request.QuizId);
 
-                 // Thông tin Quiz
-                 QuizInforVM = new QuizInforVM
-                 {
-                     name = doc.Contains("name") ? doc["name"].ToString() : null,
-                     description = doc.Contains("description") ? doc["description"].AsString : null,
-                     image = doc.Contains("image") ? doc["image"].ToString() : null,
-                     difficulty = doc.Contains("difficulty") ? doc["difficulty"].AsString : null
-                 },
+                // Validate SortBy field
+                var validSortFields = new[] { "description", "question_id" }; // Các field có thể sắp xếp
+                var sortBy = validSortFields.Contains(request.SortBy) ? request.SortBy : "description";
 
-                 // Lấy tất cả câu trả lời của câu hỏi
-                 answers = q["QuestionAnswer"].BsonType == BsonType.Array
-                     ? q["QuestionAnswer"].AsBsonArray.Select(a => new AnswerVM
-                     {
-                         idAnswered = a["_id"].ToString(),
-                         description = a["description"].ToString(),
-                         correct_answer = a["correct_answer"].ToBoolean(),
-                     }).ToList()
-                     : new List<AnswerVM>()
-             })).ToList();
+                // Lấy dữ liệu từ repository với pagination và sorting
+                var (totalItems, questions) = await quizRepository.GetQuestionsByQuizIdAsync(
+                    quizId,
+                    (request.Page - 1) * request.PageSize, // Skip
+                    request.PageSize,
+                    sortBy,
+                    request.SortAscending
+                );
+
+                var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+
+                // Map dữ liệu sang ViewModel
+                var result = questions.SelectMany(doc =>
+                    doc["QuestionInfor"].AsBsonArray.Select(q => new QuestionAndAnswerVM
+                    {
+                        question_id = q["_id"].ToString(),
+                        description = q["description"].ToString(),
+                        image = q["image"].ToString(),
+                        quiz_id = doc["_id"].ToString(),
+                        QuizInforVM = new QuizInforVM
+                        {
+                            name = doc.Contains("name") ? doc["name"].ToString() : null,
+                            description = doc.Contains("description") ? doc["description"].AsString : null,
+                            image = doc.Contains("image") ? doc["image"].ToString() : null,
+                            difficulty = doc.Contains("difficulty") ? doc["difficulty"].AsString : null
+                        },
+                        answers = q["QuestionAnswer"].BsonType == BsonType.Array
+                            ? q["QuestionAnswer"].AsBsonArray.Select(a => new AnswerVM
+                            {
+                                idAnswered = a["_id"].ToString(),
+                                description = a["description"].ToString(),
+                                correct_answer = a["correct_answer"].ToBoolean(),
+                            }).ToList()
+                            : new List<AnswerVM>()
+                    })).ToList();
+
+                return new PaginatedResponse<QuestionAndAnswerVM>
+                {
+                    TotalItems = totalItems,
+                    TotalPages = totalPages,
+                    CurrentPage = request.Page,
+                    PageSize = request.PageSize,
+                    Items = result
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-		public async Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId)
-		{
-			try
-			{
-				if (request == null)
-					throw new ArgumentException("Request body is null.");
-				if (string.IsNullOrEmpty(request.QuizId))
-					throw new ArgumentException("QuizId is null or empty.");
+        public async Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId)
+        {
+            try
+            {
+                if (request == null)
+                    throw new ArgumentException("Request body is null.");
+                if (string.IsNullOrEmpty(request.QuizId))
+                    throw new ArgumentException("QuizId is null or empty.");
 
-				var quizQuestions = await GetQuestionsAndAnswersByQuizIdAsync(request.QuizId);
-				if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
+                // Tạo PaginationRequest để lấy tất cả câu hỏi
+                var paginationRequest = new PaginationRequest
+                {
+                    QuizId = request.QuizId,
+                };
 
-				var response = new SubmitQuizResponse
-				{
-					QuizId = request.QuizId,
-					QuizTitle = quizQuestions.FirstOrDefault()?.QuizInforVM?.name ?? "No tital available",
-					QuizDescription = quizQuestions.FirstOrDefault()?.QuizInforVM?.description ?? "No description available",
-					CountTotal = quizQuestions.Count,
-					CountCorrect = 0
-				};
+                var quizQuestionsResponse = await GetQuestionsAndAnswersByQuizIdAsync(paginationRequest);
+                var quizQuestions = quizQuestionsResponse.Items; // Lấy danh sách câu hỏi từ PaginatedResponse
 
-				if (request.Answers == null || !request.Answers.Any())
-				{
-					return response;
-				}
+                if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
 
-				var userAnswersToSave = new List<QuizUserAnswer>();
+                var response = new SubmitQuizResponse
+                {
+                    QuizId = request.QuizId,
+                    QuizTitle = quizQuestions.FirstOrDefault()?.QuizInforVM?.name ?? "No title available",
+                    QuizDescription = quizQuestions.FirstOrDefault()?.QuizInforVM?.description ?? "No description available",
+                    CountTotal = quizQuestions.Count,
+                    CountCorrect = 0
+                };
 
-				foreach (var userAnswer in request.Answers)
-				{
-					if (userAnswer == null || string.IsNullOrEmpty(userAnswer.QuestionId) || string.IsNullOrEmpty(userAnswer.UserAnswerId))
-						continue;
+                if (request.Answers == null || !request.Answers.Any())
+                {
+                    return response;
+                }
 
-					var question = quizQuestions.FirstOrDefault(q => q.question_id == userAnswer.QuestionId);
-					if (question == null) continue;
+                var userAnswersToSave = new List<QuizUserAnswer>();
 
-					var correctAnswerId = question.answers.FirstOrDefault(a => a.correct_answer)?.idAnswered;
-					if (correctAnswerId == null) continue;
+                foreach (var userAnswer in request.Answers)
+                {
+                    if (userAnswer == null || string.IsNullOrEmpty(userAnswer.QuestionId) || string.IsNullOrEmpty(userAnswer.UserAnswerId))
+                        continue;
 
-					var userAnswerDescription = question.answers.FirstOrDefault(a => a.idAnswered == userAnswer.UserAnswerId)?.description ?? "Unknown";
-					bool isCorrect = userAnswer.UserAnswerId == correctAnswerId;
-					if (isCorrect) response.CountCorrect++;
+                    var question = quizQuestions.FirstOrDefault(q => q.question_id == userAnswer.QuestionId);
+                    if (question == null) continue;
 
-					response.QuizData.Add(new QuizResult
-					{
-						QuestionId = userAnswer.QuestionId,
-						QuestionDescription = question.description,
-						IsCorrect = isCorrect,
-						UserAnswerId = userAnswer.UserAnswerId,
-						UserAnswerDescription = userAnswerDescription,
-						SystemAnswers = question.answers.Select(a => new AnswerDto
-						{
-							Id = a.idAnswered,
-							Description = a.description,
-							CorrectAnswer = a.correct_answer
-						}).ToList()
-					});
+                    var correctAnswerId = question.answers.FirstOrDefault(a => a.correct_answer)?.idAnswered;
+                    if (correctAnswerId == null) continue;
 
-					userAnswersToSave.Add(new QuizUserAnswer
-					{
-						quizUserAnswer_id = ObjectId.GenerateNewId(),
-						user_answers = new ObjectId( userAnswer.UserAnswerId),
-						createAt = DateTime.UtcNow,
-						updateAt = DateTime.UtcNow,
-						UserID = new ObjectId(userId),
-						quiz_id = new ObjectId(request.QuizId),
-						question_id = new ObjectId(userAnswer.QuestionId)
-					});
-				}
+                    var userAnswerDescription = question.answers.FirstOrDefault(a => a.idAnswered == userAnswer.UserAnswerId)?.description ?? "Unknown";
+                    bool isCorrect = userAnswer.UserAnswerId == correctAnswerId;
+                    if (isCorrect) response.CountCorrect++;
 
-				var history = new History
-				{
-					history_id = ObjectId.GenerateNewId(),
-					total_questions = response.CountTotal.ToString(),
-					total_corrects = response.CountCorrect.ToString(),
-					createAt = DateTime.UtcNow,
-					updateAt = DateTime.UtcNow,
-					UserID = new ObjectId(userId),
-					quiz_id = new ObjectId(request.QuizId)
-				};
+                    response.QuizData.Add(new QuizResult
+                    {
+                        QuestionId = userAnswer.QuestionId,
+                        QuestionDescription = question.description,
+                        IsCorrect = isCorrect,
+                        UserAnswerId = userAnswer.UserAnswerId,
+                        UserAnswerDescription = userAnswerDescription,
+                        SystemAnswers = question.answers.Select(a => new AnswerDto
+                        {
+                            Id = a.idAnswered,
+                            Description = a.description,
+                            CorrectAnswer = a.correct_answer
+                        }).ToList()
+                    });
 
-				await userAnswerRepository.InsertManyAsync(userAnswersToSave);
-				await historyRepository.InsertAsync(history);
+                    userAnswersToSave.Add(new QuizUserAnswer
+                    {
+                        quizUserAnswer_id = ObjectId.GenerateNewId(),
+                        user_answers = new ObjectId(userAnswer.UserAnswerId),
+                        createAt = DateTime.UtcNow,
+                        //updateAt = DateTime.UtcNow,
+                        UserID = new ObjectId(userId),
+                        quiz_id = new ObjectId(request.QuizId),
+                        question_id = new ObjectId(userAnswer.QuestionId)
+                    });
+                }
 
-				return response;
-			}
-			catch (FormatException ex)
-			{
-				throw new ArgumentException($"Invalid ID format: {ex.Message}", ex);
-			}
-			catch (MongoException ex)
-			{
-				throw new Exception($"Database error: {ex.Message}", ex);
-			}
-			catch (ArgumentException ex)
-			{
-				throw; // Ném lại ArgumentException đã được định nghĩa
-			}
-			catch (Exception ex)
-			{
-				throw new Exception($"An unexpected error occurred: {ex.Message}", ex);
-			}
-		}
-	}
+                var history = new History
+                {
+                    history_id = ObjectId.GenerateNewId(),
+                    total_questions = response.CountTotal.ToString(),
+                    total_corrects = response.CountCorrect.ToString(),
+                    createAt = DateTime.UtcNow,
+                    //updateAt = DateTime.UtcNow,
+                    UserID = new ObjectId(userId),
+                    quiz_id = new ObjectId(request.QuizId)
+                };
+
+                await userAnswerRepository.InsertManyAsync(userAnswersToSave);
+                await historyRepository.InsertAsync(history);
+
+                return response;
+            }
+            catch (FormatException ex)
+            {
+                throw new ArgumentException($"Invalid ID format: {ex.Message}", ex);
+            }
+            catch (MongoException ex)
+            {
+                throw new Exception($"Database error: {ex.Message}", ex);
+            }
+            catch (ArgumentException ex)
+            {
+                throw; // Ném lại ArgumentException đã được định nghĩa
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An unexpected error occurred: {ex.Message}", ex);
+            }
+        }
+    }
 }

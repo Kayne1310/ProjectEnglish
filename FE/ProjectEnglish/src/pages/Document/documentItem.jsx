@@ -60,14 +60,14 @@ const DocumentItem = () => {
                     {data.map((res, index) => (
                         <article key={index} className="postcard light green">
                             <div className="postcard__text t-dark">
-                                <h1 className="postcard__title green">  Question {index + 1} :    {res.questionInfo[0].description}  </h1>
+                                <h1 className="postcard__title green" title={res.questionInfo[0].description}>  Question {index + 1} :    {res.questionInfo[0].description}  </h1>
                                 <div className="postcard__subtitle small">
                                     <time datetime="2020-05-25 12:00:00">
                                         <i className="fas fa-calendar-alt mr-2"></i>Mon, May 25th 2020
                                     </time>
                                 </div>
                                 <div className="postcard__bar"></div>
-                                <div className="postcard__preview-txt"> {res.description}</div>
+                                <div className="postcard__preview-txt" title={res.description}> {res.description}</div>
 
                             </div>
                         </article>

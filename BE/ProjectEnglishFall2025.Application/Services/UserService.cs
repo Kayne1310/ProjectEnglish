@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ProjectFall2025.Infrastructure.Repositories.Repo;
 using ProjectFall2025.Common.ImgCountry;
+using ProjectFall2025.Domain.ViewModel.ViewModel_Pagination;
 
 namespace ProjectFall2025.Application.Services
 {
@@ -161,20 +162,48 @@ namespace ProjectFall2025.Application.Services
             };
         }
 
-        public async Task<List<UserVM>> getAllUser()
+        //public async Task<List<UserVM>> getAllUser()
+        //{
+        //    var user = await repository.getAllUser();
+
+        //    var listUservm = new List<UserVM>();
+
+        //    foreach (var item in user)
+        //    {
+
+        //        listUservm.Add(mapper.Map<UserVM>(item));
+        //    }
+        //    //map
+
+        //    return listUservm;
+        //}
+
+        public async Task<PaginatedResponse<User>> GetAllUsersAsync(PaginationRequest request)
         {
-            var user = await repository.getAllUser();
+            var totalItems = await repository.GetUserCountAsync();
+            var skip = (request.Page - 1) * request.PageSize;
 
-            var listUservm = new List<UserVM>();
+            // Validate SortBy field
+            var validSortFields = new[] { "UserName", "Email", "createAt" }; // Các field cho phép sort
+            var sortBy = validSortFields.Contains(request.SortBy) ? request.SortBy : "UserName";
 
-            foreach (var item in user)
+            var users = await repository.GetAllUsersAsync(
+                skip,
+                request.PageSize,
+                sortBy,
+                request.SortAscending
+            );
+
+            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+
+            return new PaginatedResponse<User>
             {
-
-                listUservm.Add(mapper.Map<UserVM>(item));
-            }
-            //map
-
-            return listUservm;
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                CurrentPage = request.Page,
+                PageSize = request.PageSize,
+                Items = users
+            };
         }
 
         public async Task<UserVM> getUserById(string id)

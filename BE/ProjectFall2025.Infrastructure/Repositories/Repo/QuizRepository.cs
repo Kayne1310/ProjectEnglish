@@ -24,15 +24,35 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             this.dbContext = dbContext;
         }
 
-        public async Task<List<Quiz>> GetAllQuizs()
+        //public async Task<List<Quiz>> GetAllQuizs()
+        //{
+        //    var collection = dbContext.GetCollectionQuiz();
+
+        //    var getAllQuizs = await collection
+        //        .Find(_ => true)
+        //        .ToListAsync(); // Find(_ => true): tìm tất cả
+
+        //    return getAllQuizs;
+        //}
+
+        public async Task<int> GetQuizCountAsync()
         {
             var collection = dbContext.GetCollectionQuiz();
+            return (int)await collection.CountDocumentsAsync(FilterDefinition<Quiz>.Empty);
+        }
 
-            var getAllQuizs = await collection
-                .Find(_ => true)
-                .ToListAsync(); // Find(_ => true): tìm tất cả
+        public async Task<List<Quiz>> GetAllQuizsAsync(int skip, int pageSize, string sortBy, bool sortAscending)
+        {
+            var collection = dbContext.GetCollectionQuiz();
+            var sortDefinition = sortAscending
+                ? Builders<Quiz>.Sort.Ascending(sortBy)
+                : Builders<Quiz>.Sort.Descending(sortBy);
 
-            return getAllQuizs;
+            return await collection.Find(FilterDefinition<Quiz>.Empty)
+                .Sort(sortDefinition)
+                .Skip(skip)
+                .Limit(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Quiz> GetQuizById(DeleteQuizVM quiz, IClientSessionHandle session = null)
@@ -129,9 +149,15 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             return res;
         }
 
-        public async Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId)
+        public async Task<(int totalItems, List<BsonDocument> questions)> GetQuestionsByQuizIdAsync(
+                ObjectId quizId,
+                int skip,
+                int limit,
+                string sortBy,
+                bool sortAscending)
         {
-            var pipeline = new[]
+            // Pipeline để đếm tổng số câu hỏi
+            var countPipeline = new[]
             {
                 new BsonDocument("$match", new BsonDocument("_id", quizId)),
                 new BsonDocument("$lookup", new BsonDocument
@@ -141,13 +167,35 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                     { "foreignField", "quiz_id" },
                     { "as", "QuestionInfor" }
                 }),
-
                 new BsonDocument("$unwind", new BsonDocument
                 {
                     { "path", "$QuestionInfor" },
-                    { "preserveNullAndEmptyArrays", true } // Giữ quiz ngay cả khi không có câu hỏi
+                    { "preserveNullAndEmptyArrays", true }
                 }),
+                new BsonDocument("$count", "total")
+            };
 
+            var countResult = await dbContext.GetCollectionQuiz()
+                .Aggregate<BsonDocument>(countPipeline)
+                .FirstOrDefaultAsync();
+            int totalItems = countResult != null && countResult.Contains("total") ? countResult["total"].AsInt32 : 0;
+
+            // Pipeline chính với pagination và sorting
+            var pipeline = new List<BsonDocument>
+            {
+                new BsonDocument("$match", new BsonDocument("_id", quizId)),
+                new BsonDocument("$lookup", new BsonDocument
+                {
+                    { "from", "QuizQuestion" },
+                    { "localField", "_id" },
+                    { "foreignField", "quiz_id" },
+                    { "as", "QuestionInfor" }
+                }),
+                new BsonDocument("$unwind", new BsonDocument
+                {
+                    { "path", "$QuestionInfor" },
+                    { "preserveNullAndEmptyArrays", true }
+                }),
                 new BsonDocument("$lookup", new BsonDocument
                 {
                     { "from", "QuizAnswer" },
@@ -155,7 +203,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                     { "foreignField", "question_id" },
                     { "as", "QuestionInfor.QuestionAnswer" }
                 }),
-
+                new BsonDocument("$sort", new BsonDocument
+                {
+                    { $"QuestionInfor.{sortBy}", sortAscending ? 1 : -1 }
+                }),
+                new BsonDocument("$skip", skip),
+                new BsonDocument("$limit", limit),
                 new BsonDocument("$group", new BsonDocument
                 {
                     { "_id", "$_id" },
@@ -168,12 +221,12 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
                     { "QuestionInfor", new BsonDocument("$push", "$QuestionInfor") }
                 })
             };
+
             var result = await dbContext.GetCollectionQuiz()
-                .Aggregate<BsonDocument>(pipeline)
-                .ToListAsync();
+                  .Aggregate<BsonDocument>(pipeline)
+                  .ToListAsync();
 
-            return result;
-
+            return (totalItems, result);
         }
     }
 }

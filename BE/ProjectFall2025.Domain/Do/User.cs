@@ -27,7 +27,7 @@ namespace ProjectFall2025.Domain.Do
         public string role { get; set; } = "User";
         public string? ResetPasswordToken { get; set; }
         public DateTime? ResetTokenExpiry { get; set; }
-        public DateTime? createAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? updateAt { get; set; }
     }
 }

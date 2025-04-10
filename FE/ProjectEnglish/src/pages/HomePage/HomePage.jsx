@@ -37,12 +37,8 @@ const HomePage = () => {
                                     <div className="row">
                                         <div className="col-md-5"  data-aos="fade-right">
                                             <div className="detail-box">
-                                                <h1>For All Your <br /> Furniture Needs</h1>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                <div className="btn-box">
-                                                    <a href="#" className="btn1">Contact Us  </a>
-                                                    <a href="#" className="btn2">About Us</a>
-                                                </div>
+                                                <h1>Learning English is easy!</h1>
+                                                <p>Luyện nghe, nói, đọc và viết với bạn mỗi ngày để tự tin hơn trong cuộc sống và công việc.</p>                                        
                                             </div>
                                         </div>
                                         <div className="col-md-7" data-aos="fade-left">
@@ -58,8 +54,8 @@ const HomePage = () => {
                                     <div className="row">
                                         <div className="col-md-5">
                                             <div className="detail-box">
-                                                <h1>High Quality Furniture</h1>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                                <h1>Start learning English today!</h1>
+                                                <p>Khám phá cách học tiếng Anh đơn giản, thú vị và hiệu quả mỗi ngày.</p>
                                             </div>
                                         </div>
                                         <div className="col-md-7">
@@ -112,10 +108,9 @@ const HomePage = () => {
                                         About Us
                                     </h2>
                                 </div>
-                                <p> Welcome to Our English Learning Platform!
-                                    We are dedicated to helping you improve your English skills through engaging lessons, interactive exercises, and real-life practice. Whether you're a beginner or looking to enhance your fluency, our platform provides structured courses, expert guidance, and a supportive learning community.
-
-                                    Start your journey to mastering English today!</p>
+                                <p> Chào mừng bạn đến với nền tảng học tiếng Anh của chúng tôi!
+                                    Tại đây, bạn sẽ được cải thiện kỹ năng tiếng Anh qua bài học thú vị, luyện tập thực tế và sự hỗ trợ từ cộng đồng.
+                                    Bắt đầu hành trình chinh phục tiếng Anh ngay hôm nay!</p>
                                 {/* <a href="">
                                     Read More
                                 </a> */}
@@ -167,7 +162,7 @@ const HomePage = () => {
                                     <img src={b3} alt="Tài liệu" />
                                 </div>
                                 <div className="detail-box">
-                                    <h5>Tài liệu</h5>
+                                    <h5>Document</h5>
                                     <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
                                     <div className="btn-box "><Link to="/listdocument">Read More</Link></div> 
                                 </div>

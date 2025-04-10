@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -44,23 +43,38 @@ const createQuizQuestionWithAnswers = async (quizData) => {
     }
 };
 
-const getAllQuiz = async () => {
-    const response = await axios.get(`${API_URL}/Quiz/get_all_quiz`);
-    return response.data;
+const getAllQuiz = async (page = 1, pageSize = 2, sortBy = "name", sortAscending = true) => {
+    try {
+        const response = await axios.get(`${API_URL}/Quiz/get_all_quiz`, {
+            params: {
+                page,
+                pageSize,
+                sortBy,
+                sortAscending
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching quizzes:", error);
+        throw error;
+    }
 };
 
 
-const getQuestionsByQuizId = async (quizId) => {
+const getQuestionsByQuizId = async (quizId, page = 1, pageSize = 3, sortBy = "description", sortAscending = true) => {
     try {
-        const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quizId}`); // Giả sử endpoint
-        return response.data;
+        const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quizId}`, {
+            params: {
+                page,
+                pageSize,
+                sortBy,
+                sortAscending
+            }
+        });
+        return response.data; // Trả về toàn bộ response data
     } catch (error) {
-        if (error.response?.status === 400) {
-            // Nếu lỗi 400 (không tìm thấy câu hỏi), trả về mảng rỗng
-            return [];
-        }
         console.error("Error fetching questions:", error);
-        throw error; // Ném lỗi khác nếu không phải 400
+        return null;
     }
 };
 
@@ -71,6 +85,7 @@ const updateQuizQuestionWithAnswers = async (quizData) => {
 
         // Thêm QuizQuestion data
         formData.append("QuizQuestion.question_id", quizData.question_id || ""); // Thêm question_id
+        formData.append("QuizQuestion.quiz_id", quizData.quiz_id || ""); // Thêm question_id
         formData.append("QuizQuestion.description", quizData.description || "");
         if (quizData.image) {
             formData.append("QuizQuestion.image", quizData.image); // image là file object
