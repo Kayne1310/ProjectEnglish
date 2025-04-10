@@ -37,12 +37,8 @@ const HomePage = () => {
                                     <div className="row">
                                         <div className="col-md-5"  data-aos="fade-right">
                                             <div className="detail-box">
-                                                <h1>For All Your <br /> Furniture Needs</h1>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                <div className="btn-box">
-                                                    <a href="#" className="btn1">Contact Us  </a>
-                                                    <a href="#" className="btn2">About Us</a>
-                                                </div>
+                                                <h1>Learning English is easy!</h1>
+                                                <p>Practice listening, speaking, reading and writing with you every day to be more confident in life and work.</p>                                        
                                             </div>
                                         </div>
                                         <div className="col-md-7" data-aos="fade-left">
@@ -58,8 +54,8 @@ const HomePage = () => {
                                     <div className="row">
                                         <div className="col-md-5">
                                             <div className="detail-box">
-                                                <h1>High Quality Furniture</h1>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                                <h1>Start learning English today!</h1>
+                                                <p>Discover a simple, fun and effective way to master English every day.</p>
                                             </div>
                                         </div>
                                         <div className="col-md-7">
@@ -167,7 +163,7 @@ const HomePage = () => {
                                     <img src={b3} alt="Tài liệu" />
                                 </div>
                                 <div className="detail-box">
-                                    <h5>Tài liệu</h5>
+                                    <h5>Document</h5>
                                     <p>Tổng hợp những tài liệu của nhiều môn luôn sẵn sàng để bạn ôn bài hiệu quả nhất</p>
                                     <div className="btn-box "><Link to="/listdocument">Read More</Link></div> 
                                 </div>

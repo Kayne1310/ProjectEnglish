@@ -1,7 +1,7 @@
 const ContactUs = () => {
 
     return (
-        <section className="slider_section layout_padding long_section mb-5" style={{ backgroundColor: '#f9fafa' }} data-aos="fade-up">
+        <section id="contact" className="slider_section layout_padding long_section mb-5" style={{ backgroundColor: '#f9fafa' }} data-aos="fade-up">
             <div className="container">
                 <div className="row align-items-center">
                     {/* <!-- Contact Form --> */}

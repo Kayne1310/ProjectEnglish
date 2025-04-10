@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import "../../../assets/css/AdminCss/Reponsive.css";
 
@@ -371,9 +370,14 @@ const QuizQuestionAnswerPage = () => {
                                 fontSize: 15,
                                 height: "35px",
                                 lineHeight: "35px",
-                                verticalAlign: "middle"
+                                verticalAlign: "middle",
+                                maxWidth: "200px",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
                               }}
                               onClick={() => handleQuizClick(quiz.quiz_id)}
+                              title={quiz.name}
                             >
                               {quiz.name}
                             </td>
@@ -458,6 +462,10 @@ const QuizQuestionAnswerPage = () => {
                                 height: "30px",
                                 lineHeight: "30px",
                                 verticalAlign: "middle",
+                                maxWidth: "200px",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
                               }}
                               onClick={() => {
                                 setSelectedQuestion({
@@ -471,6 +479,7 @@ const QuizQuestionAnswerPage = () => {
                                 });
                                 setShowDetailModal(true);
                               }}
+                              title={q.description}
                             >
                               {q.description}
                             </td>
@@ -1077,7 +1086,15 @@ const QuizQuestionAnswerPage = () => {
                 {selectedQuestion?.answers?.map((answer, index) => (
                   <tr key={index}>
                     <td className="answer-cell">
-                      <div className="answer-text">
+                      <div className="answer-text" 
+                        style={{
+                          maxWidth: "200px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                        title={answer.description}
+                      >
                         {answer.description}
                       </div>
                     </td>

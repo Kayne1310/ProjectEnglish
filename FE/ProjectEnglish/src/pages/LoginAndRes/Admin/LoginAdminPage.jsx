@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import logo from '../../../assets/image/logo.png';
 import bear from '../../../assets/image/bear.jpeg';
 import { AuthContext } from '../../../components/layout/context/authContext';
 import { handleLoginAdmin } from '../../../helpers/authHandlers';
@@ -48,21 +47,14 @@ const LoginAdminPage = () => {
                 />
               </div>
             </Col>
-            <Col md={7} className="p-4">
-              <div className="logo-container text-center mb-2">
-                <Image
-                  src={logo}
-                  alt="logo"
-                  fluid
-                  style={{ maxWidth: "150px" }}
-                />
-              </div>
+            <Col md={7} className="p-5">
+
               <h1 className="login-title text-center mb-1">Login Admin</h1>
               <h5 className="login-subtitle text-center mb-4">
                 Sign in to experience Quizzet better.
               </h5>
 
-              <div className="container w-75 mx-auto">
+              <div className="container w-100 mx-auto">
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-1">
                     <Form.Label>Email</Form.Label>

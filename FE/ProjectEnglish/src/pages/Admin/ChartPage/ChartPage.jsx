@@ -43,9 +43,9 @@ const ChartPage = () => {
 
         // Tạo labels cho 12 tháng
         const monthLabels = [
-          'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 
-          'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
-          'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+          '1', '2', '3', '4', 
+          '5', '6', '7', '8',
+          '9', '10', '11', '12'
         ];
 
         // Tìm tháng có số đăng ký cao nhất và thấp nhất
@@ -354,10 +354,6 @@ const ChartPage = () => {
         }
       },
       x: {
-        ticks: {
-          maxRotation: 45,
-          minRotation: 45
-        },
         grid: {
           display: false
         }
@@ -427,7 +423,7 @@ const ChartPage = () => {
                         Quiz được nhiều người dùng làm nhất: {quizStats.labels[0]} ({quizStats.data[0]} người dùng)
                       </p>
                       <p>
-                        <i>*Ghi chú: Biểu đồ hiển thị số lượng người dùng khác nhau đã tham gia mỗi quiz trong {quizStats.quarterInfo || 'quý hiện tại'}</i>
+                        <i className='text-danger'>*Ghi chú: Biểu đồ hiển thị số lượng người dùng khác nhau đã tham gia mỗi quiz trong {quizStats.quarterInfo || 'quý hiện tại'}</i>
                       </p>
                       {quizStats.errorFetchingQuizNames && (
                         <p className="text-warning">

@@ -325,12 +325,12 @@ const QuizPage = () => {
                   <thead>
                     <tr>
                       <th
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', width: '200px' }}
                         onClick={() => handleSort('name')}
                       >
                         Quiz <SortIcon field="name" />
                       </th>
-                      <th>Description</th>
+                      <th style={{ width: '250px' }}>Description</th>
                       <th
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleSort('countryName')}
@@ -350,8 +350,34 @@ const QuizPage = () => {
                   <tbody>
                     {filteredQuizzes.map((quiz, index) => (
                       <tr key={index}>
-                        <td>{quiz.name || "No name"}</td>
-                        <td>{quiz.description || "No description"}</td>
+                        <td>
+                          <div
+                            style={{
+                              maxWidth: '200px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              position: 'relative'
+                            }}
+                            title={quiz.name || "No name"}
+                          >
+                            {quiz.name || "No name"}
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            style={{
+                              maxWidth: '250px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              position: 'relative'
+                            }}
+                            title={quiz.description || "No description"}
+                          >
+                            {quiz.description || "No description"}
+                          </div>
+                        </td>
                         <td>{quiz.countryName || "No country"}</td>
                         <td>
                           <img src={quiz.image || "default_image_url"} alt="quiz" width="50" />
