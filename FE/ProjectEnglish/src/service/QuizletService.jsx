@@ -38,7 +38,7 @@ const createQuiz = async (quizData) => {
             }
         );
 
-        console.log("Full API Response:", response); 
+        // console.log("Full API Response:", response); 
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");
@@ -72,7 +72,7 @@ const updateQuiz = async (quizData) => {
             },
         });
 
-        console.log("Full API Response for Update:", response.data);
+        // console.log("Full API Response for Update:", response.data);
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");

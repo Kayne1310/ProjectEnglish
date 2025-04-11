@@ -22,11 +22,11 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
         }
 
 
-        //public async Task<List<User>> getAllUser()
-        //{
-        //    var userCollection = dbContext.GetCollectionUser();
-        //    return await userCollection.Find(_ => true).ToListAsync();
-        //}
+        public async Task<List<User>> getAllUser()
+        {
+            var userCollection = dbContext.GetCollectionUser();
+            return await userCollection.Find(_ => true).ToListAsync();
+        }
 
         public async Task<int> GetUserCountAsync()
         {

@@ -97,7 +97,7 @@ const Community = () => {
         // Khởi động kết nối
         newConnection.start()
             .then(() => {
-                console.log('Connected to SignalR Hub');
+                // console.log('Connected to SignalR Hub');
                 newConnection.invoke('GetOnlineUsers')
                     .catch(err => console.error('Error getting online users:', err));
             })
@@ -112,7 +112,7 @@ const Community = () => {
                 message,
                 timestamp: timestamp
             };
-            console.log("newMessage", newMessage);
+            // console.log("newMessage", newMessage);
 
             setMessages(prev => [...prev, newMessage]);
 
@@ -152,7 +152,7 @@ const Community = () => {
         });
         // Nhận danh sách users đang online
         newConnection.on('ReceiveMessage AllUser', (users) => {
-            console.log('Users online:', users);
+            // console.log('Users online:', users);
             if (Array.isArray(users)) {
                 setOnlineUsers(users);
                 // console.log('Users online:', users);
@@ -161,11 +161,11 @@ const Community = () => {
 
         // Lắng nghe người dùng disconnect
         newConnection.on('UserDisconnected', (userId) => {
-            console.log('User disconnected:', userId); // Debug log
+            // console.log('User disconnected:', userId); // Debug log
             if (userId) {
                 setOnlineUsers(prev => {
                     const filtered = prev.filter(user => user.userId !== userId);
-                    console.log('Users after filter:', filtered); // Debug log
+                    // console.log('Users after filter:', filtered); // Debug log
                     return filtered;
                 });
             }

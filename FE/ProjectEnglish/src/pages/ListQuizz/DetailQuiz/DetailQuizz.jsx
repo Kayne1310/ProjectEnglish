@@ -24,24 +24,24 @@ const DetailQuizz = () => {
   const [completionTime, setCompletionTime] = useState(0);
   const [showConfirmModal, setShowConfirmModal] = useState(true); // State cho modal xác nhận
   const [quizInforVM, setQuizInfo] = useState(null); // State lưu thông tin quiz
-  console.log("check quizInforVM", quizInforVM);
+  // console.log("check quizInforVM", quizInforVM);
   useEffect(() => {
     const fetchQuestions = async () => {
       let timer;
       try {
         setLoading(true);
         const res = await getQuestionbyQuizId(quizId);
-        console.log("API response:", res); // Thêm log để kiểm tra response
+        // console.log("API response:", res); // Thêm log để kiểm tra response
         
         // Cập nhật để sử dụng đúng cấu trúc response
-        setQuestions(res.data.items || []); // Lưu toàn bộ mảng items
+        setQuestions(res.data || []); // Lưu toàn bộ mảng items
 
         // Cập nhật thông tin quiz từ item đầu tiên nếu có
-        if (res.data.items && res.data.items.length > 0) {
+        if (res.data && res.data.length > 0) {
           setQuizInfo({
-            name: res.data.items[0]?.quizInforVM?.name || "N/A",
-            totalQuestions: res.data.items.length,
-            difficulty: res.data.items[0]?.quizInforVM?.difficulty || "Trung bình"
+            name: res.data[0]?.quizInforVM?.name || "N/A",
+            totalQuestions: res.data.length,
+            difficulty: res.data[0]?.quizInforVM?.difficulty || "Trung bình"
           });
         }
 
@@ -50,8 +50,6 @@ const DetailQuizz = () => {
           setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
         }, 2000);
 
-        console.log("Questions after set:", questions);
-        console.log("Processed Quiz:", processedQuiz);
       } catch (err) {
         console.error("Lỗi khi lấy câu hỏi:", err);
         setError("Có lỗi xảy ra khi tải câu hỏi.");
@@ -76,7 +74,7 @@ const DetailQuizz = () => {
     }))
   }));
 
-  console.log("check processedQuiz", processedQuiz);
+  // console.log("check processedQuiz", processedQuiz);
   // Điều hướng giữa các câu hỏi
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -87,7 +85,7 @@ const DetailQuizz = () => {
   const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
-      console.log("prev", prev);
+      // console.log("prev", prev);
     }
   };
 

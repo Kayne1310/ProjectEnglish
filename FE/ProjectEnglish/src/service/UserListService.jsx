@@ -1,8 +1,8 @@
 import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllUser = async (page = 1, pageSize = 2, sortBy = "UserName", sortAscending = true) => {
-    const response = await axios.get(`${API_URL}/User/Get_All_User`, { 
+const getAllUserPage = async (page = 1, pageSize = 5, sortBy = "UserName", sortAscending = true) => {
+    const response = await axios.get(`${API_URL}/User/Get_All_User_pagination`, { 
         params: {
             page,
             pageSize,
@@ -14,4 +14,15 @@ const getAllUser = async (page = 1, pageSize = 2, sortBy = "UserName", sortAscen
     return response.data;
 }
 
-export { getAllUser };
+
+const getAllUser = async () => {
+    try {
+        const reponse = await axios.get(`${API_URL}/User/Get_All_User`, { withCredentials: true });
+        // console.log("check res: ", reponse)
+        return reponse.data;
+    } catch (error) {
+        throw error
+    }
+}
+
+export { getAllUserPage, getAllUser };

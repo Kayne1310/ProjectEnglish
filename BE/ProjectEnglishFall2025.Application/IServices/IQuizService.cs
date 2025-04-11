@@ -15,7 +15,7 @@ namespace ProjectFall2025.Application.IServices
 {
     public interface IQuizService
     {
-        //Task<List<QuizDto>> GetAllQuizs();
+        Task<List<QuizDto>> GetAllQuizs();
         Task<PaginatedResponse<QuizDto>> GetAllQuizsAsync(PaginationRequest request);
         Task<Quiz> GetIdQuiz(DeleteQuizVM quiz);
         Task<ReturnData> AddQuiz(CreateQuizVM quiz);
@@ -24,6 +24,7 @@ namespace ProjectFall2025.Application.IServices
         Task<ReturnData> HandleDelete(DeleteQuizVM request); // Xóa quiz và các question và answer liên quan
         Task<List<QuizzAndQuestionVM> > getCountQuestionInQuiz();
         Task<PaginatedResponse<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizIdAsync(PaginationRequest request);
+        Task<List<QuestionAndAnswerVM>> GetQuestionsAndAnswersByQuizId(string id);
         Task<SubmitQuizResponse> SubmitQuizAsync(SubmitQuizRequest request, string userId);
     }
 }

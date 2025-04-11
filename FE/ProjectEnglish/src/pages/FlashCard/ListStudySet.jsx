@@ -93,7 +93,7 @@ const FlashcardList = () => {
             // Kiểm tra studySetUserId trước khi set state
             if (studySetUserId && studySetUserId.listStudySetWithCount) {
                 setStudySetByUserID(studySetUserId.listStudySetWithCount);
-                console.log("studysetuserid", studySetUserId.listStudySetWithCount);
+                // console.log("studysetuserid", studySetUserId.listStudySetWithCount);
             }
         }
         catch (error) {

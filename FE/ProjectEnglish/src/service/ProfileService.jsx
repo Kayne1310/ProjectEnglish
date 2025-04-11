@@ -23,7 +23,7 @@ const updateUser = async (userData) => {
             },
         });
 
-        console.log("Full API Response for Update:", response.data);
+        // console.log("Full API Response for Update:", response.data);
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");

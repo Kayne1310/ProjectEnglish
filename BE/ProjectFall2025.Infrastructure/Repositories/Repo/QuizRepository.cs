@@ -24,16 +24,16 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
             this.dbContext = dbContext;
         }
 
-        //public async Task<List<Quiz>> GetAllQuizs()
-        //{
-        //    var collection = dbContext.GetCollectionQuiz();
+        public async Task<List<Quiz>> GetAllQuizs()
+        {
+            var collection = dbContext.GetCollectionQuiz();
 
-        //    var getAllQuizs = await collection
-        //        .Find(_ => true)
-        //        .ToListAsync(); // Find(_ => true): tìm tất cả
+            var getAllQuizs = await collection
+                .Find(_ => true)
+                .ToListAsync(); // Find(_ => true): tìm tất cả
 
-        //    return getAllQuizs;
-        //}
+            return getAllQuizs;
+        }
 
         public async Task<int> GetQuizCountAsync()
         {
@@ -228,5 +228,53 @@ namespace ProjectFall2025.Infrastructure.Repositories.Repo
 
             return (totalItems, result);
         }
+
+        public async Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId)
+        {
+            var pipeline = new[]
+            {
+                new BsonDocument("$match", new BsonDocument("_id", quizId)),
+                new BsonDocument("$lookup", new BsonDocument
+                {
+                    { "from", "QuizQuestion" },
+                    { "localField", "_id" },
+                    { "foreignField", "quiz_id" },
+                    { "as", "QuestionInfor" }
+                }),
+
+                new BsonDocument("$unwind", new BsonDocument
+                {
+                    { "path", "$QuestionInfor" },
+                    { "preserveNullAndEmptyArrays", true } // Giữ quiz ngay cả khi không có câu hỏi
+                }),
+
+                new BsonDocument("$lookup", new BsonDocument
+                {
+                    { "from", "QuizAnswer" },
+                    { "localField", "QuestionInfor._id" },
+                    { "foreignField", "question_id" },
+                    { "as", "QuestionInfor.QuestionAnswer" }
+                }),
+
+                new BsonDocument("$group", new BsonDocument
+                {
+                    { "_id", "$_id" },
+                    { "name", new BsonDocument("$first", "$name") },
+                    { "description", new BsonDocument("$first", "$description") },
+                    { "image", new BsonDocument("$first", "$image") },
+                    { "difficulty", new BsonDocument("$first", "$difficulty") },
+                    { "createAt", new BsonDocument("$first", "$createAt") },
+                    { "updateAt", new BsonDocument("$first", "$updateAt") },
+                    { "QuestionInfor", new BsonDocument("$push", "$QuestionInfor") }
+                })
+            };
+            var result = await dbContext.GetCollectionQuiz()
+                .Aggregate<BsonDocument>(pipeline)
+                .ToListAsync();
+
+            return result;
+
+        }
+
     }
 }

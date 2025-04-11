@@ -53,7 +53,7 @@ const Flashcard = () => {
 
   const handleSkip = () => {
     const correctAnswer = currentItem.answer.find(ans => ans.correct_answer);
-    console.log("correctAnswer", correctAnswer);
+    // console.log("correctAnswer", correctAnswer);
     if (correctAnswer) {
       setSelectedAnswer(correctAnswer.idAnswered);
       setIsCorrect(true);
@@ -169,7 +169,7 @@ const Flashcard = () => {
         // Gọi API cho Flashcard
         if (location.state?.flashcards) {
           setFlashcards(location.state.flashcards);
-          console.log("data flashcard", flashcards);
+          // console.log("data flashcard", flashcards);
 
           setQuestions(location.state.flashcards);
 
@@ -296,7 +296,7 @@ const Flashcard = () => {
 
   const currentItemListent = mode === "listening" ? flashcards[currentQuestionIndex] : processedQuiz[currentQuestionIndex];
   const currentItemFill = mode === "fillblank" ? flashcards[currentQuestionIndex] : processedQuiz[currentQuestionIndex];
-  console.log("currentItemFill check: ", currentItemFill);
+  // console.log("currentItemFill check: ", currentItemFill);
   // Sử dụng custom hook
   useKeyboardControls({
     onNext: handleNextCard,

@@ -72,6 +72,12 @@ body {
   font-size: 32px;
   font-weight: bold;
   color: #333;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .form_container {
@@ -174,6 +180,9 @@ body {
     margin-top: 10px !important;
   }
   .slider_section .heading_container h2{
+    
+   
+    
     font-size: 1rem;
     
   }
@@ -196,6 +205,13 @@ body {
   .header_section {
     max-width: 100%;
     padding: 0;
+  }
+  .heading_container h2{
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+
   }
 
   .about_section,

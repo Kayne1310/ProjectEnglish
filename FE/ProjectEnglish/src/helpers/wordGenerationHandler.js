@@ -62,7 +62,7 @@ export const handleWordGeneration = async (wordTitle, language) => {
 
     try {
         const response = await generateContentWithGemini(prompt);
-        console.log(response);
+        // console.log(response);
         const text = response.candidates[0].content.parts[0].text;
 
         // Sử dụng regex để trích xuất thông tin từ text

@@ -12,6 +12,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
     {
         //Task<List<User>> getAllUser();
         Task<int> GetUserCountAsync();
+        Task<List<User>> getAllUser();
         Task<List<User>> GetAllUsersAsync(int skip, int pageSize, string sortBy, bool sortAscending);
         Task<User> addUser(User user);
         Task<User> findUserByUsername(string username);

@@ -29,7 +29,7 @@ const createQuizQuestionWithAnswers = async (quizData) => {
             }
         );
 
-        console.log("Full API Response:", response);
+        // console.log("Full API Response:", response);
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");
@@ -43,9 +43,9 @@ const createQuizQuestionWithAnswers = async (quizData) => {
     }
 };
 
-const getAllQuiz = async (page = 1, pageSize = 2, sortBy = "name", sortAscending = true) => {
+const getAllQuizPage = async (page = 1, pageSize = 2, sortBy = "name", sortAscending = true) => {
     try {
-        const response = await axios.get(`${API_URL}/Quiz/get_all_quiz`, {
+        const response = await axios.get(`${API_URL}/Quiz/get_all_quiz_pagination`, {
             params: {
                 page,
                 pageSize,
@@ -60,10 +60,15 @@ const getAllQuiz = async (page = 1, pageSize = 2, sortBy = "name", sortAscending
     }
 };
 
+const getAllQuiz = async () => {
+    const response = await axios.get(`${API_URL}/Quiz/get_all_quiz`);
+    return response.data;
+};
 
-const getQuestionsByQuizId = async (quizId, page = 1, pageSize = 3, sortBy = "description", sortAscending = true) => {
+
+const getQuestionsByQuizIdPage = async (quizId, page = 1, pageSize = 3, sortBy = "description", sortAscending = true) => {
     try {
-        const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quizId}`, {
+        const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId_Pagination/${quizId}`, {
             params: {
                 page,
                 pageSize,
@@ -75,6 +80,20 @@ const getQuestionsByQuizId = async (quizId, page = 1, pageSize = 3, sortBy = "de
     } catch (error) {
         console.error("Error fetching questions:", error);
         return null;
+    }
+};
+
+const getQuestionsByQuizId = async (quizId) => {
+    try {
+        const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quizId}`); // Giả sử endpoint
+        return response.data;
+    } catch (error) {
+        if (error.response?.status === 400) {
+            // Nếu lỗi 400 (không tìm thấy câu hỏi), trả về mảng rỗng
+            return [];
+        }
+        console.error("Error fetching questions:", error);
+        throw error; // Ném lỗi khác nếu không phải 400
     }
 };
 
@@ -111,7 +130,7 @@ const updateQuizQuestionWithAnswers = async (quizData) => {
             }
         );
 
-        console.log("Full API Response:", response);
+        // console.log("Full API Response:", response);
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");
@@ -151,4 +170,4 @@ const deleteQuizQuestionWithAnswers = async (questionId) => {
 };
 
 
-export { createQuizQuestionWithAnswers, getAllQuiz, getQuestionsByQuizId, updateQuizQuestionWithAnswers, deleteQuizQuestionWithAnswers };
+export { createQuizQuestionWithAnswers, getAllQuiz, getQuestionsByQuizId, updateQuizQuestionWithAnswers, deleteQuizQuestionWithAnswers, getAllQuizPage, getQuestionsByQuizIdPage };

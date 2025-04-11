@@ -4,7 +4,7 @@ import axios from "axios";
 
  const getMessages = async () => {
     const response = await axios.get(`${API_URL}/chat/GetListMessage`);
-    console.log("response list message",response.data);
+   //  console.log("response list message",response.data);
     return response.data;
  }
 

@@ -63,7 +63,7 @@ const Nav = () => {
                         <div className="quote_btn-container">
                             <Dropdown>
                                 {isLoggedIn ? (
-                                    <Dropdown.Toggle className="custom-avatar-dropdown  " bsPrefix="custom-toggle" >
+                                    <Dropdown.Toggle className="custom-avatar-dropdown  " bsPrefix="custom-toggle"  variant="none"  style={{marginRight:"5px"}}>
                                         <img
                                             src={userInfor.picture || avatar}
                                             alt="User Avatar"

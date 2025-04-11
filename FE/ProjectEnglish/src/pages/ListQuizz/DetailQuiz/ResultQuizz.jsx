@@ -24,7 +24,7 @@ const ResultQuizz = () => {
     // Safely calculate correct answers from API response
     const correctAnswers = submitResult?.countCorrect || 0;
 
-    console.log("submitResult", submitResult);
+    // console.log("submitResult", submitResult);
 
     const wrongAnswers = totalQuestions - correctAnswers;
 
