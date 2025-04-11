@@ -12,7 +12,7 @@ export default defineConfig({
 
     proxy: {
       '/api': {
-        target: 'https://localhost:7048',
+        target: 'https://ksth.id.vn',
         changeOrigin: true,
         secure: false,
       }
