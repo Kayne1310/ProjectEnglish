@@ -8,7 +8,7 @@ const PrivateRoute = (props) => {
 
     const { userInfor } = useContext(AuthContext);
     const navigate = useNavigate();
-    console.log("userInfor", userInfor);
+    // console.log("userInfor", userInfor);
 
     const goToHome = () => {
         navigate("/"); // Điều hướng đến trang "/about"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Form, Pagination } from 'react-bootstrap';
-import { getAllUser } from '../../../service/UserListService';
+import { getAllUserPage } from '../../../service/UserListService';
 
 
 const UserlistPage = () => {
@@ -17,7 +17,7 @@ const UserlistPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await getAllUser(currentPage, pageSize, sortBy, sortAscending);
+        const response = await getAllUserPage(currentPage, pageSize, sortBy, sortAscending);
         setUsers(response.items);
         setTotalItems(response.totalItems);
         setTotalPages(response.totalPages);

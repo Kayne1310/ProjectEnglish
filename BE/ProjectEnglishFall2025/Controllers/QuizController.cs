@@ -29,21 +29,21 @@ namespace ProjectEnglishFall2025.Controllers
             this.mapper = mapper;
         }
 
-        //[HttpGet("get_all_quiz")]
-        //public async Task<IActionResult> GetAllQuizs()
-        //{
-        //    try
-        //    {
-        //        var getAllQuizs = await quizService.GetAllQuizs();
-        //        return Ok(getAllQuizs);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-
         [HttpGet("get_all_quiz")]
+        public async Task<IActionResult> GetAllQuizs()
+        {
+            try
+            {
+                var getAllQuizs = await quizService.GetAllQuizs();
+                return Ok(getAllQuizs);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("get_all_quiz_pagination")]
         //[Authorize("Admin")]
         public async Task<ActionResult> GetAllUser(
         [FromQuery] int page = 1,
@@ -140,8 +140,21 @@ namespace ProjectEnglishFall2025.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
         [HttpGet("GetQuestionByQuizId/{quizId}")]
+        public async Task<ActionResult> GetQuestionByQuizId([FromRoute] string quizId)
+        {
+            try
+            {
+                var res = await quizService.GetQuestionsAndAnswersByQuizId(quizId);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("GetQuestionByQuizId_Pagination/{quizId}")]
         public async Task<ActionResult> GetQuestionByQuizId(
                 [FromRoute] string quizId,
                 [FromQuery] int page = 1,

@@ -15,7 +15,7 @@ const createStudySet = async (title, language, isPublic, desc) => {
 //update study set
 const updateStudySet = async (data) => {
     const response = await axios.put(`${API_URL}/StudySet/UpdateStudySet`, data, { withCredentials: true });
-    console.log("updateStudySet", response);
+    // console.log("updateStudySet", response);
     return response.data;
 }
 

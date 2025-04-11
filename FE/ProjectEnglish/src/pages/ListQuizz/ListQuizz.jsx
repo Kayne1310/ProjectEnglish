@@ -87,7 +87,7 @@ const ListQuizz = () => {
     const fetchData = async () => {
       try {
         const res = await getDataQuiz();
-        console.log('res', res);
+        // console.log('res', res);
         setArrQuiz(res);
         setFilteredQuizzes(res); // Khởi tạo filteredQuizzes với dữ liệu ban đầu
 
@@ -112,8 +112,8 @@ const ListQuizz = () => {
     };
   }, [location.pathname]); // Thêm location.pathname vào dependencies
 
-  console.log("arrQuiz:", arrQuiz);
-  console.log("isQuizletPage:", isQuizletPage);
+  // console.log("arrQuiz:", arrQuiz);
+  // console.log("isQuizletPage:", isQuizletPage);
 
 
   // Xử lý danh sách quiz trước khi render

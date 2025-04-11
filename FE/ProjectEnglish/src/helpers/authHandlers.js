@@ -18,7 +18,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
-            console.error("Missing user data:", response);
+
         } else {
    
 
@@ -66,16 +66,13 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
     try {
         const response = await authService.login(email, password);
 
-        console.log("API Response:", response); // Kiểm tra response trả về từ authService
 
         if (!response || !response.user) {
             setError("Login failed. User data is missing.");
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000);
-            console.error("Missing user data:", response);
         } else {
-            console.log("User Data:", response.user);
 
             setUser({
                 userName: response.user.userName,
@@ -127,7 +124,7 @@ export const handleLogout = async (
     try {
         const res = await authService.logout();
 
-        console.log("Logout Response:", res);
+
 
         if (!res || res.error || res.returnCode !== 1) {
             throw new Error(res?.returnMessage || "Logout failed");
@@ -154,7 +151,7 @@ export const handleLogoutAdmin = async (
     try {
         const res = await authService.logout();
 
-        console.log("Logout Response:", res);
+        // console.log("Logout Response:", res);
 
         if (!res || res.error || res.returnCode !== 1) {
             throw new Error(res?.returnMessage || "Logout failed");
@@ -216,7 +213,7 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
     try {
         const apiResponse = await authService.GoogleRegister(response.access_token);
 
-        console.log("API Response:", apiResponse);
+        // console.log("API Response:", apiResponse);
 
 
 
@@ -253,7 +250,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
 
     try {
         const apiResponse = await authService.googleLogin(response.access_token);
-        console.log("google login succesul data",apiResponse);
+        // console.log("google login succesul data",apiResponse);
         // console.log("Context Response:", userInfo.email);
         // console.log("Context Response:", userInfo.userId);
         // console.log("Context Response:", userInfo.name);

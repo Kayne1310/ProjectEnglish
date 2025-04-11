@@ -10,7 +10,7 @@ const ChangePassword = async (oldPassword, newPassword, reNewPassword) => {
             reNewPassword: reNewPassword
         }, { withCredentials: true })
 
-        console.log("check res for change pass: ", res)
+        // console.log("check res for change pass: ", res)
 
         if (!res || !res.data) {
             return null;

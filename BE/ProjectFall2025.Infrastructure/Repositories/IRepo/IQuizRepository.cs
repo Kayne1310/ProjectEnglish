@@ -13,7 +13,7 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
 {
     public interface IQuizRepository
     {
-        //Task<List<Quiz>> GetAllQuizs();
+        Task<List<Quiz>> GetAllQuizs();
         Task<int> GetQuizCountAsync();
         Task<List<Quiz>> GetAllQuizsAsync(int skip, int pageSize, string sortBy, bool sortAscending);
         Task<Quiz> GetQuizById(DeleteQuizVM quiz, IClientSessionHandle session = null);
@@ -27,6 +27,8 @@ namespace ProjectFall2025.Infrastructure.Repositories.IRepo
         int limit,
         string sortBy,
         bool sortAscending);
+
+        Task<List<BsonDocument>> GetQuestionByQuizId(ObjectId quizId);
 
     }
 }

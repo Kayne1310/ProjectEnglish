@@ -23,7 +23,7 @@ const QuizletForm = () => {
       try {
         setLoading(true);
         const res = await getQuestionbyQuizId(quizId);
-        console.log("Fetched questions:", res); // Debugging
+        // console.log("Fetched questions:", res); // Debugging
         setQuestions(res.data || []); // Đảm bảo luôn là mảng
       } catch (error) {
         console.error("Error fetching questions:", error);

@@ -41,7 +41,7 @@ const AuthForm = ({
                                 appId={import.meta.env.VITE_APP_FB_APP_ID2 || ''}
                                 onResolve={facebookLogin}
                                 onReject={(err) => {
-                                    console.log(err)
+                                    // console.log(err)
                                 }}
                             >
                                 <Link to="#" className="icon" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", backgroundColor: "#3b5998", borderRadius: "50%", color: "white", fontSize: "20px", textDecoration: "none" }}>

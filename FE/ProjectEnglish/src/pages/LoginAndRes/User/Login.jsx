@@ -25,7 +25,7 @@ const Login = () => {
     const HandleGoogleLogin = useGoogleLogin({
         onSuccess: async (response) => {
             await handleGoogleLogin(response, setError, setIsLoading, setUser, navigate);
-            console.log("Google login success", response);
+            // console.log("Google login success", response);
         },
         onError: (error) => {
             console.error("Google login failed:", error);

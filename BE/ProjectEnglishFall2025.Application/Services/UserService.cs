@@ -162,21 +162,21 @@ namespace ProjectFall2025.Application.Services
             };
         }
 
-        //public async Task<List<UserVM>> getAllUser()
-        //{
-        //    var user = await repository.getAllUser();
+        public async Task<List<UserVM>> getAllUser()
+        {
+            var user = await repository.getAllUser();
 
-        //    var listUservm = new List<UserVM>();
+            var listUservm = new List<UserVM>();
 
-        //    foreach (var item in user)
-        //    {
+            foreach (var item in user)
+            {
 
-        //        listUservm.Add(mapper.Map<UserVM>(item));
-        //    }
-        //    //map
+                listUservm.Add(mapper.Map<UserVM>(item));
+            }
+            //map
 
-        //    return listUservm;
-        //}
+            return listUservm;
+        }
 
         public async Task<PaginatedResponse<User>> GetAllUsersAsync(PaginationRequest request)
         {

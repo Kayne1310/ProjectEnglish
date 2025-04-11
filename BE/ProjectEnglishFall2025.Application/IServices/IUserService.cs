@@ -15,7 +15,7 @@ namespace ProjectFall2025.Application.IServices
     public interface IUserService
     {
         Task<ReturnData> addUserService(UserViewModel userViewModel);
-        //Task<List<UserVM>> getAllUser();
+        Task<List<UserVM>> getAllUser();
         Task<PaginatedResponse<User>> GetAllUsersAsync(PaginationRequest request);
         Task<ReturnData> RegisterWithFacebook(FacebookUserViewModel model);
         Task<ReturnData> RegisterWithGoogle(GoogleUserViewModel model);

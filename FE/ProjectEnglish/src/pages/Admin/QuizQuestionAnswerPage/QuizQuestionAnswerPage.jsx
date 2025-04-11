@@ -11,14 +11,15 @@ import {
   Modal,
 } from "react-bootstrap";
 import {
-  getAllQuiz,
-  getQuestionsByQuizId,
+  getAllQuizPage,
+  getQuestionsByQuizIdPage,
   createQuizQuestionWithAnswers,
   updateQuizQuestionWithAnswers,
   deleteQuizQuestionWithAnswers,
 } from "../../../service/QuestionWithAnswersService";
 import PropTypes from "prop-types";
 import Pagination from "../../../components/Pagination/Pagination";
+import { toast } from 'react-toastify';
 
 const QuizQuestionAnswerPage = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -80,14 +81,16 @@ const QuizQuestionAnswerPage = () => {
       if (file) {
         // Kiểm tra kích thước file (giới hạn 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          alert("Kích thước ảnh không được vượt quá 5MB!");
+          toast.error("Kích thước ảnh không được vượt quá 5MB!")
+          // alert("Kích thước ảnh không được vượt quá 5MB!");
           return;
         }
 
         // Kiểm tra định dạng file
         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (!validTypes.includes(file.type)) {
-          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+          toast.error("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!")
+          // alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
           return;
         }
 
@@ -132,7 +135,8 @@ const QuizQuestionAnswerPage = () => {
 
       const result = await createQuizQuestionWithAnswers(quizData);
       if (result && result.returnCode === 1) {
-        alert("Quiz created successfully!");
+        toast.success("Quiz created successfully!");
+        // alert("Quiz created successfully!");
         setShowCreateModal(false);
         // Reset form data và xóa preview
         setImagePreview(null);
@@ -151,7 +155,7 @@ const QuizQuestionAnswerPage = () => {
         // Cập nhật lại danh sách câu hỏi
         if (selectedQuizId) {
           try {
-            const response = await getQuestionsByQuizId(
+            const response = await getQuestionsByQuizIdPage(
               selectedQuizId,
               questionCurrentPage,
               questionPageSize,
@@ -176,10 +180,12 @@ const QuizQuestionAnswerPage = () => {
           }
         }
       } else {
-        alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
+        toast.error("Failed to create quiz: " + (result.error || result.ReturnMessage));
+        // alert("Failed to create quiz: " + (result.error || result.ReturnMessage));
       }
     } catch (error) {
-      alert("An error occurred: " + error.message);
+      toast.error("An error occurred: " + error.message);
+      // alert("An error occurred: " + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -233,16 +239,16 @@ const QuizQuestionAnswerPage = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await getAllQuiz(quizCurrentPage, quizPageSize, quizSortBy, quizSortAscending);
-        console.log("Raw API Response from getAllQuiz:", response);
+        const response = await getAllQuizPage(quizCurrentPage, quizPageSize, quizSortBy, quizSortAscending);
+
         if (response && response.items) {
           setQuizzes(response.items);
           setQuizTotalItems(response.totalItems);
           setQuizTotalPages(response.totalPages);
-          console.log("Current page:", quizCurrentPage);
-          console.log("Page size:", quizPageSize);
-          console.log("Total items:", response.totalItems);
-          console.log("Total pages:", response.totalPages);
+          // console.log("Current page:", quizCurrentPage);
+          // console.log("Page size:", quizPageSize);
+          // console.log("Total items:", response.totalItems);
+          // console.log("Total pages:", response.totalPages);
         } else {
           setQuizzes([]);
           setQuizTotalItems(0);
@@ -262,23 +268,23 @@ const QuizQuestionAnswerPage = () => {
     if (selectedQuizId) {
       const fetchQuestions = async () => {
         try {
-          const response = await getQuestionsByQuizId(
+          const response = await getQuestionsByQuizIdPage(
             selectedQuizId,
             questionCurrentPage,
             questionPageSize,
             questionSortBy,
             questionSortAscending
           );
-          console.log("Questions response:", response);
+          // console.log("Questions response:", response);
 
           if (response && response.items) {
             setQuestions(response.items);
             setQuestionTotalItems(response.totalItems);
             setQuestionTotalPages(response.totalPages);
-            console.log("Current page:", response.currentPage);
-            console.log("Page size:", response.pageSize);
-            console.log("Total items:", response.totalItems);
-            console.log("Total pages:", response.totalPages);
+            // console.log("Current page:", response.currentPage);
+            // console.log("Page size:", response.pageSize);
+            // console.log("Total items:", response.totalItems);
+            // console.log("Total pages:", response.totalPages);
           } else {
             setQuestions([]);
             setQuestionTotalItems(0);
@@ -300,7 +306,7 @@ const QuizQuestionAnswerPage = () => {
   }, [selectedQuizId, questionCurrentPage, questionPageSize, questionSortBy, questionSortAscending]);
 
   const handleQuizClick = (quizId) => {
-    console.log("Attempting to select Quiz ID:", quizId);
+    // console.log("Attempting to select Quiz ID:", quizId);
     setSelectedQuizId(quizId)
   };
 
@@ -645,14 +651,16 @@ const QuizQuestionAnswerPage = () => {
                       if (file) {
                         // Kiểm tra kích thước file (giới hạn 5MB)
                         if (file.size > 5 * 1024 * 1024) {
-                          alert("Kích thước ảnh không được vượt quá 5MB!");
+                          toast.error("Kích thước ảnh không được vượt quá 5MB!");
+                          // alert("Kích thước ảnh không được vượt quá 5MB!");
                           return;
                         }
 
                         // Kiểm tra định dạng file
                         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!validTypes.includes(file.type)) {
-                          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          toast.error("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          // alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
                           return;
                         }
 
@@ -842,14 +850,16 @@ const QuizQuestionAnswerPage = () => {
                       if (file) {
                         // Kiểm tra kích thước file (giới hạn 5MB)
                         if (file.size > 5 * 1024 * 1024) {
-                          alert("Kích thước ảnh không được vượt quá 5MB!");
+                          toast.error("Kích thước ảnh không được vượt quá 5MB!");
+                          // alert("Kích thước ảnh không được vượt quá 5MB!");
                           return;
                         }
 
                         // Kiểm tra định dạng file
                         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!validTypes.includes(file.type)) {
-                          alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          toast.error("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
+                          // alert("Chỉ chấp nhận file ảnh định dạng JPEG, PNG hoặc GIF!");
                           return;
                         }
 
@@ -944,19 +954,21 @@ const QuizQuestionAnswerPage = () => {
               onClick={async () => {
                 try {
                   if (!selectedQuestion.question_id) {
-                    alert("Question ID is missing!");
+                    toast.success("Question ID is missing!");
+                    // alert("Question ID is missing!");
                     return;
                   }
                   const result = await updateQuizQuestionWithAnswers(selectedQuestion);
                   if (result && result.returnCode === 1) {
-                    alert("Quiz updated successfully!");
+                    toast.success("Quiz updated successfully!");
+                    // alert("Quiz updated successfully!");
                     setShowEditModal(false);
                     setImagePreview(null);
                     
                     // Sửa phần này để lấy danh sách câu hỏi sau khi cập nhật
                     if (selectedQuizId) {
                       try {
-                        const response = await getQuestionsByQuizId(
+                        const response = await getQuestionsByQuizIdPage(
                           selectedQuizId,
                           questionCurrentPage,
                           questionPageSize,
@@ -981,10 +993,12 @@ const QuizQuestionAnswerPage = () => {
                       }
                     }
                   } else {
-                    alert("Failed to update quiz: " + (result?.error || result?.ReturnMessage || "Unknown error"));
+                    toast.error("Failed to update quiz: " + (result?.error || result?.ReturnMessage || "Unknown error"));
+                    // alert("Failed to update quiz: " + (result?.error || result?.ReturnMessage || "Unknown error"));
                   }
                 } catch (error) {
-                  alert("Error updating quiz: " + error.message);
+                  toast.error("Error updating quiz: " + error.message);
+                  // alert("Error updating quiz: " + error.message);
                 }
               }}
             >
@@ -1011,13 +1025,15 @@ const QuizQuestionAnswerPage = () => {
               onClick={async () => {
                 try {
                   if (!selectedQuestion?.question_id) {
-                    alert("Question ID is missing!");
+                    toast.error("Question ID is missing!");
+                    // alert("Question ID is missing!");
                     return;
                   }
 
                   const result = await deleteQuizQuestionWithAnswers(selectedQuestion.question_id);
                   if (result && result.returnCode === 1) {
-                    alert("Question deleted successfully!");
+                    toast.success("Question deleted successfully!");
+   
                     setShowDeleteModal(false);
 
                     // Cập nhật lại danh sách câu hỏi sau khi xóa
@@ -1032,7 +1048,7 @@ const QuizQuestionAnswerPage = () => {
                           setQuestionCurrentPage(1);
                         }
 
-                        const response = await getQuestionsByQuizId(
+                        const response = await getQuestionsByQuizIdPage(
                           selectedQuizId,
                           questionCurrentPage > newTotalPages ? newTotalPages || 1 : questionCurrentPage,
                           questionPageSize,
@@ -1057,10 +1073,12 @@ const QuizQuestionAnswerPage = () => {
                       }
                     }
                   } else {
-                    alert("Failed to delete question: " + (result?.error || result?.ReturnMessage || "Unknown error"));
+                    toast.error("Failed to delete question: " + (result?.error || result?.ReturnMessage || "Unknown error"));
+                   
                   }
                 } catch (error) {
-                  alert("Error deleting question: " + error.message);
+                  toast.error("Error deleting question: " + error.message);
+             
                 }
               }}
             >

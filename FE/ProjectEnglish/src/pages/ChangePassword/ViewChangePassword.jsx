@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/css/ChangePassword/Changepassword.css'
 import { ChangePassword } from '../../service/ChangePasswordService';
 import { AuthContext } from '../../components/layout/context/authContext';
+import { toast } from 'react-toastify';
 
 const ViewChangePassword = () => {
     const [email, setEmail] = useState('');
@@ -24,13 +25,15 @@ const ViewChangePassword = () => {
             const res = await ChangePassword(oldPassword, newPassword, reNewPassword);
             if (res != null) {
                 if (res.returnCode === 1) {
-                    alert(`${res.returnMessage}`);
+                toast.success(`${res.returnMessage}`);
+                  
                     // Reset form after success
                     setOldPassword('');
                     setNewPassword('');
                     setreNewPassword('');
                 } else if (res.returnCode === -1) {
-                    alert(`${res.returnMessage}`);
+                    toast.error(`${res.returnMessage}`);
+                
                     // Reset form
                     setOldPassword('');
                     setNewPassword('');
@@ -42,7 +45,7 @@ const ViewChangePassword = () => {
             }
         } catch (error) {
             setError('An error occurred while changing password. Please try again.');
-            console.error('Change password error:', error);
+          
         }
 
     };

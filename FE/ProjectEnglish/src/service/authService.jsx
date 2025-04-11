@@ -12,7 +12,7 @@ const login = async (email, password) => {
         }, { withCredentials: true });
 
 
-        console.log("Full API Response:", response); // Log toàn bộ response
+        // console.log("Full API Response:", response); // Log toàn bộ response
 
         if (!response || !response.data) {
             console.error("Error: response.data is undefined!");
@@ -31,7 +31,7 @@ const logout = async () => {
       const response = await axios.post(`${API_URL}/Account/Logout`, {}, {
         withCredentials: true,
       });
-      console.log("Full Logout Response:", response);
+    //   console.log("Full Logout Response:", response);
       if (!response || !response.data) {
         console.error("Error: response.data is undefined!");
         return null;
@@ -76,7 +76,7 @@ const GoogleRegister = async (accessToken) => {
             PictureUrl: data.picture,
         };
 
-        console.log("Google User:", data);
+        // console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
         const apiResponse = await axios.post(`${API_URL}/User/GoogleRegister`, userData, { withCredentials: true });
@@ -107,7 +107,7 @@ const googleLogin = async (accessToken) => {
             PictureUrl: data.picture,
         };
 
-        console.log("Google User:", data);
+        // console.log("Google User:", data);
 
         // Gửi dữ liệu lên backend để xử lý đăng nhập
         const apiResponse = await axios.post(
@@ -137,7 +137,7 @@ const facebookLogin = async (accessToken) => {
             PictureUrl: data.picture.data.url,
         };
 
-        console.log("Facebook User:", userData);
+        // console.log("Facebook User:", userData);
 
 
         const apiResponse = await axios.post(`${API_URL}/Account/facebook-login`, userData, { withCredentials: true });
@@ -163,7 +163,7 @@ const facebookRegister = async (accessToken) => {
             PictureUrl: data.picture.data.url,
         };
 
-        console.log("Facebook User:", userData);
+        // console.log("Facebook User:", userData);
 
         const apiResponse = await axios.post(`${API_URL}/User/FacebookRegister`, userData);
 
@@ -185,7 +185,7 @@ const resetPassword = async (email, token, newpassword) => {
                 newpassword: newpassword
             });
 
-        console.log(response);
+        // console.log(response);
         return response.data;
     }
     catch (error) {

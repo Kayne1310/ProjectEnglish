@@ -19,9 +19,9 @@ const getDataQuiz = async (quiz_id) => {
 
 const getQuestionbyQuizId = async (quiz_id) => {
     try {
-        console.log(quiz_id);
+        // console.log(quiz_id);
         const response = await axios.get(`${API_URL}/Quiz/GetQuestionByQuizId/${quiz_id}`);
-        console.log("Response Data:", response); // In ra dữ liệu trả về
+        // console.log("Response Data:", response); // In ra dữ liệu trả về
         return response;
     } catch (error) {
         console.error("Error fetching quiz data:", error.response ? error.response.data : error.message);

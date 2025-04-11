@@ -22,15 +22,15 @@ const ChartPage = () => {
     hasData: true,
     error: null
   });
-  console.log("check quizStats", quizStats);
+
   const [sortedQuizzes, setSortedQuizzes] = useState([]);
 
   useEffect(() => {
     const fetchUserStats = async () => {
       try {
         const response = await getAllUser();
-        const users = response.items;
-
+        const users = response;
+        // console.log("check getalluser: ", users)
         // Khởi tạo mảng 12 tháng với giá trị 0
         const monthsData = Array(12).fill(0);
         
@@ -41,6 +41,7 @@ const ChartPage = () => {
           monthsData[month]++;
         });
 
+        // console.log("check user: ", response.items)
         // Tạo labels cho 12 tháng
         const monthLabels = [
           '1', '2', '3', '4', 
@@ -74,7 +75,6 @@ const ChartPage = () => {
       try {
         // 1. Lấy tất cả history
         const response = await getAllHistory();
-        console.log("Raw API response:", response);
 
         // Kiểm tra nếu response rỗng hoặc không hợp lệ
         if (!response || Object.keys(response).length === 0) {
@@ -85,7 +85,6 @@ const ChartPage = () => {
             hasData: false,
             errorMessage: "Không tìm thấy dữ liệu lịch sử làm quiz nào."
           });
-          console.log("Không có dữ liệu lịch sử làm quiz");
           return;
         }
 
@@ -106,7 +105,6 @@ const ChartPage = () => {
           // Cập nhật để kiểm tra đúng cấu trúc API history mới
           const createdAtValue = history.createAt || history.createdAt;
           if (!createdAtValue) {
-            console.log("History missing creation date:", history);
             return;
           }
 
@@ -114,7 +112,6 @@ const ChartPage = () => {
           
           // Kiểm tra xem ngày có hợp lệ không
           if (isNaN(historyDate.getTime())) {
-            console.log("Invalid date in history:", createdAtValue);
             return;
           }
           
@@ -133,7 +130,6 @@ const ChartPage = () => {
           }
         });
 
-        console.log(`Tìm thấy ${validHistoryCount} lịch sử hợp lệ trong quý hiện tại`);
 
         // Kiểm tra nếu không có quiz nào được làm trong quý
         if (Object.keys(quizUserCount).length === 0) {
@@ -144,7 +140,6 @@ const ChartPage = () => {
             hasData: false,
             errorMessage: "Không có quiz nào được làm trong quý hiện tại."
           });
-          console.log("Không có quiz nào được làm trong quý hiện tại");
           return;
         }
 
@@ -152,10 +147,9 @@ const ChartPage = () => {
         const quizPromises = Object.entries(quizUserCount).map(async ([quizId, data]) => {
           try {
             const cleanQuizId = quizId.trim().replace(/['"]/g, '');
-            console.log("Đang lấy thông tin cho Quiz ID:", cleanQuizId);
 
             const quizResponse = await getQuizById(cleanQuizId);
-            console.log("Quiz Response:", quizResponse);
+
 
             // Sử dụng cấu trúc response mới theo format bạn đã cung cấp
             const quizName = quizResponse?.name || 
@@ -188,7 +182,6 @@ const ChartPage = () => {
           .map(result => result.value)
           .filter(quiz => quiz); // Lọc ra các giá trị null hoặc undefined
         
-        console.log("Dữ liệu quiz đã xử lý:", sortedQuizData);
         
         // 5. Sắp xếp theo số lượng
         const sortedQuizzes = sortedQuizData.sort((a, b) => b.count - a.count);
@@ -421,10 +414,6 @@ const ChartPage = () => {
                   </>
                 )}
 
-                {/* <Card.Title>Line Chart</Card.Title>
-                <div style={{ height: '300px' }}>
-                  <Line data={lineData} options={chartOptions} />
-                </div> */}
 
               </Card.Body>
             </Card>

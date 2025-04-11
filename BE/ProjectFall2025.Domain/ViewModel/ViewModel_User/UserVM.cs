@@ -25,6 +25,8 @@ namespace ProjectFall2025.Domain.ViewModel.ViewModel_User
         public string? role { get; set; }
         public string? FacebookId { get; set; }
         public string? GoogleId { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? updateAt { get; set; }
 
     }
 

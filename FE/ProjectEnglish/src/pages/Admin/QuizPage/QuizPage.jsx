@@ -10,8 +10,9 @@ import {
   Alert,
   Pagination,
 } from "react-bootstrap";
-import { getAllQuiz } from "../../../service/QuestionWithAnswersService";
+import { getAllQuizPage } from "../../../service/QuestionWithAnswersService";
 import { createQuiz, updateQuiz, deleteQuizWithQuestionsAndAnswers } from "../../../service/QuizletService";
+import { toast } from 'react-toastify';
 
 const QuizPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,7 +66,7 @@ const QuizPage = () => {
       }
 
       // Cập nhật danh sách quiz sau khi xóa
-      const updatedQuizList = await getAllQuiz(
+      const updatedQuizList = await getAllQuizPage(
         currentPage > newTotalPages ? newTotalPages : currentPage, 
         pageSize, 
         sortBy, 
@@ -84,9 +85,10 @@ const QuizPage = () => {
       setError(null);
 
       // Hiển thị thông báo thành công
-      alert("Xóa Quiz thành công!");
+      toast.success("Xóa Quiz thành công !");
+ 
     } catch (error) {
-      console.error("Lỗi khi xóa quiz:", error);
+
       setError("Không thể xóa Quiz: " + (error.response?.data?.message || error.message));
       setShowDeleteModal(false);
     }
@@ -95,12 +97,12 @@ const QuizPage = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        const response = await getAllQuizPage(currentPage, pageSize, sortBy, sortAscending);
         setQuizzes(response.items);
         setTotalItems(response.totalItems);
         setTotalPages(response.totalPages);
       } catch (error) {
-        console.error("Error fetching quizzes:", error);
+     
         setError("Failed to fetch quizzes: " + error.message);
       }
     };
@@ -165,6 +167,7 @@ const QuizPage = () => {
 
     // Validation đầy đủ
     if (!newQuiz.name.trim()) {
+      
       setError("Vui lòng nhập tên Quiz!");
       return;
     }
@@ -187,7 +190,7 @@ const QuizPage = () => {
       const response = await createQuiz(newQuiz);
       if (response && !response.error) {
         // Cập nhật danh sách quiz sau khi tạo
-        const updatedQuizList = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        const updatedQuizList = await getAllQuizPage(currentPage, pageSize, sortBy, sortAscending);
         if (updatedQuizList && updatedQuizList.items) {
           setQuizzes(updatedQuizList.items);
           setTotalItems(updatedQuizList.totalItems);
@@ -207,12 +210,13 @@ const QuizPage = () => {
         setError(null);
 
         // Hiển thị thông báo thành công
-        alert("Tạo Quiz thành công!");
+        toast.success("Tạo Quiz thành công !");
+  
       } else {
         setError("Không thể tạo Quiz. Vui lòng thử lại!");
       }
     } catch (error) {
-      console.error("Lỗi khi tạo quiz:", error);
+
       setError("Đã xảy ra lỗi khi tạo Quiz: " + (error.response?.data?.message || error.message));
     } finally {
       setIsSubmitting(false);
@@ -268,7 +272,7 @@ const QuizPage = () => {
       const response = await updateQuiz(quizData);
       if (response && !response.error) {
         // Cập nhật danh sách quiz sau khi edit
-        const updatedQuizList = await getAllQuiz(currentPage, pageSize, sortBy, sortAscending);
+        const updatedQuizList = await getAllQuizPage(currentPage, pageSize, sortBy, sortAscending);
         if (updatedQuizList && updatedQuizList.items) {
           setQuizzes(updatedQuizList.items);
           setTotalItems(updatedQuizList.totalItems);
@@ -288,12 +292,13 @@ const QuizPage = () => {
         setError(null);
 
         // Hiển thị thông báo thành công
-        alert("Cập nhật Quiz thành công!");
+        toast.success("Cập nhật Quiz thành công !");
+
       } else {
         setError("Không thể cập nhật Quiz. Vui lòng thử lại!");
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật quiz:", error);
+  
       setError("Đã xảy ra lỗi khi cập nhật Quiz: " + (error.response?.data?.message || error.message));
     }
   };

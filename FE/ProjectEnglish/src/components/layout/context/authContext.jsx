@@ -33,7 +33,6 @@ export const AuthWrapper = (props) => {
 
     const fetchUser = async () => {
         const userData = await authService.getUserInfor();
-        console.log("userData", userData);
         if (userData.returnCode==1) {
             setUser({
                 userName: userData.user.userName,

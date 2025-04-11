@@ -66,13 +66,12 @@ const Flashcardcanh = () => {
 
             // Access the data property from response
 
-            console.log("data flashcard", data);
+            // console.log("data flashcard", data);
             setFlashcards(data.listFlashcards);
             setStudySet(data.studySet);
             setUserName(data.username);
             setPictureUrl(data.pictureUrl);
-            console.log("data studyset", studySet);
-            console.log("data flashcard", flashcards);
+          
 
         } catch (error) {
             console.error('Error fetching flashcards:', error);
@@ -97,7 +96,7 @@ const Flashcardcanh = () => {
     useEffect(() => {
         if (!isAppLoading && userInfor) {
             setIsUserLoaded(true);
-            console.log("userInfor", userInfor);
+            // console.log("userInfor", userInfor);
         }
     }, [userInfor, isAppLoading]);
 
@@ -138,7 +137,7 @@ const Flashcardcanh = () => {
             desc: studySet.desc,
             public: studySet.public,
         });
-        console.log("editData", editData);
+        // console.log("editData", editData);
         setIsEditModalVisible(true);
     };
 
@@ -150,7 +149,7 @@ const Flashcardcanh = () => {
         // Xử lý cập nhật studyset
         try {
             // Gọi API cập nhật ở đây
-            console.log("response edit study set", editData);
+            // console.log("response edit study set", editData);
             const response = await updateStudySet(editData);
             if (response.returnCode == 1) {
 
@@ -255,9 +254,9 @@ const Flashcardcanh = () => {
                     exampleVM: preparedData.exampleVM
 
                 };
-                console.log('updateData', updateData);
+                // console.log('updateData', updateData);
                 const response = await updateFlashCardWithStudySet(updateData);
-                console.log('Updated flashcard:', response);
+                // console.log('Updated flashcard:', response);
                 if (response.returnCode == 1) {
                     toast.success("Update Sucessful"); // Hiển thị toast lỗi
                     setTimeout(() => {
