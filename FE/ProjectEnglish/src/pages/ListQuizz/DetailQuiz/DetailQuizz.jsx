@@ -7,6 +7,7 @@ import ModalResult from "./ModalResult";
 import "./DetailQuizz.scss"; // File chứa style cho cả DetailQuizz và Questions
 import testImage from "../../../assets/image/b1.jpg";
 import { Modal } from 'antd'; // Thêm Modal từ antd để hiển thị modal xác nhận
+// import ResultQuizz from "./ResultQuizz";
 
 const DetailQuizz = () => {
   const navigate = useNavigate();
