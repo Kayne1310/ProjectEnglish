@@ -17,7 +17,7 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
             toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
 
         } else {
    
@@ -44,19 +44,19 @@ export const handleLogin = async (email, password, setError, setIsLoading, setUs
                 } else {
                     setError("Login failed. Invalid role!");
                 }
-            }, 1000);
+            }, 500);
             return;
         }
     } catch (err) {
         setError(`Login failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 
     setTimeout(() => {
         setIsLoading(false);
-    }, 1000);
+    }, 500);
 };
 
 export const handleLoginAdmin = async (email, password, setError, setIsLoading, setUser, navigate) => {
@@ -71,7 +71,7 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
             setError("Login failed. User data is missing.");
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         } else {
 
             setUser({
@@ -95,7 +95,7 @@ export const handleLoginAdmin = async (email, password, setError, setIsLoading, 
                 } else {
                     setError("Login failed. Invalid role!");
                 }
-            }, 1000);
+            }, 500);
             return;
         }
     } catch (err) {
@@ -184,7 +184,7 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
             toast.error(`Register failed. ${response.returnMessage}`); // hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         } else {
             setName("");
             setEmail("");
@@ -192,7 +192,7 @@ export const handerRegister = async (e, name, email, password, setError, setIsLo
             setTimeout(() => {
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
-            }, 1000); // Hide loader after 2 seconds
+            }, 500);
             toast.success("Register successfully!"); // Hiển thị toast thành công
         }
     } catch (err) {
@@ -221,19 +221,19 @@ export const handerGoogleRegister = async (response, setError, setIsLoading, set
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         }
         else if (apiResponse.returnCode == 1) {
             setTimeout(() => {
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
-            }, 1000); // Hide loader after 1 seconds
+            }, 500); // Hide loader after 1 seconds
         }
     } catch (err) {
         setError(`Register failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 
 
@@ -262,7 +262,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
             toast.error(errorMessage); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         }
 
         else if (apiResponse.returnCode == 1) {
@@ -288,7 +288,7 @@ export const handleGoogleLogin = async (response, setError, setIsLoading, setUse
                 setError(""); // Reset lỗi (hoặc không cần nếu không hiển thị trên form)
                 toast.success(successMessage); // Hiển thị toast thành công
 
-            }, 1000); // Hide loader after 1 seconds
+            }, 500); // Hide loader after 1 seconds
         }
     } catch (err) {
         const errorMessage = `Register failed. ${err.message}`;
@@ -314,20 +314,20 @@ export const FacebookRegister = async (response, setError, setIsLoading, setIsRe
             setError(`Register failed. ${apiResponse.data.returnMessage}`);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         }
         else if (apiResponse.data.returnCode == 1) {
             localStorage.setItem("isLoggedIn", "true");
             setTimeout(() => {
                 setIsLoading(false);
                 setIsRegisterSuccess(true);
-            }, 1000); // Hide loader after 1 seconds
+            }, 500); // Hide loader after 1 seconds
         }
     } catch (err) {
         setError(`Register failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 
 
@@ -348,7 +348,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
             setError(`Register failed. ${apiResponse.returnMessage}`);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         }
 
 
@@ -359,7 +359,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
                 navigate("/");
 
 
-            }, 1000); // Hide loader after 1 seconds
+            }, 500); // Hide loader after 1 seconds
         }
 
     }
@@ -367,7 +367,7 @@ export const handleFacebookLogin = async (data, setError, setIsLoading, setUser,
         setError(`Register failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 };
 
@@ -382,18 +382,18 @@ export const handleResetPassword = async (password, email, token, setError, setI
             setError(`Reset password failed. ${response.returnMessage}`);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
         } else {
             setTimeout(() => {
                 setIsLoading(false);
                 setIsSuccess(true);
-            }, 1000); // Hide loader after 1 seconds
+            }, 500); // Hide loader after 1 seconds
         }
     } catch (err) {
         setError(`Reset password failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 };
 export const handleForgotPassword = async (email, setError, setIsLoading, setIsSuccess, setEmail) => {
@@ -407,19 +407,19 @@ export const handleForgotPassword = async (email, setError, setIsLoading, setIsS
             setError(`Forgot password failed. ${response.returnMessage}`);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
             setEmail("");
         } else {
             setTimeout(() => {
                 setIsLoading(false);
                 setIsSuccess(true);
                 setEmail("");
-            }, 1000); // Hide loader after 1 second
+            }, 500); // Hide loader after 1 second
         }
     } catch (err) {
         setError(`Forgot password failed. ${err.message}`);
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     }
 };

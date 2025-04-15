@@ -210,13 +210,11 @@ namespace ProjectFall2025.Application.Services
                 var createdQuestion = await quizQuestionRepository.createQuizQuestion(quizQuestion, session);
 
 
-                // Kiểm tra danh sách QuizAnswers
+
                 if (request.QuizAnswers == null || !request.QuizAnswers.Any())
                 {
                     return new ReturnData { ReturnCode = -1, ReturnMessage = "No QuizAnswers provided." };
                 }
-
-                // Giả định yêu cầu 4 câu trả lời
                 if (request.QuizAnswers.Count != 4)
                 {
                     await _unitOfWork.AbortTransactionAsync();
@@ -232,19 +230,19 @@ namespace ProjectFall2025.Application.Services
                     createAt = DateTime.Now,
                 }).ToList();
 
-                // Kiểm tra logic correct_answer
+              
                 int trueCount = quizAnswers.Count(a => a.correct_answer == true);
-                if (trueCount == 0) // Tất cả false
+                if (trueCount == 0) 
                 {
                     await _unitOfWork.AbortTransactionAsync();
                     return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be false." };
                 }
-                if (trueCount == 4) // Tất cả true
+                if (trueCount == 4) 
                 {
                     await _unitOfWork.AbortTransactionAsync();
                     return new ReturnData { ReturnCode = -1, ReturnMessage = "All answers cannot be true." };
                 }
-                if (trueCount != 1) // Không có duy nhất 1 true
+                if (trueCount != 1) 
                 {
                     await _unitOfWork.AbortTransactionAsync();
                     return new ReturnData { ReturnCode = -1, ReturnMessage = "Exactly one answer must be true." };

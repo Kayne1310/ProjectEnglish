@@ -26,6 +26,12 @@ const truncateText = (text) => {
     : text;
 };
 
+// Hàm loại bỏ khoảng trắng thừa ở đầu và cuối từ
+const trimWord = (word) => {
+  if (!word) return '';
+  return word.trim();
+};
+
 const Flashcard = () => {
   const { quizId } = useParams(); // Lấy quizId từ URL
   const [mode, setMode] = useState("flashcard"); // Quản lý chế độ: flashcard hoặc quiz
@@ -208,7 +214,7 @@ const Flashcard = () => {
       }
       timer = setTimeout(() => {
         setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-      }, 2000);
+      }, 500);
     };
 
     fetchData();
@@ -402,8 +408,8 @@ const Flashcard = () => {
     const userAnswer = listeningAnswer.trim();
     const correctAnswer = currentItemFill?.question;
 
-    // So sánh đáp án (phân biệt hoa thường vì đây là từ vựng)
-    const isCorrect = userAnswer === correctAnswer;
+    // So sánh đáp án (không phân biệt hoa thường và loại bỏ khoảng trắng thừa)
+    const isCorrect = userAnswer.toLowerCase() === trimWord(correctAnswer).toLowerCase();
 
     setIsListeningCorrect(isCorrect);
 
@@ -841,6 +847,7 @@ const Flashcard = () => {
                               <>
                                 {(() => {
                                   const firstExample = currentItemFill.examples[0];
+                                  console.log("check example: ", firstExample)
                                   if (!firstExample) return null;
 
                                   // Hàm xử lý ẩn từ trong câu
@@ -856,16 +863,16 @@ const Flashcard = () => {
                                     if (wordIndex === -1) return sentence;
 
                                     // Lấy phần từ cần ẩn với đúng định dạng chữ hoa/thường
-                                    const originalWord = sentence.slice(wordIndex, wordIndex + wordToHide.length);
+                                    // const originalWord = sentence.slice(wordIndex, wordIndex + wordToHide.length);
 
                                     // Thay thế từ gốc bằng dấu gạch ngang
-                                    const result = sentence.slice(0, wordIndex) + '___' + sentence.slice(wordIndex + wordToHide.length);
+                                    const result = sentence.slice(0, wordIndex) + ' ___ ' + sentence.slice(wordIndex + wordToHide.length);
 
                                     return result;
                                   };
 
                                   // Kiểm tra xem Title có trong En hay Vi không
-                                  const title = currentItemFill.question;
+                                  const title = trimWord(currentItemFill.question);        
                                   let displayText = '';
 
                                   // Nếu Title có trong En

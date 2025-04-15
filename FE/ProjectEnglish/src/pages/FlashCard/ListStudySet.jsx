@@ -107,7 +107,7 @@ const FlashcardList = () => {
         try {
             timer = setTimeout(() => {
                 setIsLoading(false); // Tắt loading sau 2 giây và khi dữ liệu đã sẵn sàng
-            }, 2000);
+            }, 500);
             fetchFlashcards();
             gellAllListStudybyUser();
         } catch (error) {
@@ -305,7 +305,7 @@ const FlashcardList = () => {
                                     </h6>
                                     <p className="text-muted text-truncate fst-italic" title={data.studySet.desc || "Không có mô tả"}>{data.studySet.desc || "Không có mô tả"}</p>
                                     <div className="d-flex align-items-center">
-                                        <p className="mb-0 text-muted fst-italic">Ngôn ngữ: </p>
+                                        <p className="mb-0 text-muted fst-italic">Ngôn ngữ:</p>
                                         <img src={data.studySet.imageCountry} alt={data.studySet.language} className="ms-2 border " width="25px" height="19.25px" />
                                     </div>
                                     <div className="d-flex align-items-center mt-2 ">

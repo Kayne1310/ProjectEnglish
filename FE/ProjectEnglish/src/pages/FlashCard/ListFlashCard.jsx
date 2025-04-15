@@ -156,7 +156,7 @@ const Flashcardcanh = () => {
                 toast.success("Sửa Study Set thành công"); // Hiển thị toast lỗi
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 1000);
+                }, 500);
                 setIsEditModalVisible(false);
                 fetchFlashcards();
             }
@@ -191,7 +191,7 @@ const Flashcardcanh = () => {
             toast.error(error.message); // Hiển thị toast lỗi
             setTimeout(() => {
                 setIsLoading(false);
-            }, 1000);
+            }, 500);
 
         } finally {
             setIsLoading(false);
@@ -261,7 +261,7 @@ const Flashcardcanh = () => {
                     toast.success("Update Sucessful"); // Hiển thị toast lỗi
                     setTimeout(() => {
                         setIsLoading(false);
-                    }, 1000);
+                    }, 500);
                     document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
                     fetchFlashcards();
                 }
@@ -269,7 +269,7 @@ const Flashcardcanh = () => {
                     toast.success("Update Failed"); // Hiển thị toast lỗi
                     setTimeout(() => {
                         setIsLoading(false);
-                    }, 1000);
+                    }, 500);
 
                 }
             }
@@ -280,7 +280,7 @@ const Flashcardcanh = () => {
                         toast.success("Tạo từ mới thành công"); // Hiển thị toast lỗi
                         setTimeout(() => {
                             setIsLoading(false);
-                        }, 1000);
+                        }, 500);
                         document.getElementById('addWordModal').querySelector('[data-bs-dismiss="modal"]').click();
                         // Refresh danh sách flashcard
                         handleResetForm();
@@ -290,7 +290,7 @@ const Flashcardcanh = () => {
                         toast.error(`Tạo từ mới thất bại ${response.returnMessage}`); // Hiển thị toast lỗi
                         setTimeout(() => {
                             setIsLoading(false);
-                        }, 1000);
+                        }, 500);
                     }
                 }
                 catch (error) {

@@ -455,14 +455,7 @@ namespace ProjectFall2025.Application.Services
                 if (string.IsNullOrEmpty(request.QuizId))
                     throw new ArgumentException("QuizId is null or empty.");
 
-                // Tạo PaginationRequest để lấy tất cả câu hỏi
-                var paginationRequest = new PaginationRequest
-                {
-                    QuizId = request.QuizId,
-                };
-
-                var quizQuestionsResponse = await GetQuestionsAndAnswersByQuizIdAsync(paginationRequest);
-                var quizQuestions = quizQuestionsResponse.Items; // Lấy danh sách câu hỏi từ PaginatedResponse
+                var quizQuestions = await GetQuestionsAndAnswersByQuizId(request.QuizId);             
 
                 if (!quizQuestions.Any()) throw new Exception($"No questions found for QuizId: {request.QuizId}");
 

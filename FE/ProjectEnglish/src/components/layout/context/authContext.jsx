@@ -59,7 +59,7 @@ export const AuthWrapper = (props) => {
         setIsAppLoading(true);
         const timer = setTimeout(() => {
         fetchUser();
-        }, 1000);
+        }, 500);
 
         return () => clearTimeout(timer); // Cleanup the timer if the component unmounts
     }, []);
